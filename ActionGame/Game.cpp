@@ -16,7 +16,7 @@ void Game::Run()
 		MelLib::Library::LoopStartProcess();
 		if (MelLib::Input::KeyTrigger(DIK_ESCAPE))MelLib::Library::EndFlagTrue();
 
-		Update();
+		Update(); 
 		Draw();
 		MelLib::Library::LoopEndProcess();
 
