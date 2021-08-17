@@ -11,7 +11,7 @@ public:
 
 	void Run();
 	void Initialize();
-	void Finitialize();
+	void Finalize();
 	void Update();
 	void Draw();
 };

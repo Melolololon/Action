@@ -1,6 +1,9 @@
 #include "Game.h"
 #include"Library.h"
 
+#include"ModelData.h"
+#include"ModelObject.h"
+
 Game* Game::GetInstance()
 {
 	static Game game;
@@ -13,27 +16,29 @@ void Game::Run()
 
 	while (true)
 	{
-		MelLib::Library::LoopStartProcess();
-		if (MelLib::Input::KeyTrigger(DIK_ESCAPE))MelLib::Library::EndFlagTrue();
+		MelLib::Library::LoopStartProcess();	
 
 		Update(); 
 		Draw();
-		MelLib::Library::LoopEndProcess();
 
 		if (MelLib::Library::GetIsEnd())break;
+	
+		MelLib::Library::LoopEndProcess();
+
 	}
 
-	Finitialize();
+	Finalize();
 }
 
 void Game::Initialize()
 {
-	MelLib::Library::Initialize(1280, 720, MelLib::Color(255, 0, 0, 255), L"Game");
+	MelLib::Library::Initialize(1280, 720, MelLib::Color(120, 120, 120, 255), L"Game");
 	MelLib::Library::SetFramesPerSecond60(true);
 }
 
-void Game::Finitialize()
+void Game::Finalize()
 {
+	MelLib::Library::Finalize();
 }
 
 void Game::Update()
