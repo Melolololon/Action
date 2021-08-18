@@ -4,6 +4,11 @@
 #include"ModelData.h"
 #include"ModelObject.h"
 
+#include"GameObjectManager.h"
+
+#include"SceneManager.h"
+#include"ActionPart.h"
+
 Game* Game::GetInstance()
 {
 	static Game game;
@@ -34,6 +39,10 @@ void Game::Initialize()
 {
 	MelLib::Library::Initialize(1280, 720, MelLib::Color(120, 120, 120, 255), L"Game");
 	MelLib::Library::SetFramesPerSecond60(true);
+
+	MelLib::GameObjectManager::GetInstance()->Initialize();
+
+	MelLib::SceneManager::GetInstace()->SetStartScene(new ActionPart());
 }
 
 void Game::Finalize()
@@ -43,8 +52,10 @@ void Game::Finalize()
 
 void Game::Update()
 {
+	MelLib::SceneManager::GetInstace()->Update();
 }
 
 void Game::Draw()
 {
+	MelLib::SceneManager::GetInstace()->Draw();
 }
