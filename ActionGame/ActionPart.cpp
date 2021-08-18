@@ -7,6 +7,7 @@
 void ActionPart::Initialize()
 {
 	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<Player>(0));
+
 }
 
 void ActionPart::Update()

@@ -7,9 +7,10 @@ Player::Player(const MelLib::Vector3& pos)
 	//ï®óùââéZÇÃÇΩÇﬂÇ…seterÇ∆geterçÏÇÈ?
 	position = pos;
 	
+	collisionFlag.capsule = true;
 	capsuleData.resize(1);
 	capsuleData[0].r = 1.0f;
-	capsuleData[0].length = 4.0f;
+	
 }
 
 void Player::Update()
@@ -17,7 +18,8 @@ void Player::Update()
 	velocity = MelLib::Input::LeftStickVector3(1, MelLib::Camera::Get(), false, true);
 
 	position += velocity;
-	capsuleData[0].position = position;
+	capsuleData[0].segmentData.position[0] = position + MelLib::Vector3(0,2,0);
+	capsuleData[0].segmentData.position[1] = position + MelLib::Vector3(0,-2,0);
 }
 
 void Player::Draw()
