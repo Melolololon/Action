@@ -1,4 +1,6 @@
 #include "Player.h"
+#include"Input.h"
+#include"Camera.h"
 
 Player::Player(const MelLib::Vector3& pos)
 {
@@ -12,8 +14,9 @@ Player::Player(const MelLib::Vector3& pos)
 
 void Player::Update()
 {
+	velocity = MelLib::Input::LeftStickVector3(1, MelLib::Camera::Get(), false, true);
 
-
+	position += velocity;
 	capsuleData[0].position = position;
 }
 
