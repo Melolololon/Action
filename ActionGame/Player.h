@@ -4,11 +4,23 @@ class Player :public MelLib::GameObject
 {
 private:
 
+	//ƒJƒƒ‰
+	float cameraSpeed = 3.0f;
+
 public:
 	Player(const MelLib::Vector3& pos);
 	~Player(){}
+
+#pragma region UpdateŠÖŒW
 	void Update()override;
+
 	
+	//‘€ì•s‰Â”\‚Éif‚ÅˆÍ‚Ş‚Ì‘å•Ï‚¾‚©‚çŠÖ”‰»
+	
+	void Move();
+	void Camera();
+#pragma endregion
+
 	void Draw()override;
 
 	/// <summary>
