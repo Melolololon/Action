@@ -31,6 +31,12 @@
     <Filter Include="ヘッダー ファイル\Object\Stage">
       <UniqueIdentifier>{110e6f39-5e9f-4360-964f-d2cff5c854e6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Object\Player">
+      <UniqueIdentifier>{71eb6e69-288c-4738-b52e-3dbf14f12ca0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Object\Player">
+      <UniqueIdentifier>{dec9daf5-00e6-4108-bbc6-7b02b937b70e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -42,14 +48,17 @@
     <ClCompile Include="ActionPart.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>ソース ファイル\Object</Filter>
-    </ClCompile>
     <ClCompile Include="Floor.cpp">
       <Filter>ソース ファイル\Object\Stage</Filter>
     </ClCompile>
     <ClCompile Include="Ground.cpp">
       <Filter>ソース ファイル\Object\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>ソース ファイル\Object\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerSlush.cpp">
+      <Filter>ソース ファイル\Object\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -59,14 +68,17 @@
     <ClInclude Include="ActionPart.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>ヘッダー ファイル\Object</Filter>
-    </ClInclude>
     <ClInclude Include="Floor.h">
       <Filter>ヘッダー ファイル\Object\Stage</Filter>
     </ClInclude>
     <ClInclude Include="Ground.h">
       <Filter>ヘッダー ファイル\Object\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>ヘッダー ファイル\Object\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerSlush.h">
+      <Filter>ヘッダー ファイル\Object\Player</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

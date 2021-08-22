@@ -148,6 +148,7 @@ namespace MelLib
 
 		void SetPosition(const Vector3& pos) { position = pos; }
 		void SetRadius(const float radius) { r = radius; }
+		void SetCalcResult(const SphereCalcResult& result) { this->result = result; }
 	};
 
 
@@ -176,7 +177,7 @@ namespace MelLib
 
 		void SetPosition(const Vector3& pos) { position = pos; }
 		void SetSize(const Vector3& size) { this->size = size; }
-
+		void SetCalcResult(const BoxCalcResult& result) { this->result = result; }
 	};
 
 
@@ -242,6 +243,7 @@ namespace MelLib
 		void SetPosition(const Vector3& pos);
 		void SetSize(const Vector2& size);
 		void SetAngle(const Vector3& angle);
+		void SetCalcResult(const BoardCalcResult& result) { this->result = result; }
 	};
 
 
@@ -261,6 +263,8 @@ namespace MelLib
 	private:
 		Value2<Vector3> position;
 		Vector3 angle = 0;
+		//回転基準を決める変数(0.0fでv1基準、0.5fで中心、1.0fでv2基準)
+		float rotatePoint = 0.5f;
 
 		//angleを適応させた座標
 		Value2<Vector3> rotatePosition;
@@ -276,11 +280,18 @@ namespace MelLib
 		Value2<Vector3> GetPosition()const { return position; }
 		Value2<Vector3> GetRotatePosition()const { return rotatePosition; }
 		Vector3 GetAngle()const { return angle; }
+		float GetRotatePoint()const { return rotatePoint; }
 		Segment3DCalcResult GetCalcResult()const { return result; }
+
 
 		void SetPosition(const Value2<Vector3>& pos);
 		void SetAngle(const Vector3& angle);
-
+		/// <summary>
+		/// //回転基準を決める数値(0.0fでv1基準、0.5fで中心、1.0fでv2基準)をセットします。
+		/// </summary>
+		/// <param name="num">回転基準を決める数値(0.0fでv1基準、0.5fで中心、1.0fでv2基準)</param>
+		void SetRotatePoint(const float num);
+		void SetCalcResult(const Segment3DCalcResult& result) { this->result = result; }
 	
 	};
 

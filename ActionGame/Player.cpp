@@ -3,6 +3,8 @@
 #include"Input.h"
 #include"Camera.h"
 #include"LibMath.h"
+#include"GameObjectManager.h"
+#include"PlayerSlush.h"
 
 Player::Player(const MelLib::Vector3& pos)
 {
@@ -13,11 +15,13 @@ Player::Player(const MelLib::Vector3& pos)
 	capsuleData.resize(1);
 	capsuleData[0].SetRadius(0.5f);
 	
+	attackTimer.SetMaxTime(ATTACK_END_TIME);
 }
 
 void Player::Update()
 {
 	Move();
+	Attack();
 	Camera();
 }
 
@@ -40,6 +44,53 @@ void Player::Move()
 
 }
 
+void Player::Attack()
+{
+	if(attackTimer.GetSameAsMaxFlag())
+	{
+		currentAttack = PlayerSlush::AttackType::NONE;
+		attackTimer.ResetTimeZero();
+
+		attackTimer.SetStopFlag(true);
+	}
+
+	//
+	if (MelLib::Input::ButtonTrigger(1, MelLib::GamePadButton::X)
+		&& (attackTimer.GetNowTime() >= ATTACK_NEXT_TIME || currentAttack == PlayerSlush::AttackType::NONE))
+	{
+		attackTimer.ResetTimeZero();
+		attackTimer.SetStopFlag(false);
+
+		SetAttackType();
+		MelLib::GameObjectManager::GetInstance()->AddObject(
+			std::make_shared<PlayerSlush>(position, 0, currentAttack));
+		
+
+
+
+	}
+}
+
+void Player::SetAttackType()
+{
+	switch (currentAttack)
+	{
+	case PlayerSlush::AttackType::NONE:
+		currentAttack = PlayerSlush::AttackType::NORMAL_1;
+		break;
+	case PlayerSlush::AttackType::NORMAL_1:
+		currentAttack = PlayerSlush::AttackType::NORMAL_2;
+		break;
+	case PlayerSlush::AttackType::NORMAL_2:
+		//currentAttack = PlayerSlush::AttackType::NORMAL_3;
+		break;
+	case PlayerSlush::AttackType::NORMAL_3:
+		break;
+	default:
+		break;
+	}
+}
+
 void Player::Camera()
 {
 
@@ -50,6 +101,9 @@ void Player::Camera()
 	MelLib::Vector3 addCameraAngle = 0;
 	float MAX_CAMERA_ANGLE_X = 60.0f;
 
+
+	//ÉJÉÅÉâë¨ìx(ê›íËÇ≈ïœÇ¶ÇÁÇÍÇÈÇÊÇ§Ç…Ç∑ÇÈÇΩÇﬂÇ…ÅAconstÇ…ÇµÇƒÇ»Ç¢)
+	float cameraSpeed = 3.0f;
 	if (MelLib::Input::RightStickLeft(1, 30.0f))addCameraAngle.y = -cameraSpeed;
 	if (MelLib::Input::RightStickRight(1, 30.0f))addCameraAngle.y = cameraSpeed;
 	if (MelLib::Input::RightStickUp(1, 30.0f))addCameraAngle.x = -cameraSpeed;

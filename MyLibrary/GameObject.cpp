@@ -84,13 +84,7 @@ void GameObject::CalcMovePhysics()
 	position += velocity;
 }
 
-void MelLib::GameObject::ResizeCalcResult()
-{
-	if (sphereData.size() != sphereCalcResult.size()) sphereCalcResult.resize(sphereData.size());
-	if (boxData.size() != boxCalcResult.size()) boxCalcResult.resize(boxData.size());
-	if (lineSegmentData.size() != lineSegmentCalcResult.size()) lineSegmentCalcResult.resize(lineSegmentData.size());
-	if (boardData.size() != boardCalcResult.size()) boardCalcResult.resize(boardData.size());
-}
+
 #ifdef _DEBUG
 
 
@@ -164,7 +158,7 @@ void MelLib::GameObject::CreateCollisionCheckModel()
 	createOrDeleteModel(capsuleData.size(), capsuleModelObjects[0], ShapeType3D::BOX);
 	createOrDeleteModel(capsuleData.size(), capsuleModelObjects[1], ShapeType3D::BOX);
 	//â~íçÇçÏê¨
-	createOrDeleteModel(capsuleData.size(), capsuleModelObjects[2], ShapeType3D::BOX);
+	//createOrDeleteModel(capsuleData.size(), capsuleModelObjects[2], ShapeType3D::BOX);
 }
 
 void MelLib::GameObject::SetCollisionCheckModelData()
@@ -201,13 +195,13 @@ void MelLib::GameObject::SetCollisionCheckModelData()
 		capsuleModelObjects[1][i].SetAngle(capsuleData[i].GetSegment3DData().GetAngle());
 
 		//â~íå
-		Value2<Vector3>segmentPos = capsuleData[i].GetSegment3DData().GetRotatePosition();
-		float segmentLength = (segmentPos.v1 - segmentPos.v2).Length();
+		/*Value2<Vector3>segmentPos = capsuleData[i].GetSegment3DData().GetRotatePosition();
+		float segmentLength = (segmentPos.v1.y - segmentPos.v2.y);
 
 		capsuleModelObjects[2][i].SetScale
 		(Vector3(capsuleData[i].GetRadius() * 2, segmentLength, capsuleData[i].GetRadius() * 2));
 		capsuleModelObjects[2][i].SetPosition(LibMath::CalcCenterPosition3D(segmentPos.v1, segmentPos.v2));
-		capsuleModelObjects[2][i].SetAngle(capsuleData[i].GetSegment3DData().GetAngle());
+		capsuleModelObjects[2][i].SetAngle(capsuleData[i].GetSegment3DData().GetAngle());*/
 	}
 
 }

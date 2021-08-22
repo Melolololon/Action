@@ -1,33 +1,40 @@
 #pragma once
 #include"GameObject.h"
 
-#include<FrameTimer.h>
+#include"FrameTimer.h"
 
-#include"PlayerSlush.h"
-
-class Player :public MelLib::GameObject
+//プレイヤーの攻撃判定
+class PlayerSlush :public MelLib::GameObject
 {
+public:
+	enum class AttackType
+	{
+		NONE,
+		NORMAL_1,//通常(Xボタン)攻撃1番目
+		NORMAL_2,//通常(Xボタン)攻撃2番目
+		NORMAL_3,//通常(Xボタン)攻撃3番目
+
+	};
+
 private:
 	
-	PlayerSlush::AttackType currentAttack = PlayerSlush::AttackType::NONE;
-	static const int ATTACK_NEXT_TIME = 60 * 0.2f;
-	static const int ATTACK_END_TIME = 60 * 0.5f;
+	
+private:
 	MelLib::FrameTimer attackTimer;
+	AttackType attackType = AttackType::NORMAL_1;
+private:
+	void SetAttackParam();
 
-
-public:
-	Player(const MelLib::Vector3& pos);
-	~Player(){}
-
-#pragma region Update関係
-	
-	//操作不可能時にifで囲むの大変だから関数化
-	
-	void Move();
 	void Attack();
-	void SetAttackType();
-	void Camera();
-#pragma endregion
+public:
+
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="pos"></param>
+	/// <param name="playerDir">プレイやーの向き</param>
+	PlayerSlush(const MelLib::Vector3& pos,const MelLib::Vector3& playerDir,const AttackType type);
 
 	void Update()override;
 	void Draw()override;
