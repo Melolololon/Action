@@ -540,6 +540,18 @@ char LibMath::PointLeftRightCheck(const Vector2& vector, const Vector2& point)
 	return 0;
 }
 
+char MelLib::LibMath::PointPlaneFrontBackCheck(const Vector3& point, const PlaneData& plane)
+{
+
+	//原点から法線方向に距離分動いた座標を求める。
+	Vector3 disPos = FloatDistanceMoveVector3(0, plane.GetNormal(), plane.GetDistance());
+
+	if (Vector3::Dot(point - disPos, plane.GetNormal()) > 0)return 1;
+	else if (Vector3::Dot(point - disPos, plane.GetDistance()) < 0)return -1;
+	return 0;
+}
+
+
 float LibMath::TwoVector2Angle(const Vector2& v1, const Vector2& v2)
 {
 
@@ -615,15 +627,6 @@ Vector3 LibMath::RotateVector3(const Vector3& rotateV, const Vector3& vec, const
 	return { q.x, q.y, q.z };
 }
 
-Vector3 LibMath::FloatDistanceMoveVector3
-(
-	const Vector3& pos, 
-	const Vector3& vector, 
-	const float distance
-)
-{
-	return pos + vector * distance;
-}
 
 
 #pragma endregion

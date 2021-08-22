@@ -123,14 +123,18 @@ bool Collision::CircleAndSegment2D
 
 bool Collision::SphereAndSphere(const SphereData& sphere1, const SphereData& sphere2)
 {
+	Vector3 sphere1Pos = sphere1.GetPosition();
+	float sphere1R = sphere1.GetRadius();
+	Vector3 sphere2Pos = sphere2.GetPosition();
+	float sphere2R = sphere2.GetRadius();
 
-	return (sphere2.position.x - sphere1.position.x) *
-		(sphere2.position.x - sphere1.position.x) +
-		(sphere2.position.y - sphere1.position.y) *
-		(sphere2.position.y - sphere1.position.y) +
-		(sphere2.position.z - sphere1.position.z) *
-		(sphere2.position.z - sphere1.position.z) <=
-		(sphere1.r + sphere2.r) * (sphere1.r + sphere2.r);
+	return (sphere2Pos.x - sphere1Pos.x) *
+		(sphere2Pos.x - sphere1Pos.x) +
+		(sphere2Pos.y - sphere1Pos.y) *
+		(sphere2Pos.y - sphere1Pos.y) +
+		(sphere2Pos.z - sphere1Pos.z) *
+		(sphere2Pos.z - sphere1Pos.z) <=
+		(sphere1R + sphere2R) * (sphere1R + sphere2R);
 }
 
 bool Collision::BoxAndBox
@@ -141,10 +145,15 @@ bool Collision::BoxAndBox
 	BoxCalcResult* boxCalcResult2
 )
 {
-	Vector3 minPos1 = box1.position - box1.size / 2;
-	Vector3 maxPos1 = box1.position + box1.size / 2;
-	Vector3 minPos2 = box2.position - box2.size / 2;
-	Vector3 maxPos2 = box2.position + box2.size / 2;
+	Vector3 box1Pos = box1.GetPosition();
+	Vector3 box1Size = box1.GetPosition();
+	Vector3 box2Pos = box2.GetPosition();
+	Vector3 box2Size = box2.GetPosition();
+
+	Vector3 minPos1 = box1Pos - box1Size / 2;
+	Vector3 maxPos1 = box1Pos + box1Size / 2;
+	Vector3 minPos2 = box2Pos - box2Size / 2;
+	Vector3 maxPos2 = box2Pos + box2Size / 2;
 	bool isHit = false;
 
 	//1か2のminかmaxがXYZ全部相手の範囲内だったら当たってる
@@ -199,21 +208,21 @@ bool Collision::BoxAndBox
 		//3 Zが多い
 		char top = 0;
 		//対象へのベクトル
-		Vector3 targetToVector = box2.position - box1.position;
+		Vector3 targetToVector = box2Pos - box1Pos;
 
 		if (abs(targetToVector.x) > abs(targetToVector.y) &&
-			abs(targetToVector.x) > box2.size.x / 2)
+			abs(targetToVector.x) > box2Size.x / 2)
 		{
 			top = 1;
 			if (abs(targetToVector.z) > abs(targetToVector.x) &&
-				abs(targetToVector.z) > box2.size.z / 2)
+				abs(targetToVector.z) > box2Size.z / 2)
 				top = 3;
 		}
 		else
 		{
 			top = 2;
 			if (abs(targetToVector.z) > abs(targetToVector.y) &&
-				abs(targetToVector.z) > box2.size.z / 2)
+				abs(targetToVector.z) > box2Size.z / 2)
 				top = 3;
 		}
 
@@ -333,9 +342,9 @@ bool Collision::Segment3DAndSegment3D
 bool Collision::CapsuleAndCapsule(const CapsuleData& capsule1, const CapsuleData& capsule2)
 {
 	//回転適応.
-	Value2<Vector3>capsule1LineSegmentPos = capsule1.segmentData.GetRotatePosition();
+	Value2<Vector3>capsule1LineSegmentPos = capsule1.GetSegment3DData().GetRotatePosition();
 
-	Value2<Vector3>capsule2LineSegmentPos = capsule2.segmentData.GetRotatePosition();
+	Value2<Vector3>capsule2LineSegmentPos = capsule2.GetSegment3DData().GetRotatePosition();
 
 
 	Vector3 d1 = capsule1LineSegmentPos.v2 - capsule1LineSegmentPos.v1;
@@ -380,7 +389,7 @@ bool Collision::CapsuleAndCapsule(const CapsuleData& capsule1, const CapsuleData
 	Vector3 c1 = p1 + s * d1;
 	Vector3 c2 = p2 + t * d2;
 
-	return LibMath::CalcDistance3D(c1,c2) < capsule1.r + capsule2.r;
+	return LibMath::CalcDistance3D(c1,c2) < capsule1.GetRadius() + capsule2.GetRadius();
 }
 
 bool Collision::SphereAndBox
@@ -393,28 +402,28 @@ bool Collision::SphereAndBox
 {
 	float dir2 = 0.0f;
 
-	Vector3 minPos = box.position - box.size / 2;
-	Vector3 maxPos = box.position + box.size / 2;
+	Vector3 minPos = box.GetPosition() -box.GetSize() / 2;
+	Vector3 maxPos = box.GetPosition() +box.GetSize() / 2;
 
 	//x
-	if (sphere.position.x < minPos.x)
-		dir2 += (minPos.x - sphere.position.x) * (minPos.x - sphere.position.x);
-	if (sphere.position.x > maxPos.x)
-		dir2 += (sphere.position.x - maxPos.x) * (sphere.position.x - maxPos.x);
+	if (sphere.GetPosition().x < minPos.x)
+		dir2 += (minPos.x - sphere.GetPosition().x) * (minPos.x - sphere.GetPosition().x);
+	if (sphere.GetPosition().x > maxPos.x)
+		dir2 += (sphere.GetPosition().x - maxPos.x) * (sphere.GetPosition().x - maxPos.x);
 
 	//y
-	if (sphere.position.y < minPos.y)
-		dir2 += (minPos.y - sphere.position.y) * (minPos.y - sphere.position.y);
-	if (sphere.position.y > maxPos.y)
-		dir2 += (sphere.position.y - maxPos.y) * (sphere.position.y - maxPos.y);
+	if (sphere.GetPosition().y < minPos.y)
+		dir2 += (minPos.y - sphere.GetPosition().y) * (minPos.y - sphere.GetPosition().y);
+	if (sphere.GetPosition().y > maxPos.y)
+		dir2 += (sphere.GetPosition().y - maxPos.y) * (sphere.GetPosition().y - maxPos.y);
 
 	//z
-	if (sphere.position.z < minPos.z)
-		dir2 += (minPos.z - sphere.position.z) * (minPos.z - sphere.position.z);
-	if (sphere.position.z > maxPos.z)
-		dir2 += (sphere.position.z - maxPos.z) * (sphere.position.z - maxPos.z);
+	if (sphere.GetPosition().z < minPos.z)
+		dir2 += (minPos.z - sphere.GetPosition().z) * (minPos.z - sphere.GetPosition().z);
+	if (sphere.GetPosition().z > maxPos.z)
+		dir2 += (sphere.GetPosition().z - maxPos.z) * (sphere.GetPosition().z - maxPos.z);
 
-	bool isHit = dir2 < sphere.r * sphere.r;
+	bool isHit = dir2 < sphere.GetRadius() * sphere.GetRadius();
 
 	//どこに当たったかを返す
 	if (sphereCalcResult || boxCalcResult)
@@ -433,21 +442,21 @@ bool Collision::SphereAndBox
 		//3 Zが多い
 		char top = 0;
 		//ボックスへのベクトル
-		Vector3 sphereToVector = box.position - sphere.position;
+		Vector3 sphereToVector = box.GetPosition() - sphere.GetPosition();
 
 		if (abs(sphereToVector.x) > abs(sphereToVector.y) &&
-			abs(sphereToVector.x) > box.size.x / 2)
+			abs(sphereToVector.x) >box.GetSize().x / 2)
 		{
 			top = 1;
 			if (abs(sphereToVector.z) > abs(sphereToVector.x) &&
-				abs(sphereToVector.z) > box.size.z / 2)
+				abs(sphereToVector.z) >box.GetSize().z / 2)
 				top = 3;
 		}
 		else
 		{
 			top = 2;
 			if (abs(sphereToVector.z) > abs(sphereToVector.y) &&
-				abs(sphereToVector.z) > box.size.z / 2)
+				abs(sphereToVector.z) >box.GetSize().z / 2)
 				top = 3;
 		}
 
@@ -494,11 +503,11 @@ bool Collision::SphereAndBox
 
 bool Collision::SphereAndCapsule(const SphereData& sphere, const CapsuleData& capsule)
 {
-	Value2<Vector3>capsuleLineSegmentPos = capsule.segmentData.GetRotatePosition();
-
+	Value2<Vector3>capsuleLineSegmentPos = capsule.GetSegment3DData().GetRotatePosition();
+	Vector3 spherePos = sphere.GetPosition();
 
 	Vector3 capsulePos0ToSphere = 
-		LibMath::OtherVector(capsuleLineSegmentPos.v1, sphere.position);
+		LibMath::OtherVector(capsuleLineSegmentPos.v1, spherePos);
 	
 	//資料のn
 	Vector3 capsuleLineSegmentVector =
@@ -513,21 +522,21 @@ bool Collision::SphereAndCapsule(const SphereData& sphere, const CapsuleData& ca
 	float sphereAndCupsuleDis = 0.0f;
 	if(lenghtRate < 0.0f)
 	{
-		sphereAndCupsuleDis = LibMath::CalcDistance3D(sphere.position, capsuleLineSegmentPos.v1);
+		sphereAndCupsuleDis = LibMath::CalcDistance3D(spherePos, capsuleLineSegmentPos.v1);
 	}
 	else if(lenghtRate > 1.0f)
 	{
-		sphereAndCupsuleDis = LibMath::CalcDistance3D(sphere.position, capsuleLineSegmentPos.v2);
+		sphereAndCupsuleDis = LibMath::CalcDistance3D(spherePos, capsuleLineSegmentPos.v2);
 	}
 	else
 	{
-		sphereAndCupsuleDis = LibMath::CalcDistance3D(sphere.position, onTheLinePos);
+		sphereAndCupsuleDis = LibMath::CalcDistance3D(spherePos, onTheLinePos);
 	}
 
-	return sphereAndCupsuleDis < sphere.r;
+	return sphereAndCupsuleDis < sphere.GetRadius();
 }
 
-bool Collision::BoardAndLineSegment3D
+bool Collision::BoardAndSegment3D
 (
 	const BoardData& board,
 	BoardCalcResult* boardCalcResult,
@@ -535,24 +544,43 @@ bool Collision::BoardAndLineSegment3D
 	Segment3DCalcResult* lineSegmentCalcResult
 )
 {
+	//Vector2 halfSize = board.size / 2;
 
+	////座標を求める
+	//Vector3 leftDownPos = board.GetPosition() + Vector3(-halfSize.x, -halfSize.y, 0);
+	//Vector3 leftUpPos = board.GetPosition() + Vector3(-halfSize.x, halfSize.y, 0);
+	//Vector3 rightUpPos = board.GetPosition() + Vector3(halfSize.x, halfSize.y, 0);
+	//Vector3 rightDownPos = board.GetPosition() + Vector3(halfSize.x, -halfSize.y, 0);
+
+	////回転
+	//leftDownPos = Quaternion::GetZXYRotateQuaternion(leftDownPos, board.angle).ToVector3();
+	//leftUpPos = Quaternion::GetZXYRotateQuaternion(leftUpPos, board.angle).ToVector3();
+	//rightUpPos = Quaternion::GetZXYRotateQuaternion(rightUpPos, board.angle).ToVector3();
+	//rightDownPos = Quaternion::GetZXYRotateQuaternion(rightDownPos, board.angle).ToVector3();
+
+	Value2<Vector3> segmentPos = lineSegment.GetPosition();
+	Value4<Vector3>boardVertexPos = board.GetVertexPosition();
+	Vector3 leftDownPos = boardVertexPos.v1;
+	Vector3 leftUpPos = boardVertexPos.v2;
+	Vector3 rightDownPos = boardVertexPos.v3;
+	Vector3 rightUpPos = boardVertexPos.v4;
 
 	Vector3 v1;
 	Vector3 v2;
 
-	v1 = lineSegment.position[0] - board.position;
-	v2 = lineSegment.position[1] - board.position;
+	v1 = segmentPos.v1 - board.GetPosition();
+	v2 = segmentPos.v2 - board.GetPosition();
 
 	//線が板ポリと並行ではないかを調べる(平行だったらreturn)
-	if (Vector3Dot(v1, board.normal) * Vector3Dot(v2, board.normal) > 0)
+	if (Vector3Dot(v1, board.GetNormal()) * Vector3Dot(v2, board.GetNormal()) > 0)
 		return false;
 
 
 	//ここにポリゴンの範囲内かどうかの処理を書く
 
 	//線の端 - ポリゴンの角
-	v1 = lineSegment.position[0] - board.leftDownPos;
-	v2 = lineSegment.position[1] - board.leftDownPos;
+	v1 = segmentPos.v1 - leftDownPos;
+	v2 = segmentPos.v2 - leftDownPos;
 	/*v1 = normalize(v1);
 	v2 = normalize(v2);*/
 
@@ -571,17 +599,17 @@ bool Collision::BoardAndLineSegment3D
 	//	abs(normal.x * linePos2.x + normal.y * linePos2.y + normal.z * linePos2.z + d) /
 	//	sqrt(normal.x* normal.x + normal.y* normal.y + normal.z* normal.z);
 
-	Vector3 vec1 = lineSegment.position[0] - board.position;
-	Vector3 vec2 = lineSegment.position[1] - board.position;
+	Vector3 vec1 = segmentPos.v1 - board.GetPosition();
+	Vector3 vec2 = segmentPos.v2 - board.GetPosition();
 
 	float kyori1 = 0;
-	if (board.normal.x != 0)kyori1 += abs(Vector3Dot(board.normal, vec1)) / abs(board.normal.x);
-	if (board.normal.y != 0)kyori1 += abs(Vector3Dot(board.normal, vec1)) / abs(board.normal.y);
-	if (board.normal.z != 0)kyori1 += abs(Vector3Dot(board.normal, vec1)) / abs(board.normal.z);
+	if (board.GetNormal().x != 0)kyori1 += abs(Vector3Dot(board.GetNormal(), vec1)) / abs(board.GetNormal().x);
+	if (board.GetNormal().y != 0)kyori1 += abs(Vector3Dot(board.GetNormal(), vec1)) / abs(board.GetNormal().y);
+	if (board.GetNormal().z != 0)kyori1 += abs(Vector3Dot(board.GetNormal(), vec1)) / abs(board.GetNormal().z);
 	float kyori2 = 0;
-	if (board.normal.x != 0)kyori2 += abs(Vector3Dot(board.normal, vec2)) / abs(board.normal.x);
-	if (board.normal.y != 0)	kyori2 += abs(Vector3Dot(board.normal, vec2)) / abs(board.normal.y);
-	if (board.normal.z != 0)	kyori2 += abs(Vector3Dot(board.normal, vec2)) / abs(board.normal.z);
+	if (board.GetNormal().x != 0)kyori2 += abs(Vector3Dot(board.GetNormal(), vec2)) / abs(board.GetNormal().x);
+	if (board.GetNormal().y != 0)	kyori2 += abs(Vector3Dot(board.GetNormal(), vec2)) / abs(board.GetNormal().y);
+	if (board.GetNormal().z != 0)	kyori2 += abs(Vector3Dot(board.GetNormal(), vec2)) / abs(board.GetNormal().z);
 
 	/*float kyori1 = abs(dot(normal, linePos1)) / abs(normal.x);
 	float kyori2 = abs(dot(normal, linePos2)) / abs(normal.x);*/
@@ -600,32 +628,32 @@ bool Collision::BoardAndLineSegment3D
 	crossVector.x = (1 - a) * v1.x + a * v2.x;
 	crossVector.y = (1 - a) * v1.y + a * v2.y;
 	crossVector.z = (1 - a) * v1.z + a * v2.z;
-	Vector3 crossPos = board.leftDownPos + crossVector;
+	Vector3 crossPos = leftDownPos + crossVector;
 	//crossPos.y *= - 1;
 
 
 
 	//三角形1個目の判定
 	Vector3 normal1;
-	normal1 = LibMath::CalcNormal(board.leftDownPos, board.leftUpPos, crossPos);
+	normal1 = LibMath::CalcNormal(leftDownPos, leftUpPos, crossPos);
 	Vector3 normal2;
-	normal2 = LibMath::CalcNormal(board.leftUpPos, board.rightDownPos, crossPos);
+	normal2 = LibMath::CalcNormal(leftUpPos, rightDownPos, crossPos);
 	Vector3 normal3;
-	normal3 = LibMath::CalcNormal(board.rightDownPos, board.leftDownPos, crossPos);
+	normal3 = LibMath::CalcNormal(rightDownPos, leftDownPos, crossPos);
 
 	//板ポリと法線が同じか調べる
 	bool equal1 = false;//板ポリと法線が同じかどうか
 
 	//ほぼ同じだったらtrue
-	if (LibMath::Difference(board.normal.x, normal1.x, 0.0001f) &&
-		LibMath::Difference(board.normal.y, normal1.y, 0.0001f) &&
-		LibMath::Difference(board.normal.z, normal1.z, 0.0001f) &&
-		LibMath::Difference(board.normal.x, normal2.x, 0.0001f) &&
-		LibMath::Difference(board.normal.y, normal2.y, 0.0001f) &&
-		LibMath::Difference(board.normal.z, normal2.z, 0.0001f) &&
-		LibMath::Difference(board.normal.x, normal3.x, 0.0001f) &&
-		LibMath::Difference(board.normal.y, normal3.y, 0.0001f) &&
-		LibMath::Difference(board.normal.z, normal3.z, 0.0001f))
+	if (LibMath::Difference(board.GetNormal().x, normal1.x, 0.0001f) &&
+		LibMath::Difference(board.GetNormal().y, normal1.y, 0.0001f) &&
+		LibMath::Difference(board.GetNormal().z, normal1.z, 0.0001f) &&
+		LibMath::Difference(board.GetNormal().x, normal2.x, 0.0001f) &&
+		LibMath::Difference(board.GetNormal().y, normal2.y, 0.0001f) &&
+		LibMath::Difference(board.GetNormal().z, normal2.z, 0.0001f) &&
+		LibMath::Difference(board.GetNormal().x, normal3.x, 0.0001f) &&
+		LibMath::Difference(board.GetNormal().y, normal3.y, 0.0001f) &&
+		LibMath::Difference(board.GetNormal().z, normal3.z, 0.0001f))
 	{
 		equal1 = true;
 	}
@@ -636,23 +664,23 @@ p[2] = c2.rightDownPos;
 p[3] = c2.rightUpPos;*/
 
 	//三角形2個目の判定
-	normal1 = LibMath::CalcNormal(board.rightDownPos, board.leftUpPos, crossPos);
-	normal2 = LibMath::CalcNormal(board.leftUpPos, board.rightUpPos, crossPos);
-	normal3 = LibMath::CalcNormal(board.rightUpPos, board.rightDownPos, crossPos);
+	normal1 = LibMath::CalcNormal(rightDownPos, leftUpPos, crossPos);
+	normal2 = LibMath::CalcNormal(leftUpPos, rightUpPos, crossPos);
+	normal3 = LibMath::CalcNormal(rightUpPos, rightDownPos, crossPos);
 
 	//板ポリと法線が同じか調べる
 	bool equal2 = false;//板ポリと法線が同じかどうか
 
 	//ほぼ同じ(誤差0.0001以内)だったらtrue
-	if (LibMath::Difference(board.normal.x, normal1.x, 0.0001f) &&
-		LibMath::Difference(board.normal.y, normal1.y, 0.0001f) &&
-		LibMath::Difference(board.normal.z, normal1.z, 0.0001f) &&
-		LibMath::Difference(board.normal.x, normal2.x, 0.0001f) &&
-		LibMath::Difference(board.normal.y, normal2.y, 0.0001f) &&
-		LibMath::Difference(board.normal.z, normal2.z, 0.0001f) &&
-		LibMath::Difference(board.normal.x, normal3.x, 0.0001f) &&
-		LibMath::Difference(board.normal.y, normal3.y, 0.0001f) &&
-		LibMath::Difference(board.normal.z, normal3.z, 0.0001f))
+	if (LibMath::Difference(board.GetNormal().x, normal1.x, 0.0001f) &&
+		LibMath::Difference(board.GetNormal().y, normal1.y, 0.0001f) &&
+		LibMath::Difference(board.GetNormal().z, normal1.z, 0.0001f) &&
+		LibMath::Difference(board.GetNormal().x, normal2.x, 0.0001f) &&
+		LibMath::Difference(board.GetNormal().y, normal2.y, 0.0001f) &&
+		LibMath::Difference(board.GetNormal().z, normal2.z, 0.0001f) &&
+		LibMath::Difference(board.GetNormal().x, normal3.x, 0.0001f) &&
+		LibMath::Difference(board.GetNormal().y, normal3.y, 0.0001f) &&
+		LibMath::Difference(board.GetNormal().z, normal3.z, 0.0001f))
 	{
 		equal2 = true;
 	}
@@ -666,9 +694,9 @@ p[3] = c2.rightUpPos;*/
 	}
 
 	//衝突位置と中心がほぼ同じだったらヒット
-	if (LibMath::Difference(crossPos.x, board.position.x, 0.001f)
-		&& LibMath::Difference(crossPos.y, board.position.y, 0.001f)
-		&& LibMath::Difference(crossPos.z, board.position.z, 0.001f)
+	if (LibMath::Difference(crossPos.x, board.GetPosition().x, 0.001f)
+		&& LibMath::Difference(crossPos.y, board.GetPosition().y, 0.001f)
+		&& LibMath::Difference(crossPos.z, board.GetPosition().z, 0.001f)
 		|| equal1
 		|| equal2)
 	{

@@ -25,6 +25,12 @@
     <Filter Include="ヘッダー ファイル\Object">
       <UniqueIdentifier>{b506589f-214e-49de-94ea-1a54b343aab9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Object\Stage">
+      <UniqueIdentifier>{898c7030-e600-4513-a831-86432476c2f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Object\Stage">
+      <UniqueIdentifier>{110e6f39-5e9f-4360-964f-d2cff5c854e6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -39,6 +45,12 @@
     <ClCompile Include="Player.cpp">
       <Filter>ソース ファイル\Object</Filter>
     </ClCompile>
+    <ClCompile Include="Floor.cpp">
+      <Filter>ソース ファイル\Object\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Ground.cpp">
+      <Filter>ソース ファイル\Object\Stage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -49,6 +61,12 @@
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>ヘッダー ファイル\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Floor.h">
+      <Filter>ヘッダー ファイル\Object\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Ground.h">
+      <Filter>ヘッダー ファイル\Object\Stage</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

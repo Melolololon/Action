@@ -3,6 +3,8 @@
 #include"FbxLoader.h"
 #include"DirectionalLight.h"
 #include"Matrix.h"
+#include"CollisionType.h"
+#include"LibMath.h"
 
 using namespace MelLib;
 
@@ -535,6 +537,117 @@ void ModelObject::Draw(const std::string& rtName)
 	FbxAnimation();
 
 	DrawCommonProcessing(rtName);
+}
+
+void MelLib::ModelObject::MeshCat()
+{
+	//この処理はBoxとBoardで行う
+
+	//とりあえず当たり判定処理をすっ飛ばして、
+	//インデックスのセットと断面の描画を行う(断面用のテクスチャは割り当てない)
+
+	//平面情報
+	PlaneData plane;
+	plane.SetDistance(0.0f);
+	plane.SetNormal(Vector3(1.0f, 0, 0));
+
+	//スケール
+	Vector3 scale = modelConstDatas[0].scale;
+
+	//仮実装用の衝突点。中心をぶった切ることを仮定
+	std::vector<Vector3>hitPoints =
+	{
+		Vector3(0,0.5f,0.5f) * scale,
+		Vector3(0,0.5f,-0.5f)* scale,
+		Vector3(0,-0.5f,0.5f)* scale,
+		Vector3(0,-0.5f,-0.5f)* scale
+	};
+
+	//衝突した辺
+	std::vector<Value2<Vector3>> hitLine =
+	{
+		Value2<Vector3>(Vector3(-0.5f, 0.5f, 0.5f) * scale,Vector3(0.5f, 0.5f, 0.5f) * scale),
+		Value2<Vector3>(Vector3(-0.5f, 0.5f,-0.5f) * scale,Vector3(0.5f, 0.5f,-0.5f) * scale),
+		Value2<Vector3>(Vector3(-0.5f,-0.5f, 0.5f) * scale,Vector3(0.5f,-0.5f, 0.5f) * scale),
+		Value2<Vector3>(Vector3(-0.5f,-0.5f,-0.5f) * scale,Vector3(0.5f,-0.5f,-0.5f) * scale),
+	};
+
+	//四角形の頂点とインデックス取得
+	std::vector<Vector3>modelVertices = pModelData->GetVerticesPosition()[0];
+	std::vector<USHORT>modelIndices = pModelData->GetIndices()[0];
+	
+	//分割後の結果格納用配列
+	std::vector<Vector3>modelVerticesFront = modelVertices;
+	std::vector<Vector3>modelVerticesBack = modelVertices;
+
+
+	//分離(モデルを2つに分ける処理)
+	
+	//当たった辺の左右判定
+	std::vector<Value2<char>> hitLineResult =
+	{
+		Value2<char>
+		(LibMath::PointPlaneFrontBackCheck(hitLine[0].v1,plane),LibMath::PointPlaneFrontBackCheck(hitLine[0].v2,plane)),
+
+		Value2<char>
+		(LibMath::PointPlaneFrontBackCheck(hitLine[1].v1,plane),LibMath::PointPlaneFrontBackCheck(hitLine[1].v2,plane)),
+
+		Value2<char>
+		(LibMath::PointPlaneFrontBackCheck(hitLine[2].v1,plane),LibMath::PointPlaneFrontBackCheck(hitLine[2].v2,plane)),
+
+		Value2<char>
+		(LibMath::PointPlaneFrontBackCheck(hitLine[3].v1,plane),LibMath::PointPlaneFrontBackCheck(hitLine[3].v2,plane)),
+	};
+
+	//頂点を左右で分ける
+	size_t hitLineNum = hitLine.size();
+	
+	//頂点を衝突点に
+	//表
+	for(auto& v : modelVerticesFront)
+	{
+		for(int i = 0; i < hitLineNum;i++)
+		{
+			//辺と同じ頂点かつ、頂点が裏側だったら入る
+			if(v == hitLine[i].v1
+				&& hitLineResult[i].v1 == -1)
+			{
+				//裏側の頂点を衝突点と入れ替え
+				v = hitPoints[i];
+			}
+			else if (v == hitLine[i].v2
+				&& hitLineResult[i].v2 == -1)
+			{
+				v = hitPoints[i];
+			}
+		}
+	}
+
+	//裏
+	for (auto& v : modelVerticesBack)
+	{
+		for (int i = 0; i < hitLineNum; i++)
+		{
+			//辺と同じ頂点かつ、頂点が表側だったら入る
+			if (v == hitLine[i].v1
+				&& hitLineResult[i].v1 == 1)
+			{
+				//表側の頂点を衝突点と入れ替え
+				v = hitPoints[i];
+			}
+			else if (v == hitLine[i].v2
+				&& hitLineResult[i].v2 == 1)
+			{
+				v = hitPoints[i];
+			}
+		}
+	}
+
+	//面を生成
+
+	
+
+	int z = 0;
 }
 
 void ModelObject::SetPosition(const Vector3& position)

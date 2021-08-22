@@ -1,6 +1,8 @@
 #include "Player.h"
+
 #include"Input.h"
 #include"Camera.h"
+#include"LibMath.h"
 
 Player::Player(const MelLib::Vector3& pos)
 {
@@ -9,7 +11,7 @@ Player::Player(const MelLib::Vector3& pos)
 	
 	collisionFlag.capsule = true;
 	capsuleData.resize(1);
-	capsuleData[0].r = 1.0f;
+	capsuleData[0].SetRadius(0.5f);
 	
 }
 
@@ -21,11 +23,21 @@ void Player::Update()
 
 void Player::Move()
 {
-	velocity = MelLib::Input::LeftStickVector3(1, MelLib::Camera::Get(), false, true);
+	velocity = 0;
+	if (MelLib::Input::LeftStickUp(1, 70)
+		|| MelLib::Input::LeftStickDown(1, 70)
+		|| MelLib::Input::LeftStickRight(1, 70)
+		|| MelLib::Input::LeftStickLeft(1, 70)) 
+	{
+		velocity = MelLib::Input::LeftStickVector3(1, MelLib::Camera::Get(), false, true);
+	}
 
 	position += velocity;
-	capsuleData[0].segmentData.position[0] = position + MelLib::Vector3(0, 2, 0);
-	capsuleData[0].segmentData.position[1] = position + MelLib::Vector3(0, -2, 0);
+	capsuleData[0].GetRefSegment3DData().
+		SetPosition(MelLib::Value2<MelLib::Vector3>
+			(position + MelLib::Vector3(0, 3, 0), position + MelLib::Vector3(0, -3, 0)));
+
+
 }
 
 void Player::Camera()
@@ -36,7 +48,7 @@ void Player::Camera()
 
 	MelLib::Vector3 cameraAngle = pCamera->GetAngle();
 	MelLib::Vector3 addCameraAngle = 0;
-	float MAX_CAMERA_ANGLE_X = 70.0f;
+	float MAX_CAMERA_ANGLE_X = 60.0f;
 
 	if (MelLib::Input::RightStickLeft(1, 30.0f))addCameraAngle.y = -cameraSpeed;
 	if (MelLib::Input::RightStickRight(1, 30.0f))addCameraAngle.y = cameraSpeed;
@@ -48,8 +60,13 @@ void Player::Camera()
 
 	pCamera->SetAngle(cameraAngle + addCameraAngle);
 	pCamera->SetRotatePoint(MelLib::Camera::RotatePoint::ROTATE_POINT_TARGET_POSITION);
-	pCamera->SetCameraToTargetDistance(20.0f);
-	pCamera->SetRotateCriteriaPosition(position);
+	pCamera->SetCameraToTargetDistance(80.0f);
+
+	//pCamera->SetRotateCriteriaPosition(position);
+	pCamera->SetRotateCriteriaPosition
+	(MelLib::LibMath::FloatDistanceMoveVector3
+	(position,MelLib::LibMath::OtherVector(pCamera->GetCameraPosition(),pCamera->GetTargetPosition()),30.0f)
+	);
 }
 
 void Player::Draw()

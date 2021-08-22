@@ -709,7 +709,7 @@ std::vector<Material*> MelLib::ModelData::GetBaseClassMaterial()
 	return mtls;
 }
 
-std::vector<std::vector<Vector3>> MelLib::ModelData::GetVerticesPosition()
+std::vector<std::vector<Vector3>> MelLib::ModelData::GetVerticesPosition()const
 {
 	int verticesSize = vertices.size();
 	std::vector<std::vector<Vector3>>verticesPos(verticesSize);
@@ -718,7 +718,7 @@ std::vector<std::vector<Vector3>> MelLib::ModelData::GetVerticesPosition()
 		verticesPos[i].resize(vertices[i].size());
 
 
-		for (int j = 0,size = verticesPos[i].size(); j < verticesSize; j++)
+		for (int j = 0,size = verticesPos[i].size(); j < size; j++)
 		{
 			verticesPos[i][j] = vertices[i][j].pos;
 		}

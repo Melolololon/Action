@@ -1,23 +1,22 @@
 #pragma once
 #include"GameObject.h"
-class Player :public MelLib::GameObject
-{
-private:
 
-	//カメラ
-	float cameraSpeed = 3.0f;
+#include"ModelData.h"
+
+
+class Floor :
+    public MelLib::GameObject
+{
 
 public:
-	Player(const MelLib::Vector3& pos);
-	~Player(){}
 
-#pragma region Update関係
-	
-	//操作不可能時にifで囲むの大変だから関数化
-	
-	void Move();
-	void Camera();
-#pragma endregion
+	//床によって足音変えるために、SoundDataも渡せるようにする?
+	Floor
+	(
+		const MelLib::Vector3& pos, 
+		const MelLib::Vector3 size, 
+		const MelLib::ModelData* pModelData
+	);
 
 	void Update()override;
 	void Draw()override;

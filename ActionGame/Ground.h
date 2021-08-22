@@ -1,23 +1,32 @@
 #pragma once
-#include"GameObject.h"
-class Player :public MelLib::GameObject
+#include <GameObject.h>
+
+#include<Material.h>
+#include<ModelObject.h>
+
+//地面のモデルはボード
+//サイズを受け取る
+
+
+//テクスチャを受け取る
+//テクスチャ受け取ると毎回マテリアル生成することになるから、マテリアル渡す
+
+//地面クラス
+class Ground :
+    public MelLib::GameObject
 {
 private:
-
-	//カメラ
-	float cameraSpeed = 3.0f;
+	MelLib::Material* pMaterial = nullptr;
+	MelLib::ModelObject model;
 
 public:
-	Player(const MelLib::Vector3& pos);
-	~Player(){}
-
-#pragma region Update関係
-	
-	//操作不可能時にifで囲むの大変だから関数化
-	
-	void Move();
-	void Camera();
-#pragma endregion
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="pos">座標</param>
+	/// <param name="size">大きさ</param>
+	/// <param name="pMaterial">マテリアル</param>
+	Ground(const MelLib::Vector3& pos, const MelLib::Vector3& size,  MelLib::Material* pMaterial);
 
 	void Update()override;
 	void Draw()override;

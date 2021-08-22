@@ -16,7 +16,7 @@ void Camera::CalcCameraData()
 		vector = LibMath::RotateVector3(vector, Vector3(0, 0, -1), angle.z);
 		vector = LibMath::RotateVector3(vector, Vector3(-1, 0, 0), angle.x);
 		vector = LibMath::RotateVector3(vector, Vector3(0, -1, 0), angle.y);
-	};
+	}; 
 
 
 	//このアルゴリズムで、カメラを90度回転(Xの-方向に向いてる)ときに、FPSからTPS切り替えると、

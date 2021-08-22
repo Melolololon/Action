@@ -39,7 +39,7 @@ namespace MelLib
 	};
 
 
-	enum BoxHitDirection
+	enum class BoxHitDirection
 	{
 		BOX_HIT_DIRECTION_NO_HIT,
 		BOX_HIT_DIRECTION_UP,
@@ -123,35 +123,37 @@ namespace MelLib
 #pragma region 球
 
 
-	//球
-	struct SphereData
+	struct SphereCalcResult
 	{
+		//箱のどの部分にぶつかったかという情報
+		BoxHitDirection boxHitDistance = BoxHitDirection::BOX_HIT_DIRECTION_NO_HIT;
+	};
+
+	//球
+	class SphereData
+	{
+	private:
+		//座標
 		Vector3 position;
 
 		//半径
 		float r = 0.0f;
 
+		SphereCalcResult result;
+
+	public:
+		Vector3 GetPosition()const { return position; }
+		float GetRadius()const { return r; }
+		SphereCalcResult GetCalcResult() const { return result; }
+
+		void SetPosition(const Vector3& pos) { position = pos; }
+		void SetRadius(const float radius) { r = radius; }
 	};
 
-	struct SphereCalcResult
-	{
-		//箱のどの部分にぶつかったかという情報
-		BoxHitDirection boxHitDistance;
-	};
 
 #pragma endregion
 
-#pragma region 箱
-
-
-	//箱
-	struct BoxData
-	{
-		Vector3 size;
-		Vector3 position;
-
-	};
-
+#pragma region AABB
 	struct BoxCalcResult
 	{
 
@@ -159,87 +161,148 @@ namespace MelLib
 		BoxHitDirection boxHitDistance;
 	};
 
+	//箱
+	class BoxData
+	{
+	private:
+		Vector3 position;
+		Vector3 size;
+		BoxCalcResult result;
+
+	public:
+		Vector3 GetPosition()const{ return position; }
+		Vector3 GetSize()const { return size; }
+		BoxCalcResult GetCalcResult() { return result; }
+
+		void SetPosition(const Vector3& pos) { position = pos; }
+		void SetSize(const Vector3& size) { this->size = size; }
+
+	};
+
+
+
+#pragma endregion
+
+#pragma region OBB
+
 #pragma endregion
 
 #pragma region 平面
 
 	//平面
-	struct PlaneData
+	class PlaneData
 	{
+	private:
 		Vector3 normal;
 		float distance = 0.0f;
+
+	public:
+		Vector3 GetNormal()const { return normal; }
+		float GetDistance()const { return distance; }
+
+		void SetNormal(const Vector3& normal) { this->normal = normal; }
+		void SetDistance(const float dis) { distance = dis; }
 	};
 #pragma endregion
 
 #pragma region 板
-
-
-	//板
-	struct BoardData
-	{
-		Vector3 normal;
-		Vector3 position;
-		Vector3 leftDownPos;
-		Vector3 leftUpPos;
-		Vector3 rightUpPos;
-		Vector3 rightDownPos;
-
-	};
 
 	struct BoardCalcResult
 	{
 		Vector3 lineSegment3DHitPos;
 	};
 
+	//板
+	//板の判定。未回転時は、0,0,1の方向を向きます。
+	class BoardData
+	{
+	private:
+		Vector3 position;
+		Vector2 size;
+		Vector3 angle;
+		BoardCalcResult result;
+
+		Vector3 normal = Vector3(0, 0, -1);
+		Vector3 leftDownPos;
+		Vector3 leftUpPos;
+		Vector3 rightUpPos;
+		Vector3 rightDownPos;
+
+	public:
+		Vector3 GetPosition()const { return position; }
+		Vector2 GetSize()const { return size; }
+		Vector3 GetAngle()const { return angle; }
+		BoardCalcResult GetCalcResult()const { return result; }
+
+		Vector3 GetNormal()const { return normal; }
+		//左下、左上、右下、右上の順で格納されている
+		Value4<Vector3>GetVertexPosition()const { return Value4<Vector3>(leftDownPos, leftUpPos, rightDownPos, rightUpPos); }
+
+
+		void SetPosition(const Vector3& pos);
+		void SetSize(const Vector2& size);
+		void SetAngle(const Vector3& angle);
+	};
+
+
 #pragma endregion
 
 
 #pragma region 線分3D
-
-	//線分
-	struct Segment3DData
-	{
-		Vector3 position[2];
-		Vector3 angle = 0;
-
-		
-
-		//これ計算毎フレーム1回にしてCalcResultに入れるようにする?
-		//セットしてすぐ取得したい場合あるかもしれないからこのままにする?
-		/// <summary>
-		/// 線分の中心を基準にangle分回転させた両端の座標を返します。
-		/// </summary>
-		/// <returns></returns>
-		Value2<Vector3>GetRotatePosition()const;
-
-		/// <summary>
-		/// 2点間の中心座標を取得します。
-		/// </summary>
-		/// <returns></returns>
-		Vector3 GetCenterPosition ()const;
-
-		/// <summary>
-		/// 2点間の距離を求めます。
-		/// </summary>
-		/// <returns></returns>
-		float GetPositionDistance()const;
-	};
-
 	struct Segment3DCalcResult
 	{
 		Vector3 lineSegment3DHitPos;
 		Vector3 boardHitPos;
 	};
 
+	//線分
+	class Segment3DData
+	{
+	private:
+		Value2<Vector3> position;
+		Vector3 angle = 0;
+
+		//angleを適応させた座標
+		Value2<Vector3> rotatePosition;
+
+		Segment3DCalcResult result;
+
+	private:
+		//angle適応させた角度をrotatePositionに代入する関数
+		void CalcRotatePosition();
+
+		
+	public:
+		Value2<Vector3> GetPosition()const { return position; }
+		Value2<Vector3> GetRotatePosition()const { return rotatePosition; }
+		Vector3 GetAngle()const { return angle; }
+		Segment3DCalcResult GetCalcResult()const { return result; }
+
+		void SetPosition(const Value2<Vector3>& pos);
+		void SetAngle(const Vector3& angle);
+
+	
+	};
+
+	
+
 #pragma endregion
 
-#pragma region 線
+#pragma region レイ
 
 	//線
-	struct RayData
+	class RayData
 	{
-		Vector3 pos;
+	private:
+		Vector3 position;
 		Vector3 direction;
+
+	public:
+		Vector3 GetPosition()const { return position; }
+		Vector3 GetDirection()const { return direction; }
+
+		void SetPosition(const Vector3& pos) { position = pos; }
+		void SetDirection(const Vector3& dir) { direction = dir; }
 	};
 #pragma endregion
 
@@ -248,11 +311,21 @@ namespace MelLib
 
 
 	//カプセル
-	struct CapsuleData
+	class CapsuleData
 	{
+	private:
 		Segment3DData segmentData;
-		
 		float r = 0.0f;
+
+	public:
+		Segment3DData GetSegment3DData()const { return segmentData; }
+		float GetRadius()const { return r; }
+
+		Segment3DData& GetRefSegment3DData() { return segmentData; }
+
+		void SetSegment3DData(const Segment3DData& data) { segmentData = data; }
+		void SetRadius(const float radius) { r = radius; }
+
 	};
 
 #pragma endregion
