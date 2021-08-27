@@ -20,6 +20,7 @@ Player::Player(const MelLib::Vector3& pos)
 
 void Player::Update()
 {
+	
 	Move();
 	Attack();
 	Camera();
@@ -27,6 +28,9 @@ void Player::Update()
 
 void Player::Move()
 {
+	//攻撃中は動けないように
+	if (attackTimer.GetNowTime() > 0)return;
+
 	velocity = 0;
 
 	static const float DASH_STICK_PAR = 80.0f;
@@ -34,26 +38,31 @@ void Player::Move()
 	static const float DASH_SPEED = 0.7f;
 	static const float WALK_SPEED = 0.25f;
 
-	//走り
-	if (MelLib::Input::LeftStickUp(1, DASH_STICK_PAR)
-		|| MelLib::Input::LeftStickDown(1, DASH_STICK_PAR)
-		|| MelLib::Input::LeftStickRight(1, DASH_STICK_PAR)
-		|| MelLib::Input::LeftStickLeft(1, DASH_STICK_PAR))
-	{
-		velocity = MelLib::Input::LeftStickVector3(1, MelLib::Camera::Get(), false, true);
-		velocity *= DASH_SPEED;
-	}
-	//歩き
-	else 
-		if(MelLib::Input::LeftStickUp(1, WALK_STICK_PAR)
+	if (MelLib::Input::LeftStickUp(1, WALK_STICK_PAR)
 		|| MelLib::Input::LeftStickDown(1, WALK_STICK_PAR)
 		|| MelLib::Input::LeftStickRight(1, WALK_STICK_PAR)
-		|| MelLib::Input::LeftStickLeft(1, WALK_STICK_PAR))
-		{
+		|| MelLib::Input::LeftStickLeft(1, WALK_STICK_PAR)) 
+	{
+		playerDir = MelLib::Input::LeftStickVector3(1, MelLib::Camera::Get(), false, true);
 
-			velocity = MelLib::Input::LeftStickVector3(1, MelLib::Camera::Get(), false, true);
+		velocity = playerDir;
+
+		//ダッシュの傾き量を超えていたらダッシュ
+		if (MelLib::Input::LeftStickUp(1, DASH_STICK_PAR)
+			|| MelLib::Input::LeftStickDown(1, DASH_STICK_PAR)
+			|| MelLib::Input::LeftStickRight(1, DASH_STICK_PAR)
+			|| MelLib::Input::LeftStickLeft(1, DASH_STICK_PAR))
+		{
+			velocity *= DASH_SPEED;
+		}
+		else
+		{
 			velocity *= WALK_SPEED;
 		}
+
+	}
+	
+
 
 	position += velocity;
 	capsuleData[0].GetRefSegment3DData().
@@ -87,7 +96,7 @@ void Player::Attack()
 		if (currentAttack != PlayerSlush::AttackType::NONE) 
 		{
 			MelLib::GameObjectManager::GetInstance()->AddObject(
-				std::make_shared<PlayerSlush>(position, 0, currentAttack));
+				std::make_shared<PlayerSlush>(position, playerDir, currentAttack));
 		}
 
 

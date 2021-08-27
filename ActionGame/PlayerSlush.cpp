@@ -3,10 +3,14 @@
 
 void PlayerSlush::SetAttackParam()
 {
-	//剣の長さは変わらないので、手元の座標(v1)から、
-	//判定生成時の切っ先へのベクトル方向へCOLLISION_LENGTH分動かした座標をv2とする
+	//座標回転させてもアングルをいじってないから回転おかしくなる?
+	//playerAngleをカプセルの角度に加算減算する?
 
-	//判定サイズ
+	//0度回転で判定のX軸回転を100%、90度回転で0%、180で-100%(反対側)になればよい
+	
+	
+
+	//判定の長さ
 	static const float COLLISION_LENGTH = 5.0f;
 	MelLib::Value2<MelLib::Vector3>pos;
 	switch (attackType)
@@ -20,8 +24,6 @@ void PlayerSlush::SetAttackParam()
 		pos.v2 = MelLib::LibMath::FloatDistanceMoveVector3(pos.v1, MelLib::Vector3(-4, 4, 2).Normalize(), COLLISION_LENGTH);
 		
 		
-		capsuleData[0].GetRefSegment3DData().SetPosition(pos);
-
 		break;
 
 	case PlayerSlush::AttackType::NORMAL_2:
@@ -31,7 +33,7 @@ void PlayerSlush::SetAttackParam()
 
 		pos.v1 = position + MelLib::Vector3(1, -1, 1);
 		pos.v2 = MelLib::LibMath::FloatDistanceMoveVector3(pos.v1, MelLib::Vector3(4, -2, 4).Normalize(), COLLISION_LENGTH);
-		capsuleData[0].GetRefSegment3DData().SetPosition(pos);
+		
 		break;
 	case PlayerSlush::AttackType::NORMAL_3:
 		eraseTimer.SetMaxTime(10);
@@ -40,15 +42,25 @@ void PlayerSlush::SetAttackParam()
 
 		pos.v1 = position + MelLib::Vector3(0,1,1);
 		pos.v2 = MelLib::LibMath::FloatDistanceMoveVector3(pos.v1, MelLib::Vector3(0,5,4).Normalize(), COLLISION_LENGTH);
-		capsuleData[0].GetRefSegment3DData().SetPosition(pos);
+		
 		break;
 	default:
 		break;
 	}
+
+	//回転
+	pos.v1 = MelLib::LibMath::RotateVector3(pos.v1, MelLib::Vector3(0, -1, 0), playerAngle);
+	pos.v2 = MelLib::LibMath::RotateVector3(pos.v2, MelLib::Vector3(0, -1, 0), playerAngle);
+
+	capsuleData[0].GetRefSegment3DData().SetPosition(pos);
 }
 
 void PlayerSlush::Attack()
 {
+	//角度を調整するための割合
+	 //0度回転で判定のX軸回転を100%、90度回転で0%、180で-100%(反対側)になるように
+	float angleMulPar = sin(MelLib::LibMath::AngleConversion(0, playerAngle + 90));
+
 	//移動しながら回転させることで、いい感じになる?
 	//回転使わなくても座標を斜めに移動させれば問題ない?
 	//移動させる方向は、プレイヤーの向きに応じて変える?(回転させる?)
@@ -82,10 +94,17 @@ void PlayerSlush::Attack()
 	}
 }
 
-PlayerSlush::PlayerSlush(const MelLib::Vector3& pos, const MelLib::Vector3& playerDir, const AttackType type)
+PlayerSlush::PlayerSlush(const MelLib::Vector3& pos, const MelLib::Vector3& playerDir, const AttackType type):
+	attackType(type)
 {
+	//プレイヤーの向いてる方向に回転する為の処理
+	playerAngle =
+		MelLib::LibMath::Vecto2ToAngle(MelLib::Vector2(playerDir.x, playerDir.z), true);
+	//未回転時を0,0,1としてるので、0,0,1が0度になるようにする
+	playerAngle -= 90.0f;
+
 	position = pos;
-	attackType = type;
+	
 
 	capsuleData.resize(1);
 	capsuleData[0].SetRadius(0.2f);

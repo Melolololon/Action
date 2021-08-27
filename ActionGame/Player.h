@@ -8,12 +8,22 @@
 class Player :public MelLib::GameObject
 {
 private:
-	
+
+	//向いてる向き
+	MelLib::Vector3 playerDir = MelLib::Vector3(0, 0, 1);
+
+#pragma region 攻撃
+
+	//現在の攻撃
 	PlayerSlush::AttackType currentAttack = PlayerSlush::AttackType::NONE;
+	//次の攻撃の入力受付開始時間
 	static const int ATTACK_NEXT_TIME = 60 * 0.2f;
+	//攻撃終了時間
 	static const int ATTACK_END_TIME = 60 * 0.5f;
+	//攻撃時間タイマー
 	MelLib::FrameTimer attackTimer;
 
+#pragma endregion
 
 public:
 	Player(const MelLib::Vector3& pos);

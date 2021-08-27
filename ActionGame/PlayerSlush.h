@@ -20,8 +20,7 @@ public:
 	};
 
 private:
-	
-	
+	float playerAngle = 0.0f;
 private:
 	MelLib::FrameTimer eraseTimer;
 	AttackType attackType = AttackType::NORMAL_1;
