@@ -54,17 +54,22 @@ void Player::Attack()
 		attackTimer.SetStopFlag(true);
 	}
 
-	//
+	//ifの2行目のタイマー確認は、コンボ終了後にNONEにするため、その攻撃中に入らないようにするために書いてる
 	if (MelLib::Input::ButtonTrigger(1, MelLib::GamePadButton::X)
-		&& (attackTimer.GetNowTime() >= ATTACK_NEXT_TIME || currentAttack == PlayerSlush::AttackType::NONE))
+		&& (attackTimer.GetNowTime() == 0 && currentAttack == PlayerSlush::AttackType::NONE
+			|| attackTimer.GetNowTime() >= ATTACK_NEXT_TIME && currentAttack != PlayerSlush::AttackType::NONE))
 	{
 		attackTimer.ResetTimeZero();
 		attackTimer.SetStopFlag(false);
 
 		SetAttackType();
-		MelLib::GameObjectManager::GetInstance()->AddObject(
-			std::make_shared<PlayerSlush>(position, 0, currentAttack));
-		
+
+		//コンボの最後の時にボタン押したらNONEをセットするため、コンボを終わらせるためのif
+		if (currentAttack != PlayerSlush::AttackType::NONE) 
+		{
+			MelLib::GameObjectManager::GetInstance()->AddObject(
+				std::make_shared<PlayerSlush>(position, 0, currentAttack));
+		}
 
 
 
@@ -82,9 +87,10 @@ void Player::SetAttackType()
 		currentAttack = PlayerSlush::AttackType::NORMAL_2;
 		break;
 	case PlayerSlush::AttackType::NORMAL_2:
-		//currentAttack = PlayerSlush::AttackType::NORMAL_3;
+		currentAttack = PlayerSlush::AttackType::NORMAL_3;
 		break;
 	case PlayerSlush::AttackType::NORMAL_3:
+		currentAttack = PlayerSlush::AttackType::NONE;
 		break;
 	default:
 		break;

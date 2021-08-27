@@ -16,17 +16,13 @@ class Ground :
     public MelLib::GameObject
 {
 private:
-	MelLib::Material* pMaterial = nullptr;
+	MelLib::ADSAMaterial material;
 	MelLib::ModelObject model;
+	
+	static const MelLib::Vector2 GROUND_SIZE;
 
 public:
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <param name="pos">座標</param>
-	/// <param name="size">大きさ</param>
-	/// <param name="pMaterial">マテリアル</param>
-	Ground(const MelLib::Vector3& pos, const MelLib::Vector3& size,  MelLib::Material* pMaterial);
+	Ground();
 
 	void Update()override;
 	void Draw()override;
@@ -46,5 +42,8 @@ public:
 		const MelLib::ShapeType3D hitObjColType,
 		const int hitObjArrayNum
 	)override;
+
+	static void LoadResource();
+
 };
 

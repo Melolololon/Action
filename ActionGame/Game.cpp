@@ -9,6 +9,7 @@
 #include"SceneManager.h"
 #include"ActionPart.h"
 
+
 Game* Game::GetInstance()
 {
 	static Game game;
@@ -17,6 +18,7 @@ Game* Game::GetInstance()
 
 void Game::Run()
 {
+
 	Initialize();
 
 	while (true)
@@ -58,4 +60,14 @@ void Game::Update()
 void Game::Draw()
 {
 	MelLib::SceneManager::GetInstace()->Draw();
+}
+
+std::string Game::GetPath(const ResourcePathType type)const
+{
+	switch (type)
+	{
+	case ResourcePathType::TEXTURE:
+		return texturePath;
+		break;
+	}
 }

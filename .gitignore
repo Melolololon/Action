@@ -363,3 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 /DirectXTex
 /MyLibrary/lib/fbx_sdk
+/ActionGame/Resources/Texture
+/ActionGame/ActionGame.exe

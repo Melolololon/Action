@@ -3,6 +3,9 @@
 
 #include"FrameTimer.h"
 
+
+//刀薄いから、板の判定でもいいかも
+
 //プレイヤーの攻撃判定
 class PlayerSlush :public MelLib::GameObject
 {
@@ -20,7 +23,7 @@ private:
 	
 	
 private:
-	MelLib::FrameTimer attackTimer;
+	MelLib::FrameTimer eraseTimer;
 	AttackType attackType = AttackType::NORMAL_1;
 private:
 	void SetAttackParam();

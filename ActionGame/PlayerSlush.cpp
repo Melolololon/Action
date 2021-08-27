@@ -12,7 +12,7 @@ void PlayerSlush::SetAttackParam()
 	switch (attackType)
 	{
 	case PlayerSlush::AttackType::NORMAL_1:
-		attackTimer.SetMaxTime(10);
+		eraseTimer.SetMaxTime(10);
 
 		capsuleData[0].GetRefSegment3DData().SetRotatePoint(0.1f);
 		
@@ -25,7 +25,7 @@ void PlayerSlush::SetAttackParam()
 		break;
 
 	case PlayerSlush::AttackType::NORMAL_2:
-		attackTimer.SetMaxTime(10);
+		eraseTimer.SetMaxTime(10);
 
 		capsuleData[0].GetRefSegment3DData().SetRotatePoint(0.1f);
 
@@ -34,6 +34,13 @@ void PlayerSlush::SetAttackParam()
 		capsuleData[0].GetRefSegment3DData().SetPosition(pos);
 		break;
 	case PlayerSlush::AttackType::NORMAL_3:
+		eraseTimer.SetMaxTime(10);
+
+		capsuleData[0].GetRefSegment3DData().SetRotatePoint(0.1f);
+
+		pos.v1 = position + MelLib::Vector3(0,1,1);
+		pos.v2 = MelLib::LibMath::FloatDistanceMoveVector3(pos.v1, MelLib::Vector3(0,5,4).Normalize(), COLLISION_LENGTH);
+		capsuleData[0].GetRefSegment3DData().SetPosition(pos);
 		break;
 	default:
 		break;
@@ -66,6 +73,9 @@ void PlayerSlush::Attack()
 		
 		break;
 	case PlayerSlush::AttackType::NORMAL_3:
+		//ç°YÇÃãóó£ÇµÇ©â~íåïîï™Ç…âeãøÇ≥ÇπÇƒÇ»Ç¢Ç©ÇÁâÒì]Ç≥ÇπÇÈÇ∆èkÇﬁ
+		capsuleData[0].GetRefSegment3DData().SetAngle
+		(capsuleData[0].GetRefSegment3DData().GetAngle() + MelLib::Vector3(8, 0, 0));
 		break;
 	default:
 		break;
@@ -81,21 +91,14 @@ PlayerSlush::PlayerSlush(const MelLib::Vector3& pos, const MelLib::Vector3& play
 	capsuleData[0].SetRadius(0.2f);
 
 
-	attackTimer.SetStopFlag(false);
+	eraseTimer.SetStopFlag(false);
 
 	SetAttackParam();
 }
 
 void PlayerSlush::Update()
 {
-
-	/*capsuleData[0].GetRefSegment3DData().SetPosition
-	(MelLib::Value2<MelLib::Vector3>(position + MelLib::Vector3(-4,4,2), position + MelLib::Vector3(0, -1, 4)));*/
-
-
-	if (attackTimer.GetSameAsMaxFlag())eraseManager = true;
-
-
+	if (eraseTimer.GetSameAsMaxFlag())eraseManager = true;
 	Attack();
 }
 

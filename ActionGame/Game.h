@@ -1,9 +1,13 @@
 #pragma once
+#include<string>
+
 class Game
 {
 private:
 	Game(){}
 	~Game(){}
+
+	const std::string texturePath = "Resources/Texture/";
 public:
 	Game(Game& ins) = delete;
 	Game& operator=(Game& ins) = delete;
@@ -14,5 +18,11 @@ public:
 	void Finalize();
 	void Update();
 	void Draw();
+
+	enum class ResourcePathType
+	{
+		TEXTURE,
+	};
+	std::string GetPath(const ResourcePathType type)const;
 };
 
