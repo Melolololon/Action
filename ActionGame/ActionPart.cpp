@@ -14,7 +14,7 @@ void ActionPart::Initialize()
 
 	Ground::LoadResource();
 	
-	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<Player>(0));
+	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<Player>(MelLib::Vector3(0,5,0)));
 
 	
 	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<Ground>());
