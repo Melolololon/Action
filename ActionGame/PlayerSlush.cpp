@@ -20,7 +20,7 @@ void PlayerSlush::SetAttackParam()
 	MelLib::Vector3 v2MoveVector;
 	
 	const float PLAYER_ANGLE = playerAngle;
-	auto rotAddPos = [&v1AddPos, &v2MoveVector,&PLAYER_ANGLE]()
+	auto rotSegmentPosData = [&v1AddPos, &v2MoveVector,&PLAYER_ANGLE]()
 	{
 		const float V1_ADD_POS_Y = v1AddPos.y;
 		v1AddPos = 
@@ -67,38 +67,39 @@ void PlayerSlush::SetAttackParam()
 	}
 
 	//回転
-	rotAddPos();
+	rotSegmentPosData();
 	pos.v1 = position + v1AddPos;
 	pos.v2 = MelLib::LibMath::FloatDistanceMoveVector3(pos.v1, v2MoveVector, COLLISION_LENGTH);
 
 	capsuleData[0].GetRefSegment3DData().SetPosition(pos);
+
+	capsuleData[0].GetRefSegment3DData().SetAxisAngle(MelLib::Vector3(0, -playerAngle, 0));
+
 }
 
 void PlayerSlush::Attack()
 {
 	//45回転の時0.7,0,0.7になるからおかしくなる(まわりすぎる?)
-	
+	//ZじゃなくてYを回さないといけない?
+	//もうZXYじゃなくて自分で軸決めたほうがよさそう
+	//軸決めると座標動かさないといけない
 
 	MelLib::Vector3 attackAngle = 0;
-	const float PLAYER_ANGLE = playerAngle;
-	
-	//プレイヤーの向きに応じて回転させるラムダ式
-	auto rotAttackAngleXZ = [&attackAngle,&PLAYER_ANGLE]()
-	{
-		float ATTACK_ANGLE_Y = attackAngle.y;
-		attackAngle = 
-			MelLib::LibMath::RotateVector3(attackAngle, MelLib::Vector3(0,1,0), PLAYER_ANGLE);
-		attackAngle.y = ATTACK_ANGLE_Y;
+	//const float PLAYER_ANGLE = playerAngle;
+	//
+	////プレイヤーの向きに応じて回転させるラムダ式
+	////角度先求めたほうがよい
+	//auto rotAttackAngleXZ = [&attackAngle,&PLAYER_ANGLE]()
+	//{
+	//	MelLib::Vector2 rotateAttackAngle = 
+	//		MelLib::LibMath::RotateVector2Box(MelLib::Vector2(attackAngle.x, attackAngle.z), PLAYER_ANGLE);
 
-		
-		
+	//	attackAngle.x = rotateAttackAngle.x;
+	//	attackAngle.z = -rotateAttackAngle.y;
 
-		const float hosei = MelLib::Vector2(0.5, 0.5).Normalize().x/* - 0.5f*/;
-		if(attackAngle.x > 0)attackAngle.x -= hosei;
-		else attackAngle.x += hosei;
-		if (attackAngle.z > 0)attackAngle.z -= hosei;
-		else attackAngle.z += hosei;
-	};
+
+	//	//attackAngle.x = 0;
+	//};
 
 
 	switch (attackType)
@@ -119,7 +120,7 @@ void PlayerSlush::Attack()
 		break;
 	}
 
-	rotAttackAngleXZ();
+	//rotAttackAngleXZ();
 	//今Yの距離しか円柱部分に影響させてないから回転させると縮む
 	capsuleData[0].GetRefSegment3DData().SetAngle
 	(capsuleData[0].GetRefSegment3DData().GetAngle() + attackAngle);
@@ -131,6 +132,9 @@ PlayerSlush::PlayerSlush(const MelLib::Vector3& pos, const MelLib::Vector3& play
 	//プレイヤーの向いてる方向に回転する為の処理
 	playerAngle =
 		MelLib::LibMath::Vecto2ToAngle(MelLib::Vector2(playerDir.x, playerDir.z), true);
+	
+	//playerAngle = 0;
+
 	//未回転時を0,0,1としてるので、0,0,1が0度になるようにする
 	playerAngle -= 90.0f;
 
