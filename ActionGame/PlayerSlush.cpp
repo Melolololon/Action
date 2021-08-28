@@ -13,6 +13,26 @@ void PlayerSlush::SetAttackParam()
 	//”»’è‚Ì’·‚³
 	static const float COLLISION_LENGTH = 5.0f;
 	MelLib::Value2<MelLib::Vector3>pos;
+
+	//v1‚É‰ÁŽZ‚·‚éÀ•W
+	MelLib::Vector3 v1AddPos;
+	//v2‚ÌˆÚ“®•ûŒü
+	MelLib::Vector3 v2MoveVector;
+	
+	const float PLAYER_ANGLE = playerAngle;
+	auto rotAddPos = [&v1AddPos, &v2MoveVector,&PLAYER_ANGLE]()
+	{
+		const float V1_ADD_POS_Y = v1AddPos.y;
+		v1AddPos = 
+			MelLib::LibMath::RotateVector3(v1AddPos, MelLib::Vector3(0, 1, 0), PLAYER_ANGLE);
+		v1AddPos.y = V1_ADD_POS_Y;
+
+		const float V2_MOVE_VECTOR_Y = v2MoveVector.y;
+		v2MoveVector =
+			MelLib::LibMath::RotateVector3(v2MoveVector, MelLib::Vector3(0, 1, 0), PLAYER_ANGLE);
+		v2MoveVector.y = V2_MOVE_VECTOR_Y;
+	};
+
 	switch (attackType)
 	{
 	case PlayerSlush::AttackType::NORMAL_1:
@@ -20,10 +40,9 @@ void PlayerSlush::SetAttackParam()
 
 		capsuleData[0].GetRefSegment3DData().SetRotatePoint(0.1f);
 		
-		pos.v1 = position + MelLib::Vector3(0, -1, 1);
-		pos.v2 = MelLib::LibMath::FloatDistanceMoveVector3(pos.v1, MelLib::Vector3(-4, 4, 2).Normalize(), COLLISION_LENGTH);
-		
-		
+		v1AddPos = MelLib::Vector3(0, -1, 1);
+		v2MoveVector = MelLib::Vector3(-4, 4, 2).Normalize();
+
 		break;
 
 	case PlayerSlush::AttackType::NORMAL_2:
@@ -31,17 +50,16 @@ void PlayerSlush::SetAttackParam()
 
 		capsuleData[0].GetRefSegment3DData().SetRotatePoint(0.1f);
 
-		pos.v1 = position + MelLib::Vector3(1, -1, 1);
-		pos.v2 = MelLib::LibMath::FloatDistanceMoveVector3(pos.v1, MelLib::Vector3(4, -2, 4).Normalize(), COLLISION_LENGTH);
-		
+		v1AddPos = MelLib::Vector3(1, -1, 1);
+		v2MoveVector = MelLib::Vector3(4, -2, 4).Normalize();
+
 		break;
 	case PlayerSlush::AttackType::NORMAL_3:
 		eraseTimer.SetMaxTime(10);
 
 		capsuleData[0].GetRefSegment3DData().SetRotatePoint(0.1f);
-
-		pos.v1 = position + MelLib::Vector3(0,1,1);
-		pos.v2 = MelLib::LibMath::FloatDistanceMoveVector3(pos.v1, MelLib::Vector3(0,5,4).Normalize(), COLLISION_LENGTH);
+		v1AddPos = MelLib::Vector3(0, 1, 1);
+		v2MoveVector = MelLib::Vector3(0, 5, 4).Normalize();
 		
 		break;
 	default:
@@ -49,25 +67,39 @@ void PlayerSlush::SetAttackParam()
 	}
 
 	//‰ñ“]
-	pos.v1 = MelLib::LibMath::RotateVector3(pos.v1, MelLib::Vector3(0, -1, 0), playerAngle);
-	pos.v2 = MelLib::LibMath::RotateVector3(pos.v2, MelLib::Vector3(0, -1, 0), playerAngle);
+	rotAddPos();
+	pos.v1 = position + v1AddPos;
+	pos.v2 = MelLib::LibMath::FloatDistanceMoveVector3(pos.v1, v2MoveVector, COLLISION_LENGTH);
 
 	capsuleData[0].GetRefSegment3DData().SetPosition(pos);
 }
 
 void PlayerSlush::Attack()
 {
+	//45‰ñ“]‚ÌŽž0.7,0,0.7‚É‚È‚é‚©‚ç‚¨‚©‚µ‚­‚È‚é(‚Ü‚í‚è‚·‚¬‚é?)
 	
+
 	MelLib::Vector3 attackAngle = 0;
 	const float PLAYER_ANGLE = playerAngle;
-
+	
 	//ƒvƒŒƒCƒ„[‚ÌŒü‚«‚É‰ž‚¶‚Ä‰ñ“]‚³‚¹‚éƒ‰ƒ€ƒ_Ž®
 	auto rotAttackAngleXZ = [&attackAngle,&PLAYER_ANGLE]()
 	{
-		float attackAngleY = attackAngle.y;
+		float ATTACK_ANGLE_Y = attackAngle.y;
 		attackAngle = 
-			MelLib::LibMath::RotateVector3(attackAngle, MelLib::Vector3(0,-1,0), PLAYER_ANGLE);
+			MelLib::LibMath::RotateVector3(attackAngle, MelLib::Vector3(0,1,0), PLAYER_ANGLE);
+		attackAngle.y = ATTACK_ANGLE_Y;
+
+		
+		
+
+		const float hosei = MelLib::Vector2(0.5, 0.5).Normalize().x/* - 0.5f*/;
+		if(attackAngle.x > 0)attackAngle.x -= hosei;
+		else attackAngle.x += hosei;
+		if (attackAngle.z > 0)attackAngle.z -= hosei;
+		else attackAngle.z += hosei;
 	};
+
 
 	switch (attackType)
 	{
