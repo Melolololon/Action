@@ -57,41 +57,40 @@ void PlayerSlush::SetAttackParam()
 
 void PlayerSlush::Attack()
 {
-	//Šp“x‚ğ’²®‚·‚é‚½‚ß‚ÌŠ„‡
-	 //0“x‰ñ“]‚Å”»’è‚ÌX²‰ñ“]‚ğ100%A90“x‰ñ“]‚Å0%A180‚Å-100%(”½‘Î‘¤)‚É‚È‚é‚æ‚¤‚É
-	float angleMulPar = sin(MelLib::LibMath::AngleConversion(0, playerAngle + 90));
+	
+	MelLib::Vector3 attackAngle = 0;
+	const float PLAYER_ANGLE = playerAngle;
 
-	//ˆÚ“®‚µ‚È‚ª‚ç‰ñ“]‚³‚¹‚é‚±‚Æ‚ÅA‚¢‚¢Š´‚¶‚É‚È‚é?
-	//‰ñ“]g‚í‚È‚­‚Ä‚àÀ•W‚ğÎ‚ß‚ÉˆÚ“®‚³‚¹‚ê‚Î–â‘è‚È‚¢?
-	//ˆÚ“®‚³‚¹‚é•ûŒü‚ÍAƒvƒŒƒCƒ„[‚ÌŒü‚«‚É‰‚¶‚Ä•Ï‚¦‚é?(‰ñ“]‚³‚¹‚é?)
-	//‚â‚Á‚Ï‰ñ“]‚Ì‚Ù‚¤‚ª‚¢‚¢?
+	//ƒvƒŒƒCƒ„[‚ÌŒü‚«‚É‰‚¶‚Ä‰ñ“]‚³‚¹‚éƒ‰ƒ€ƒ_®
+	auto rotAttackAngleXZ = [&attackAngle,&PLAYER_ANGLE]()
+	{
+		float attackAngleY = attackAngle.y;
+		attackAngle = 
+			MelLib::LibMath::RotateVector3(attackAngle, MelLib::Vector3(0,-1,0), PLAYER_ANGLE);
+	};
+
 	switch (attackType)
 	{
 	case PlayerSlush::AttackType::NORMAL_1:
-		
-		//¡Y‚Ì‹——£‚µ‚©‰~’Œ•”•ª‚É‰e‹¿‚³‚¹‚Ä‚È‚¢‚©‚ç‰ñ“]‚³‚¹‚é‚Æk‚Ş
-		capsuleData[0].GetRefSegment3DData().SetAngle
-		(capsuleData[0].GetRefSegment3DData().GetAngle() + MelLib::Vector3(8, 8, 0));
-
+		attackAngle = MelLib::Vector3(8, 8, 0);
 		break;
 
 	case PlayerSlush::AttackType::NORMAL_2:
-		
-
-		//¡Y‚Ì‹——£‚µ‚©‰~’Œ•”•ª‚É‰e‹¿‚³‚¹‚Ä‚È‚¢‚©‚ç‰ñ“]‚³‚¹‚é‚Æk‚Ş
-		capsuleData[0].GetRefSegment3DData().SetAngle
-		(capsuleData[0].GetRefSegment3DData().GetAngle() + MelLib::Vector3(0, -8, 0));
-
-		
+		attackAngle = MelLib::Vector3(0, -8, 0);
 		break;
+
 	case PlayerSlush::AttackType::NORMAL_3:
-		//¡Y‚Ì‹——£‚µ‚©‰~’Œ•”•ª‚É‰e‹¿‚³‚¹‚Ä‚È‚¢‚©‚ç‰ñ“]‚³‚¹‚é‚Æk‚Ş
-		capsuleData[0].GetRefSegment3DData().SetAngle
-		(capsuleData[0].GetRefSegment3DData().GetAngle() + MelLib::Vector3(8, 0, 0));
+		attackAngle = MelLib::Vector3(8, 0, 0);
 		break;
+
 	default:
 		break;
 	}
+
+	rotAttackAngleXZ();
+	//¡Y‚Ì‹——£‚µ‚©‰~’Œ•”•ª‚É‰e‹¿‚³‚¹‚Ä‚È‚¢‚©‚ç‰ñ“]‚³‚¹‚é‚Æk‚Ş
+	capsuleData[0].GetRefSegment3DData().SetAngle
+	(capsuleData[0].GetRefSegment3DData().GetAngle() + attackAngle);
 }
 
 PlayerSlush::PlayerSlush(const MelLib::Vector3& pos, const MelLib::Vector3& playerDir, const AttackType type):
