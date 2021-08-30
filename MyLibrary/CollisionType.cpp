@@ -6,10 +6,10 @@ using namespace MelLib;
 
 void  MelLib::Segment3DData::CalcRotatePosition()
 {
-	
+
 
 	Vector3 v1ToV2 = Interpolation::Lerp(position.v1, position.v2, rotatePoint);
-	
+
 	//rotatePosition = Value2<Vector3>
 	//	(
 	//		Quaternion::GetZXYRotateQuaternion(position.v1 - v1ToV2, Vector3(angle.x, angle.y, angle.z)).ToVector3(),
@@ -96,14 +96,14 @@ void MelLib::BoardData::SetSize(const Vector2& size)
 	Vector2 preSize = this->size;
 	this->size = size;
 
-	
+
 	//前との差分を求めて、座標を移動させる
 	//差の大きさ分、中心方向の逆にlength分移動(lengthが-だったら中心に近づく)
 	//lengthだとマイナス入らない
 
 
 	//0だとベクトルを求められないので、仕方なく回転させる
-	if(preSize == 0.0f)
+	if (preSize == 0.0f)
 	{
 		leftDownPos = MelLib::Vector3(-size.x, -size.y, 0) / 2;
 		leftUpPos = MelLib::Vector3(-size.x, size.y, 0) / 2;
@@ -113,7 +113,7 @@ void MelLib::BoardData::SetSize(const Vector2& size)
 		//回転
 		CalcRotateDirPosition();
 	}
-	else 
+	else
 	{
 		//差(マイナスあり)を求める
 		Vector2 curSubPre = size - preSize;

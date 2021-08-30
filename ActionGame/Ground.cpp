@@ -9,7 +9,7 @@ const MelLib::Vector2 Ground::GROUND_SIZE = MelLib::Vector2(500, 500);
 
 Ground::Ground()
 {
-	position = 0;
+	
 
 
 	material.Create(MelLib::PipelineState::GetDefaultDrawData(MelLib::PipelineStateType::MODEL));
@@ -21,12 +21,14 @@ Ground::Ground()
 	model.SetMaterial(&material, 0);
 	model.SetAngle(MelLib::Vector3(90.0f, 0.0f, 0.0f));
 	model.SetScale(GROUND_SIZE.ToVector3());
-	model.SetPosition(position);
+	model.SetPosition(GetPosition());
 
 	boardData.resize(1);
 	boardData[0].SetAngle(MelLib::Vector3(90, 0, 0));
 	boardData[0].SetSize(GROUND_SIZE);
 	boardData[0].SetPosition(0);
+
+	SetPosition(0);
 }
 
 void Ground::Update()

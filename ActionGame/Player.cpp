@@ -6,23 +6,29 @@
 #include"GameObjectManager.h"
 #include"PlayerSlush.h"
 
+#include"Ground.h"
+
 Player::Player(const MelLib::Vector3& pos)
 {
 	//•¨—‰‰ŽZ‚Ì‚½‚ß‚Éseter‚Ægeterì‚é?
-	position = pos;
+	
 	
 	collisionFlag.capsule = true;
 	capsuleData.resize(1);
-	capsuleData[0].SetRadius(0.5f);
+	capsuleData[0].SetRadius(0.5f); 
+	SetPosition(pos);
 	
 	attackTimer.SetMaxTime(ATTACK_END_TIME);
 }
 
 void Player::Update()
 {
-	
 	Move();
 	Attack();
+	
+	CalcMovePhysics();
+	SetCollisionPosition();
+
 	Camera();
 }
 
@@ -31,10 +37,9 @@ void Player::Move()
 	//UŒ‚’†‚Í“®‚¯‚È‚¢‚æ‚¤‚É
 	if (attackTimer.GetNowTime() > 0)return;
 
-	velocity = 0;
 
-	static const float DASH_STICK_PAR = 80.0f;
-	static const float WALK_STICK_PAR = 30.0f;
+	static const float DASH_STICK_PAR = 60.0f;
+	static const float WALK_STICK_PAR = 20.0f;
 	static const float DASH_SPEED = 0.7f;
 	static const float WALK_SPEED = 0.25f;
 
@@ -45,7 +50,7 @@ void Player::Move()
 	{
 		playerDir = MelLib::Input::LeftStickVector3(1, MelLib::Camera::Get(), false, true);
 
-		velocity = playerDir;
+		MelLib::Vector3 addPos = playerDir;
 
 		//ƒ_ƒbƒVƒ…‚ÌŒX‚«—Ê‚ð’´‚¦‚Ä‚¢‚½‚çƒ_ƒbƒVƒ…
 		if (MelLib::Input::LeftStickUp(1, DASH_STICK_PAR)
@@ -53,24 +58,23 @@ void Player::Move()
 			|| MelLib::Input::LeftStickRight(1, DASH_STICK_PAR)
 			|| MelLib::Input::LeftStickLeft(1, DASH_STICK_PAR))
 		{
-			velocity *= DASH_SPEED;
+			addPos *= DASH_SPEED;
 		}
 		else
 		{
-			velocity *= WALK_SPEED;
+			addPos *= WALK_SPEED;
 		}
 
+		position += addPos;
 	}
 	
-	velocity.y = -0.2f;
+}
 
-
-	position += velocity;
+void Player::SetCollisionPosition()
+{
 	capsuleData[0].GetRefSegment3DData().
 		SetPosition(MelLib::Value2<MelLib::Vector3>
-			(position + MelLib::Vector3(0, 3, 0), position + MelLib::Vector3(0, -3, 0)));
-
-
+			(GetPosition() + MelLib::Vector3(0, 3, 0), GetPosition() + MelLib::Vector3(0, -3, 0)));
 }
 
 void Player::Attack()
@@ -97,7 +101,7 @@ void Player::Attack()
 		if (currentAttack != PlayerSlush::AttackType::NONE) 
 		{
 			MelLib::GameObjectManager::GetInstance()->AddObject(
-				std::make_shared<PlayerSlush>(position, playerDir, currentAttack));
+				std::make_shared<PlayerSlush>(GetPosition(), playerDir, currentAttack));
 		}
 
 
@@ -156,9 +160,15 @@ void Player::Camera()
 	pCamera->SetCameraToTargetDistance(80.0f);
 
 	//pCamera->SetRotateCriteriaPosition(position);
+	SetCameraPosition();
+}
+
+void Player::SetCameraPosition()
+{
+	MelLib::Camera* pCamera = MelLib::Camera::Get();
 	pCamera->SetRotateCriteriaPosition
 	(MelLib::LibMath::FloatDistanceMoveVector3
-	(position,MelLib::LibMath::OtherVector(pCamera->GetCameraPosition(),pCamera->GetTargetPosition()),30.0f)
+	(GetPosition(), MelLib::LibMath::OtherVector(pCamera->GetCameraPosition(), pCamera->GetTargetPosition()), 30.0f)
 	);
 }
 
@@ -168,9 +178,27 @@ void Player::Draw()
 
 void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D collisionType, const int arrayNum, const MelLib::ShapeType3D hitObjColType, const int hitObjArrayNum)
 {
-	velocity.y = 0.2f;
-	position.y += velocity.y;
+	
+	if(typeid(*object) == typeid(Ground))
+	{
+		AddPosition
+		(MelLib::Vector3(0, MelLib::GameObject::GetGravutationalAcceleration(), 0));
+		SetCameraPosition();
+	}
+	/*position.y += velocity.y;
 	capsuleData[0].GetRefSegment3DData().
 		SetPosition(MelLib::Value2<MelLib::Vector3>
-			(position + MelLib::Vector3(0, 3, 0), position + MelLib::Vector3(0, -3, 0)));
+			(position + MelLib::Vector3(0, 3, 0), position + MelLib::Vector3(0, -3, 0)));*/
+}
+
+void Player::AddPosition(const MelLib::Vector3& vec)
+{
+	SetPosition(GetPosition() + vec);
+	SetCollisionPosition();
+}
+
+void Player::SetPosition(const MelLib::Vector3& pos)
+{
+	position = pos;
+	SetCollisionPosition();
 }

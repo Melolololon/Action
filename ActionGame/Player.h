@@ -31,6 +31,9 @@ private:
 
 #pragma endregion
 
+private:
+
+
 public:
 	Player(const MelLib::Vector3& pos);
 	~Player(){}
@@ -40,9 +43,11 @@ public:
 	//‘€ì•s‰Â”\‚Éif‚ÅˆÍ‚Ş‚Ì‘å•Ï‚¾‚©‚çŠÖ”‰»
 	
 	void Move();
+	void SetCollisionPosition();
 	void Attack();
 	void SetAttackType();
 	void Camera();
+	void SetCameraPosition();
 #pragma endregion
 
 	void Update()override;
@@ -63,5 +68,11 @@ public:
 		const MelLib::ShapeType3D hitObjColType,
 		const int hitObjArrayNum
 	)override;
+
+
+	void AddPosition(const MelLib::Vector3& vec)override;
+	void SetPosition(const MelLib::Vector3& pos)override;
+
+
 };
 

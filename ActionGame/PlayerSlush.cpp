@@ -70,7 +70,7 @@ void PlayerSlush::SetAttackParam()
 	rotSegmentPosData();
 	//座標セット
 	MelLib::Value2<MelLib::Vector3>pos;
-	pos.v1 = position + v1AddPos;
+	pos.v1 = GetPosition() + v1AddPos;
 	pos.v2 = MelLib::LibMath::FloatDistanceMoveVector3(pos.v1, v2MoveVector, COLLISION_LENGTH);
 	capsuleData[0].GetRefSegment3DData().SetPosition(pos);
 
@@ -120,11 +120,12 @@ PlayerSlush::PlayerSlush(const MelLib::Vector3& pos, const MelLib::Vector3& play
 	//未回転時を0,0,1としてるので、0,0,1が0度になるようにする
 	playerAngle -= 90.0f;
 
-	position = pos;
-	
+
 
 	capsuleData.resize(1);
-	capsuleData[0].SetRadius(0.2f);
+	capsuleData[0].SetRadius(0.2f);	
+	SetPosition(pos);
+
 
 
 	eraseTimer.SetStopFlag(false);
