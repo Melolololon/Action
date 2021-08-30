@@ -5,7 +5,7 @@
 #include<ModelData.h>
 
 
-const MelLib::Vector2 Ground::GROUND_SIZE = MelLib::Vector2(50, 50);
+const MelLib::Vector2 Ground::GROUND_SIZE = MelLib::Vector2(500, 500);
 
 Ground::Ground()
 {

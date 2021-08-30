@@ -229,6 +229,9 @@ namespace MelLib
 		Vector3 rightUpPos;
 		Vector3 rightDownPos;
 
+	private:
+		void CalcRotateDirPosition();
+
 	public:
 		Vector3 GetPosition()const { return position; }
 		Vector2 GetSize()const { return size; }
@@ -267,6 +270,8 @@ namespace MelLib
 		float rotatePoint = 0.5f;
 
 		Vector3 axisAngle;
+
+
 		Vector3 axisXVector = MelLib::Vector3(-1, 0, 0);
 		Vector3 axisYVector = MelLib::Vector3(0, -1, 0);
 		Vector3 axisZVector = MelLib::Vector3(0, 0, -1);

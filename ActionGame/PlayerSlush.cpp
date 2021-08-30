@@ -12,7 +12,6 @@ void PlayerSlush::SetAttackParam()
 
 	//判定の長さ
 	static const float COLLISION_LENGTH = 5.0f;
-	MelLib::Value2<MelLib::Vector3>pos;
 
 	//v1に加算する座標
 	MelLib::Vector3 v1AddPos;
@@ -67,41 +66,26 @@ void PlayerSlush::SetAttackParam()
 	}
 
 	//回転
+	//これラムダ式にしなくていいかも
 	rotSegmentPosData();
+	//座標セット
+	MelLib::Value2<MelLib::Vector3>pos;
 	pos.v1 = position + v1AddPos;
 	pos.v2 = MelLib::LibMath::FloatDistanceMoveVector3(pos.v1, v2MoveVector, COLLISION_LENGTH);
-
 	capsuleData[0].GetRefSegment3DData().SetPosition(pos);
 
+	//軸回転
 	capsuleData[0].GetRefSegment3DData().SetAxisAngle(MelLib::Vector3(0, -playerAngle, 0));
 
 }
 
 void PlayerSlush::Attack()
 {
-	//45回転の時0.7,0,0.7になるからおかしくなる(まわりすぎる?)
-	//ZじゃなくてYを回さないといけない?
-	//もうZXYじゃなくて自分で軸決めたほうがよさそう
-	//軸決めると座標動かさないといけない
 
 	MelLib::Vector3 attackAngle = 0;
-	//const float PLAYER_ANGLE = playerAngle;
-	//
-	////プレイヤーの向きに応じて回転させるラムダ式
-	////角度先求めたほうがよい
-	//auto rotAttackAngleXZ = [&attackAngle,&PLAYER_ANGLE]()
-	//{
-	//	MelLib::Vector2 rotateAttackAngle = 
-	//		MelLib::LibMath::RotateVector2Box(MelLib::Vector2(attackAngle.x, attackAngle.z), PLAYER_ANGLE);
 
-	//	attackAngle.x = rotateAttackAngle.x;
-	//	attackAngle.z = -rotateAttackAngle.y;
-
-
-	//	//attackAngle.x = 0;
-	//};
-
-
+	//判定の角度(0,0,1向いてるとき)セット
+	//SetAxisAngleで軸の角度変えてるため、0,0,1向いてるときのでいい
 	switch (attackType)
 	{
 	case PlayerSlush::AttackType::NORMAL_1:
@@ -120,8 +104,6 @@ void PlayerSlush::Attack()
 		break;
 	}
 
-	//rotAttackAngleXZ();
-	//今Yの距離しか円柱部分に影響させてないから回転させると縮む
 	capsuleData[0].GetRefSegment3DData().SetAngle
 	(capsuleData[0].GetRefSegment3DData().GetAngle() + attackAngle);
 }

@@ -298,8 +298,6 @@ void GameObjectManager::Update()
 				std::vector<BoxData>boxData = obj2->GetBoxData();
 				size_t boxDataSize = boxData.size();
 
-
-
 				for (int colI = 0; colI < sphereDataSize; colI++)
 				{
 					for (int colJ = 0; colJ < boxDataSize; colJ++)
@@ -338,6 +336,58 @@ void GameObjectManager::Update()
 					}
 				}
 
+
+
+
+			}
+
+			if(collisionFlags[objJ].sphere
+				&& collisionFlags[objI].box)
+			{
+
+				std::vector<SphereData>sphereData = obj2->GetSphereData();
+				size_t sphereDataSize = sphereData.size();
+				std::vector<BoxData>boxData = obj1->GetBoxData();
+				size_t boxDataSize = boxData.size();
+
+				for (int colI = 0; colI < sphereDataSize; colI++)
+				{
+					for (int colJ = 0; colJ < boxDataSize; colJ++)
+					{
+						SphereCalcResult result1;
+						BoxCalcResult result2;
+
+						if (Collision::SphereAndBox
+						(
+							sphereData[colI],
+							&result1,
+							boxData[colJ],
+							&result2
+						))
+						{
+							obj2->SetSphereCalcResult(result1, colI);
+							obj1->SetBoxCalcResult(result2, colJ);
+							//hitを呼び出す
+							obj2->Hit
+							(
+								obj1,
+								ShapeType3D::SPHERE,
+								colI,
+								ShapeType3D::BOX,
+								colJ
+							);
+							obj1->Hit
+							(
+								obj2,
+								ShapeType3D::BOX,
+								colJ,
+								ShapeType3D::SPHERE,
+								colI
+							);
+						}
+					}
+				}
+
 			}
 
 #pragma endregion
@@ -348,7 +398,7 @@ void GameObjectManager::Update()
 			{
 				std::vector<SphereData>sphereData = obj1->GetSphereData();
 				size_t sphereDataSize = sphereData.size();
-				std::vector<CapsuleData>capsuleData = obj1->GetCapsuleData();
+				std::vector<CapsuleData>capsuleData = obj2->GetCapsuleData();
 				size_t capsuleDataSize = capsuleData.size();
 			
 				for (int colI = 0; colI < sphereDataSize; colI++)
@@ -380,11 +430,228 @@ void GameObjectManager::Update()
 				}
 
 			}
+
+			if (collisionFlags[objJ].sphere
+				&& collisionFlags[objI].capsule)
+			{
+
+				std::vector<SphereData>sphereData = obj2->GetSphereData();
+				size_t sphereDataSize = sphereData.size();
+				std::vector<CapsuleData>capsuleData = obj1->GetCapsuleData();
+				size_t capsuleDataSize = capsuleData.size();
+
+				for (int colI = 0; colI < sphereDataSize; colI++)
+				{
+					for (int colJ = 0; colJ < capsuleDataSize; colJ++)
+					{
+						if (Collision::SphereAndCapsule(sphereData[colI], capsuleData[colJ]))
+						{
+							//hitを呼び出す
+							obj2->Hit
+							(
+								obj1,
+								ShapeType3D::SPHERE,
+								colI,
+								ShapeType3D::CAPSULE,
+								colJ
+							);
+							obj1->Hit
+							(
+								obj2,
+								ShapeType3D::CAPSULE,
+								colJ,
+								ShapeType3D::SPHERE,
+								colI
+							);
+
+						}
+					}
+				}
+			}
+
 #pragma endregion
 
 #pragma region Board & Segent
-		//板もカプセルと同じように角度セットするようにする
+			if (collisionFlags[objI].board
+				&& collisionFlags[objJ].segment)
+			{
+				std::vector<BoardData>boardData = obj1->GetBoardData();
+				size_t boardDataSize = boardData.size();
+				std::vector<Segment3DData>segmentData = obj2->GetSegmentData();
+				size_t segmentDataSize = segmentData.size();
+
+				for (int colI = 0; colI < boardDataSize; colI++)
+				{
+					for (int colJ = 0; colJ < segmentDataSize; colJ++)
+					{
+						BoardCalcResult result1;
+						Segment3DCalcResult result2;
+
+						if (Collision::BoardAndSegment3D(boardData[colI], &result1, segmentData[colJ], &result2))
+						{
+							obj1->SetBoardCalcResult(result1, colI);
+							obj2->SetSegmentCalcResult(result2, colJ);
+
+							//hitを呼び出す
+							obj1->Hit
+							(
+								obj2,
+								ShapeType3D::BOARD,
+								colI,
+								ShapeType3D::SEGMENT,
+								colJ
+							);
+							obj2->Hit
+							(
+								obj1,
+								ShapeType3D::SEGMENT,
+								colJ,
+								ShapeType3D::BOARD,
+								colI
+							);
+
+						}
+					}
+				}
+
+			}
+
+			if (collisionFlags[objJ].board
+				&& collisionFlags[objI].segment)
+			{
+				std::vector<BoardData>boardData = obj2->GetBoardData();
+				size_t boardDataSize = boardData.size();
+				std::vector<Segment3DData>segmentData = obj1->GetSegmentData();
+				size_t segmentDataSize = segmentData.size();
+
+				for (int colI = 0; colI < boardDataSize; colI++)
+				{
+					for (int colJ = 0; colJ < segmentDataSize; colJ++)
+					{
+						BoardCalcResult result1;
+						Segment3DCalcResult result2;
+
+						if (Collision::BoardAndSegment3D(boardData[colI], &result1, segmentData[colJ], &result2))
+						{
+							obj2->SetBoardCalcResult(result1, colI);
+							obj1->SetSegmentCalcResult(result2, colJ);
+
+							//hitを呼び出す
+							obj2->Hit
+							(
+								obj1,
+								ShapeType3D::BOARD,
+								colI,
+								ShapeType3D::SEGMENT,
+								colJ
+							);
+							obj1->Hit
+							(
+								obj2,
+								ShapeType3D::SEGMENT,
+								colJ,
+								ShapeType3D::BOARD,
+								colI
+							);
+
+						}
+					}
+				}
+
+			}
+
 #pragma endregion
+
+#pragma region Board & Capsule
+			if (collisionFlags[objI].board
+				&& collisionFlags[objJ].capsule)
+			{
+				std::vector<BoardData>boardData = obj1->GetBoardData();
+				size_t boardDataSize = boardData.size();
+				std::vector<CapsuleData>capsuleData = obj2->GetCapsuleData();
+				size_t capsuleDataSize = capsuleData.size();
+
+				for (int colI = 0; colI < boardDataSize; colI++)
+				{
+					for (int colJ = 0; colJ < capsuleDataSize; colJ++)
+					{
+						BoardCalcResult result1;
+						Segment3DCalcResult result2;
+
+						if (Collision::BoardAndSegment3D(boardData[colI], &result1, capsuleData[colJ].GetSegment3DData(), &result2))
+						{
+							obj1->SetBoardCalcResult(result1, colI);
+							obj2->SetCapsuleCalcResult(result2, colJ);
+
+							//hitを呼び出す
+							obj1->Hit
+							(
+								obj2,
+								ShapeType3D::BOARD,
+								colI,
+								ShapeType3D::CAPSULE,
+								colJ
+							);
+							obj2->Hit
+							(
+								obj1,
+								ShapeType3D::CAPSULE,
+								colJ,
+								ShapeType3D::BOARD,
+								colI
+							);
+
+						}
+					}
+				}
+
+			}
+
+			if (collisionFlags[objJ].board
+				&& collisionFlags[objI].capsule)
+			{
+				std::vector<BoardData>boardData = obj2->GetBoardData();
+				size_t boardDataSize = boardData.size();
+				std::vector<CapsuleData>capsuleData = obj1->GetCapsuleData();
+				size_t capsuleDataSize = capsuleData.size();
+
+				for (int colI = 0; colI < boardDataSize; colI++)
+				{
+					for (int colJ = 0; colJ < capsuleDataSize; colJ++)
+					{
+						BoardCalcResult result1;
+						Segment3DCalcResult result2;
+
+						if (Collision::BoardAndSegment3D(boardData[colI], &result1, capsuleData[colJ].GetSegment3DData(), &result2))
+						{
+							obj2->SetBoardCalcResult(result1, colI);
+							obj1->SetCapsuleCalcResult(result2, colJ);
+
+							//hitを呼び出す
+							obj2->Hit
+							(
+								obj1,
+								ShapeType3D::BOARD,
+								colI,
+								ShapeType3D::CAPSULE,
+								colJ
+							);
+							obj1->Hit
+							(
+								obj2,
+								ShapeType3D::CAPSULE,
+								colJ,
+								ShapeType3D::BOARD,
+								colI
+							);
+
+						}
+					}
+				}
+
+			}
+#pragma endregion
+
 
 		}
 	}

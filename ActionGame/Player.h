@@ -5,6 +5,11 @@
 
 #include"PlayerSlush.h"
 
+
+//攻撃時間終わったかどうか判定から受け取ってプレイヤー制御する?
+//攻撃判定の生存時間と攻撃時間は違うからとりあえず今のままでいい?
+//とりあえず攻撃時間は技ごとに定義したほうがよさそう
+
 class Player :public MelLib::GameObject
 {
 private:
@@ -20,6 +25,7 @@ private:
 	static const int ATTACK_NEXT_TIME = 60 * 0.2f;
 	//攻撃終了時間
 	static const int ATTACK_END_TIME = 60 * 0.5f;
+	
 	//攻撃時間タイマー
 	MelLib::FrameTimer attackTimer;
 

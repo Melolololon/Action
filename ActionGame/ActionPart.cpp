@@ -11,6 +11,7 @@
 void ActionPart::Initialize()
 {
 	MelLib::DirectionalLight::Get().SetDirection(MelLib::Vector3(0, -1, 0));
+	MelLib::Camera::Get()->SetAngle(MelLib::Vector3(20, 0, 0));
 
 	Ground::LoadResource();
 	

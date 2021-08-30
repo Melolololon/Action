@@ -62,6 +62,7 @@ void Player::Move()
 
 	}
 	
+	velocity.y = -0.2f;
 
 
 	position += velocity;
@@ -167,4 +168,9 @@ void Player::Draw()
 
 void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D collisionType, const int arrayNum, const MelLib::ShapeType3D hitObjColType, const int hitObjArrayNum)
 {
+	velocity.y = 0.2f;
+	position.y += velocity.y;
+	capsuleData[0].GetRefSegment3DData().
+		SetPosition(MelLib::Value2<MelLib::Vector3>
+			(position + MelLib::Vector3(0, 3, 0), position + MelLib::Vector3(0, -3, 0)));
 }
