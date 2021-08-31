@@ -43,9 +43,12 @@ public:
 	//‘€ì•s‰Â”\‚Éif‚ÅˆÍ‚Ş‚Ì‘å•Ï‚¾‚©‚çŠÖ”‰»
 	
 	void Move();
+	void Jump();
 	void SetCollisionPosition();
+
 	void Attack();
 	void SetAttackType();
+	
 	void Camera();
 	void SetCameraPosition();
 #pragma endregion

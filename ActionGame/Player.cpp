@@ -19,11 +19,15 @@ Player::Player(const MelLib::Vector3& pos)
 	SetPosition(pos);
 	
 	attackTimer.SetMaxTime(ATTACK_END_TIME);
+
+	//浮き防止
+	StartThrowUp(0.0f);
 }
 
 void Player::Update()
 {
 	Move();
+	Jump();
 	Attack();
 	
 	CalcMovePhysics();
@@ -66,6 +70,15 @@ void Player::Move()
 		}
 
 		position += addPos;
+	}
+	
+}
+
+void Player::Jump()
+{
+	if(MelLib::Input::ButtonTrigger(1,MelLib::GamePadButton::A))
+	{
+		StartThrowUp(3.0f);
 	}
 	
 }
@@ -181,24 +194,41 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D colli
 	
 	if(typeid(*object) == typeid(Ground))
 	{
-		AddPosition
-		(MelLib::Vector3(0, MelLib::GameObject::GetGravutationalAcceleration(), 0));
-		SetCameraPosition();
+		MelLib::Vector3 addPos;
+		
+		//velocity分戻すと戻しすぎちゃう
+		//カプセルの下の座標-半径(先端座標)から衝突点へのベクトルの大きさ分戻せばOK?
+		
+		//重力加速度分上げる
+		//addPos.y += MelLib::GameObject::GetGravutationalAcceleration();
+		
+		//投げ上げ処理終了
+		StopThrowUp();
+
+		//カプセルの下の先端から衝突点のベクトルを求め、その分押し出す。
+		addPos.y += capsuleData[0].GetSegment3DData().GetCalcResult().boardHitPos.y -
+			 (capsuleData[0].GetSegment3DData().GetPosition().v2.y - capsuleData[0].GetRadius());
+
+		
+		AddPosition(addPos);
+		
+		MelLib::Vector3 vel = GetVelocity();
+		int z = 0;
 	}
-	/*position.y += velocity.y;
-	capsuleData[0].GetRefSegment3DData().
-		SetPosition(MelLib::Value2<MelLib::Vector3>
-			(position + MelLib::Vector3(0, 3, 0), position + MelLib::Vector3(0, -3, 0)));*/
 }
 
 void Player::AddPosition(const MelLib::Vector3& vec)
 {
 	SetPosition(GetPosition() + vec);
 	SetCollisionPosition();
+
+	SetCameraPosition();
 }
 
 void Player::SetPosition(const MelLib::Vector3& pos)
 {
 	position = pos;
 	SetCollisionPosition();
+
+	SetCameraPosition();
 }

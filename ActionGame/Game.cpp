@@ -4,6 +4,7 @@
 #include"ModelData.h"
 #include"ModelObject.h"
 
+#include"GameObject.h"
 #include"GameObjectManager.h"
 
 #include"SceneManager.h"
@@ -45,6 +46,9 @@ void Game::Initialize()
 	MelLib::GameObjectManager::GetInstance()->Initialize();
 
 	MelLib::SceneManager::GetInstace()->SetStartScene(new ActionPart());
+
+	//d—Í‰Á‘¬“x‚ğİ’è
+	MelLib::GameObject::SetGravutationalAcceleration(0.1f);
 }
 
 void Game::Finalize()
