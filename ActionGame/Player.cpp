@@ -21,7 +21,7 @@ Player::Player(const MelLib::Vector3& pos)
 	attackTimer.SetMaxTime(ATTACK_END_TIME);
 
 	//浮き防止
-	StartThrowUp(0.0f);
+	StartFall(0.0f);
 }
 
 void Player::Update()
@@ -71,14 +71,18 @@ void Player::Move()
 
 		position += addPos;
 	}
+
+	//if (position.y <= -100)position.y = 100;
 	
+	//落下するために
+	if(!GetIsFall())StartFall(0.0f);
 }
 
 void Player::Jump()
 {
 	if(MelLib::Input::ButtonTrigger(1,MelLib::GamePadButton::A))
 	{
-		StartThrowUp(3.0f);
+		StartFall(3.0f);
 	}
 	
 }
@@ -203,17 +207,15 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D colli
 		//addPos.y += MelLib::GameObject::GetGravutationalAcceleration();
 		
 		//投げ上げ処理終了
-		StopThrowUp();
+		EndFall();
 
 		//カプセルの下の先端から衝突点のベクトルを求め、その分押し出す。
+		//-0.15fは、押し出しすぎるとHitが呼ばれなくなって、非ジャンプ時の落下の処理で下がってがくがくするのを防止するためにある
 		addPos.y += capsuleData[0].GetSegment3DData().GetCalcResult().boardHitPos.y -
-			 (capsuleData[0].GetSegment3DData().GetPosition().v2.y - capsuleData[0].GetRadius());
+			 (capsuleData[0].GetSegment3DData().GetPosition().v2.y - capsuleData[0].GetRadius()) - 0.15f;
 
-		
 		AddPosition(addPos);
 		
-		MelLib::Vector3 vel = GetVelocity();
-		int z = 0;
 	}
 }
 

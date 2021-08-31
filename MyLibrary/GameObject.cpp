@@ -88,16 +88,15 @@ void GameObject::CalcMovePhysics()
 		mass
 	);
 
-	//投げ上げた時の速度
-	if (isUpThrow) 
+	//落下時の速度
+	if (isFall) 
 	{
-		//velocity.y += upSpeed + -gravutationalAcc * upThrowTime;
-		//position.y += velocity.y;
+		fallTime++;
 
 		
-		const float PRE_VEL_Y = upThrowVelocity;
-		upThrowVelocity = upStartSpeed + -gravutationalAcc * upThrowTime;
-		const float ADD_VEL_Y = upThrowVelocity - PRE_VEL_Y;
+		const float PRE_VEL_Y = currentFallVelovity;
+		currentFallVelovity = Physics::CalcFallVelocity(fallStartSpeed, gravutationalAcc, fallTime);
+		const float ADD_VEL_Y = currentFallVelovity - PRE_VEL_Y;
 
 		//Velocity取得時に反映させるためにvelocityに代入
 		//Get関数でvelocityに加算するようにする? 
@@ -108,11 +107,11 @@ void GameObject::CalcMovePhysics()
 		velocity.y += ADD_VEL_Y;
 
 		//毎フレーム速度を加算
-		position.y += upThrowVelocity;
-
-		upThrowTime++;
+		position.y += currentFallVelovity;
+		
 	}
 
+	//重力加速度は落下中のみ適応するように変更して!!!!!!!
 	//重力加速度適応
 	//position.y -= gravutationalAcc;
 

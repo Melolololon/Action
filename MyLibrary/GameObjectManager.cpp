@@ -81,11 +81,6 @@ void GameObjectManager::Update()
 	{
 		collisionFlags[i] = objects[i]->GetCollisionFlag();
 
-
-#ifdef _DEBUG
-		objects[i]->CreateCollisionCheckModel();
-		objects[i]->SetCollisionCheckModelData();
-#endif // _DEBUG
 	}
 
 
@@ -654,12 +649,6 @@ void GameObjectManager::Update()
 		}
 	}
 
-
-
-
-
-#pragma endregion
-
 #ifdef _DEBUG
 	for (int i = 0; i < objectSize; i++)
 	{
@@ -668,6 +657,10 @@ void GameObjectManager::Update()
 
 	}
 #endif // _DEBUG
+
+
+
+#pragma endregion
 
 	EraseObjectCheck();
 

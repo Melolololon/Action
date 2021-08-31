@@ -54,6 +54,20 @@ namespace MelLib
 		);
 
 		/// <summary>
+		/// 自由落下の速度を計算します。
+		/// </summary>
+		/// <param name="startSpeed">初速度</param>
+		/// <param name="gravAcc">重力加速度度</param>
+		/// <param name="t">時間(秒)</param>
+		/// <returns></returns>
+		static float CalcFallVelocity
+		(
+			const float startSpeed,
+			const float gravAcc,
+			const float t
+		);
+
+		/// <summary>
 		/// 物体が衝突したときのvelocityを返します。
 		/// </summary>
 		/// <param name="position">座標</param>
@@ -103,7 +117,7 @@ namespace MelLib
 		/// <param name="gravitationalAcceleration">重力加速度(このクラスで定義されている定数または自分で考えた値)</param>
 		/// <param name="springConstant">ばね定数</param>
 		/// <param name="viscousDragCoefficient">粘性抵抗係数</param>
-		/// <returns></returns>
+		/// <returns>速度</returns>
 		static Vector3 CalcSpringVelocity
 		(
 			const Vector3& currentPos,
