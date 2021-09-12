@@ -3,14 +3,7 @@
 
 void PlayerSlush::SetAttackParam()
 {
-	//座標回転させてもアングルをいじってないから回転おかしくなる?
-	//playerAngleをカプセルの角度に加算減算する?
-
-	//0度回転で判定のX軸回転を100%、90度回転で0%、180で-100%(反対側)になればよい
-	
-	
-
-	//判定の長さ
+	//判定の長さ(武器の長さ)
 	static const float COLLISION_LENGTH = 5.0f;
 
 	//v1に加算する座標
@@ -35,7 +28,6 @@ void PlayerSlush::SetAttackParam()
 	switch (attackType)
 	{
 	case PlayerSlush::AttackType::NORMAL_1:
-		eraseTimer.SetMaxTime(10);
 
 		capsuleData[0].GetRefSegment3DData().SetRotatePoint(0.1f);
 		
@@ -45,7 +37,6 @@ void PlayerSlush::SetAttackParam()
 		break;
 
 	case PlayerSlush::AttackType::NORMAL_2:
-		eraseTimer.SetMaxTime(10);
 
 		capsuleData[0].GetRefSegment3DData().SetRotatePoint(0.1f);
 
@@ -54,7 +45,6 @@ void PlayerSlush::SetAttackParam()
 
 		break;
 	case PlayerSlush::AttackType::NORMAL_3:
-		eraseTimer.SetMaxTime(10);
 
 		capsuleData[0].GetRefSegment3DData().SetRotatePoint(0.1f);
 		v1AddPos = MelLib::Vector3(0, 1, 1);
@@ -108,9 +98,12 @@ void PlayerSlush::Attack()
 	(capsuleData[0].GetRefSegment3DData().GetAngle() + attackAngle);
 }
 
-PlayerSlush::PlayerSlush(const MelLib::Vector3& pos, const MelLib::Vector3& playerDir, const AttackType type):
+PlayerSlush::PlayerSlush(const MelLib::Vector3& pos, const MelLib::Vector3& playerDir, const AttackType type,const int attackTime):
 	attackType(type)
 {
+
+	eraseTimer.SetMaxTime(attackTime);
+
 	//プレイヤーの向いてる方向に回転する為の処理
 	playerAngle =
 		MelLib::LibMath::Vecto2ToAngle(MelLib::Vector2(playerDir.x, playerDir.z), true);
@@ -137,6 +130,7 @@ void PlayerSlush::Update()
 {
 	if (eraseTimer.GetSameAsMaxFlag())eraseManager = true;
 	Attack();
+
 }
 
 void PlayerSlush::Draw()

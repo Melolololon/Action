@@ -17,7 +17,6 @@ class Ground :
 {
 private:
 	MelLib::ADSAMaterial material;
-	MelLib::ModelObject model;
 	
 	static const MelLib::Vector2 GROUND_SIZE;
 

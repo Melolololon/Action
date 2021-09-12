@@ -4,6 +4,9 @@
 //アクションパートのシーン
 class ActionPart :public MelLib::Scene
 {
+private:
+	bool isPause = false;
+
 public:
 	void Initialize()override;//初期化
 	void Update()override;

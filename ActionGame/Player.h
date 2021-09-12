@@ -13,22 +13,28 @@
 class Player :public MelLib::GameObject
 {
 private:
-
+	
+	//前フレームの座標を格納する変数
+	MelLib::Vector3 prePos;
 	//向いてる向き
 	MelLib::Vector3 playerDir = MelLib::Vector3(0, 0, 1);
 
 #pragma region 攻撃
 
+	std::shared_ptr<PlayerSlush>pPSlush = nullptr;
 	//現在の攻撃
 	PlayerSlush::AttackType currentAttack = PlayerSlush::AttackType::NONE;
-	//次の攻撃の入力受付開始時間
-	static const int ATTACK_NEXT_TIME = 60 * 0.2f;
-	//攻撃終了時間
-	static const int ATTACK_END_TIME = 60 * 0.5f;
 	
 	//攻撃時間タイマー
 	MelLib::FrameTimer attackTimer;
 
+	//攻撃の時間
+	static  std::unordered_map<PlayerSlush::AttackType, const int>attackTime;
+
+	//キャンセル可能になるまでの時間
+	//現在は攻撃判定のある時間にもなっているが、変える可能性あり
+	//その場合、判定のある時間を判定自身に持たせ、引数をなくす
+	static  std::unordered_map<PlayerSlush::AttackType, const int>nextAttackTime;
 #pragma endregion
 
 private:
@@ -42,10 +48,11 @@ public:
 	
 	//操作不可能時にifで囲むの大変だから関数化
 	
+	
 	void Move();
 	void Jump();
-	void SetCollisionPosition();
 
+	//攻撃処理、攻撃判定の操作
 	void Attack();
 	void SetAttackType();
 	
@@ -71,10 +78,6 @@ public:
 		const MelLib::ShapeType3D hitObjColType,
 		const int hitObjArrayNum
 	)override;
-
-
-	void AddPosition(const MelLib::Vector3& vec)override;
-	void SetPosition(const MelLib::Vector3& pos)override;
 
 
 };

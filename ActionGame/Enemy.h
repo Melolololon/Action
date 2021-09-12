@@ -1,46 +1,24 @@
 #pragma once
-#include"GameObject.h"
-
-#include"FrameTimer.h"
-
-
-//刀薄いから、板の判定でもいいかも
-
-//プレイヤーの攻撃判定
-class PlayerSlush :public MelLib::GameObject
+#include <GameObject.h>
+#include"Player.h"
+//敵クラス
+class Enemy :
+    public MelLib::GameObject
 {
-public:
-	enum class AttackType
-	{
-		NONE,
-		NORMAL_1,//通常(Xボタン)攻撃1番目
-		NORMAL_2,//通常(Xボタン)攻撃2番目
-		NORMAL_3,//通常(Xボタン)攻撃3番目
-
-	};
-
 private:
+
+	static Player* pPlayer;
+
+	int life = 0;
 	
-
-
-	float playerAngle = 0.0f;
 private:
-	MelLib::FrameTimer eraseTimer;
-	AttackType attackType = AttackType::NORMAL_1;
-private:
-	void SetAttackParam();
-
-	void Attack();
+	/// <summary>
+	/// プレイヤーへ向かう処理
+	/// </summary>
+	void MoveToPlayer();
 public:
 
-
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <param name="pos"></param>
-	/// <param name="playerDir">プレイやーの向き</param>
-	PlayerSlush(const MelLib::Vector3& pos,const MelLib::Vector3& playerDir,const AttackType type,const int attackTime);
-
+	Enemy(const MelLib::Vector3& pos);
 	void Update()override;
 	void Draw()override;
 	/// <summary>
@@ -61,5 +39,6 @@ public:
 	)override;
 
 
+	static void SetPPlayer(Player* p) { pPlayer = p; }
 };
 

@@ -17,11 +17,12 @@ Ground::Ground()
 
 	//モデル用意
 	//板ポリをセットして生成
-	model.Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX), nullptr);
-	model.SetMaterial(&material, 0);
-	model.SetAngle(MelLib::Vector3(90.0f, 0.0f, 0.0f));
-	model.SetScale(GROUND_SIZE.ToVector3());
-	model.SetPosition(GetPosition());
+	modelObjects.emplace("main",MelLib::ModelObject());
+	modelObjects["main"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX), nullptr);
+	modelObjects["main"].SetMaterial(&material, 0);
+	modelObjects["main"].SetAngle(MelLib::Vector3(90.0f, 0.0f, 0.0f));
+	modelObjects["main"].SetScale(GROUND_SIZE.ToVector3());
+	modelObjects["main"].SetPosition(GetPosition());
 
 	boardData.resize(1);
 	boardData[0].SetAngle(MelLib::Vector3(90, 0, 0));
@@ -37,7 +38,7 @@ void Ground::Update()
 
 void Ground::Draw()
 {
-	model.Draw();
+	modelObjects["main"].Draw();
 }
 
 void Ground::Hit(const GameObject* const object, const MelLib::ShapeType3D collisionType, const int arrayNum, const MelLib::ShapeType3D hitObjColType, const int hitObjArrayNum)

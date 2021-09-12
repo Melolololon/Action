@@ -3,6 +3,7 @@
 #include"DirectionalLight.h"
 
 #include"GameObjectManager.h"
+#include"Input.h"
 
 #include"Player.h"
 
@@ -24,6 +25,10 @@ void ActionPart::Initialize()
 
 void ActionPart::Update()
 {
+	////ƒ|[ƒY
+	if (MelLib::Input::ButtonTrigger(1,MelLib::GamePadButton::START))isPause = isPause == false ? true : false;
+	if (isPause)return;
+
 	MelLib::GameObjectManager::GetInstance()->Update();
 }
 

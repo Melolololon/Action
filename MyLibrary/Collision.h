@@ -36,6 +36,23 @@ namespace MelLib
 			const CircleData& circle2
 		);
 
+		static bool PointAndCircle
+		(
+			const Vector2& pointPos,
+			const CircleData& circle
+		);
+
+		/// <summary>
+		/// 点と扇形が当たっているかを確認します。
+		/// </summary>
+		/// <param name="pointPos"></param>
+		/// <param name="circularSector"></param>
+		/// <returns></returns>
+		static bool PointAndCircularSector
+		(
+			const Vector2& pointPos,
+			const CircularSectorData& circularSector
+		);
 
 		static bool RectAndCircle(const RectData& rect, const CircleData& circle);
 
@@ -52,6 +69,7 @@ namespace MelLib
 			const Segment2DData& lineSegment,
 			Segment2DCalcResult* lineSegmentCalcResult
 		);
+
 
 #pragma endregion
 
@@ -122,7 +140,31 @@ namespace MelLib
 			Segment3DCalcResult* lineSegmentCalcResult
 		);
 
-	
+		static bool BoardAndCapsule
+		(
+			const BoardData& board,
+			BoardCalcResult* boardCalcResult,
+			const CapsuleData& capsule,
+			Segment3DCalcResult* lineSegmentCalcResult
+		);
+
+		static bool PointAndSphere
+		(
+			const Vector3& pointPos, 
+			const SphereData& sphere
+		);
+
+	/*	static bool PointAndCircularSector3D
+		(
+			const Vector3& pointPos,
+		    const CircularSector3DData& circularSector
+		);*/
+
+		static bool PointAndFrustum
+		(
+			const Vector3& pointPos,
+			const FrustumData& frustum
+		);
 #pragma endregion
 	};
 

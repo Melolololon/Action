@@ -8,6 +8,25 @@
 
 #include"Ground.h"
 
+
+std::unordered_map<PlayerSlush::AttackType, const int>Player::attackTime =
+{
+	{PlayerSlush::AttackType::NONE,0},
+	{PlayerSlush::AttackType::NORMAL_1,20},
+	{PlayerSlush::AttackType::NORMAL_2,20},
+	{PlayerSlush::AttackType::NORMAL_3,20},
+
+};
+
+
+std::unordered_map<PlayerSlush::AttackType, const int>Player::nextAttackTime =
+{
+	{PlayerSlush::AttackType::NONE,0},
+	{PlayerSlush::AttackType::NORMAL_1,10},
+	{PlayerSlush::AttackType::NORMAL_2,10},
+	{PlayerSlush::AttackType::NORMAL_3,10},
+};
+
 Player::Player(const MelLib::Vector3& pos)
 {
 	//物理演算のためにseterとgeter作る?
@@ -16,9 +35,16 @@ Player::Player(const MelLib::Vector3& pos)
 	collisionFlag.capsule = true;
 	capsuleData.resize(1);
 	capsuleData[0].SetRadius(0.5f); 
+	capsuleData[0].GetRefSegment3DData().
+		SetPosition(MelLib::Value2<MelLib::Vector3>
+			(GetPosition() + MelLib::Vector3(0, 3, 0), GetPosition() + MelLib::Vector3(0, -3, 0)));
+
+	segment3DData.resize(1);
+	segment3DData[0] = capsuleData[0].GetSegment3DData();
+
 	SetPosition(pos);
+
 	
-	attackTimer.SetMaxTime(ATTACK_END_TIME);
 
 	//浮き防止
 	StartFall(0.0f);
@@ -26,14 +52,19 @@ Player::Player(const MelLib::Vector3& pos)
 
 void Player::Update()
 {
+	prePos = position;
 	Move();
 	Jump();
 	Attack();
 	
 	CalcMovePhysics();
-	SetCollisionPosition();
+
+	//とりあえずSetPositionを使って判定セットしたり攻撃判定動かしてる
+	//SetPosition(position);
 
 	Camera();
+
+	
 }
 
 void Player::Move()
@@ -69,30 +100,29 @@ void Player::Move()
 			addPos *= WALK_SPEED;
 		}
 
-		position += addPos;
+		AddPosition(addPos);
+
+		
 	}
+
 
 	//if (position.y <= -100)position.y = 100;
 	
 	//落下するために
 	if(!GetIsFall())StartFall(0.0f);
+
 }
 
 void Player::Jump()
 {
 	if(MelLib::Input::ButtonTrigger(1,MelLib::GamePadButton::A))
 	{
-		StartFall(3.0f);
+		StartFall(2.0f);
 	}
 	
 }
 
-void Player::SetCollisionPosition()
-{
-	capsuleData[0].GetRefSegment3DData().
-		SetPosition(MelLib::Value2<MelLib::Vector3>
-			(GetPosition() + MelLib::Vector3(0, 3, 0), GetPosition() + MelLib::Vector3(0, -3, 0)));
-}
+
 
 void Player::Attack()
 {
@@ -107,23 +137,32 @@ void Player::Attack()
 	//ifの2行目のタイマー確認は、コンボ終了後にNONEにするため、その攻撃中に入らないようにするために書いてる
 	if (MelLib::Input::ButtonTrigger(1, MelLib::GamePadButton::X)
 		&& (attackTimer.GetNowTime() == 0 && currentAttack == PlayerSlush::AttackType::NONE
-			|| attackTimer.GetNowTime() >= ATTACK_NEXT_TIME && currentAttack != PlayerSlush::AttackType::NONE))
+			|| attackTimer.GetNowTime() >= nextAttackTime[currentAttack] && currentAttack != PlayerSlush::AttackType::NONE))
 	{
 		attackTimer.ResetTimeZero();
 		attackTimer.SetStopFlag(false);
 
+		//CurrentAttack更新
 		SetAttackType();
+		//攻撃時間セット
+		attackTimer.SetMaxTime(attackTime[currentAttack]);
 
 		//コンボの最後の時にボタン押したらNONEをセットするため、コンボを終わらせるためのif
 		if (currentAttack != PlayerSlush::AttackType::NONE) 
 		{
-			MelLib::GameObjectManager::GetInstance()->AddObject(
-				std::make_shared<PlayerSlush>(GetPosition(), playerDir, currentAttack));
+			if(pPSlush)
+			{
+				//解放
+				pPSlush.reset();
+			}
+
+			pPSlush = std::make_shared<PlayerSlush>(GetPosition(), playerDir, currentAttack, nextAttackTime[currentAttack]);
+			MelLib::GameObjectManager::GetInstance()->AddObject(pPSlush);
 		}
-
-
-
 	}
+
+	//攻撃判定も動かす
+	if (pPSlush)pPSlush->AddPosition(position - prePos);
 }
 
 void Player::SetAttackType()
@@ -149,6 +188,8 @@ void Player::SetAttackType()
 
 void Player::Camera()
 {
+
+
 	//スティックの倒し具合でスピード変える
 	//緩急あったほうがいい?だんだん加速してく。早めにスピードマックスになる
 
@@ -185,8 +226,12 @@ void Player::SetCameraPosition()
 	MelLib::Camera* pCamera = MelLib::Camera::Get();
 	pCamera->SetRotateCriteriaPosition
 	(MelLib::LibMath::FloatDistanceMoveVector3
-	(GetPosition(), MelLib::LibMath::OtherVector(pCamera->GetCameraPosition(), pCamera->GetTargetPosition()), 30.0f)
+	(GetPosition(), MelLib::LibMath::OtherVector3(pCamera->GetCameraPosition(), pCamera->GetTargetPosition()), 30.0f)
 	);
+
+
+	
+
 }
 
 void Player::Draw()
@@ -196,7 +241,8 @@ void Player::Draw()
 void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D collisionType, const int arrayNum, const MelLib::ShapeType3D hitObjColType, const int hitObjArrayNum)
 {
 	
-	if(typeid(*object) == typeid(Ground))
+	if(typeid(*object) == typeid(Ground)
+		&& collisionType == MelLib::ShapeType3D::SEGMENT)
 	{
 		MelLib::Vector3 addPos;
 		
@@ -211,26 +257,16 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D colli
 
 		//カプセルの下の先端から衝突点のベクトルを求め、その分押し出す。
 		//-0.15fは、押し出しすぎるとHitが呼ばれなくなって、非ジャンプ時の落下の処理で下がってがくがくするのを防止するためにある
-		addPos.y += capsuleData[0].GetSegment3DData().GetCalcResult().boardHitPos.y -
-			 (capsuleData[0].GetSegment3DData().GetPosition().v2.y - capsuleData[0].GetRadius()) - 0.15f;
+		//線分の先端がヒットしたらカプセルの先端が上に来るまで押し返すから、-0.15引かないとがくがくする
+		/*addPos.y -= (capsuleData[0].GetSegment3DData().GetPosition().v2.y - capsuleData[0].GetRadius()) -
+			capsuleData[0].GetSegment3DData().GetCalcResult().boardHitPos.y;*/
+		
+		//カプセルじゃなくて線分で判定取ってるときの処理
+		addPos.y += segment3DData[0].GetCalcResult().boardHitPos.y - segment3DData[0].GetPosition().v2.y;\
+		segment3DData[0] = capsuleData[0].GetSegment3DData();
+
 
 		AddPosition(addPos);
-		
+		SetCameraPosition();
 	}
-}
-
-void Player::AddPosition(const MelLib::Vector3& vec)
-{
-	SetPosition(GetPosition() + vec);
-	SetCollisionPosition();
-
-	SetCameraPosition();
-}
-
-void Player::SetPosition(const MelLib::Vector3& pos)
-{
-	position = pos;
-	SetCollisionPosition();
-
-	SetCameraPosition();
 }
