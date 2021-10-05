@@ -9,7 +9,7 @@ private:
 
 	static Player* pPlayer;
 
-	int life = 0;
+	int hp = 0;
 	
 private:
 	/// <summary>

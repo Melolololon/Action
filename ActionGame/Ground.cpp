@@ -7,11 +7,11 @@
 
 const MelLib::Vector2 Ground::GROUND_SIZE = MelLib::Vector2(500, 500);
 
-Ground::Ground()
+Ground::Ground(const MelLib::Vector3& pos, const MelLib::Vector3& angle, const MelLib::Vector2& scale)
 {
-	
+	SetPosition(pos);
 
-
+	//âº(sttaicÇ»Ç«Ç…ÇµÇΩÇËÇµÇƒê∂ê¨àÍâÒÇ…ÇµÇ∆Ç¢Çƒ)
 	material.Create(MelLib::PipelineState::GetDefaultDrawData(MelLib::PipelineStateType::MODEL));
 	material.SetTexture(MelLib::Texture::Get("ground"));
 
@@ -20,16 +20,23 @@ Ground::Ground()
 	modelObjects.emplace("main",MelLib::ModelObject());
 	modelObjects["main"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX), nullptr);
 	modelObjects["main"].SetMaterial(&material, 0);
-	modelObjects["main"].SetAngle(MelLib::Vector3(90.0f, 0.0f, 0.0f));
+	/*modelObjects["main"].SetAngle(MelLib::Vector3(90.0f, 0.0f, 0.0f));
 	modelObjects["main"].SetScale(GROUND_SIZE.ToVector3());
-	modelObjects["main"].SetPosition(GetPosition());
+	modelObjects["main"].SetPosition(GetPosition());*/
+	modelObjects["main"].SetAngle(angle);
+	modelObjects["main"].SetScale(scale.ToVector3());
+	modelObjects["main"].SetPosition(pos);
+
+	//boardData.resize(1);
+	//boardData[0].SetAngle(MelLib::Vector3(90, 0, 0));
+	//boardData[0].SetSize(GROUND_SIZE);
+	//boardData[0].SetPosition(0);
 
 	boardData.resize(1);
-	boardData[0].SetAngle(MelLib::Vector3(90, 0, 0));
-	boardData[0].SetSize(GROUND_SIZE);
-	boardData[0].SetPosition(0);
+	boardData[0].SetAngle(angle);
+	boardData[0].SetSize(scale);
+	boardData[0].SetPosition(pos);
 
-	SetPosition(0);
 }
 
 void Ground::Update()

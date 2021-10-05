@@ -21,7 +21,7 @@ private:
 	static const MelLib::Vector2 GROUND_SIZE;
 
 public:
-	Ground();
+	Ground(const MelLib::Vector3& pos, const MelLib::Vector3& angle, const MelLib::Vector2& scale);
 
 	void Update()override;
 	void Draw()override;
