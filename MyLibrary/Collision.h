@@ -73,7 +73,6 @@ namespace MelLib
 
 #pragma endregion
 
-
 #pragma region 3D
 
 		/// <summary>
@@ -165,6 +164,8 @@ namespace MelLib
 			const Vector3& pointPos,
 			const FrustumData& frustum
 		);
+
+
 #pragma endregion
 	};
 

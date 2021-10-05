@@ -25,6 +25,7 @@ namespace MelLib
 	//モデルの座標などをまとめたもの
 	class ModelObject
 	{
+	private:
 
 	private:
 
@@ -170,7 +171,7 @@ namespace MelLib
 
 #pragma endregion
 
-		void SetMaterial(Material* mtl, const int index);
+		void SetMaterial(Material* mtl, const UINT index);
 #pragma endregion
 
 #pragma region ゲット

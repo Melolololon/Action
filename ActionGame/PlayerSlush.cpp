@@ -106,7 +106,7 @@ PlayerSlush::PlayerSlush(const MelLib::Vector3& pos, const MelLib::Vector3& play
 
 	//ƒvƒŒƒCƒ„[‚ÌŒü‚¢‚Ä‚é•ûŒü‚É‰ñ“]‚·‚éˆ×‚Ìˆ—
 	playerAngle =
-		MelLib::LibMath::Vecto2ToAngle(MelLib::Vector2(playerDir.x, playerDir.z), true);
+		MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(playerDir.x, playerDir.z), true);
 	
 	//playerAngle = 0;
 

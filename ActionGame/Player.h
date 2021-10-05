@@ -21,7 +21,7 @@ private:
 
 	static const unsigned int HP_MAX = 200;
 	unsigned int hp = HP_MAX;
-
+	bool hitGround = false;
 #pragma region 攻撃
 
 	std::shared_ptr<PlayerSlush>pPSlush = nullptr;
@@ -32,7 +32,7 @@ private:
 	MelLib::FrameTimer attackTimer;
 
 	//攻撃の時間
-	static  std::unordered_map<PlayerSlush::AttackType, const int>attackTime;
+	static std::unordered_map<PlayerSlush::AttackType, const int>attackTime;
 
 	//キャンセル可能になるまでの時間
 	//現在は攻撃判定のある時間にもなっているが、変える可能性あり

@@ -838,16 +838,20 @@ bool ModelObject::Initialize(ID3D12Device* dev, const std::vector<ID3D12Graphics
 
 }
 
-void MelLib::ModelObject::SetMaterial(Material* mtl, const int index)
+void MelLib::ModelObject::SetMaterial(Material* mtl, const UINT index)
 { 
 	if (!mtl)
 	{
+#ifdef _DEBUG
 		OutputDebugString(L"マテリアルのセットに失敗しました。マテリアルがnullptrです。\n");
+#endif // _DEBUG
 		return;
 	}
 	if(index >= materials.size())
 	{
+#ifdef _DEBUG
 		OutputDebugString(L"マテリアルのセットに失敗しました。indexの値が大きくてセットできません。\n");
+#endif // _DEBUG
 		return;
 	}
 

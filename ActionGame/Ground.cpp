@@ -12,14 +12,14 @@ Ground::Ground(const MelLib::Vector3& pos, const MelLib::Vector3& angle, const M
 	SetPosition(pos);
 
 	//仮(sttaicなどにしたりして生成一回にしといて)
-	material.Create(MelLib::PipelineState::GetDefaultDrawData(MelLib::PipelineStateType::MODEL));
-	material.SetTexture(MelLib::Texture::Get("ground"));
+	testMtl.Create(MelLib::PipelineState::GetDefaultDrawData(MelLib::PipelineStateType::MODEL));
+	testMtl.SetTexture(MelLib::Texture::Get("ground"));
 
 	//モデル用意
 	//板ポリをセットして生成
 	modelObjects.emplace("main",MelLib::ModelObject());
 	modelObjects["main"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX), nullptr);
-	modelObjects["main"].SetMaterial(&material, 0);
+	modelObjects["main"].SetMaterial(&testMtl, 0);
 	/*modelObjects["main"].SetAngle(MelLib::Vector3(90.0f, 0.0f, 0.0f));
 	modelObjects["main"].SetScale(GROUND_SIZE.ToVector3());
 	modelObjects["main"].SetPosition(GetPosition());*/

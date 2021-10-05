@@ -65,6 +65,7 @@ void Player::Update()
 	Camera();
 
 	
+	hitGround = false;
 }
 
 void Player::Move()
@@ -115,6 +116,8 @@ void Player::Move()
 
 void Player::Jump()
 {
+	if (attackTimer.GetNowTime() != 0)return;
+
 	if(MelLib::Input::PadButtonTrigger(1,MelLib::PadButton::A))
 	{
 		FallStart(2.0f);
@@ -126,7 +129,7 @@ void Player::Jump()
 
 void Player::Attack()
 {
-	if(attackTimer.GetSameAsMaxFlag())
+	if(attackTimer.GetMaxOverFlag())
 	{
 		currentAttack = PlayerSlush::AttackType::NONE;
 		attackTimer.ResetTimeZero();
@@ -171,7 +174,7 @@ void Player::SetAttackType()
 	switch (currentAttack)
 	{
 	case PlayerSlush::AttackType::NONE:
-		currentAttack = PlayerSlush::AttackType::NORMAL_1;
+		if(hitGround)currentAttack = PlayerSlush::AttackType::NORMAL_1;
 		break;
 	case PlayerSlush::AttackType::NORMAL_1:
 		currentAttack = PlayerSlush::AttackType::NORMAL_2;
@@ -262,12 +265,14 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 		/*addPos.y -= (capsuleData[0].GetSegment3DData().GetPosition().v2.y - capsuleData[0].GetRadius()) -
 			capsuleData[0].GetSegment3DData().GetCalcResult().boardHitPos.y;*/
 		
-		//カプセルじゃなくて線分で判定取ってるときの処理
-		addPos.y += segment3DData[0].GetCalcResult().boardHitPos.y - segment3DData[0].GetPosition().v2.y;\
-		segment3DData[0] = capsuleData[0].GetSegment3DData();
 
+		//カプセルじゃなくて線分で判定取ってるときの処理
+		addPos.y += segment3DData[0].GetCalcResult().boardHitPos.y - segment3DData[0].GetPosition().v2.y;
+		//segment3DData[0] = capsuleData[0].GetSegment3DData();
 
 		AddPosition(addPos);
 		SetCameraPosition();
+
+		hitGround = true;
 	}
 }

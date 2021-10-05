@@ -43,7 +43,6 @@ void Game::Initialize()
 	MelLib::Library::Initialize(1280, 720, MelLib::Color(120, 120, 120, 255), L"Game");
 	MelLib::Library::SetFramesPerSecond60(true);
 
-	MelLib::GameObjectManager::GetInstance()->Initialize();
 
 	MelLib::SceneManager::GetInstace()->SetStartScene(new ActionPart());
 

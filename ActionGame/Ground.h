@@ -16,7 +16,7 @@ class Ground :
     public MelLib::GameObject
 {
 private:
-	MelLib::ADSAMaterial material;
+	MelLib::ADSAMaterial testMtl;
 	
 	static const MelLib::Vector2 GROUND_SIZE;
 
