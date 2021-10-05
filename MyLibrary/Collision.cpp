@@ -17,8 +17,9 @@ bool Collision::RectAndRect(const RectData& rect1, const RectData& rect2)
 	Vector2 size1 = rect1.GetSize();
 	Vector2 size2 = rect2.GetSize();
 
+
 	return size2.x + pos2.x > pos1.x &&
-		pos2.x < size1.x + pos2.x &&
+		pos2.x < size1.x + pos1.x &&
 		pos2.y < size1.y + pos1.y &&
 		size2.y + pos2.y > pos1.y;
 }
@@ -183,9 +184,9 @@ bool Collision::BoxAndBox
 )
 {
 	Vector3 box1Pos = box1.GetPosition();
-	Vector3 box1Size = box1.GetPosition();
+	Vector3 box1Size = box1.GetSize();
 	Vector3 box2Pos = box2.GetPosition();
-	Vector3 box2Size = box2.GetPosition();
+	Vector3 box2Size = box2.GetSize();
 
 	Vector3 minPos1 = box1Pos - box1Size / 2;
 	Vector3 maxPos1 = box1Pos + box1Size / 2;
@@ -719,39 +720,75 @@ bool MelLib::Collision::BoardAndCapsule(const BoardData& board, BoardCalcResult*
 	//両端の辺の方向に板ポリゴンを半径分動かして、交差したら、
 	//カプセルと当たってるって言える?
 	//中心でもいい?
-
-	////点の方向に半径分移動した板ポリの座標
-	//Vector3 moveBoardPos = LibMath::FloatDistanceMoveVector3
-	//(board.GetPosition(), LibMath::OtherVector3(board.GetPosition(),capsule.GetSegment3DData().GetPosition().v1), capsule.GetRadius());
-	//BoardData bData = board;
-	//bData.SetPosition(moveBoardPos);
-
-	//bool result = BoardAndSegment3D(bData, boardCalcResult,capsule.GetSegment3DData(), lineSegmentCalcResult);
-	//if (result)return true;
-
-	//moveBoardPos = LibMath::FloatDistanceMoveVector3
-	//(board.GetPosition(), LibMath::OtherVector3(board.GetPosition(), capsule.GetSegment3DData().GetPosition().v2), capsule.GetRadius());
-	//bData.SetPosition(moveBoardPos);
-	//return BoardAndSegment3D(bData, boardCalcResult, capsule.GetSegment3DData(), lineSegmentCalcResult);
-
-	Vector3 segmentCenterPos = LibMath::CalcCenterPosition3D
-	(
-		capsule.GetSegment3DData().GetPosition().v1,
-		capsule.GetSegment3DData().GetPosition().v2
-	);
-
-	Vector3 moveVec = LibMath::OtherVector3(board.GetPosition(), segmentCenterPos);
-	Vector3 moveBoardPos = LibMath::FloatDistanceMoveVector3
-	(board.GetPosition(), moveVec, capsule.GetRadius());
-	BoardData bData = board;
-	bData.SetPosition(moveBoardPos);
-	bool result = BoardAndSegment3D(bData, boardCalcResult, capsule.GetSegment3DData(), lineSegmentCalcResult);
+	//この方法じゃダメだった
+	
+	//衝突点は交差してなくても求められる?(平面扱いして計算してるならできるはず)
+	//衝突点と四つの辺の距離が半径以内、または、平面との距離が半径以内だったらOK?
+	//それだと、範囲外でも平面と交差してたらアウトだからダメ
 
 
-	//移動分減らす
-	lineSegmentCalcResult->boardHitPos -= moveBoardPos;
+	//じゃあ、四角形の範囲内だったら、両端と平面との距離を計算
+	//範囲外だったら、辺との距離を計算
+	//それだと、カプセルと板が平行の時アウト
+	//平行だったら範囲内でも平面との距離を計算する?
+	//あと、斜めになってて範囲外にいてかつ中心の近くにいて板がクソデカかったらアウト
+	//その場合、両端と平面の距離を求めればいい?
+	//そもそも、めちゃくちゃ長かったら、両端の距離求めても意味ない?
 
-	if (result)return true;
+	//範囲外の時、辺との距離を計算。それでだめだったら両端の距離を求めればいい?(球並みに短くて半径でかいやつ用)
+	//範囲外で両端の距離を求める場合、衝突点が中にあるか確認しないといけない?
+	//そもそも衝突点が外になる場合は、線分同士のチェックに引っかかるかあたらない
+	//クソ長いのが刺さってたら、両端と平面の距離求めても意味ない場合あるから、刺さってるかどうかも判断して、
+	//刺さってたら当たってる。刺さってなかったら両端求めればいい。
+	//平行の時、単純に距離を求めると、当たってないのにあたってることになる
+
+
+	//中の場合、
+	//1.刺さっている
+	//2.両端と平面の距離が半径以内
+	//どちらかが成立してればおそらく当たっている
+
+	//外の場合、
+	//1.線分と板の辺の距離が半径以内
+	// 
+	//普通に両端と平面の距離を計算すると、板からめちゃくちゃ離れてても平面に近かったらダメ
+	//2.
+
+
+	//難しく考えすぎ?
+	//刺さってるか確認し、
+
+	Value2<Vector3> segmentPos = capsule.GetSegment3DData().GetRotatePosition();
+	Value4<Vector3>boardVertexPos = board.GetVertexPosition();
+	Vector3 leftDownPos = boardVertexPos.v1;
+	Vector3 leftUpPos = boardVertexPos.v2;
+	Vector3 rightDownPos = boardVertexPos.v3;
+	Vector3 rightUpPos = boardVertexPos.v4;
+
+	Vector3 v1;
+	Vector3 v2;
+
+	v1 = segmentPos.v1 - board.GetPosition();
+	v2 = segmentPos.v2 - board.GetPosition();
+
+	//線が板ポリと並行ではないかを調べる(平行だったらreturn)
+	if (Vector3Dot(v1, board.GetNormal()) * Vector3Dot(v2, board.GetNormal()) > 0) 
+	{
+		//平行だった場合、両端と平面の距離が半径以内だったら当たってる
+		float planeDir = abs(Vector3::Dot(board.GetNormal(), segmentPos.v1 - board.GetPosition())) / board.GetNormal().Length();
+		if (planeDir <= capsule.GetRadius())return true;
+
+		planeDir = abs(Vector3::Dot(board.GetNormal(), segmentPos.v2 - board.GetPosition())) / board.GetNormal().Length();
+		if (planeDir <= capsule.GetRadius())return true;
+
+		return false;
+	}
+
+
+	//起きたらやること
+	//範囲内か外かを調べて処理を行う
+
+
 }
 
 bool MelLib::Collision::PointAndSphere(const Vector3& pointPos, const SphereData& sphere)

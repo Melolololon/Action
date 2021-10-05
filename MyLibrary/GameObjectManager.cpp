@@ -73,7 +73,6 @@ void GameObjectManager::Update()
 
 #pragma region 新判定処理
 	
-
 	size_t objectSize = objects.size();
 
 	std::vector<CollisionDetectionFlag>collisionFlags(objectSize);
@@ -82,8 +81,6 @@ void GameObjectManager::Update()
 		collisionFlags[i] = objects[i]->GetCollisionFlag();
 
 	}
-
-
 
 	for (int objI = 0; objI < objectSize; objI++)
 	{
@@ -115,6 +112,9 @@ void GameObjectManager::Update()
 						if (Collision::SphereAndSphere(sphereData1[colI], sphereData2[colJ]))
 						{
 							//hitを呼び出す
+							obj1->SetHitSphereData(sphereData2[colJ]);
+							obj2->SetHitSphereData(sphereData1[colJ]);
+
 							obj1->Hit
 							(
 								obj2,
@@ -161,6 +161,9 @@ void GameObjectManager::Update()
 							obj1->SetBoxCalcResult(result1, colI);
 							obj2->SetBoxCalcResult(result2, colJ);
 
+							obj1->SetHitBoxData(boxData2[colJ]);
+							obj2->SetHitBoxData(boxData1[colI]);
+
 							//hitを呼び出す
 							obj1->Hit
 							(
@@ -205,6 +208,7 @@ void GameObjectManager::Update()
 						Segment3DCalcResult result1;
 						Segment3DCalcResult result2;
 
+
 						if (Collision::Segment3DAndSegment3D
 						(
 							segmentData1[colI],
@@ -215,6 +219,10 @@ void GameObjectManager::Update()
 						{
 							obj1->SetSegmentCalcResult(result1,colI);
 							obj2->SetSegmentCalcResult(result2,colJ);
+
+
+							obj1->SetHitSegment3DData(segmentData2[colJ]);
+							obj2->SetHitSegment3DData(segmentData1[colI]);
 
 							//hitを呼び出す
 							obj1->Hit
@@ -257,6 +265,10 @@ void GameObjectManager::Update()
 					{
 						if (Collision::CapsuleAndCapsule(capsuleData1[colI], capsuleData2[colJ]))
 						{
+							obj1->SetHitCapsuleData(capsuleData2[colJ]);
+							obj2->SetHitCapsuleData(capsuleData1[colI]);
+
+
 							//hitを呼び出す
 							obj1->Hit
 							(
@@ -308,6 +320,10 @@ void GameObjectManager::Update()
 						{
 							obj1->SetSphereCalcResult(result1, colI);
 							obj2->SetBoxCalcResult(result2, colJ);
+
+							obj1->SetHitBoxData(boxData[colJ]);
+							obj2->SetHitSphereData(sphereData[colI]);
+
 							//hitを呼び出す
 							obj1->Hit
 							(
@@ -360,6 +376,10 @@ void GameObjectManager::Update()
 						{
 							obj2->SetSphereCalcResult(result1, colI);
 							obj1->SetBoxCalcResult(result2, colJ);
+
+							obj1->SetHitSphereData(sphereData[colI]);
+							obj2->SetHitBoxData(boxData[colJ]);
+
 							//hitを呼び出す
 							obj2->Hit
 							(
@@ -400,6 +420,10 @@ void GameObjectManager::Update()
 					{
 						if (Collision::SphereAndCapsule(sphereData[colI], capsuleData[colJ]))
 						{
+							obj1->SetHitCapsuleData(capsuleData[colJ]);
+							obj2->SetHitSphereData(sphereData[colI]);
+
+
 							//hitを呼び出す
 							obj1->Hit
 							(
@@ -439,6 +463,9 @@ void GameObjectManager::Update()
 					{
 						if (Collision::SphereAndCapsule(sphereData[colI], capsuleData[colJ]))
 						{
+							obj1->SetHitSphereData(sphereData[colI]);
+							obj2->SetHitCapsuleData(capsuleData[colJ]);
+
 							//hitを呼び出す
 							obj2->Hit
 							(
@@ -485,6 +512,9 @@ void GameObjectManager::Update()
 							obj1->SetBoardCalcResult(result1, colI);
 							obj2->SetSegmentCalcResult(result2, colJ);
 
+							obj1->SetHitSegment3DData(segmentData[colJ]);
+							obj2->SetHitBoardData(boardData[colI]);
+
 							//hitを呼び出す
 							obj1->Hit
 							(
@@ -529,6 +559,9 @@ void GameObjectManager::Update()
 							obj2->SetBoardCalcResult(result1, colI);
 							obj1->SetSegmentCalcResult(result2, colJ);
 
+							obj1->SetHitBoardData(boardData[colI]);
+							obj2->SetHitSegment3DData(segmentData[colJ]);
+
 							//hitを呼び出す
 							obj2->Hit
 							(
@@ -571,10 +604,13 @@ void GameObjectManager::Update()
 						BoardCalcResult result1;
 						Segment3DCalcResult result2;
 
-						if (Collision::BoardAndSegment3D(boardData[colI], &result1, capsuleData[colJ].GetSegment3DData(), &result2))
+						if (Collision::BoardAndCapsule(boardData[colI], &result1, capsuleData[colJ], &result2))
 						{
 							obj1->SetBoardCalcResult(result1, colI);
 							obj2->SetCapsuleCalcResult(result2, colJ);
+
+							obj1->SetHitCapsuleData(capsuleData[colJ]);
+							obj2->SetHitBoardData(boardData[colI]);
 
 							//hitを呼び出す
 							obj1->Hit
@@ -619,6 +655,9 @@ void GameObjectManager::Update()
 						{
 							obj2->SetBoardCalcResult(result1, colI);
 							obj1->SetCapsuleCalcResult(result2, colJ);
+
+							obj1->SetHitBoardData(boardData[colI]);
+							obj2->SetHitCapsuleData(capsuleData[colJ]);
 
 							//hitを呼び出す
 							obj2->Hit

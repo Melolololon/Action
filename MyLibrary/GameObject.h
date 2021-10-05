@@ -6,10 +6,10 @@
 #include"CollisionType.h"
 #include"Physics.h"
 
+#include"ModelObject.h"
 
 #ifdef _DEBUG
 #include"PipelineState.h"
-#include"ModelObject.h"
 #include"Material.h"
 #endif // _DEBUG
 
@@ -33,12 +33,17 @@
 //投げ上げの関数呼び出したら強制的にtrue、falseに切り替え。
 //落下フラグをいじってもらうことで、落下処理を行うようにする。
 
+
+//アクションRPGとかで当たったアイテムに称号とかついてたり、取得できるゴールドが不特定の場合、
+//管理クラス作って、アイテム出現時にそれに追加して、
+//Hit関数のObjectとアイテムのポインタが一致してたら、アイテム出現時に追加したポインタ全部と比較して、
+//アドレスが同じポインタもらってパラメータ受け取ればいい
+
 namespace MelLib 
 {
 	class GameObject
 	{
 	private:
-
 
 #ifdef _DEBUG
 		//判定確認用モデルのパイプライン
@@ -61,11 +66,14 @@ namespace MelLib
 
 #endif // _DEBUG
 
-
-
+		Vector3 position = 0;
 
 #pragma region 物理関係
-
+		
+		//物体が動く力
+		Vector3 force = 0;
+		//重さ(kg)
+		float mass = 1.0f;
 		//速度
 		Vector3 velocity = 0;
 		//重力加速度
@@ -83,17 +91,16 @@ namespace MelLib
 		bool isFall = false;
 #pragma endregion
 
-
+		//当たった相手のデータ
+		SphereData hitSphereData;
+		BoxData hitBoxData;
+		Segment3DData hitSegment3DData;
+		RayData hitLayData;
+		PlaneData hitPlaneData;
+		BoardData hitBoardData;
+		CapsuleData hitCapsuleData;
 
 	protected:
-		Vector3 position = 0;
-
-		//物体が動く力
-		Vector3 force = 0;
-		//重さ(kg)
-		float mass = 1.0f;
-
-		
 
 #pragma region 判定データ
 		CollisionDetectionFlag collisionFlag;
@@ -121,42 +128,16 @@ namespace MelLib
 		bool eraseManager = false;
 		
 
-	private:
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="vec">移動量</param>
-		void SetModelPosition(const Vector3& vec);
+		bool drawCollisionModel = true;
 
-		void SetDataPosition(const Vector3& vec);
-	public:
+	protected:
+		SphereData GetHitSphereData() const { return hitSphereData; }
+		BoxData GetHitBoxData() const { return hitBoxData; }
+		Segment3DData GetHitSegmentData() const { return hitSegment3DData; }
+		PlaneData GetHitPlaneData() const { return hitPlaneData; }
+		BoardData GetHitBoardData()const { return hitBoardData; }
+		CapsuleData GetHitCapsuleData() const { return hitCapsuleData; }
 
-		//コンストラクタ
-		GameObject();
-		//デストラクタ
-		virtual ~GameObject();
-
-		//更新
-		virtual void Update();
-		//描画
-		virtual void Draw();
-
-		/// <summary>
-		/// 当たった時の処理
-		/// </summary>
-		/// <param name="object">相手オブジェトのポインタ</param>
-		/// <param name="collisionType">自分のどの判定に当たったか</param>
-		/// <param name="arrayNum">自分の何個目の判定に当たったか</param>
-		/// <param name="hitObjColType">相手のどの判定に当たったか</param>
-		/// <param name="hitObjArrayNum">相手の何個目の判定に当たったか</param>
-		virtual void Hit
-		(
-			const GameObject* const  object,
-			const ShapeType3D collisionType,
-			const int arrayNum,
-			const ShapeType3D hitObjColType,
-			const int hitObjArrayNum
-		);
 
 
 #pragma region 物理演算
@@ -181,7 +162,7 @@ namespace MelLib
 		/// 落下処理を開始します。
 		/// </summary>
 		/// <param name="startSpeed">初速度</param>
-		void StartFall(const float startSpeed)
+		void FallStart(const float startSpeed)
 		{
 			this->fallStartSpeed = startSpeed;
 			isFall = true;
@@ -190,7 +171,7 @@ namespace MelLib
 		/// <summary>
 		/// 落下処理を終了します。
 		/// </summary>
-		void EndFall()
+		void FallEnd()
 		{
 			fallTime = 0;
 			fallStartSpeed = 0.0f;
@@ -204,9 +185,47 @@ namespace MelLib
 			currentFallVelovity = 0.0f;
 		}
 
-		
+
 
 #pragma endregion
+	private:
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="vec">移動量</param>
+		void SetModelPosition(const Vector3& vec);
+
+		void SetDataPosition(const Vector3& vec);
+
+	public:
+
+		//コンストラクタ
+		GameObject();
+		//デストラクタ
+		virtual ~GameObject();
+
+		//更新
+		virtual void Update();
+		//描画
+		virtual void Draw();
+
+		/// <summary>
+		/// 当たった時の処理
+		/// </summary>
+		/// <param name="object">相手オブジェトのポインタ</param>
+		/// <param name="collisionType">自分のどの判定に当たったか</param>
+		/// <param name="arrayNum">自分の何個目の判定に当たったか</param>
+		/// <param name="hitObjColType">相手のどの判定に当たったか</param>
+		/// <param name="hitObjArrayNum">相手の何個目の判定に当たったか</param>
+		virtual void Hit
+		(
+			const GameObject* const object,
+			const ShapeType3D& collisionType,
+			const int arrayNum,
+			const ShapeType3D& hitObjColType,
+			const int hitObjArrayNum
+		);
+
 
 
 		//void CalcHitPhysics(GameObject* hitObject,const Vector3& hutPreVelocity,const CollisionType& collisionType);
@@ -227,7 +246,7 @@ namespace MelLib
 		/// 座標、モデルの座標、判定の座標に引数を加算します。
 		/// </summary>
 		/// <param name="vec"></param>
-		void AddPosition(const Vector3& vec);
+	    virtual void AddPosition(const Vector3& vec);
 #pragma endregion
 
 
@@ -237,7 +256,7 @@ namespace MelLib
 		/// 座標をセットします。モデルと衝突確認に使うデータは、セット前の座標との差だけ移動します。
 		/// </summary>
 		/// <param name="pos"></param>
-		void SetPosition(const Vector3& pos);
+		virtual void SetPosition(const Vector3& pos);
 		//void SetVelocity(const Vector3& velocity) { this->velocity = velocity; }
 
 		//void SetAcceleration(const Vector3& acc) { acceleration = acc; }
@@ -297,7 +316,12 @@ namespace MelLib
 		//BoxHitDirection& GetSphereBoxHitDistance(const int num) { return sphereData[num].boxHitDistance; }
 		//BoxHitDirection& GetBoxBoxHitDistance(const int num) { return boxData[num].boxHitDistance; }
 
-
+		void SetHitSphereData(const SphereData& sphere) { hitSphereData = sphere; }
+		void SetHitBoxData(const BoxData& box) { hitBoxData = box; }
+		void SetHitBoardData(const BoardData& board) { hitBoardData = board; }
+		void SetHitPlaneData(const PlaneData& plane) { hitPlaneData = plane; }
+		void SetHitSegment3DData(const Segment3DData& segment) { hitSegment3DData = segment; }
+		void SetHitCapsuleData(const CapsuleData& capsule) { hitCapsuleData = capsule; }
 
 #ifdef _DEBUG
 		static void CreateCollisionCheckModelPipelineState();
@@ -308,10 +332,12 @@ namespace MelLib
 		void SetCollisionCheckModelData();
 		//衝突確認用モデルの描画
 		void DrawCollisionCheckModel();
+
 #endif // _DEBUG
 
-#pragma endregion
 
+
+#pragma endregion
 
 	};
 }

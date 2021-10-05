@@ -70,10 +70,11 @@ void MelLib::BoardData::CalcRotateDirPosition()
 	//ここ行列にしたほうがいい
 	//行列使いまわしたほうが計算コスト少ない
 
-	leftDownPos = Quaternion::GetZXYRotateQuaternion(leftDownPos, angle).ToVector3();
+	/*leftDownPos = Quaternion::GetZXYRotateQuaternion(leftDownPos, angle).ToVector3();
 	leftUpPos = Quaternion::GetZXYRotateQuaternion(leftUpPos, angle).ToVector3();
 	rightDownPos = Quaternion::GetZXYRotateQuaternion(rightDownPos, angle).ToVector3();
-	rightUpPos = Quaternion::GetZXYRotateQuaternion(rightUpPos, angle).ToVector3();
+	rightUpPos = Quaternion::GetZXYRotateQuaternion(rightUpPos, angle).ToVector3();*/
+
 }
 
 void MelLib::BoardData::SetPosition(const Vector3& pos)
@@ -103,56 +104,85 @@ void MelLib::BoardData::SetSize(const Vector2& size)
 
 
 	//0だとベクトルを求められないので、仕方なく回転させる
-	if (preSize == 0.0f)
-	{
-		leftDownPos = MelLib::Vector3(-size.x, -size.y, 0) / 2;
-		leftUpPos = MelLib::Vector3(-size.x, size.y, 0) / 2;
-		rightDownPos = MelLib::Vector3(size.x, -size.y, 0) / 2;
-		rightUpPos = MelLib::Vector3(size.x, size.y, 0) / 2;
+	//if (preSize == 0.0f)
+	//{
+	//	leftDownPos = MelLib::Vector3(-size.x, -size.y, 0) / 2;
+	//	leftUpPos = MelLib::Vector3(-size.x, size.y, 0) / 2;
+	//	rightDownPos = MelLib::Vector3(size.x, -size.y, 0) / 2;
+	//	rightUpPos = MelLib::Vector3(size.x, size.y, 0) / 2;
 
-		//回転
-		CalcRotateDirPosition();
-	}
-	else
-	{
-		//差(マイナスあり)を求める
-		Vector2 curSubPre = size - preSize;
-		Vector3 pos = position;
+	//	//回転
+	//	CalcRotateDirPosition();
+	//}
+	//else
+	//{
+	//	//差(マイナスあり)を求める
+	//	Vector2 curSubPre = size - preSize;
+	//	Vector3 pos = position;
 
-		/// <summary>
-		/// サイズを適応させるラムダ式
-		/// </summary>
-		/// <param name="size"></param>
-		auto calcMovePos = [&curSubPre, &pos](const Vector3& dirPos)
-		{
-			Vector3 posToDirPos = LibMath::OtherVector3(pos, dirPos);
-			Vector3 returnPos;
+	//	/// <summary>
+	//	/// サイズを適応させるラムダ式
+	//	/// </summary>
+	//	/// <param name="size"></param>
+	//	auto calcMovePos = [&curSubPre, &pos](const Vector3& dirPos)
+	//	{
+	//		Vector3 posToDirPos = LibMath::OtherVector3(pos, dirPos);
+	//		Vector3 returnPos;
 
-			//差のX分移動
-			returnPos = LibMath::FloatDistanceMoveVector3(dirPos, posToDirPos.x, curSubPre.x);
-			//差のY分移動
-			returnPos = LibMath::FloatDistanceMoveVector3(returnPos, posToDirPos.y, curSubPre.y);
+	//		//差のX分移動
+	//		returnPos = LibMath::FloatDistanceMoveVector3(dirPos, posToDirPos.x, curSubPre.x);
+	//		//差のY分移動
+	//		returnPos = LibMath::FloatDistanceMoveVector3(returnPos, posToDirPos.y, curSubPre.y);
 
-			return returnPos;
-		};
+	//		return returnPos;
+	//	};
 
-		//サイズ分拡縮
-		leftDownPos = calcMovePos(leftDownPos);
-		leftUpPos = calcMovePos(leftUpPos);
-		rightDownPos = calcMovePos(rightDownPos);
-		rightUpPos = calcMovePos(rightUpPos);
-	}
+	//	//サイズ分拡縮
+	//	leftDownPos = calcMovePos(leftDownPos);
+	//	leftUpPos = calcMovePos(leftUpPos);
+	//	rightDownPos = calcMovePos(rightDownPos);
+	//	rightUpPos = calcMovePos(rightUpPos);
+	//}
+
+	leftDownPos = MelLib::Vector3(-size.x, -size.y, 0) / 2;
+	leftUpPos = MelLib::Vector3(-size.x, size.y, 0) / 2;
+	rightDownPos = MelLib::Vector3(size.x, -size.y, 0) / 2;
+	rightUpPos = MelLib::Vector3(size.x, size.y, 0) / 2;
+
+	//回転
+	//ここ行列にしたほうがいい
+	//行列使いまわしたほうが計算コスト少ない
+	//CalcRotateDirPosition();
+	leftDownPos = Quaternion::GetZXYRotateQuaternion(leftDownPos, angle).ToVector3();
+	leftUpPos = Quaternion::GetZXYRotateQuaternion(leftUpPos, angle).ToVector3();
+	rightDownPos = Quaternion::GetZXYRotateQuaternion(rightDownPos, angle).ToVector3();
+	rightUpPos = Quaternion::GetZXYRotateQuaternion(rightUpPos, angle).ToVector3();
+
+
+	//移動
+	leftDownPos += position;
+	leftUpPos += position;
+	rightDownPos += position;
+	rightUpPos += position;
 }
 
 void MelLib::BoardData::SetAngle(const Vector3& angle)
 {
 	if (this->angle == angle)return;
-	this->angle = angle;
+	
 
 	//回転
 	normal = Quaternion::GetZXYRotateQuaternion(Vector3(0, 0, -1), angle).ToVector3();
-	CalcRotateDirPosition();
+	//CalcRotateDirPosition();
 
+	//ここ行列にしたほうがいい
+	//行列使いまわしたほうが計算コスト少ない
+	MelLib::Vector3 preSubCrr = angle - this->angle;
+	this->angle = angle;
+	leftDownPos = Quaternion::GetZXYRotateQuaternion(leftDownPos, preSubCrr).ToVector3();
+	leftUpPos = Quaternion::GetZXYRotateQuaternion(leftUpPos, preSubCrr).ToVector3();
+	rightDownPos = Quaternion::GetZXYRotateQuaternion(rightDownPos, preSubCrr).ToVector3();
+	rightUpPos = Quaternion::GetZXYRotateQuaternion(rightUpPos, preSubCrr).ToVector3();
 }
 
 

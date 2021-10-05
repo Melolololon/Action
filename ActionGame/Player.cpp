@@ -47,12 +47,12 @@ Player::Player(const MelLib::Vector3& pos)
 	
 
 	//浮き防止
-	StartFall(0.0f);
+	FallStart(0.0f);
 }
 
 void Player::Update()
 {
-	prePos = position;
+	prePos = GetPosition();
 	Move();
 	Jump();
 	Attack();
@@ -109,15 +109,15 @@ void Player::Move()
 	//if (position.y <= -100)position.y = 100;
 	
 	//落下するために
-	if(!GetIsFall())StartFall(0.0f);
+	if(!GetIsFall())FallStart(0.0f);
 
 }
 
 void Player::Jump()
 {
-	if(MelLib::Input::ButtonTrigger(1,MelLib::GamePadButton::A))
+	if(MelLib::Input::PadButtonTrigger(1,MelLib::PadButton::A))
 	{
-		StartFall(2.0f);
+		FallStart(2.0f);
 	}
 	
 }
@@ -135,7 +135,7 @@ void Player::Attack()
 	}
 
 	//ifの2行目のタイマー確認は、コンボ終了後にNONEにするため、その攻撃中に入らないようにするために書いてる
-	if (MelLib::Input::ButtonTrigger(1, MelLib::GamePadButton::X)
+	if (MelLib::Input::PadButtonTrigger(1, MelLib::PadButton::X)
 		&& (attackTimer.GetNowTime() == 0 && currentAttack == PlayerSlush::AttackType::NONE
 			|| attackTimer.GetNowTime() >= nextAttackTime[currentAttack] && currentAttack != PlayerSlush::AttackType::NONE))
 	{
@@ -158,11 +158,12 @@ void Player::Attack()
 
 			pPSlush = std::make_shared<PlayerSlush>(GetPosition(), playerDir, currentAttack, nextAttackTime[currentAttack]);
 			MelLib::GameObjectManager::GetInstance()->AddObject(pPSlush);
+
 		}
 	}
 
 	//攻撃判定も動かす
-	if (pPSlush)pPSlush->AddPosition(position - prePos);
+	if (pPSlush)pPSlush->AddPosition(GetPosition() - prePos);
 }
 
 void Player::SetAttackType()
@@ -238,7 +239,7 @@ void Player::Draw()
 {
 }
 
-void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D collisionType, const int arrayNum, const MelLib::ShapeType3D hitObjColType, const int hitObjArrayNum)
+void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)
 {
 	
 	if(typeid(*object) == typeid(Ground)
@@ -253,7 +254,7 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D colli
 		//addPos.y += MelLib::GameObject::GetGravutationalAcceleration();
 		
 		//投げ上げ処理終了
-		EndFall();
+		FallEnd();
 
 		//カプセルの下の先端から衝突点のベクトルを求め、その分押し出す。
 		//-0.15fは、押し出しすぎるとHitが呼ばれなくなって、非ジャンプ時の落下の処理で下がってがくがくするのを防止するためにある

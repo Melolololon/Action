@@ -88,6 +88,8 @@ namespace MelLib
 		UINT modelFileObjectNum = 0;
 
 
+		//テクスチャ未セット時にセットする透明のテクスチャバッファ
+		static ComPtr<ID3D12Resource>colorZeroTexBuffer;
 	private:
 
 		void CreateConstBuffer();
@@ -173,6 +175,7 @@ namespace MelLib
 
 #pragma region ゲット
 
+		Material* GetPMaterial(const int num) { return materials[num]; }
 
 #pragma region 操作見た目変更
 

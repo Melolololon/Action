@@ -19,6 +19,9 @@ private:
 	//Œü‚¢‚Ä‚éŒü‚«
 	MelLib::Vector3 playerDir = MelLib::Vector3(0, 0, 1);
 
+	static const unsigned int HP_MAX = 200;
+	unsigned int hp = HP_MAX;
+
 #pragma region UŒ‚
 
 	std::shared_ptr<PlayerSlush>pPSlush = nullptr;
@@ -73,9 +76,9 @@ public:
 	void Hit
 	(
 		const GameObject* const  object,
-		const MelLib::ShapeType3D collisionType,
+		const MelLib::ShapeType3D& collisionType,
 		const int arrayNum,
-		const MelLib::ShapeType3D hitObjColType,
+		const MelLib::ShapeType3D& hitObjColType,
 		const int hitObjArrayNum
 	)override;
 

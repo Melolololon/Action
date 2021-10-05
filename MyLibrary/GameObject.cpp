@@ -74,9 +74,9 @@ void GameObject::Draw()
 void GameObject::Hit
 (
 	const GameObject* const  object,
-	const ShapeType3D collisionType,
+	const ShapeType3D& collisionType,
 	const int arrayNum,
-	const ShapeType3D hitObjColType,
+	const ShapeType3D& hitObjColType,
 	const int hitObjArrayNum
 )
 {
@@ -277,7 +277,7 @@ void MelLib::GameObject::SetCollisionCheckModelData()
 	dataNum = sphereData.size();
 	for (size_t i = 0; i < dataNum; i++)
 	{
-		sphereModelObjects[i].SetScale(sphereData[i].GetRadius());
+		sphereModelObjects[i].SetScale(sphereData[i].GetRadius() * 2);
 		sphereModelObjects[i].SetPosition(sphereData[i].GetPosition());
 	}
 
@@ -336,6 +336,8 @@ void MelLib::GameObject::SetCollisionCheckModelData()
 
 void MelLib::GameObject::DrawCollisionCheckModel()
 {
+	if (!drawCollisionModel)return;
+
 	for(auto& box : boxModelObjects)
 	{
 		box.Draw();

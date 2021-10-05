@@ -10,6 +10,7 @@ using namespace MelLib;
 
 std::unordered_map<std::string, std::unique_ptr<ModelObject>>ModelObject::pModelObjects;
 
+
 ID3D12Device* ModelObject::device;
 std::vector<ID3D12GraphicsCommandList*>ModelObject::cmdLists;
 ComPtr<ID3D12RootSignature> ModelObject::rootSignature;
@@ -479,23 +480,19 @@ void ModelObject::SetCmdList()
 
 #pragma region テクスチャ
 
-	
-		if (materials[i]->GetPTexture())
-		{
-			ID3D12DescriptorHeap* textureDescHeap = materials[i]->GetPTextureHeap();
-			std::vector<ID3D12DescriptorHeap*> ppHeaps;
-			ppHeaps.push_back(textureDescHeap);
-			cmdLists[0]->SetDescriptorHeaps(1, &ppHeaps[0]);
+		ID3D12DescriptorHeap* textureDescHeap = materials[i]->GetPTextureHeap();
+		std::vector<ID3D12DescriptorHeap*> ppHeaps;
+		ppHeaps.push_back(textureDescHeap);
+		cmdLists[0]->SetDescriptorHeaps(1, &ppHeaps[0]);
 
 
-			D3D12_GPU_DESCRIPTOR_HANDLE gpuDescHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE
-			(
-				materials[i]->GetPTextureHeap()->GetGPUDescriptorHandleForHeapStart(),
-				i,
-				device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)
-			);
-			cmdLists[0]->SetGraphicsRootDescriptorTable(TEXURE_ROOTPARAM_NUM, gpuDescHandle);
-		}
+		D3D12_GPU_DESCRIPTOR_HANDLE gpuDescHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE
+		(
+			materials[i]->GetPTextureHeap()->GetGPUDescriptorHandleForHeapStart(),
+			i,
+			device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)
+		);
+		cmdLists[0]->SetGraphicsRootDescriptorTable(TEXURE_ROOTPARAM_NUM, gpuDescHandle);
 #pragma endregion
 
 #pragma region 定数
@@ -835,6 +832,9 @@ bool ModelObject::Initialize(ID3D12Device* dev, const std::vector<ID3D12Graphics
 #pragma endregion
 
 	PipelineState::SetModelRootSignature(rootSignature.Get());
+
+
+	
 
 }
 

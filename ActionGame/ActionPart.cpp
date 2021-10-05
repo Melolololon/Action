@@ -25,9 +25,9 @@ void ActionPart::Initialize()
 
 void ActionPart::Update()
 {
-	////ポーズ
-	if (MelLib::Input::ButtonTrigger(1,MelLib::GamePadButton::START))isPause = isPause == false ? true : false;
-	if (isPause)return;
+	// ポーズ(仮)
+	if (MelLib::Input::PadButtonTrigger(1,MelLib::PadButton::START))isPause = isPause == false ? true : false;
+	//if (isPause)return;
 
 	MelLib::GameObjectManager::GetInstance()->Update();
 }
