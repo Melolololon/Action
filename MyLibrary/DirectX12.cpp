@@ -302,7 +302,7 @@ void DirectX12::Initialize(HWND hwnd, int windouWidth, int windowHeight)
 	Sprite::Initialize(dev.Get(), cmdList.Get());
 	Sprite2DBase::Initialize(windouWidth, windowHeight);
 	Sprite3D::Initialize();
-	RenderTarget::Initialize();
+	RenderTarget::Initialize(dev.Get(), cmdList.Get());
 
 	Color rtColor =
 		Color
@@ -375,7 +375,8 @@ void DirectX12::LoopStartProcess()
 	cmdList->ResourceBarrier(1, &barrierDesc);*/
 #pragma endregion
 
-	RenderTarget::Get("main")->PreDrawProcess();
+	//RenderTarget::Get("main")->PreDrawProcess();
+	RenderTarget::DrawBegin();
 
 
 	TextWrite::LoopStartProcess();
@@ -384,6 +385,7 @@ void DirectX12::LoopStartProcess()
 
 void DirectX12::LoopEndProcess()
 {
+	RenderTarget::AllDraw();
 	//板ポリをバックバッファーに描画する準備
 	UINT bbIndex = swapchain->GetCurrentBackBufferIndex();
 	barrierDesc.Transition.pResource = backBuffer[bbIndex].Get();
@@ -399,8 +401,8 @@ void DirectX12::LoopEndProcess()
 	//画面のクリア
 	cmdList->ClearRenderTargetView(rtvH, clearColor, 0, nullptr);
 	cmdList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
-
-	RenderTarget::AllDraw();
+	
+	RenderTarget::MainRTDraw();
 
 	ImguiManager::GetInstance()->Draw();
 #pragma region RTVからPRESENTへ
