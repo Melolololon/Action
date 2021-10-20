@@ -96,7 +96,6 @@ void MelLib::ModelData::CreatePrimitiveModel()
 		pModelData->directionMaxPos = CalcDirectionMaxPosition(vertices);
 		
 
-		pModelData->material.resize(1);
 		/*pModelData->material.resize(1);
 		pModelData->material[0] = std::make_unique<ADSAMaterial>();
 		pModelData->material[0]->Create(PipelineState::GetDefaultDrawData(PipelineStateType::MODEL));*/
@@ -325,6 +324,8 @@ void MelLib::ModelData::CreateModel()
 
 
 	modelFormat = ModelFormat::MODEL_FORMAT_PRIMITIVE;
+	material.resize(vertices.size());
+	directionMaxPos = CalcDirectionMaxPosition(vertices);
 }
 
 bool MelLib::ModelData::Create(std::vector<std::vector<FbxVertex>> vertices, std::vector<std::vector<USHORT>> indices, const bool batchDeletionFlag, const std::string& name)
@@ -413,7 +414,6 @@ void ModelData::Initialize(ID3D12Device* pDevice)
 	defaultMaterial->Create(PipelineState::GetDefaultDrawData(PipelineStateType::MODEL));
 	CreatePrimitiveModel();
 }
-
 
 
 bool ModelData::LoadModel(const std::string& path, const std::string& name)
@@ -806,5 +806,45 @@ std::vector<std::array<float, 6>> MelLib::ModelData::CalcDirectionMaxPosition(st
 		}
 	}
 	return pos;
+}
+
+MelLib::ModelData::ModelData(ModelData& data)
+{
+	Create(data.vertices, data.indices);
+
+	modelName = data.modelName;
+	pTexture.resize(data.vertices.size());
+	material.resize(data.material.size());
+
+	for (int i = 0; i < data.material.size(); i++)
+	{
+		//nullptr‚¶‚á‚È‚©‚Á‚½‚ç¶¬(‘ã“ü‚µ‚½‚ç¶¬‚³‚ê‚é)
+		if (data.material[i])
+		{
+			material[i] = std::make_unique<ADSAMaterial>();
+			*material[i] = *data.material[i];
+		}
+	}
+}
+
+ModelData& MelLib::ModelData::operator=(ModelData& data)
+{
+	Create(data.vertices, data.indices);
+
+	modelName = data.modelName;
+	pTexture.resize(data.vertices.size());
+	material.resize(data.material.size());
+
+	for (int i = 0; i < data.material.size(); i++)
+	{
+		//nullptr‚¶‚á‚È‚©‚Á‚½‚ç¶¬(‘ã“ü‚µ‚½‚ç¶¬‚³‚ê‚é)
+		if (data.material[i])
+		{
+			material[i] = std::make_unique<ADSAMaterial>();
+			*material[i] = *data.material[i];
+		}
+	}
+
+	return *this;
 }
 

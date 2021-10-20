@@ -22,6 +22,21 @@ private:
 	static const unsigned int HP_MAX = 200;
 	unsigned int hp = HP_MAX;
 	bool hitGround = false;
+
+#pragma region 移動
+	float speed = 0.5f;
+
+#pragma region ダッシュ
+	//シュン!って感じで動くやつ
+	//ヤーナムステップ、閃乱カグラのあれ
+	bool isDash = false;
+	MelLib::FrameTimer dashTimer;
+
+#pragma endregion
+
+#pragma endregion
+
+
 #pragma region 攻撃
 
 	std::shared_ptr<PlayerSlush>pPSlush = nullptr;
@@ -53,6 +68,7 @@ public:
 	
 	
 	void Move();
+	void Dash();
 	void Jump();
 
 	//攻撃処理、攻撃判定の操作

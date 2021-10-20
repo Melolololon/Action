@@ -44,7 +44,10 @@ Player::Player(const MelLib::Vector3& pos)
 
 	SetPosition(pos);
 
-	
+
+#pragma region ダッシュ
+	dashTimer.SetMaxTime(60 * 0.4);
+#pragma endregion
 
 	//浮き防止
 	FallStart(0.0f);
@@ -70,14 +73,16 @@ void Player::Update()
 
 void Player::Move()
 {
-	//攻撃中は動けないように
-	if (attackTimer.GetNowTime() > 0)return;
+	Dash();
+	
+	if (attackTimer.GetNowTime() > 0 
+		|| isDash)return;
 
 
-	static const float DASH_STICK_PAR = 60.0f;
+	static const float FAST_WARK_STICK_PAR = 60.0f;
 	static const float WALK_STICK_PAR = 20.0f;
-	static const float DASH_SPEED = 0.7f;
-	static const float WALK_SPEED = 0.25f;
+	static const float MAX_FAST_WRK_SPEED = 0.7f;
+	static const float MAX_WALK_SPEED = 0.25f;
 
 	if (MelLib::Input::LeftStickUp(1, WALK_STICK_PAR)
 		|| MelLib::Input::LeftStickDown(1, WALK_STICK_PAR)
@@ -89,16 +94,16 @@ void Player::Move()
 		MelLib::Vector3 addPos = playerDir;
 
 		//ダッシュの傾き量を超えていたらダッシュ
-		if (MelLib::Input::LeftStickUp(1, DASH_STICK_PAR)
-			|| MelLib::Input::LeftStickDown(1, DASH_STICK_PAR)
-			|| MelLib::Input::LeftStickRight(1, DASH_STICK_PAR)
-			|| MelLib::Input::LeftStickLeft(1, DASH_STICK_PAR))
+		if (MelLib::Input::LeftStickUp(1, FAST_WARK_STICK_PAR)
+			|| MelLib::Input::LeftStickDown(1, FAST_WARK_STICK_PAR)
+			|| MelLib::Input::LeftStickRight(1, FAST_WARK_STICK_PAR)
+			|| MelLib::Input::LeftStickLeft(1, FAST_WARK_STICK_PAR))
 		{
-			addPos *= DASH_SPEED;
+			addPos *= MAX_FAST_WRK_SPEED;
 		}
 		else
 		{
-			addPos *= WALK_SPEED;
+			addPos *= MAX_WALK_SPEED;
 		}
 
 		AddPosition(addPos);
@@ -112,6 +117,31 @@ void Player::Move()
 	//落下するために
 	if(!GetIsFall())FallStart(0.0f);
 
+}
+
+void Player::Dash()
+{
+	static const float MAX_DASH_SPEED = 1.5f;
+	static const float START_DASH_SPEED = 1.0f;
+	
+
+	if (MelLib::Input::PadButtonTrigger(1, MelLib::PadButton::B))
+	{
+		isDash = true;
+		dashTimer.SetStopFlag(false);
+	}
+
+	if(isDash)
+	{
+		AddPosition(playerDir * MAX_DASH_SPEED);
+	}
+
+	if(dashTimer.GetMaxOverFlag())
+	{
+		isDash = false;
+		dashTimer.SetStopFlag(true);
+		dashTimer.ResetTimeZero();
+	}
 }
 
 void Player::Jump()

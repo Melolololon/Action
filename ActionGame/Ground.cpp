@@ -17,7 +17,8 @@ Ground::Ground(const MelLib::Vector3& pos, const MelLib::Vector3& angle, const M
 
 	//モデル用意
 	//板ポリをセットして生成
-	modelObjects.emplace("main",MelLib::ModelObject());
+	//modelObjects.emplace("main",MelLib::ModelObject());
+	modelObjects["main"];
 	modelObjects["main"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX), nullptr);
 	modelObjects["main"].SetMaterial(&testMtl, 0);
 	/*modelObjects["main"].SetAngle(MelLib::Vector3(90.0f, 0.0f, 0.0f));

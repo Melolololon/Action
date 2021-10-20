@@ -179,6 +179,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp" />
+    <ClCompile Include="ClothSimulator.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="CollisionType.cpp" />
     <ClCompile Include="Counter.cpp" />
@@ -195,6 +196,7 @@
     <ClCompile Include="Interpolation.cpp" />
     <ClCompile Include="Limit.cpp" />
     <ClCompile Include="Material.cpp" />
+    <ClCompile Include="ModelVertexData.cpp" />
     <ClCompile Include="Network.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="Physics.cpp" />
@@ -462,6 +464,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h" />
+    <ClInclude Include="ClothSimulator.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="Counter.h" />
     <ClInclude Include="ErrorProcess.h" />
@@ -479,6 +482,7 @@
     <ClInclude Include="LibraryEnum.h" />
     <ClInclude Include="Limit.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="ModelVertexData.h" />
     <ClInclude Include="Network.h" />
     <ClInclude Include="Particle.h" />
     <ClInclude Include="Physics.h" />

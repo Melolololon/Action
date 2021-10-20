@@ -91,12 +91,21 @@ namespace MelLib
 		UINT modelFileObjectNum = 0;
 
 
+
 		//テクスチャ未セット時にセットする透明のテクスチャバッファ
 		static ComPtr<ID3D12Resource>colorZeroTexBuffer;
 
+		//こいつ宣言してModelObjectのvectorとかresizeするとエラー出る。対策して
+		//ModelDataを持たせないでモデルデータ渡した時に使うデータだけ持ってくればいい?
+		//一時的にModelData作ってModelObjectにセットしてすぐ消しちゃう
+		//渡すとなると、生成するごとに頂点のコピーが必要になる(コピーしないとカットしたモデルの頂点参照できない)
+		//直接ModelObjectに頂点とか渡して作れるようにしてもいいかも
+		//頂点とインデックス関係のものだけをまとめたクラスを作って、それをこれに持たせるのもあり
 		
-		//std::unique_ptr<ModelData> catFrontModelData;
-		//std::unique_ptr<ModelData> catBackModelData;
+		// //ModelDataないとヒープ用意できないから、
+		//マテリアルとかのコピーコンストラクタ作ったほうがいいかも
+		std::unique_ptr<ModelData> catFrontModelData;
+		std::unique_ptr<ModelData> catBackModelData;
 		//ModelData* catFrontModelData;
 		//ModelData* catBackModelData;
 
@@ -113,7 +122,8 @@ namespace MelLib
 
 		//nullptr渡される可能性を考えると、boolをreturnできるようにしたほうがいい?
 		ModelObject() {}
-
+		ModelObject( ModelObject& obj);
+		ModelObject& operator= (ModelObject& obj);
 		~ModelObject() {}
 
 		static bool Initialize(ID3D12Device* dev, const std::vector<ID3D12GraphicsCommandList*>& cmdList);
@@ -143,9 +153,14 @@ namespace MelLib
 
 #pragma region メッシュカット
 		/// <summary>
-		/// モデルの切断(仮実装用の関数)
+		/// モデルを平面に応じて切断します。
 		/// </summary>
-		void MeshCat(const PlaneData& plane,ModelData* pFront, ModelData* pBack);
+		/// <param name="plane">平面</param>
+		/// <param name="pFront">平面の表側にあるモデル情報を格納するModelDataのポインタ</param>
+		/// <param name="pBack">平面の裏側にあるモデル情報を格納するModelDataのポインタ<</param>
+		/// <param name="createCrossSection">断面を形成するかどうか</param>
+		/// <returns>切断できたかどうか</returns>
+		bool MeshCat(const PlaneData& plane,ModelData*& pFront, ModelData*& pBack,const bool createCrossSection);
 #pragma endregion
 
 
@@ -185,6 +200,9 @@ namespace MelLib
 
 #pragma region ゲット
 
+		//この辺constにする
+
+		ModelData* GetPModelData() { return pModelData; }
 		Material* GetPMaterial(const int num) { return materials[num]; }
 
 #pragma region 操作見た目変更
@@ -216,7 +234,11 @@ namespace MelLib
 			const bool transformImpact
 		);
 
-
+		/// <summary>
+		/// モデルのポリゴンを当たり判定に使えるデータに変換して返します。
+		/// </summary>
+		/// <returns>モデルを元にセットした三角形の情報の配列</returns>
+		std::vector<std::vector<TriangleData>>GetModelTriangleData()const;
 #pragma endregion
 
 
