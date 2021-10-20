@@ -46,7 +46,10 @@ Player::Player(const MelLib::Vector3& pos)
 
 
 #pragma region ダッシュ
-	dashTimer.SetMaxTime(60 * 0.4);
+	dashEasing.SetAddPar(5.0f);
+
+
+
 #pragma endregion
 
 	//浮き防止
@@ -124,23 +127,36 @@ void Player::Dash()
 	static const float MAX_DASH_SPEED = 1.5f;
 	static const float START_DASH_SPEED = 1.0f;
 	
+	static const float DASH_DISTANCE = 40.0f;
 
 	if (MelLib::Input::PadButtonTrigger(1, MelLib::PadButton::B))
 	{
 		isDash = true;
-		dashTimer.SetStopFlag(false);
+
+		dashEasing.SetStart(GetPosition());
+		dashEasing.SetEnd(MelLib::LibMath::FloatDistanceMoveVector3(GetPosition(), playerDir, DASH_DISTANCE));
 	}
 
 	if(isDash)
 	{
-		AddPosition(playerDir * MAX_DASH_SPEED);
+		MelLib::Vector3 prePos = GetPosition();
+		MelLib::Vector3 pos = dashEasing.EaseInOut();
+		MelLib::Vector3 addPos = pos - prePos;
+		
+		// Yを0にしないとダッシュ中にYが変わったらおかしくなっちゃう
+		AddPosition(MelLib::Vector3(addPos.x, 0, addPos.z));
+		
+		//AddPosition(dashEasing.GetValueDifference());
+		//SetPosition(dashEasing.EaseInOut());
 	}
 
-	if(dashTimer.GetMaxOverFlag())
+	if(dashEasing.GetPar() >= 100.0f)
 	{
+		/*dashEasing.SetPar(100.0f);
+		SetPosition(dashEasing.EaseInOut());*/
+
+		dashEasing.SetPar(0.0f);
 		isDash = false;
-		dashTimer.SetStopFlag(true);
-		dashTimer.ResetTimeZero();
 	}
 }
 

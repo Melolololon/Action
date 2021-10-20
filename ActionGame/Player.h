@@ -2,6 +2,7 @@
 #include"GameObject.h"
 
 #include<FrameTimer.h>
+#include<Easing.h>
 
 #include"PlayerSlush.h"
 
@@ -30,8 +31,10 @@ private:
 	//シュン!って感じで動くやつ
 	//ヤーナムステップ、閃乱カグラのあれ
 	bool isDash = false;
-	MelLib::FrameTimer dashTimer;
 
+	MelLib::Easing<MelLib::Vector3> dashEasing;
+	//ダッシュの増加量
+	MelLib::Vector3 dashAddValue = 0.0f;
 #pragma endregion
 
 #pragma endregion
