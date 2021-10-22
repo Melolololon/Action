@@ -30,11 +30,11 @@ std::unordered_map<PlayerSlush::AttackType, const int>Player::nextAttackTime =
 Player::Player(const MelLib::Vector3& pos)
 {
 	//物理演算のためにseterとgeter作る?
-	
-	
+
+
 	collisionFlag.capsule = true;
 	capsuleData.resize(1);
-	capsuleData[0].SetRadius(0.5f); 
+	capsuleData[0].SetRadius(0.5f);
 	capsuleData[0].GetRefSegment3DData().
 		SetPosition(MelLib::Value2<MelLib::Vector3>
 			(GetPosition() + MelLib::Vector3(0, 3, 0), GetPosition() + MelLib::Vector3(0, -3, 0)));
@@ -62,7 +62,7 @@ void Player::Update()
 	Move();
 	Jump();
 	Attack();
-	
+
 	CalcMovePhysics();
 
 	//とりあえずSetPositionを使って判定セットしたり攻撃判定動かしてる
@@ -70,18 +70,18 @@ void Player::Update()
 
 	Camera();
 
-	
+
 	hitGround = false;
 }
 
 void Player::Move()
 {
 	Dash();
-	
-	if (attackTimer.GetNowTime() > 0 
+
+	if (attackTimer.GetNowTime() > 0
 		|| isDash)return;
-	
-	
+
+
 	static const float FAST_WARK_STICK_PAR = 60.0f;
 	static const float WALK_STICK_PAR = 20.0f;
 	static const float MAX_FAST_WARK_SPEED = 0.7f;
@@ -89,20 +89,20 @@ void Player::Move()
 	static const float FRAME_UP_FAST_WARK_SPEED = MAX_FAST_WARK_SPEED / 10;
 	static const float FRAME_UP_WARK_SPEED = MAX_WALK_SPEED / 10;
 
-	if (MelLib::Input::LeftStickUp(1, WALK_STICK_PAR)
-		|| MelLib::Input::LeftStickDown(1, WALK_STICK_PAR)
-		|| MelLib::Input::LeftStickRight(1, WALK_STICK_PAR)
-		|| MelLib::Input::LeftStickLeft(1, WALK_STICK_PAR)) 
+	if (MelLib::Input::LeftStickUp(WALK_STICK_PAR)
+		|| MelLib::Input::LeftStickDown(WALK_STICK_PAR)
+		|| MelLib::Input::LeftStickRight(WALK_STICK_PAR)
+		|| MelLib::Input::LeftStickLeft(WALK_STICK_PAR))
 	{
-		playerDir = MelLib::Input::LeftStickVector3(1, MelLib::Camera::Get(), false, true);
+		playerDir = MelLib::Input::LeftStickVector3(MelLib::Camera::Get(), false, true);
 
 		MelLib::Vector3 addPos = playerDir;
 
 		//ダッシュの傾き量を超えていたらダッシュ
-		if (MelLib::Input::LeftStickUp(1, FAST_WARK_STICK_PAR)
-			|| MelLib::Input::LeftStickDown(1, FAST_WARK_STICK_PAR)
-			|| MelLib::Input::LeftStickRight(1, FAST_WARK_STICK_PAR)
-			|| MelLib::Input::LeftStickLeft(1, FAST_WARK_STICK_PAR))
+		if (MelLib::Input::LeftStickUp(FAST_WARK_STICK_PAR)
+			|| MelLib::Input::LeftStickDown(FAST_WARK_STICK_PAR)
+			|| MelLib::Input::LeftStickRight(FAST_WARK_STICK_PAR)
+			|| MelLib::Input::LeftStickLeft(FAST_WARK_STICK_PAR))
 		{
 			if (speed < MAX_FAST_WARK_SPEED)speed += FRAME_UP_FAST_WARK_SPEED;
 			else speed = MAX_FAST_WARK_SPEED;
@@ -118,7 +118,7 @@ void Player::Move()
 
 		AddPosition(addPos);
 
-		
+
 	}
 	else
 	{
@@ -127,9 +127,9 @@ void Player::Move()
 
 
 	//if (position.y <= -100)position.y = 100;
-	
+
 	//落下するために
-	if(!GetIsFall())FallStart(0.0f);
+	if (!GetIsFall())FallStart(0.0f);
 
 }
 
@@ -137,10 +137,10 @@ void Player::Dash()
 {
 	static const float MAX_DASH_SPEED = 1.5f;
 	static const float START_DASH_SPEED = 1.0f;
-	
+
 	static const float DASH_DISTANCE = 40.0f;
 
-	if (MelLib::Input::PadButtonTrigger(1, MelLib::PadButton::B) 
+	if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::B)
 		&& !isDash)
 	{
 		isDash = true;
@@ -149,18 +149,18 @@ void Player::Dash()
 		dashEasing.SetEnd(MelLib::LibMath::FloatDistanceMoveVector3(GetPosition(), playerDir, DASH_DISTANCE));
 	}
 
-	if(isDash)
+	if (isDash)
 	{
 		MelLib::Vector3 prePos = GetPosition();
 		MelLib::Vector3 pos = dashEasing.EaseInOut();
 		MelLib::Vector3 addPos = pos - prePos;
-		
+
 		// Yを0にしないとダッシュ中にYが変わったらおかしくなっちゃう
 		AddPosition(MelLib::Vector3(addPos.x, 0, addPos.z));
-		
+
 	}
 
-	if(dashEasing.GetPar() >= 100.0f)
+	if (dashEasing.GetPar() >= 100.0f)
 	{
 		dashEasing.SetPar(0.0f);
 		isDash = false;
@@ -171,18 +171,18 @@ void Player::Jump()
 {
 	if (attackTimer.GetNowTime() != 0)return;
 
-	if(MelLib::Input::PadButtonTrigger(1,MelLib::PadButton::A))
+	if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::A))
 	{
 		FallStart(2.0f);
 	}
-	
+
 }
 
 
 
 void Player::Attack()
 {
-	if(attackTimer.GetMaxOverFlag())
+	if (attackTimer.GetMaxOverFlag())
 	{
 		currentAttack = PlayerSlush::AttackType::NONE;
 		attackTimer.ResetTimeZero();
@@ -191,7 +191,7 @@ void Player::Attack()
 	}
 
 	//ifの2行目のタイマー確認は、コンボ終了後にNONEにするため、その攻撃中に入らないようにするために書いてる
-	if (MelLib::Input::PadButtonTrigger(1, MelLib::PadButton::X)
+	if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::X)
 		&& (attackTimer.GetNowTime() == 0 && currentAttack == PlayerSlush::AttackType::NONE
 			|| attackTimer.GetNowTime() >= nextAttackTime[currentAttack] && currentAttack != PlayerSlush::AttackType::NONE))
 	{
@@ -204,9 +204,9 @@ void Player::Attack()
 		attackTimer.SetMaxTime(attackTime[currentAttack]);
 
 		//コンボの最後の時にボタン押したらNONEをセットするため、コンボを終わらせるためのif
-		if (currentAttack != PlayerSlush::AttackType::NONE) 
+		if (currentAttack != PlayerSlush::AttackType::NONE)
 		{
-			if(pPSlush)
+			if (pPSlush)
 			{
 				//解放
 				pPSlush.reset();
@@ -227,7 +227,7 @@ void Player::SetAttackType()
 	switch (currentAttack)
 	{
 	case PlayerSlush::AttackType::NONE:
-		if(hitGround)currentAttack = PlayerSlush::AttackType::NORMAL_1;
+		if (hitGround)currentAttack = PlayerSlush::AttackType::NORMAL_1;
 		break;
 	case PlayerSlush::AttackType::NORMAL_1:
 		currentAttack = PlayerSlush::AttackType::NORMAL_2;
@@ -262,17 +262,17 @@ void Player::Camera()
 	static const float MAX_CAMERA_SPEED = 3.0f;
 	static const float FRAME_UP_CAMERA_SPEED = MAX_CAMERA_SPEED / 10;
 
-	if (!MelLib::Input::RightStickLeft(1, 30.0f)
-		&& !MelLib::Input::RightStickRight(1, 30.0f)
-		&& !MelLib::Input::RightStickUp(1, 30.0f)
-		&& !MelLib::Input::RightStickDown(1, 30.0f))cameraSpeed = 0.0f;
+	if (!MelLib::Input::RightStickLeft(30.0f)
+		&& !MelLib::Input::RightStickRight(30.0f)
+		&& !MelLib::Input::RightStickUp(30.0f)
+		&& !MelLib::Input::RightStickDown(30.0f))cameraSpeed = 0.0f;
 	else cameraSpeed += FRAME_UP_CAMERA_SPEED;
 
-	if (MelLib::Input::RightStickLeft(1, 30.0f))addCameraAngle.y = -cameraSpeed;
-	else if (MelLib::Input::RightStickRight(1, 30.0f))addCameraAngle.y = cameraSpeed;
-	if (MelLib::Input::RightStickUp(1, 30.0f))addCameraAngle.x = -cameraSpeed;
-	else if (MelLib::Input::RightStickDown(1, 30.0f))addCameraAngle.x = cameraSpeed;
-	
+	if (MelLib::Input::RightStickLeft(30.0f))addCameraAngle.y = -cameraSpeed;
+	else if (MelLib::Input::RightStickRight(30.0f))addCameraAngle.y = cameraSpeed;
+	if (MelLib::Input::RightStickUp(30.0f))addCameraAngle.x = -cameraSpeed;
+	else if (MelLib::Input::RightStickDown(30.0f))addCameraAngle.x = cameraSpeed;
+
 	if (cameraSpeed >= MAX_CAMERA_SPEED)cameraSpeed = MAX_CAMERA_SPEED;
 
 	cameraAngle += addCameraAngle;
@@ -292,11 +292,10 @@ void Player::SetCameraPosition()
 	MelLib::Camera* pCamera = MelLib::Camera::Get();
 	pCamera->SetRotateCriteriaPosition
 	(MelLib::LibMath::FloatDistanceMoveVector3
-	(GetPosition(), MelLib::LibMath::OtherVector3(pCamera->GetCameraPosition(), pCamera->GetTargetPosition()), 30.0f)
-	);
+	(GetPosition(), MelLib::LibMath::OtherVector3(pCamera->GetCameraPosition(), pCamera->GetTargetPosition()), 30.0f));
 
 
-	
+
 
 }
 
@@ -306,18 +305,18 @@ void Player::Draw()
 
 void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)
 {
-	
-	if(typeid(*object) == typeid(Ground)
+
+	if (typeid(*object) == typeid(Ground)
 		&& collisionType == MelLib::ShapeType3D::SEGMENT)
 	{
 		MelLib::Vector3 addPos;
-		
+
 		//velocity分戻すと戻しすぎちゃう
 		//カプセルの下の座標-半径(先端座標)から衝突点へのベクトルの大きさ分戻せばOK?
-		
+
 		//重力加速度分上げる
 		//addPos.y += MelLib::GameObject::GetGravutationalAcceleration();
-		
+
 		//投げ上げ処理終了
 		FallEnd();
 
@@ -326,9 +325,9 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 		//線分の先端がヒットしたらカプセルの先端が上に来るまで押し返すから、-0.15引かないとがくがくする
 		/*addPos.y -= (capsuleData[0].GetSegment3DData().GetPosition().v2.y - capsuleData[0].GetRadius()) -
 			capsuleData[0].GetSegment3DData().GetCalcResult().boardHitPos.y;*/
-		
 
-		//カプセルじゃなくて線分で判定取ってるときの処理
+
+			//カプセルじゃなくて線分で判定取ってるときの処理
 		addPos.y += segment3DData[0].GetCalcResult().boardHitPos.y - segment3DData[0].GetPosition().v2.y;
 		//segment3DData[0] = capsuleData[0].GetSegment3DData();
 

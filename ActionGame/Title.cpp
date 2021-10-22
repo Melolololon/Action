@@ -23,14 +23,16 @@ void Title::Update()
 #pragma region ƒV[ƒ“‘JˆÚ
 
 	bool pushSceneChangeButton =
-		MelLib::Input::PadButtonTrigger(1, MelLib::PadButton::A)
-		|| MelLib::Input::PadButtonTrigger(1, MelLib::PadButton::B)
-		|| MelLib::Input::PadButtonTrigger(1, MelLib::PadButton::START);
+		MelLib::Input::PadButtonTrigger(MelLib::PadButton::A)
+		|| MelLib::Input::PadButtonTrigger(MelLib::PadButton::B)
+		|| MelLib::Input::PadButtonTrigger(MelLib::PadButton::START);
 
 	if(pushSceneChangeButton && !Fade::GetInstance()->GetIsFade())
 	{
 		Fade::GetInstance()->Start();
 	}
+
+	Fade::GetInstance()->Update();
 
 	if(Fade::GetInstance()->GetChangeSceneFlag())
 	{

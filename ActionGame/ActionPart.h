@@ -1,15 +1,24 @@
 #pragma once
 #include"Scene.h"
 
+#include<Sprite2D.h>
+
 //アクションパートのシーン
 class ActionPart :public MelLib::Scene
 {
 private:
 
 private:
-	// ポーズ中の項目
+#pragma region ポーズ
+	// 一気にメニューを表示せずに、少しづつアルファ値を上げて表示すること
+
 	bool isPause = false;
+	bool pauseEnd = false;
+	//現在選ばれている項目
 	int currentPauseSelect = 0;
+	//ボタンを押されて選ばれた項目
+	int pushPauseSelect = 0;
+	// ポーズ中の項目
 	struct PauseMenu 
 	{
 		static const int PAUSE_END = 0;
@@ -19,10 +28,22 @@ private:
 		static const int NUM_MAX = 3;
 	};
 
+	// ポーズ関係のスプライトのアルファ値
+	float pauseSubAlpha = 100.0f;
+
+	// これObject2Dにしてもいいかも
+	// ポーズ中の背景
+	MelLib::Sprite2D pauseBackSpr;
+#pragma endregion
+
+	bool isOption = false;
+
+
 private:
 	void LoadResources();
 
-	void Pause();
+	void PauseUpdate();
+	void PauseDraw();
 public:
 	void Initialize()override;//初期化
 	void Update()override;

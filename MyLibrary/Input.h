@@ -16,7 +16,7 @@
 #include"Vector.h"
 #include"Camera.h"
 
-namespace MelLib 
+namespace MelLib
 {
 	// ゲームパッドのボタンの列挙
 	enum class PadButton
@@ -45,18 +45,21 @@ namespace MelLib
 	};
 
 	// Input リファレンス
-    // https://sites.google.com/view/melgames/%E8%87%AA%E4%BD%9C%E3%83%A9%E3%82%A4%E3%83%96%E3%83%A9%E3%83%AA/%E3%83%AA%E3%83%95%E3%82%A1%E3%83%AC%E3%83%B3%E3%82%B9/%E4%BD%BF%E7%94%A8%E4%BB%BB%E6%84%8F%E3%82%AF%E3%83%A9%E3%82%B9/%E5%85%A5%E5%8A%9B
+	// https://sites.google.com/view/melgames/%E8%87%AA%E4%BD%9C%E3%83%A9%E3%82%A4%E3%83%96%E3%83%A9%E3%83%AA/%E3%83%AA%E3%83%95%E3%82%A1%E3%83%AC%E3%83%B3%E3%82%B9/%E4%BD%BF%E7%94%A8%E4%BB%BB%E6%84%8F%E3%82%AF%E3%83%A9%E3%82%B9/%E5%85%A5%E5%8A%9B
+	
+	// メモエリア
+	// GetPressKeyChars使わずに、WinAPIのエディットボックスで文字取得するようにする?
+	// エディットボックスを透明にできるか試す
+	// そもそも子ウィンドウ扱いだからゲーム画面に表示できない?できる?
+	// できなかった
+	// もしかして隠れてても入力はできる?ウィンドウタイプで設定すればいける
+
+	// デバイスごとにクラス分けしてもいいかも。
+	// Inputは各デバイスの処理の呼び出しをするクラスにする
 
 	// 入力クラス
 	class Input
 	{
-		// メモエリア
-		// GetPressKeyChars使わずに、WinAPIのエディットボックスで文字取得するようにする?
-		// エディットボックスを透明にできるか試す
-		// そもそも子ウィンドウ扱いだからゲーム画面に表示できない?できる?
-		// できなかった
-		// もしかして隠れてても入力はできる?ウィンドウタイプで設定すればいける
-
 
 	private:
 		Input() {}
@@ -114,6 +117,24 @@ namespace MelLib
 		static XINPUT_STATE padState[4];
 		static XINPUT_STATE padPrevious[4];
 
+		static float leftStickLeftPar;
+		static float preLeftStickLeftPar;
+		static float leftStickRightPar;
+		static float preLeftStickRightPar;
+		static float leftStickUpPar;
+		static float preLeftStickUpPar;
+		static float leftStickDownPar;
+		static float preLeftStickDownPar;
+
+		static float rightStickLeftPar;
+		static float preRightStickLeftPar;
+		static float rightStickRightPar;
+		static float preRightStickRightPar;
+		static float rightStickUpPar;
+		static float preRightStickUpPar;
+		static float rightStickDownPar;
+		static float preRightStickDownPar;
+
 		static bool padConnected[4];
 
 		//軸の最高値
@@ -140,11 +161,11 @@ namespace MelLib
 		/// </summary>
 		/// <param name="padNum"></param>
 		/// <returns></returns>
-		static bool PadCheck(const UCHAR padNum);
+		static bool PadCheck(UCHAR padNum);
 
 
 	public:
-		static void Initialize(HWND hwnd, const int windowWidth, const int windowHeight);
+		static void Initialize(HWND hwnd, int windowWidth, int windowHeight);
 		static void Update();
 		static void Finalize();
 
@@ -153,7 +174,7 @@ namespace MelLib
 		/// </summary>
 		/// <param name="padNum"></param>
 		/// <returns></returns>
-		static bool GetPadConnectedFlag(const UCHAR padNum);
+		static bool GetPadConnectedFlag(UCHAR padNum);
 
 
 #pragma region キーボード
@@ -163,21 +184,21 @@ namespace MelLib
 		/// </summary>
 		/// <param name="keyDef"></param>
 		/// <returns></returns>
-		static bool KeyState(const BYTE keyDef);
+		static bool KeyState(BYTE keyDef);
 
 		/// <summary>
 		/// キーが押された瞬間(押されたフレーム)だったらtrueを返します。
 		/// </summary>
 		/// <param name="keyDef"></param>
 		/// <returns></returns>
-		static bool KeyTrigger(const BYTE keyDef);
-	
+		static bool KeyTrigger(BYTE keyDef);
+
 		/// <summary>
 		/// キーを押すのをやめた瞬間(やめたフレーム)だったらtrueを返します。
 		/// </summary>
 		/// <param name="keyDef"></param>
 		/// <returns></returns>
-		static bool KeyRelease(const BYTE keyDef);
+		static bool KeyRelease(BYTE keyDef);
 
 
 #pragma region 文字取得
@@ -232,8 +253,8 @@ namespace MelLib
 
 		static void SetViewMatrix(const DirectX::XMMATRIX& viewMatrix) { viewMat = viewMatrix; }
 		static void SetProjectionMatrix(const DirectX::XMMATRIX& projectionMatrix) { projectionMat = projectionMatrix; }
-		static void SetNear(const float nearNumber) { nearNum = nearNumber; }
-		static void SetFar(const float farNumber) { farNum = farNumber; }
+		static void SetNear(float nearNumber) { nearNum = nearNumber; }
+		static void SetFar(float farNumber) { farNum = farNumber; }
 
 		/// <summary>
 		/// クライアント座標に変換し、最初に設定したウィンドウサイズに応じて補正したマウスの座標を取得します
@@ -259,8 +280,14 @@ namespace MelLib
 		/// </summary>
 		/// <param name="nearPoint"></param>
 		/// <param name="farPoint"></param>
-		static void GetMouse3DLine(Vector3& nearPoint, Vector3& farPoint);
+		static void GetMouse3DLine( Vector3& nearPoint,   Vector3& farPoint);
 
+		/// <summary>
+		/// カメラの情報を元に、マウスカーソルを座標変換したときの最近点と最遠点を求めます。
+		/// </summary>
+		/// <param name="pCamera"></param>
+		/// <param name="pNear"></param>
+		/// <param name="pFar"></param>
 		static void GetMouse3DLine2
 		(
 			Camera* pCamera,
@@ -273,12 +300,26 @@ namespace MelLib
 #pragma region ボタン
 
 
+		/// <summary>
+		/// マウスのボタンを取得します。
+		/// </summary>
+		/// <param name="mouseButton"></param>
+		/// <returns></returns>
+		static bool MouseButtonState(MouseButton mouseButton);
 
-		static bool MouseButtonState(const MouseButton mouseButton);
+		/// <summary>
+		/// マウスのボタンが押された瞬間(押されたフレーム)かどうかを取得します。
+		/// </summary>
+		/// <param name="mouseButton"></param>
+		/// <returns></returns>
+		static bool MouseButtonTrigger(MouseButton mouseButton);
 
-		static bool MouseButtonTrigger(const MouseButton mouseButton);
-
-		static bool MouseButtonRelease(const MouseButton mouseButton);
+		/// <summary>
+		/// マウスのボタンが離された瞬間(押すのを止めたフレーム)かどうかを取得します。
+		/// </summary>
+		/// <param name="mouseButton"></param>
+		/// <returns></returns>
+		static bool MouseButtonRelease(MouseButton mouseButton);
 
 
 #pragma endregion
@@ -289,59 +330,96 @@ namespace MelLib
 
 
 #pragma region ボタン
-		static bool PadButtonState(const UCHAR padNum,const PadButton button);
-		static bool PadButtonTrigger(const UCHAR padNum, const PadButton button);
-		static bool PadButtonRelease(const UCHAR padNum, const PadButton button);
+		static bool PadButtonState(PadButton button, UCHAR padNum = 1);
+		static bool PadButtonTrigger(PadButton button, UCHAR padNum = 1);
+		static bool PadButtonRelease(PadButton button, UCHAR padNum = 1);
 
 		/// <summary>
 		/// 十字ボタンが示す角度を取得します。
 		/// </summary>
 		/// <returns></returns>
-		static float DirectionalButtonAngle(const UCHAR padNum);
+		static float DirectionalButtonAngle(UCHAR padNum = 1);
 #pragma endregion
 
 #pragma region アナログスティック
 
 #pragma region 左
+		
+#pragma region 状態
 
-		static bool LeftStickLeft(const UCHAR padNum, const float lXPar);
-		static bool LeftStickRight(const UCHAR padNum, const float lXPar);
-		static bool LeftStickUp(const UCHAR padNum, const float lYPar);
-		static bool LeftStickDown(const UCHAR padNum, const float lYPar);
+
+		static bool LeftStickLeft(float lXPar, UCHAR padNum = 1);
+		static bool LeftStickRight(float lXPar, UCHAR padNum = 1);
+		static bool LeftStickUp(float lYPar, UCHAR padNum = 1);
+		static bool LeftStickDown(float lYPar, UCHAR padNum = 1);
+
+#pragma endregion
+
+#pragma region トリガー
+
+		/// <summary>
+		/// 前フレームのスティックの傾きがpreLXPar以下、現在のスティックの傾きがlXPar以上だったらtrueを返します。
+		/// </summary>
+		/// <param name="lXPar">スティックが何%傾いていたらtrueにするか</param>
+		/// <param name="preLYPar">前フレームのスティックの傾きと比較する割合</param>
+		/// <param name="padNum">パッド番号</param>
+		/// <returns></returns>
+		static bool LeftStickLeftTrigger(float lXPar,float preLXPar,UCHAR padNum = 1);
+
+		static bool LeftStickRightTrigger(float lXPar, float preLXPar, UCHAR padNum = 1);
+
+		static bool LeftStickUpTrigger(float lXPar, float preLYPar, UCHAR padNum = 1);
+
+		static bool LeftStickDownTrigger(float lXPar, float preLYPar, UCHAR padNum = 1);
+
+
+#pragma endregion
+
 
 		/// <summary>
 		/// 左スティックの角度を返します。スティックが傾いていない場合、-1を返します。
 		/// </summary>
 		/// <returns></returns>
-		static float LeftStickAngle(const UCHAR padNum);
+		static float LeftStickAngle(UCHAR padNum = 1);
 
 
-		static Vector2 LeftStickVector2(const UCHAR padNum, const bool dimention3D);
-		static Vector3 LeftStickVector3(const UCHAR padNum, Camera* pCamera = nullptr,const bool rotX = false, const bool rotY = false);
+		static Vector2 LeftStickVector2(bool dimention3D, UCHAR padNum = 1);
+		static Vector3 LeftStickVector3(Camera* pCamera = nullptr, bool rotX = false, bool rotY = false, UCHAR padNum = 1);
 #pragma endregion
 
 #pragma region 右
-		static bool RightStickLeft(const UCHAR padNum, const float lXPar);
-		static bool RightStickRight(const UCHAR padNum, const float lXPar);
-		static bool RightStickUp(const UCHAR padNum, const float lYPar);
-		static bool RightStickDown(const UCHAR padNum, const float lYPar);
+
+#pragma region 状態
+
+		static bool RightStickLeft(float lXPar, UCHAR padNum = 1);
+		static bool RightStickRight(float lXPar, UCHAR padNum = 1);
+		static bool RightStickUp(float lYPar, UCHAR padNum = 1);
+		static bool RightStickDown(float lYPar, UCHAR padNum = 1);
+#pragma endregion
+
+#pragma region トリガー
+		static bool RightStickLeftTrigger(float lXPar, float preLXPar, UCHAR padNum = 1);
+
+		static bool RightStickRightTrigger(float lXPar, float preLXPar, UCHAR padNum = 1);
+
+		static bool RightStickUpTrigger(float lYPar, float preLYPar, UCHAR padNum = 1);
+
+		static bool RightStickDownTrigger(float lYPar, float preLYPar, UCHAR padNum = 1);
+#pragma endregion
+
 
 
 		/// <summary>
 		/// 右スティックが何度かを角度で返します。スティックが傾いていない場合、-1を返します。
 		/// </summary>
 		/// <returns></returns>
-		static float RightStickAngle(const UCHAR padNum);
+		static float RightStickAngle(UCHAR padNum = 1);
 
 
-		static Vector2 RightStickVector2(const UCHAR padNum,const bool dimention3D);
-		static Vector3 RightStickVector3(const UCHAR padNum, Camera* pCamera = nullptr, const bool rotX = false, const bool rotY = false);
+		static Vector2 RightStickVector2(bool dimention3D, UCHAR padNum = 1);
+		static Vector3 RightStickVector3(Camera* pCamera = nullptr, bool rotX = false, bool rotY = false, UCHAR padNum = 1);
 #pragma endregion
 
-
-	
-
-	
 
 #pragma endregion
 
@@ -352,7 +430,7 @@ namespace MelLib
 		/// <param name="leftPar">左側の振動量(0%～100%)</param>
 		/// <param name="rightPar">右側の振動量(0%～100%)</param>
 		/// <param name="padNum">パッド番号(1Pや2Pのこと)</param>
-		static void PadVibration(const float leftPar, const float rightPar, const UCHAR padNum);
+		static void PadVibration(float leftPar, float rightPar, UCHAR padNum = 1);
 
 #pragma endregion
 #pragma endregion

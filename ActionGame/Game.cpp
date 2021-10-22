@@ -13,6 +13,7 @@
 #include"Fade.h"
 #include"ActionPart.h"
 
+#include"Option.h"
 
 Game* Game::GetInstance()
 {
@@ -22,7 +23,6 @@ Game* Game::GetInstance()
 
 void Game::Run()
 {
-
 	Initialize();
 
 	while (true)
@@ -46,12 +46,14 @@ void Game::Initialize()
 	MelLib::Library::Initialize(1280, 720, MelLib::Color(120, 120, 120, 255), L"Game");
 	MelLib::Library::SetFramesPerSecond60(true);
 
+	//重力加速度を設定
+	MelLib::GameObject::SetGravutationalAcceleration(0.1f);
 
 	MelLib::SceneManager::GetInstace()->SetStartScene(new ActionPart());
 	Fade::GetInstance()->Initializ();
 
-	//重力加速度を設定
-	MelLib::GameObject::SetGravutationalAcceleration(0.1f);
+	Option::GetInstance()->Initialize();
+	
 }
 
 void Game::Finalize()

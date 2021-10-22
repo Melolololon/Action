@@ -74,7 +74,6 @@ namespace MelLib
 			float max1Par = (par / 100.0f);
 			float t = (max1Par * max1Par);
 			CalcEasing(start, end, t);
-			Clamp();
 			return value;
 		}
 
@@ -84,7 +83,6 @@ namespace MelLib
 			float max1Par = (par / 100.0f);
 			float t = max1Par * (2 - max1Par);
 			CalcEasing(start, end, t);
-			Clamp();
 			return value;
 		}
 
@@ -94,7 +92,6 @@ namespace MelLib
 			float max1Par = (par / 100.0f);
 			float t = max1Par * max1Par * (3 - 2 * max1Par);
 			CalcEasing(start, end, t);
-			Clamp();
 			return value;
 		}
 

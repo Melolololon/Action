@@ -21,14 +21,14 @@ void Option::Update()
 {
 
 	// çÄñ⁄ïœçX
-	if (MelLib::Input::PadButtonTrigger(1, MelLib::PadButton::UP)
-		/*|| MelLib::Input::LeftStickUp(1, 30.0f)*/)
+	if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::UP)
+		|| MelLib::Input::LeftStickUpTrigger(30.0f, 30.0f))
 	{
 		currentSelect--;
 		if (currentSelect < 0)currentSelect = OptionMenu::NUM_MAX;
 	}
-	else if(MelLib::Input::PadButtonTrigger(1, MelLib::PadButton::DOWN)
-		/*|| MelLib::Input::LeftStickDown(1, 30.0f)*/)
+	else if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::DOWN)
+		|| MelLib::Input::LeftStickDownTrigger(30.0f, 30.0f))
 	{
 		currentSelect--;
 		if (currentSelect > OptionMenu::NUM_MAX)currentSelect = 0;
