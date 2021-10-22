@@ -4,10 +4,13 @@
 #include"ModelData.h"
 #include"ModelObject.h"
 
+// オブジェクト
 #include"GameObject.h"
 #include"GameObjectManager.h"
 
+// シーン
 #include"SceneManager.h"
+#include"Fade.h"
 #include"ActionPart.h"
 
 
@@ -45,6 +48,7 @@ void Game::Initialize()
 
 
 	MelLib::SceneManager::GetInstace()->SetStartScene(new ActionPart());
+	Fade::GetInstance()->Initializ();
 
 	//重力加速度を設定
 	MelLib::GameObject::SetGravutationalAcceleration(0.1f);

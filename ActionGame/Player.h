@@ -39,7 +39,6 @@ private:
 
 #pragma endregion
 
-
 #pragma region 攻撃
 
 	std::shared_ptr<PlayerSlush>pPSlush = nullptr;
@@ -57,6 +56,11 @@ private:
 	//その場合、判定のある時間を判定自身に持たせ、引数をなくす
 	static  std::unordered_map<PlayerSlush::AttackType, const int>nextAttackTime;
 #pragma endregion
+
+#pragma region カメラ
+	float cameraSpeed = 0.0f;
+#pragma endregion
+
 
 private:
 

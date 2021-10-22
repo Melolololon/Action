@@ -80,12 +80,14 @@ void Player::Move()
 	
 	if (attackTimer.GetNowTime() > 0 
 		|| isDash)return;
-
-
+	
+	
 	static const float FAST_WARK_STICK_PAR = 60.0f;
 	static const float WALK_STICK_PAR = 20.0f;
-	static const float MAX_FAST_WRK_SPEED = 0.7f;
+	static const float MAX_FAST_WARK_SPEED = 0.7f;
 	static const float MAX_WALK_SPEED = 0.25f;
+	static const float FRAME_UP_FAST_WARK_SPEED = MAX_FAST_WARK_SPEED / 10;
+	static const float FRAME_UP_WARK_SPEED = MAX_WALK_SPEED / 10;
 
 	if (MelLib::Input::LeftStickUp(1, WALK_STICK_PAR)
 		|| MelLib::Input::LeftStickDown(1, WALK_STICK_PAR)
@@ -102,16 +104,25 @@ void Player::Move()
 			|| MelLib::Input::LeftStickRight(1, FAST_WARK_STICK_PAR)
 			|| MelLib::Input::LeftStickLeft(1, FAST_WARK_STICK_PAR))
 		{
-			addPos *= MAX_FAST_WRK_SPEED;
+			if (speed < MAX_FAST_WARK_SPEED)speed += FRAME_UP_FAST_WARK_SPEED;
+			else speed = MAX_FAST_WARK_SPEED;
+			addPos *= speed;
 		}
 		else
 		{
+			if (speed < MAX_WALK_SPEED)speed += FRAME_UP_WARK_SPEED;
+			else speed = MAX_WALK_SPEED;
+			addPos *= speed;
 			addPos *= MAX_WALK_SPEED;
 		}
 
 		AddPosition(addPos);
 
 		
+	}
+	else
+	{
+		speed = 0.0;
 	}
 
 
@@ -129,7 +140,8 @@ void Player::Dash()
 	
 	static const float DASH_DISTANCE = 40.0f;
 
-	if (MelLib::Input::PadButtonTrigger(1, MelLib::PadButton::B))
+	if (MelLib::Input::PadButtonTrigger(1, MelLib::PadButton::B) 
+		&& !isDash)
 	{
 		isDash = true;
 
@@ -146,15 +158,10 @@ void Player::Dash()
 		// Yを0にしないとダッシュ中にYが変わったらおかしくなっちゃう
 		AddPosition(MelLib::Vector3(addPos.x, 0, addPos.z));
 		
-		//AddPosition(dashEasing.GetValueDifference());
-		//SetPosition(dashEasing.EaseInOut());
 	}
 
 	if(dashEasing.GetPar() >= 100.0f)
 	{
-		/*dashEasing.SetPar(100.0f);
-		SetPosition(dashEasing.EaseInOut());*/
-
 		dashEasing.SetPar(0.0f);
 		isDash = false;
 	}
@@ -248,16 +255,25 @@ void Player::Camera()
 
 	MelLib::Vector3 cameraAngle = pCamera->GetAngle();
 	MelLib::Vector3 addCameraAngle = 0;
-	float MAX_CAMERA_ANGLE_X = 30.0f;
-	float MIX_CAMERA_ANGLE_X = -5.0f;
+	static const float MAX_CAMERA_ANGLE_X = 30.0f;
+	static const float MIX_CAMERA_ANGLE_X = -5.0f;
 
+	//最大値は一旦const(あとで設定で最大値を変えられるようにする)
+	static const float MAX_CAMERA_SPEED = 3.0f;
+	static const float FRAME_UP_CAMERA_SPEED = MAX_CAMERA_SPEED / 10;
 
-	//カメラ速度(設定で変えられるようにするために、constにしてない)
-	float cameraSpeed = 3.0f;
+	if (!MelLib::Input::RightStickLeft(1, 30.0f)
+		&& !MelLib::Input::RightStickRight(1, 30.0f)
+		&& !MelLib::Input::RightStickUp(1, 30.0f)
+		&& !MelLib::Input::RightStickDown(1, 30.0f))cameraSpeed = 0.0f;
+	else cameraSpeed += FRAME_UP_CAMERA_SPEED;
+
 	if (MelLib::Input::RightStickLeft(1, 30.0f))addCameraAngle.y = -cameraSpeed;
-	if (MelLib::Input::RightStickRight(1, 30.0f))addCameraAngle.y = cameraSpeed;
+	else if (MelLib::Input::RightStickRight(1, 30.0f))addCameraAngle.y = cameraSpeed;
 	if (MelLib::Input::RightStickUp(1, 30.0f))addCameraAngle.x = -cameraSpeed;
-	if (MelLib::Input::RightStickDown(1, 30.0f))addCameraAngle.x = cameraSpeed;
+	else if (MelLib::Input::RightStickDown(1, 30.0f))addCameraAngle.x = cameraSpeed;
+	
+	if (cameraSpeed >= MAX_CAMERA_SPEED)cameraSpeed = MAX_CAMERA_SPEED;
 
 	cameraAngle += addCameraAngle;
 	if (cameraAngle.x >= MAX_CAMERA_ANGLE_X)cameraAngle.x = MAX_CAMERA_ANGLE_X;
