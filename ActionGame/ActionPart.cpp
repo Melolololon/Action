@@ -14,39 +14,56 @@ void ActionPart::LoadResources()
 	Ground::LoadResource();
 
 	pauseBackSpr.Create(MelLib::Color(0, 0, 0, 255));
+	pauseBackSpr.SetScale(MelLib::Vector2(1280, 720));
+
+
 }
 
 void ActionPart::PauseUpdate()
 {
+	//アルファの増減イージング使う
+
 	static const float PAUSE_SUB_ALPHA_SPEED = 10.0f;
 	//スプライトのアルファ値の減算値増減
 	if (pauseEnd)
 	{
-		if (pauseSubAlpha < 100.0f)
+
+		pauseSubAlpha.SetAddPar(PAUSE_SUB_ALPHA_SPEED);
+		pauseBackSubAlpha.SetAddPar(PAUSE_SUB_ALPHA_SPEED);
+		if(pauseSubAlpha.GetPar() < 100.0f)
 		{
-			pauseSubAlpha += PAUSE_SUB_ALPHA_SPEED;
+			pauseSubAlpha.Lerp();
+			pauseBackSubAlpha.Lerp();
 		}
 		else
 		{
-			pauseSubAlpha = 100.0f;
+			pauseSubAlpha.SetPar(100.0f);
+			pauseBackSubAlpha.SetPar(100.0f);
 			isPause = false;
 			pauseEnd = false;
 		}
 	}
 	else
 	{
-		if (pauseSubAlpha > 0.0f)
+
+		pauseSubAlpha.SetAddPar(-PAUSE_SUB_ALPHA_SPEED);
+		pauseBackSubAlpha.SetAddPar(-PAUSE_SUB_ALPHA_SPEED);
+		if(pauseSubAlpha.GetPar() > 0.0f)
 		{
-			pauseSubAlpha -= PAUSE_SUB_ALPHA_SPEED;
+			pauseSubAlpha.Lerp();
+			pauseBackSubAlpha.Lerp();
 		}
 		else
 		{
-			pauseSubAlpha = 0.0f;
+			pauseSubAlpha.SetPar(0.0f);
+			pauseBackSubAlpha.SetPar(0.0f);
 		}
+
 	}
 
 	//こいつだけ50.0fで止める
-	pauseBackSpr.SetSubColor(MelLib::Color(0,0,0, pauseSubAlpha));
+	//pauseBackSpr.SetSubColor(MelLib::Color(0,0,0, pauseBackSubAlpha2.GetValue()));
+	pauseBackSpr.SetSubColor(MelLib::Color(0,0,0, MelLib::Color::ParToUChar(pauseBackSubAlpha.GetValue())));
 
 	// 項目変更
 	if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::UP)
@@ -124,6 +141,13 @@ void ActionPart::Initialize()
 	MelLib::GameObjectManager::GetInstance()->AddObject
 	(std::make_shared<Ground>(MelLib::Vector3(0, 0, 50), MelLib::Vector3(45, 0, 0), 100));
 
+
+	pauseSubAlpha.SetStart(0.0f);
+	pauseSubAlpha.SetEnd(100.0f);
+	pauseSubAlpha.SetPar(100.0f);
+	pauseBackSubAlpha.SetStart(70.0f);
+	pauseBackSubAlpha.SetEnd(100.0f);
+	pauseBackSubAlpha.SetPar(100.0f);
 }
 
 void ActionPart::Update()

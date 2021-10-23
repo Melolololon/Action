@@ -1,7 +1,9 @@
 #pragma once
 #include"Scene.h"
 
+#include<Easing.h>
 #include<Sprite2D.h>
+
 
 //アクションパートのシーン
 class ActionPart :public MelLib::Scene
@@ -29,7 +31,8 @@ private:
 	};
 
 	// ポーズ関係のスプライトのアルファ値
-	float pauseSubAlpha = 100.0f;
+	MelLib::Easing<float>pauseSubAlpha;
+	MelLib::Easing<float>pauseBackSubAlpha;
 
 	// これObject2Dにしてもいいかも
 	// ポーズ中の背景
