@@ -4,6 +4,8 @@
 #include<Easing.h>
 #include<Sprite2D.h>
 
+//テスト用
+#include<ModelObject.h>
 
 //アクションパートのシーン
 class ActionPart :public MelLib::Scene
@@ -11,6 +13,9 @@ class ActionPart :public MelLib::Scene
 private:
 
 private:
+	//テスト用
+	MelLib::ModelObject obj;
+
 #pragma region ポーズ
 	// 一気にメニューを表示せずに、少しづつアルファ値を上げて表示すること
 
@@ -41,12 +46,19 @@ private:
 
 	bool isOption = false;
 
+#pragma region エディット関係
+	bool isEdit = true;
+	bool currentEdit = false;
+#pragma endregion
 
 private:
 	void LoadResources();
 
 	void PauseUpdate();
 	void PauseDraw();
+
+	void EditUpdate();
+	void EditDraw();
 public:
 	void Initialize()override;//初期化
 	void Update()override;

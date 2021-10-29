@@ -872,3 +872,191 @@ bool MelLib::Collision::PointAndFrustum(const Vector3& pointPos, const FrustumDa
 	}
 	return true;
 }
+
+bool MelLib::Collision::BoxAndRay(const BoxData& box, const RayData& ray, RayCalcResult* rayResult)
+{
+	// https://plaza.rakuten.co.jp/ootorii/diary/200705140000/
+	
+	// https://el-ement.com/blog/2017/08/16/primitives-ray-intersection/
+
+	// p 始点座標
+	// d 方向ベクトル
+	// hw hh hd boxSizeHの x y z
+
+	Vector3 boxSize = box.GetSize() / 2;
+	Vector3 tMin = -FLT_MAX;
+	Vector3 tMax = FLT_MAX;
+	Vector3 t;
+
+	// boxを原点にある場合でしか求められない方法なので、rayを動かして四角形が原点にあるときと同じ状況にする
+	Vector3 rayMovePos = ray.GetPosition() - box.GetPosition();
+
+	// 法線ベクトルが0の場合、レイの点が四角形に入っているかを確認する
+	if(ray.GetDirection().x == 0)
+	{
+
+		if(-boxSize.x < rayMovePos.x && rayMovePos.x < boxSize.x)
+		{
+			t.x = FLT_MAX;
+		}
+		else
+		{
+			t.x = -1;
+			tMin.x = 0;
+			tMax.x = 0;
+		}
+	}
+	else
+	{
+		float num1 = (boxSize.x - rayMovePos.x) / ray.GetDirection().x;
+		float num2 = (-boxSize.x - rayMovePos.x) / ray.GetDirection().x;
+		if(num1 > num2)
+		{
+			tMin.x = num2;
+			tMax.x = num1;
+		}
+		else
+		{
+			tMin.x = num1;
+			tMax.x = num2;
+		}
+		t.x = tMax.x - tMin.x;
+	}
+
+	if (ray.GetDirection().y == 0)
+	{
+		if (-boxSize.y < rayMovePos.y && rayMovePos.y < boxSize.y)
+		{
+			t.y = FLT_MAX;
+		}
+		else
+		{
+			t.y = -1;
+			tMin.y = 0;
+			tMax.y = 0;
+		}
+	}
+	else
+	{
+		float num1 = (boxSize.y - rayMovePos.y) / ray.GetDirection().y;
+		float num2 = (-boxSize.y - rayMovePos.y) / ray.GetDirection().y;
+		if (num1 > num2)
+		{
+			tMin.y = num2;
+			tMax.y = num1;
+		}
+		else
+		{
+			tMin.y = num1;
+			tMax.y = num2;
+		}
+		t.y = tMax.y - tMin.y;
+
+	}
+
+	if (ray.GetDirection().z == 0)
+	{
+		if (-boxSize.z < rayMovePos.z && rayMovePos.z < boxSize.z)
+		{
+			t.z = FLT_MAX;
+		}
+		else
+		{
+			t.z = -1;
+			tMin.z = 0;
+			tMax.z = 0;
+		}
+	}
+	else
+	{
+		float num1 = (boxSize.z - rayMovePos.z) / ray.GetDirection().z;
+		float num2 = (-boxSize.z - rayMovePos.z) / ray.GetDirection().z;
+		if (num1 > num2)
+		{
+			tMin.z = num2;
+			tMax.z = num1;
+		}
+		else
+		{
+			tMin.z = num1;
+			tMax.z = num2;
+		}
+
+		t.z = tMax.z - tMin.z;
+	}
+
+	float min = FLT_MAX;
+	
+	/*if (0 <= t.x)min = t.x;
+	if (0 <= t.y && min > t.y)min = t.y;
+	if (0 <= t.z && min > t.z)min = t.z;*/
+
+	//	ここmaxいらない?
+	if (0 <= tMax.x)min = tMax.x;
+	if (0 <= tMin.x && min > tMin.x)min = tMin.x;
+	if (0 <= tMax.y && min > tMax.y)min = tMax.y;
+	if (0 <= tMin.y && min > tMin.y)min = tMin.y;
+	if (0 <= tMax.z && min > tMax.z)min = tMax.z;
+	if (0 <= tMin.z && min > tMin.z)min = tMin.z;
+	
+	// 条件を満たさなかったらfalse
+	if (min == FLT_MAX)return false;
+
+	Vector3 n = rayMovePos + min * ray.GetDirection();
+	if (-boxSize.x <= n.x && n.x <= boxSize.x
+		&& -boxSize.y <= n.y && n.y <= boxSize.y
+		&& -boxSize.z <= n.z && n.z <= boxSize.z)
+	{
+		if (rayResult)
+		{
+			/*Vector3 hitPos;
+			if (abs(tMin.x - rayMovePos.x) < abs(tMax.x - rayMovePos.x))hitPos.x = tMin.x - rayMovePos.x;
+			else hitPos.x = tMax.x + rayMovePos.x;
+			if (hitPos.x == FLT_MAX)hitPos.x = ray.GetPosition().x;
+
+			if (abs(tMin.y - rayMovePos.y) < abs(tMax.y - rayMovePos.y))hitPos.y = tMin.y - rayMovePos.y;
+			else hitPos.y = tMax.y + rayMovePos.y;
+			if (hitPos.y == FLT_MAX)hitPos.y = ray.GetPosition().y;
+
+			if (abs(tMin.z - rayMovePos.z) < abs(tMax.z - rayMovePos.z))hitPos.z = tMin.z - rayMovePos.z;
+			else hitPos.z = tMax.z + rayMovePos.z;
+			if (hitPos.z == FLT_MAX)hitPos.z = ray.GetPosition().z;
+
+			rayResult->hitPosition = hitPos;*/
+			//rayResult->hitPosition = hitPos - box.GetPosition();
+			//rayResult->hitPosition = hitPos + ray.GetPosition();
+
+			rayResult->hitPosition = n + box.GetPosition();
+		}
+
+		return true;
+	}
+	return false;
+
+	//return true;
+}
+
+bool MelLib::Collision::BoxAndSegment3D(const BoxData& box, const Segment3DData& segment)
+{
+	RayData ray;
+	ray.SetPosition(segment.GetPosition().v1);
+	ray.SetDirection((segment.GetPosition().v2 - segment.GetPosition().v1).Normalize());
+	RayCalcResult result;
+
+	if (!BoxAndRay(box, ray, &result))return false;
+
+	// 衝突点が線分と重なってたら当たってる判定
+	if (PointAndSegment3D(result.hitPosition, segment))return true;
+	return false;
+
+}
+
+bool MelLib::Collision::PointAndSegment3D(const Vector3& pointPos, const Segment3DData& segment)
+{
+	Vector3 segmentPosVector = segment.GetRotatePosition().v2 - segment.GetRotatePosition().v1;
+	Vector3 segmentV1ToPoint = pointPos - segment.GetRotatePosition().v1;
+
+	return LibMath::Difference(Vector3::Cross(segmentV1ToPoint, segmentPosVector).Length(), 0.0f, 0.0001f) 
+		&& segmentV1ToPoint.Length() <= segmentPosVector.Length();
+	
+}

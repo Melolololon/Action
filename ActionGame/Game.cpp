@@ -3,6 +3,7 @@
 
 #include"ModelData.h"
 #include"ModelObject.h"
+#include"ImguiManager.h"
 
 // オブジェクト
 #include"GameObject.h"
@@ -43,6 +44,7 @@ void Game::Run()
 
 void Game::Initialize()
 {
+	MelLib::ImguiManager::GetInstance()->SetReleaseDrawFlag(true);
 	MelLib::Library::Initialize(1280, 720, MelLib::Color(120, 120, 120, 255), L"Game");
 	MelLib::Library::SetFramesPerSecond60(true);
 

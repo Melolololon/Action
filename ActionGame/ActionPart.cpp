@@ -6,8 +6,13 @@
 #include"Input.h"
 
 #include"Player.h"
+#include"NoemalEnemy.h"
 
 #include"Ground.h"
+
+#include"ImguiManager.h"
+
+
 
 void ActionPart::LoadResources()
 {
@@ -19,9 +24,9 @@ void ActionPart::LoadResources()
 
 }
 
+// ポーズの暗くなるやつとか文字出すのクラス化する?
 void ActionPart::PauseUpdate()
 {
-	//アルファの増減イージング使う
 
 	static const float PAUSE_SUB_ALPHA_SPEED = 10.0f;
 	//スプライトのアルファ値の減算値増減
@@ -125,6 +130,27 @@ void ActionPart::PauseDraw()
 	}
 }
 
+void ActionPart::EditUpdate()
+{
+	
+
+
+	MelLib::ImguiManager* imguiManager = MelLib::ImguiManager::GetInstance();
+	imguiManager->BeginDrawWindow("Edit");
+
+	// どうやって配置するようにする?
+	// ビルボードのアルゴリズムでカメラの方に平面の法線を向けるようにして、マウスで置いていく?
+	// それとも、床と判定取って置いていく?どうせ地上にした置かないだろうからこれでも問題ないはず
+	// となると、床をすべて格納しないといけない
+
+	imguiManager->EndDrawWindow();
+}
+
+void ActionPart::EditDraw()
+{
+
+}
+
 void ActionPart::Initialize()
 {
 	LoadResources();
@@ -132,15 +158,17 @@ void ActionPart::Initialize()
 	MelLib::DirectionalLight::Get().SetDirection(MelLib::Vector3(0, -1, 0));
 	MelLib::Camera::Get()->SetAngle(MelLib::Vector3(20, 0, 0));
 
-
-
-	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<Player>(MelLib::Vector3(0, 5, 0)));
+	std::shared_ptr<Player>p = std::make_shared<Player>(MelLib::Vector3(10, 5, 0));
+	MelLib::GameObjectManager::GetInstance()->AddObject(p);
 
 	MelLib::GameObjectManager::GetInstance()->AddObject
 	(std::make_shared<Ground>(0, MelLib::Vector3(90, 0, 0), 100));
 	MelLib::GameObjectManager::GetInstance()->AddObject
 	(std::make_shared<Ground>(MelLib::Vector3(0, 0, 50), MelLib::Vector3(45, 0, 0), 100));
 
+	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<NoemalEnemy>(MelLib::Vector3(10,0,30)));
+	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<NoemalEnemy>(MelLib::Vector3(0,0,30)));
+	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<NoemalEnemy>(MelLib::Vector3(-10,0,30)));
 
 	pauseSubAlpha.SetStart(0.0f);
 	pauseSubAlpha.SetEnd(100.0f);
@@ -148,10 +176,37 @@ void ActionPart::Initialize()
 	pauseBackSubAlpha.SetStart(70.0f);
 	pauseBackSubAlpha.SetEnd(100.0f);
 	pauseBackSubAlpha.SetPar(100.0f);
+
+	//経路探索用
+	Enemy::SetPPlayer(p.get());
+	std::vector<MelLib::BoxData>bData;
+	bData.resize(1);
+	bData[0].SetPosition(MelLib::Vector3(0, 0, 10));
+	bData[0].SetSize(MelLib::Vector3(50,20,2));
+	obj.Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX),nullptr);
+	obj.SetPosition(bData[0].GetPosition());
+	obj.SetScale(bData[0].GetSize());
+
+
+
+	std::vector<UINT>costs;
+
+	Enemy::SetAStarNodeDatas
+	(
+		MelLib::Vector3(-100,-500,-100),// Yどっちも0にするとノードサイズが0になって判定おかしくなるから注意
+		MelLib::Vector3(100,500,100),
+		MelLib::Value3<UINT>(100,1,100),
+		bData,
+		costs
+	);
 }
 
 void ActionPart::Update()
 {
+	if (MelLib::Input::KeyTrigger(DIK_F5))currentEdit = currentEdit == false ? true : false;
+	if(isEdit && currentEdit) EditUpdate();
+	if (currentEdit)return;
+
 	// ポーズ(仮)
 	if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::START)&& !isPause)
 	{
@@ -175,15 +230,26 @@ void ActionPart::Update()
 
 
 	MelLib::GameObjectManager::GetInstance()->Update();
+
+	// デバッグ用
+	if (MelLib::Input::KeyTrigger(DIK_ESCAPE))
+	{
+		MelLib::GameObjectManager::GetInstance()->AllEraseObject();
+		isEnd = true;
+	}
 }
 
 void ActionPart::Draw()
 {
+	if (isEdit) EditDraw();
+
 	MelLib::GameObjectManager::GetInstance()->Draw();
 	if (isPause)
 	{
 		PauseDraw();
 	}
+
+	obj.Draw();
 }
 
 void ActionPart::Finalize()
