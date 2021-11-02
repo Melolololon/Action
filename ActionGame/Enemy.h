@@ -1,6 +1,7 @@
 #pragma once
 #include <GameObject.h>
 #include<RouteSearch.h>
+#include<FrameTimer.h>
 #include"Player.h"
 //敵クラス
 class Enemy :
@@ -10,12 +11,25 @@ private:
 
 	static Player* pPlayer;
 	static std::vector<std::vector<std::vector<MelLib::AStarNode>>> nodes;
+	
+	// 現在選ばれている進行方向
+	int currentMoveVector = 0;
+	MelLib::FrameTimer routeSearchTimer;
+	std::vector<MelLib::Vector3>routeVectors;
+	// デバッグ用
+	MelLib::ModelObject routeObj[100];
 
 	int hp = 0;
 	
-protected:
-	std::vector<MelLib::Vector3>routeVectors;
+private:
+	/// <summary>
+	/// 経路探索の結果の加算関数
+	/// </summary>
+	void AddRouteVector();
 
+protected:
+
+	float moveSpeed = 0.0f;
 protected:
 	/// <summary>
 	/// プレイヤーへ向かう処理

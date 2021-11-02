@@ -25,7 +25,7 @@ private:
 	bool hitGround = false;
 
 #pragma region 移動
-	float speed = 0.5f;
+	float moveSpeed = 0.5f;
 
 #pragma region ダッシュ
 	//シュン!って感じで動くやつ

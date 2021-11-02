@@ -104,15 +104,15 @@ void Player::Move()
 			|| MelLib::Input::LeftStickRight(FAST_WARK_STICK_PAR)
 			|| MelLib::Input::LeftStickLeft(FAST_WARK_STICK_PAR))
 		{
-			if (speed < MAX_FAST_WARK_SPEED)speed += FRAME_UP_FAST_WARK_SPEED;
-			else speed = MAX_FAST_WARK_SPEED;
-			addPos *= speed;
+			if (moveSpeed < MAX_FAST_WARK_SPEED)moveSpeed += FRAME_UP_FAST_WARK_SPEED;
+			else moveSpeed = MAX_FAST_WARK_SPEED;
+			addPos *= moveSpeed;
 		}
 		else
 		{
-			if (speed < MAX_WALK_SPEED)speed += FRAME_UP_WARK_SPEED;
-			else speed = MAX_WALK_SPEED;
-			addPos *= speed;
+			if (moveSpeed < MAX_WALK_SPEED)moveSpeed += FRAME_UP_WARK_SPEED;
+			else moveSpeed = MAX_WALK_SPEED;
+			addPos *= moveSpeed;
 			addPos *= MAX_WALK_SPEED;
 		}
 
@@ -122,7 +122,7 @@ void Player::Move()
 	}
 	else
 	{
-		speed = 0.0;
+		moveSpeed = 0.0;
 	}
 
 

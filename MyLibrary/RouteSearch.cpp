@@ -547,63 +547,52 @@ void MelLib::RouteSearch::SetCost(const std::vector<BoxData>& hitObjectsBoxData,
 	}
 }
 
-bool MelLib::RouteSearch::CalcRoute
-(
-	const Vector3& startPos,
-	const Vector3& endPos,
-	std::vector<std::vector<std::vector<AStarNode>>>& nodes,
-	std::vector<Vector3>& routeVector, 
-	const bool straight,
-	const float straightDis
-)
+bool MelLib::RouteSearch::CheckStraightMove(const Vector3& startPos, const Vector3& endPos, std::vector<std::vector<std::vector<AStarNode>>>& nodes, const float straightDis, Vector3& startToEnd)
 {
-	// ノードにたどり着くまで(一定距離になるまで)計算しない処理入れてもいいかも
-	// たどり着くまで呼ばないとなると、直進可能判断が不可能なため却下
+	bool straightMove = true;
+	Segment3DData segment;
+	segment.SetPosition(MelLib::Value2<MelLib::Vector3>(startPos, endPos));
 
-	// そもそもルート確認する必要ないか確認する	
-	if(straight)
+	for (const auto& nZ : nodes)
 	{
-		bool straightMove = true;
-		Segment3DData segment;
-		segment.SetPosition(MelLib::Value2<MelLib::Vector3>(startPos, endPos));
-
-		for(const auto& nZ : nodes)
+		for (const auto& nY : nZ)
 		{
-			for(const auto& nY : nZ)
+			for (const auto& nX : nY)
 			{
-				for(const auto& nX : nY)
+				BoxData box;
+				box.SetPosition(nX.position);
+				box.SetSize(nX.size);
+
+				if(nX.position == MelLib::Vector3(0,0,8))
 				{
-					BoxData box;
-					box.SetPosition(nX.position);
-					box.SetSize(nX.size);
-					
-					// 当たらなかったら次へ
-					if (!Collision::BoxAndSegment3D(box, segment))continue;
+					int z = 0;
+				}
 
-					// 進行不可能ノードだったら直進不可なので確認終了
-					if(nX.hitObjectNode)
-					{
-						straightMove = false;
-						break;
-					}
+				// 当たらなかったら次へ
+				if (!Collision::BoxAndSegment3D(box, segment))continue;
 
-					// 別のノードと確認
-					for (const auto& nZ2 : nodes)
+				// 進行不可能ノードだったら直進不可なので確認終了
+				if (nX.hitObjectNode)
+				{
+					straightMove = false;
+					break;
+				}
+
+				// 別のノードと確認
+				for (const auto& nZ2 : nodes)
+				{
+					for (const auto& nY2 : nZ2)
 					{
-						for (const auto& nY2 : nZ2)
+						for (const auto& nX2 : nY2)
 						{
-							for (const auto& nX2 : nY2)
-							{
-								// ヒットオブジェクトじゃなかったら次へ
-								if (!nX2.hitObjectNode)continue;
+							// ヒットオブジェクトじゃなかったら次へ
+							if (!nX2.hitObjectNode)continue;
 
-								if((nX.position - nX2.position).Length() < straightDis)
-								{
-									straightMove = false;
-									break;
-								}
+							if ((nX.position - nX2.position).Length() < straightDis)
+							{
+								straightMove = false;
+								break;
 							}
-							if (!straightMove)break;
 						}
 						if (!straightMove)break;
 					}
@@ -613,18 +602,26 @@ bool MelLib::RouteSearch::CalcRoute
 			}
 			if (!straightMove)break;
 		}
-
-		// 可能だったら直進して処理終了
-		if(straightMove)
-		{
-			routeVector.clear();
-			routeVector.resize(1);
-			routeVector[0] = (endPos - startPos).Normalize();
-			return true;
-		}
+		if (!straightMove)break;
 	}
 
+	// 可能だったら直進して処理終了
+	if (straightMove)
+	{
+		startToEnd = (endPos - startPos).Normalize();
+		return true;
+	}
+}
 
+bool MelLib::RouteSearch::CalcRoute
+(
+	const Vector3& startPos,
+	const Vector3& endPos,
+	std::vector<std::vector<std::vector<AStarNode>>>& nodes,
+	std::vector<Vector3>* routeVector,
+	std::vector<Vector3>* routeNodePos
+)
+{
 
 	//スタート地点に一番近いノードの距離を格納する変数
 	float startMinDistance = FLT_MAX;
@@ -831,7 +828,8 @@ bool MelLib::RouteSearch::CalcRoute
 		int mainNodeOpenIndex = 0;
 		for (int i = openNodes.size() - 1;; i--)
 		{
-			float dis = LibMath::CalcDistance3D(openNodes[i]->pNode->position, nodes[startNodeIndexZ][startNodeIndexY][startNodeIndexX].position);
+			//float dis = LibMath::CalcDistance3D(openNodes[i]->pNode->position, nodes[startNodeIndexZ][startNodeIndexY][startNodeIndexX].position);
+			float dis = LibMath::CalcDistance3D(openNodes[i]->pNode->position, nodes[endNodeIndexZ][endNodeIndexY][endNodeIndexX].position);
 			if (minDis > dis)
 			{
 				minDis = dis;
@@ -840,8 +838,6 @@ bool MelLib::RouteSearch::CalcRoute
 			}
 			if (openNodes[i]->calcNum != minCalcNum || i == 0)break;
 		}
-
-
 
 		//オープンに追加するノードを格納する配列
 		std::vector<AStarCalcData*>openPushBackNode;
@@ -866,11 +862,11 @@ bool MelLib::RouteSearch::CalcRoute
 					if (indexX <= -1 || indexX >= nodeXArrayNum)continue;
 
 					//基準検索防止
-					if (indexX == mainNode->indexX && indexY == mainNode->indexY)continue;
+					if (indexX == mainNode->indexX && indexY == mainNode->indexY && indexZ == mainNode->indexZ)continue;
 
 					AStarCalcData* checkNode = &calcData[indexZ][indexY][indexX];
 
-					//オブジェクトに重なってるかどうか
+					//オブジェクトに重なってたら次のノードへ　
 					if (checkNode->pNode->hitObjectNode)
 					{
 						checkNode->closeFlag = true;
@@ -956,26 +952,36 @@ bool MelLib::RouteSearch::CalcRoute
 	}
 
 	AStarCalcData* currentNode = endNode;
-	std::vector<Vector3>routeNodeVectors;
+	std::vector<Vector3>routeNodePositions;
 	while (1)
 	{
 		if (!currentNode)break;
 
-		routeNodeVectors.push_back(currentNode->pNode->position);
-		
+		routeNodePositions.push_back(currentNode->pNode->position);
+
 		currentNode = currentNode->previousNode;
 	}
-	std::reverse(routeNodeVectors.begin(), routeNodeVectors.end());
+	std::reverse(routeNodePositions.begin(), routeNodePositions.end());
+
+	if (routeNodePos)
+	{
+		routeNodePos->clear();
+		*routeNodePos = routeNodePositions;
+	}
 
 	//ベクトルを求める
-	routeVector.clear();
-	size_t routeVectorSize = routeNodeVectors.size() - 1;
-	routeVector.resize(routeVectorSize);
-	for (size_t i = 0; i < routeVectorSize; i++)
+	if (routeVector)
 	{
-		routeVector[i] = Vector3::Normalize(routeNodeVectors[i + 1] - routeNodeVectors[i]);
+		std::vector<Vector3>& refRouteVector = *routeVector;
+		refRouteVector.clear();
+		size_t routeVectorSize = routeNodePositions.size() - 1;
+		refRouteVector.resize(routeVectorSize);
+		for (size_t i = 0; i < routeVectorSize; i++)
+		{
+			refRouteVector[i] = Vector3::Normalize(routeNodePositions[i + 1] - routeNodePositions[i]);
+		}
 	}
-	
+
 	ReturnHitObjectNode();
 	return true;
 }

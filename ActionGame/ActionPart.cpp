@@ -158,17 +158,42 @@ void ActionPart::Initialize()
 	MelLib::DirectionalLight::Get().SetDirection(MelLib::Vector3(0, -1, 0));
 	MelLib::Camera::Get()->SetAngle(MelLib::Vector3(20, 0, 0));
 
-	std::shared_ptr<Player>p = std::make_shared<Player>(MelLib::Vector3(10, 5, 0));
+	std::shared_ptr<Player>p = std::make_shared<Player>(MelLib::Vector3(0, 5, 0));
 	MelLib::GameObjectManager::GetInstance()->AddObject(p);
+
+
+
+
+	//経路探索用
+	Enemy::SetPPlayer(p.get());
+	std::vector<MelLib::BoxData>bData;
+	bData.resize(1);
+	bData[0].SetPosition(MelLib::Vector3(0, 0, 10));
+	bData[0].SetSize(MelLib::Vector3(50, 20, 2));
+	obj.Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX), nullptr);
+	obj.SetPosition(bData[0].GetPosition());
+	obj.SetScale(bData[0].GetSize());
+
+	std::vector<UINT>costs;
+
+	Enemy::SetAStarNodeDatas
+	(
+		MelLib::Vector3(-50, -500, -50),// Yどっちも0にするとノードサイズが0になって判定おかしくなるから注意
+		MelLib::Vector3(50, 500, 50),
+		MelLib::Value3<UINT>(50, 1, 50),
+		bData,
+		costs
+	);
+
 
 	MelLib::GameObjectManager::GetInstance()->AddObject
 	(std::make_shared<Ground>(0, MelLib::Vector3(90, 0, 0), 100));
 	MelLib::GameObjectManager::GetInstance()->AddObject
 	(std::make_shared<Ground>(MelLib::Vector3(0, 0, 50), MelLib::Vector3(45, 0, 0), 100));
 
-	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<NoemalEnemy>(MelLib::Vector3(10,0,30)));
+	//MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<NoemalEnemy>(MelLib::Vector3(10,0,30)));
 	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<NoemalEnemy>(MelLib::Vector3(0,0,30)));
-	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<NoemalEnemy>(MelLib::Vector3(-10,0,30)));
+	//MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<NoemalEnemy>(MelLib::Vector3(-10,0,30)));
 
 	pauseSubAlpha.SetStart(0.0f);
 	pauseSubAlpha.SetEnd(100.0f);
@@ -177,28 +202,7 @@ void ActionPart::Initialize()
 	pauseBackSubAlpha.SetEnd(100.0f);
 	pauseBackSubAlpha.SetPar(100.0f);
 
-	//経路探索用
-	Enemy::SetPPlayer(p.get());
-	std::vector<MelLib::BoxData>bData;
-	bData.resize(1);
-	bData[0].SetPosition(MelLib::Vector3(0, 0, 10));
-	bData[0].SetSize(MelLib::Vector3(50,20,2));
-	obj.Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX),nullptr);
-	obj.SetPosition(bData[0].GetPosition());
-	obj.SetScale(bData[0].GetSize());
-
-
-
-	std::vector<UINT>costs;
-
-	Enemy::SetAStarNodeDatas
-	(
-		MelLib::Vector3(-100,-500,-100),// Yどっちも0にするとノードサイズが0になって判定おかしくなるから注意
-		MelLib::Vector3(100,500,100),
-		MelLib::Value3<UINT>(100,1,100),
-		bData,
-		costs
-	);
+	
 }
 
 void ActionPart::Update()
@@ -241,7 +245,7 @@ void ActionPart::Update()
 
 void ActionPart::Draw()
 {
-	if (isEdit) EditDraw();
+	if (isEdit && currentEdit) EditDraw();
 
 	MelLib::GameObjectManager::GetInstance()->Draw();
 	if (isPause)
