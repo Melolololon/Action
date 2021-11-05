@@ -327,8 +327,18 @@ namespace MelLib
 		/// <returns></returns>
 		bool GetEraseManager()const { return eraseManager; }
 
+#pragma region ƒ‚ƒfƒ‹ŠÖŒW
+		const std::unordered_map<std::string, ModelObject>& GetRefModelObjects()const { return modelObjects; }
+#pragma endregion
+
+#pragma region ”»’èŠÖŒW
+		
+#pragma endregion
+
 
 #pragma endregion
+
+
 
 
 #pragma region ”»’è—pŠÖ”

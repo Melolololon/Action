@@ -5,13 +5,20 @@
 class EditMode
 {
 private:
+	// ファイルの末尾に追加するパス
+	const std::string ADD_PATH = "_EditData.edit";
 
 	int objectType = 0;
 	int objectNum = 0;
 	MelLib::Vector3 addObjectPos;
 	MelLib::Vector3 addObjectAngle;
+	MelLib::Vector3 addObjectScale;
 
 #pragma region エディットモードで配置するときの識別番号
+
+
+	std::vector<int>objectTypes;
+	std::vector<int>objectNums;
 
 	using ObjID = const int;
 
@@ -34,7 +41,7 @@ private:
 #pragma endregion
 
 #pragma region OBJ_TYPE_FIERD
-
+	static ObjID GROUND = OBJ_TYPE_FIERD + 0;
 #pragma endregion
 
 
@@ -47,6 +54,7 @@ private:
 	EditMode(){}
 	~EditMode(){}
 
+	void Save();
 public:
 
 	EditMode(EditMode& e) = delete;
@@ -56,6 +64,9 @@ public:
 		static EditMode e; 
 		return &e; 
 	}
+	
+
+	void Load();
 
 	void Update();
 	void Draw();

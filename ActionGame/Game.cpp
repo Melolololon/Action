@@ -51,7 +51,7 @@ void Game::Initialize()
 	//d—Í‰Á‘¬“x‚ðÝ’è
 	MelLib::GameObject::SetGravutationalAcceleration(0.1f);
 
-	MelLib::SceneManager::GetInstace()->SetStartScene(new ActionPart());
+	MelLib::SceneManager::GetInstance()->SetStartScene(new ActionPart());
 	Fade::GetInstance()->Initializ();
 
 	Option::GetInstance()->Initialize();
@@ -65,12 +65,12 @@ void Game::Finalize()
 
 void Game::Update()
 {
-	MelLib::SceneManager::GetInstace()->Update();
+	MelLib::SceneManager::GetInstance()->Update();
 }
 
 void Game::Draw()
 {
-	MelLib::SceneManager::GetInstace()->Draw();
+	MelLib::SceneManager::GetInstance()->Draw();
 }
 
 std::string Game::GetPath(const ResourcePathType type)const
