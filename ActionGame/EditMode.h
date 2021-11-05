@@ -1,14 +1,18 @@
 #pragma once
+
+#include<string>
+
 #include<Vector.h>
+
+#include"Player.h"
 
 // シーン内で呼び出すエディットモード
 class EditMode
 {
 private:
-	// ファイルの末尾に追加するパス
-	const std::string ADD_PATH = "_EditData.edit";
+	
 
-	int objectType = 0;
+	int objectType = EditMode::OBJ_TYPE_ENEMY;
 	int objectNum = 0;
 	MelLib::Vector3 addObjectPos;
 	MelLib::Vector3 addObjectAngle;
@@ -22,14 +26,9 @@ private:
 
 	using ObjID = const int;
 
-	static ObjID OBJ_TYPE_PLAYER = 1000;
-	static ObjID OBJ_TYPE_ENEMY = 2000;
-	static ObjID OBJ_TYPE_STAGE = 3000;
-	static ObjID OBJ_TYPE_FIERD = 4000;
-
-#pragma region OBJ_TYPE_PLAYER
-	static ObjID PLAYER = OBJ_TYPE_PLAYER + 0;
-#pragma endregion
+	static ObjID OBJ_TYPE_ENEMY = 0;
+	static ObjID OBJ_TYPE_STAGE = 1000;
+	static ObjID OBJ_TYPE_FIERD = 2000;
 
 #pragma region OBJ_TYPE_ENEMY
 	static ObjID NORMAL_ENEMY = OBJ_TYPE_ENEMY + 0;
@@ -54,22 +53,20 @@ private:
 	EditMode(){}
 	~EditMode(){}
 
+	std::string GetFileName();
+
 	void Save();
+	void AddObject();
 public:
 
 	EditMode(EditMode& e) = delete;
 	EditMode& operator=(EditMode& e) = delete;
-	static EditMode* GetInstance() 
-	{
-		static EditMode e; 
-		return &e; 
-	}
+	static EditMode* GetInstance();
 	
 
-	void Load();
+	bool Load(std::shared_ptr<Player>& p);
 
 	void Update();
 	void Draw();
-	void AddObject();
 };
 

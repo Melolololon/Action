@@ -47,6 +47,8 @@ Player::Player(const MelLib::Vector3& pos)
 
 	SetPosition(pos);
 
+	modelObjects["main"];
+	modelObjects["main"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX), nullptr);
 
 #pragma region ƒ_ƒbƒVƒ…
 	dashEasing.SetAddPar(5.0f);

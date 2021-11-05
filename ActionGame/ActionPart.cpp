@@ -141,9 +141,23 @@ void ActionPart::Initialize()
 	MelLib::DirectionalLight::Get().SetDirection(MelLib::Vector3(0, -1, 0));
 	MelLib::Camera::Get()->SetAngle(MelLib::Vector3(20, 0, 0));
 
-	std::shared_ptr<Player>p = std::make_shared<Player>(MelLib::Vector3(0, 5, 0));
-	MelLib::GameObjectManager::GetInstance()->AddObject(p);
+	// プレイヤーのポインタ
+	std::shared_ptr<Player>p;
 
+	// ファイルがなかったら必要最低限のものだけ用意
+	// プレイヤーを必ず最初に追加するために、elseで追加処理を分ける
+	if (!EditMode::GetInstance()->Load(p))
+	{
+		p = std::make_shared<Player>(MelLib::Vector3(0, 5, 0));
+		MelLib::GameObjectManager::GetInstance()->AddObject(p);
+
+		MelLib::GameObjectManager::GetInstance()->AddObject
+		(std::make_shared<Ground>(0, MelLib::Vector3(90, 0, 0), 10));
+	}
+	else
+	{
+		MelLib::GameObjectManager::GetInstance()->AddObject(p);
+	}
 
 
 
@@ -169,10 +183,10 @@ void ActionPart::Initialize()
 	);
 
 
-	MelLib::GameObjectManager::GetInstance()->AddObject
+	/*MelLib::GameObjectManager::GetInstance()->AddObject
 	(std::make_shared<Ground>(0, MelLib::Vector3(90, 0, 0), 100));
 	MelLib::GameObjectManager::GetInstance()->AddObject
-	(std::make_shared<Ground>(MelLib::Vector3(0, 0, 50), MelLib::Vector3(45, 0, 0), 100));
+	(std::make_shared<Ground>(MelLib::Vector3(0, 0, 50), MelLib::Vector3(45, 0, 0), 100));*/
 
 	//MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<NoemalEnemy>(MelLib::Vector3(10,0,30)));
 	//MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<NoemalEnemy>(MelLib::Vector3(0,0,30)));

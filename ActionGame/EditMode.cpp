@@ -1,7 +1,7 @@
 #include "EditMode.h"
 
-#include<string>
 #include<vector>
+#include<unordered_map>
 #include<fstream>
 #include<filesystem>
 
@@ -11,9 +11,6 @@
 #include<Input.h>
 
 
-#pragma region OBJ_TYPE_PLAYER
-#include"Player.h"
-#pragma endregion
 
 #pragma region OBJ_TYPE_ENEMY
 #include"NoemalEnemy.h"
@@ -28,11 +25,24 @@
 #pragma endregion
 
 
+std::string EditMode::GetFileName()
+{
+	std::string path;
+
+	MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
+	path = typeid(*currentScene).name();
+
+	// 先頭6文字("class ")を削除
+	path.erase(path.begin(),path.begin() + 6);
+	
+	path += "_EditData.edit";
+
+	return path;
+}
+
 void EditMode::Save()
 {
-	MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
-
-	std::string filePath = typeid(currentScene).name() + ADD_PATH;
+	std::string filePath = GetFileName();
 
 	std::ofstream file;
 	file.open(filePath, std::ios_base::binary);
@@ -42,9 +52,12 @@ void EditMode::Save()
 
 	for (size_t i = 0; i < refGameObjects.size(); i++)
 	{
-		// 識別番号書き込み
-		file.write(reinterpret_cast<char*>(&objectTypes[i]), sizeof(int));
-		file.write(reinterpret_cast<char*>(&objectNums[i]), sizeof(int));
+		if (i != 0) 
+		{
+			// 識別番号書き込み
+			file.write(reinterpret_cast<char*>(&objectTypes[i - 1]), sizeof(int));
+			file.write(reinterpret_cast<char*>(&objectNums[i - 1]), sizeof(int));
+		}
 
 		// 座標の書き込み
 		MelLib::Vector3 writeParam = refGameObjects[i]->GetPosition();
@@ -55,7 +68,9 @@ void EditMode::Save()
 		file.write(reinterpret_cast<char*>(&modelNum), sizeof(modelNum));
 
 		// モデルの角度と大きさの書き込み
-		for (const auto& model : refGameObjects[i]->GetRefModelObjects())
+		const std::unordered_map<std::string, MelLib::ModelObject>& refModels = refGameObjects[i]->GetRefModelObjects();
+
+		for (const auto& model : refModels)
 		{
 			writeParam = model.second.GetAngle();
 			file.write(reinterpret_cast<char*>(&writeParam), sizeof(writeParam));
@@ -68,19 +83,40 @@ void EditMode::Save()
 	file.close();
 }
 
-void EditMode::Load()
+
+
+bool EditMode::Load(std::shared_ptr<Player>& p)
 {
-	MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
-	std::string filePath = typeid(currentScene).name() + ADD_PATH;
+
+	std::string filePath = GetFileName();
 
 	std::ifstream file;
 	file.open(filePath, std::ios_base::binary);
 
-	if (!file)return;
+	if (!file)
+	{
+		// 床の情報入れる
+		objectTypes.push_back(OBJ_TYPE_FIERD);
+		objectNums.push_back(GROUND - OBJ_TYPE_FIERD);
 
+		return false;
+	}
+
+	// プレイヤー情報読み込み
+	file.read(reinterpret_cast<char*>(&addObjectPos), sizeof(addObjectPos));
+
+	int modelNum = 0;
+	file.read(reinterpret_cast<char*>(&modelNum), sizeof(modelNum));
+
+	for (int i = 0; i < modelNum; i++)
+	{
+		file.read(reinterpret_cast<char*>(&addObjectAngle), sizeof(addObjectAngle));
+		file.read(reinterpret_cast<char*>(&addObjectScale), sizeof(addObjectScale));
+	}
+	p = std::make_shared<Player>(addObjectPos);
+	
+	// 残り全部読み込む
 	size_t fileSize = std::filesystem::file_size(filePath);
-
-	// 全部読み込む
 	while (fileSize != file.tellg())
 	{
 		file.read(reinterpret_cast<char*>(&objectType), sizeof(objectType));
@@ -88,7 +124,6 @@ void EditMode::Load()
 
 		file.read(reinterpret_cast<char*>(&addObjectPos), sizeof(addObjectPos));
 
-		int modelNum = 0;
 		file.read(reinterpret_cast<char*>(&modelNum), sizeof(modelNum));
 
 		for (int i = 0; i < modelNum; i++)
@@ -102,13 +137,22 @@ void EditMode::Load()
 	}
 
 	file.close();
+
+	// 値を戻す
+	objectType = OBJ_TYPE_ENEMY;
+	objectNum = 0;
+	addObjectPos = 0;
+	addObjectAngle = 0;
+	addObjectScale = 0;
+
+	return true;
 }
 
 
 
 void EditMode::Update()
 {
-
+	if (MelLib::Input::KeyState(DIK_LCONTROL) && MelLib::Input::KeyTrigger(DIK_S))Save();
 
 
 	MelLib::ImguiManager* imguiManager = MelLib::ImguiManager::GetInstance();
@@ -122,7 +166,6 @@ void EditMode::Update()
 	// カメラを移動できるようにする
 	// imguiで座標いじって追加する感じでいい?
 
-	imguiManager->DrawRadioButton("OBJ_Player", objectType, OBJ_TYPE_PLAYER);
 	imguiManager->DrawRadioButton("OBJ_Enemy", objectType, OBJ_TYPE_ENEMY);
 	imguiManager->DrawRadioButton("OBJ_Stage", objectType, OBJ_TYPE_STAGE);
 	imguiManager->DrawRadioButton("OBJ_Fierd", objectType, OBJ_TYPE_FIERD);
@@ -154,9 +197,6 @@ void EditMode::AddObject()
 
 	switch (objectType + objectNum)
 	{
-	case PLAYER:
-		add(std::make_shared<Player>(addObjectPos));
-		break;
 
 	case NORMAL_ENEMY:
 		add(std::make_shared<NoemalEnemy>(addObjectPos));
@@ -164,7 +204,7 @@ void EditMode::AddObject()
 
 	case GROUND:
 		add(std::make_shared<Ground>(addObjectPos, addObjectAngle, addObjectScale.ToVector2()));
-		return;
+		break;
 
 	default:
 		return;
@@ -174,4 +214,10 @@ void EditMode::AddObject()
 	// 追加に成功したら、オブジェクト番号を格納
 	objectTypes.push_back(objectType);
 	objectNums.push_back(objectNum);
+}
+
+EditMode* EditMode::GetInstance()
+{
+	static EditMode e;
+	return &e;
 }
