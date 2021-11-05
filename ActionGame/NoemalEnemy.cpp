@@ -13,8 +13,15 @@ void NoemalEnemy::Update()
 
 	CalcPlayerRoute();
 	//AddPosition(routeVectors[0] * 0.2f);
+
+	Attack();
 }
 
 void NoemalEnemy::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)
 {
+}
+
+void NoemalEnemy::Attack()
+{
+
 }

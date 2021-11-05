@@ -17,7 +17,7 @@
 #pragma endregion
 
 #pragma region OBJ_TYPE_STAGE
-
+#include"Bamboo.h"
 #pragma endregion
 
 #pragma region OBJ_TYPE_FIERD
@@ -200,6 +200,10 @@ void EditMode::AddObject()
 
 	case NORMAL_ENEMY:
 		add(std::make_shared<NoemalEnemy>(addObjectPos));
+		break;
+
+	case BAMBOO:
+		add(std::make_shared<Bamboo>(addObjectPos));
 		break;
 
 	case GROUND:

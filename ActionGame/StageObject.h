@@ -1,22 +1,19 @@
 #pragma once
-#include"StageObject.h"
-class Bamboo :
-    public StageObject
+#include<GameObject.h>
+
+#include"Player.h"
+
+class StageObject :public MelLib::GameObject
 {
 private:
-
+	static Player* pPlayer;
 public:
-	Bamboo(const MelLib::Vector3& pos);
-	
-	/// <summary>
-	/// カットした竹用のコンストラクタ
-	/// </summary>
-	/// <param name="pos"></param>
-	/// <param name="pCatModelData"></param>
-	Bamboo(const MelLib::Vector3& pos,MelLib::ModelData* pCatModelData);
-
+	StageObject(const MelLib::Vector3& pos, const std::string& modelName);
+	StageObject(const MelLib::Vector3& pos, MelLib::ModelData* pCatModelData);
+	~StageObject();
 
 	void Update()override;
+	void Draw()override;
 	/// <summary>
 	/// 当たった時の処理
 	/// </summary>
@@ -34,6 +31,6 @@ public:
 		const int hitObjArrayNum
 	)override;
 
-	static void LoadResources();
+	static void SetPPlayer(Player* p) { pPlayer = p; }
 };
 

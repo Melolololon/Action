@@ -6,7 +6,10 @@
 #include"Input.h"
 
 #include"Player.h"
-#include"NoemalEnemy.h"
+
+#include"Enemy.h"
+#include"StageObject.h"
+
 
 #include"Ground.h"
 
@@ -159,10 +162,10 @@ void ActionPart::Initialize()
 		MelLib::GameObjectManager::GetInstance()->AddObject(p);
 	}
 
-
+	Enemy::SetPPlayer(p.get());
+	StageObject::SetPPlayer(p.get());
 
 	//Œo˜H’Tõ—p
-	Enemy::SetPPlayer(p.get());
 	std::vector<MelLib::BoxData>bData;
 	bData.resize(1);
 	bData[0].SetPosition(MelLib::Vector3(0, 0, 10));

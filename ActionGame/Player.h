@@ -64,16 +64,11 @@ private:
 
 private:
 
-
-public:
-	Player(const MelLib::Vector3& pos);
-	~Player(){}
-
 #pragma region UpdateŠÖŒW
-	
+
 	//‘€ì•s‰Â”\‚Éif‚ÅˆÍ‚Ş‚Ì‘å•Ï‚¾‚©‚çŠÖ”‰»
-	
-	
+
+
 	void Move();
 	void Dash();
 	void Jump();
@@ -81,10 +76,16 @@ public:
 	//UŒ‚ˆ—AUŒ‚”»’è‚Ì‘€ì
 	void Attack();
 	void SetAttackType();
-	
+
 	void Camera();
 	void SetCameraPosition();
 #pragma endregion
+
+public:
+	Player(const MelLib::Vector3& pos);
+	~Player(){}
+
+	PlayerSlush* GetPPlayerSlush() { return pPSlush.get(); }
 
 	void Update()override;
 	void Draw()override;

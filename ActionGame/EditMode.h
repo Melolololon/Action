@@ -11,7 +11,6 @@ class EditMode
 {
 private:
 	
-
 	int objectType = EditMode::OBJ_TYPE_ENEMY;
 	int objectNum = 0;
 	MelLib::Vector3 addObjectPos;
@@ -36,7 +35,7 @@ private:
 #pragma endregion
 
 #pragma region OBJ_TYPE_STAGE
-
+	static ObjID BAMBOO = OBJ_TYPE_STAGE + 0;
 #pragma endregion
 
 #pragma region OBJ_TYPE_FIERD
@@ -55,7 +54,11 @@ private:
 
 	std::string GetFileName();
 
+	/// <summary>
+	///GameObjectの読み込み
+	/// </summary>
 	void Save();
+
 	void AddObject();
 public:
 
@@ -63,7 +66,11 @@ public:
 	EditMode& operator=(EditMode& e) = delete;
 	static EditMode* GetInstance();
 	
-
+	/// <summary>
+	/// GameObjectの読み込み
+	/// </summary>
+	/// <param name="p">プレイヤーのポインタ</param>
+	/// <returns>読み込みが成功したかどうか</returns>
 	bool Load(std::shared_ptr<Player>& p);
 
 	void Update();

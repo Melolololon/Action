@@ -26,5 +26,7 @@ public:
 		const MelLib::ShapeType3D& hitObjColType,
 		const int hitObjArrayNum
 	)override;
+
+	void Attack();
 };
 

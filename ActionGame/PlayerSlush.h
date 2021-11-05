@@ -20,7 +20,8 @@ public:
 	};
 
 private:
-	
+	// ü•ª‚©‚ç•½–Êî•ñæ“¾‚ğl‚¦‚Ä‚İ‚Ä–³—‚¾‚Á‚½‚ç’è‹`
+	//static const std::unordered_map<AttackType, MelLib::PlaneData> attackPlane;
 
 
 	float playerAngle = 0.0f;
