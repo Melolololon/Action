@@ -1,5 +1,7 @@
 #include "NoemalEnemy.h"
 
+#include"ActionPart.h"
+
 NoemalEnemy::NoemalEnemy(const MelLib::Vector3& pos) :Enemy(pos,"")
 {
 	moveSpeed = 0.2f;
@@ -7,6 +9,8 @@ NoemalEnemy::NoemalEnemy(const MelLib::Vector3& pos) :Enemy(pos,"")
 
 void NoemalEnemy::Update()
 {
+	if (ActionPart::GetStopFlag())return;
+
 	CalcPlayerRoute();
 	//AddPosition(routeVectors[0] * 0.2f);
 }

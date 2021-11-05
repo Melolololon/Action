@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClCompile Include="ActionPart.cpp" />
     <ClCompile Include="Bamboo.cpp" />
+    <ClCompile Include="EditMode.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Fade.cpp" />
     <ClCompile Include="Floor.cpp" />
@@ -164,6 +165,7 @@
   <ItemGroup>
     <ClInclude Include="ActionPart.h" />
     <ClInclude Include="Bamboo.h" />
+    <ClInclude Include="EditMode.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Fade.h" />
     <ClInclude Include="Floor.h" />

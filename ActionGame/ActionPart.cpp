@@ -10,9 +10,11 @@
 
 #include"Ground.h"
 
-#include"ImguiManager.h"
+#include"Option.h"
+#include"EditMode.h"
 
-
+bool ActionPart::isPause;
+bool ActionPart::isEdit;
 
 void ActionPart::LoadResources()
 {
@@ -130,26 +132,7 @@ void ActionPart::PauseDraw()
 	}
 }
 
-void ActionPart::EditUpdate()
-{
-	
 
-
-	MelLib::ImguiManager* imguiManager = MelLib::ImguiManager::GetInstance();
-	imguiManager->BeginDrawWindow("Edit");
-
-	// どうやって配置するようにする?
-	// ビルボードのアルゴリズムでカメラの方に平面の法線を向けるようにして、マウスで置いていく?
-	// それとも、床と判定取って置いていく?どうせ地上にした置かないだろうからこれでも問題ないはず
-	// となると、床をすべて格納しないといけない
-
-	imguiManager->EndDrawWindow();
-}
-
-void ActionPart::EditDraw()
-{
-
-}
 
 void ActionPart::Initialize()
 {
@@ -192,7 +175,7 @@ void ActionPart::Initialize()
 	(std::make_shared<Ground>(MelLib::Vector3(0, 0, 50), MelLib::Vector3(45, 0, 0), 100));
 
 	//MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<NoemalEnemy>(MelLib::Vector3(10,0,30)));
-	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<NoemalEnemy>(MelLib::Vector3(0,0,30)));
+	//MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<NoemalEnemy>(MelLib::Vector3(0,0,30)));
 	//MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<NoemalEnemy>(MelLib::Vector3(-10,0,30)));
 
 	pauseSubAlpha.SetStart(0.0f);
@@ -207,9 +190,9 @@ void ActionPart::Initialize()
 
 void ActionPart::Update()
 {
-	if (MelLib::Input::KeyTrigger(DIK_F5))currentEdit = currentEdit == false ? true : false;
-	if(isEdit && currentEdit) EditUpdate();
-	if (currentEdit)return;
+	if (MelLib::Input::KeyTrigger(DIK_F5))isEdit = isEdit == false ? true : false;
+	if(editOn && isEdit) EditMode::GetInstance()->Update();
+	
 
 	// ポーズ(仮)
 	if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::START)&& !isPause)
@@ -245,7 +228,7 @@ void ActionPart::Update()
 
 void ActionPart::Draw()
 {
-	if (isEdit && currentEdit) EditDraw();
+	if (editOn && isEdit)  EditMode::GetInstance()->Draw();
 
 	MelLib::GameObjectManager::GetInstance()->Draw();
 	if (isPause)

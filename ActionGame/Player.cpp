@@ -4,6 +4,9 @@
 #include"Camera.h"
 #include"LibMath.h"
 #include"GameObjectManager.h"
+
+#include"ActionPart.h"
+
 #include"PlayerSlush.h"
 
 #include"Ground.h"
@@ -58,6 +61,8 @@ Player::Player(const MelLib::Vector3& pos)
 
 void Player::Update()
 {
+	if (ActionPart::GetStopFlag())return;
+
 	prePos = GetPosition();
 	Move();
 	Jump();

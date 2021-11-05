@@ -3,7 +3,9 @@
 #include<LibMath.h>
 #include<Collision.h>
 
-//debug
+
+
+// デバッグ用
 #include<Input.h>
 
 Player* Enemy::pPlayer;
@@ -37,6 +39,8 @@ Enemy::Enemy(const MelLib::Vector3& pos, const std::string& modelName)
 
 void Enemy::Update()
 {
+
+
 }
 
 void Enemy::Draw()
@@ -78,6 +82,13 @@ void Enemy::AddRouteVector()
 
 void Enemy::CalcPlayerRoute()
 {
+	MelLib::Vector3 playerPos = pPlayer->GetPosition();
+
+	// 敵が自分からプレイヤーに近づける最小距離
+	static const float MIN_DISTANCE = 3.0f;
+	if (MelLib::LibMath::CalcDistance3D(playerPos, GetPosition()) < MIN_DISTANCE)return;
+
+
 	// 毎フレーム計算するとがくがくする(フレームごとに向きが変わるから)一定フレームでいいかも
 	// ノードに辿りつくごとがベスト?
 	// プレイヤーが移動したらにする?
@@ -85,7 +96,6 @@ void Enemy::CalcPlayerRoute()
 	// デバッグ用
 	std::vector<MelLib::Vector3>routeNodePos;
 
-	MelLib::Vector3 playerPos = pPlayer->GetPosition();
 
 	MelLib::Vector3 myToPlayer;
 	bool straightMove = MelLib::RouteSearch::CheckStraightMove(GetPosition(), playerPos, nodes, 4.0f,myToPlayer);

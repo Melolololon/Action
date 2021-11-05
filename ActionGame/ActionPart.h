@@ -19,7 +19,7 @@ private:
 #pragma region ポーズ
 	// 一気にメニューを表示せずに、少しづつアルファ値を上げて表示すること
 
-	bool isPause = false;
+	static bool isPause;
 	bool pauseEnd = false;
 	//現在選ばれている項目
 	int currentPauseSelect = 0;
@@ -44,11 +44,12 @@ private:
 	MelLib::Sprite2D pauseBackSpr;
 #pragma endregion
 
-	bool isOption = false;
+	bool isOption;
 
 #pragma region エディット関係
-	bool isEdit = true;
-	bool currentEdit = false;
+	bool editOn = true;
+	static bool isEdit;
+
 #pragma endregion
 
 private:
@@ -57,13 +58,13 @@ private:
 	void PauseUpdate();
 	void PauseDraw();
 
-	void EditUpdate();
-	void EditDraw();
 public:
 	void Initialize()override;//初期化
 	void Update()override;
 	void Draw()override;
 	void Finalize()override;//終了処理
 	Scene* GetNextScene()override;//次のシーン
+
+	static bool GetStopFlag() { return isPause || isEdit; }
 };
 
