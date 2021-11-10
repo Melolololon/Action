@@ -367,7 +367,7 @@ void MelLib::ModelData::Create(std::vector<std::vector<FbxVertex>> vertices, std
 	material[0]->Create(PipelineState::GetDefaultDrawData(PipelineStateType::MODEL));*/
 }
 
-bool ModelData::Load(const std::string& path, const bool batchDeletionFlag, const std::string& name)
+bool ModelData::CreateSprite(const std::string& path, const bool batchDeletionFlag, const std::string& name)
 {
 	pModelDatas.emplace(name, std::make_unique<ModelData>());
 	bool result = pModelDatas[name]->LoadModel(path, name);

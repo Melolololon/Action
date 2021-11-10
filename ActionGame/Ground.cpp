@@ -56,5 +56,5 @@ void Ground::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 void Ground::LoadResource()
 {
 	const std::string texturePath = Game::GetInstance()->GetPath(Game::ResourcePathType::TEXTURE);
-	MelLib::Texture::Load(texturePath + "ground.png","ground");
+	MelLib::Texture::CreateSprite(texturePath + "ground.png","ground");
 }

@@ -85,7 +85,7 @@ void EditMode::Save()
 
 
 
-bool EditMode::Load(std::shared_ptr<Player>& p)
+bool EditMode::CreateSprite(std::shared_ptr<Player>& p)
 {
 
 	std::string filePath = GetFileName();

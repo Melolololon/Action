@@ -5,6 +5,8 @@
 class Pause
 {
 private:
+	bool loadResource = false;
+
 	bool isPause = false;
 
 	// ポーズが終わったか(終了処理を行うか)
@@ -39,11 +41,13 @@ private:
 	void ActionPartPauseUpdate();
 	void ActionPartPauseDraw();
 
+	void CreateSprite();
 public:
 	Pause(Pause& p) = delete;
 	Pause& operator=(Pause& p) = delete;
 	static Pause* GetInstance();
 
+	void Initialize();
 	void Update();
 	void Draw();
 

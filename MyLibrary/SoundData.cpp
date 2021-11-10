@@ -5,7 +5,7 @@ using namespace MelLib;
 
 std::unordered_map < std::string, std::unique_ptr<SoundData> > SoundData::pSoundDatas;
 
-bool SoundData::Load(const std::string& path,const std::string& name)
+bool SoundData::CreateSprite(const std::string& path,const std::string& name)
 {
 	pSoundDatas.emplace(name, std::make_unique<SoundData>());
 	return pSoundDatas[name]->LoadSound(path, name);

@@ -75,7 +75,7 @@ public:
 	/// </summary>
 	/// <param name="p">プレイヤーのポインタ</param>
 	/// <returns>読み込みが成功したかどうか</returns>
-	bool Load(std::shared_ptr<Player>& p);
+	bool CreateSprite(std::shared_ptr<Player>& p);
 
 	void Update();
 	void Draw();

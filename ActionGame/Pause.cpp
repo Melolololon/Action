@@ -29,10 +29,34 @@ void Pause::ActionPartPauseDraw()
 	}
 }
 
+void Pause::CreateSprite()
+{
+	if (loadResource)return;
+	loadResource = true;
+
+
+	pauseBackSpr.Create(MelLib::Color(0, 0, 0, 255));
+	pauseBackSpr.SetScale(MelLib::Vector2(1280, 720));
+
+}
+
 Pause* Pause::GetInstance()
 {
 	static Pause p;
 	return &p;
+}
+
+void Pause::Initialize()
+{
+	CreateSprite();
+
+	pauseSubAlpha.SetStart(0.0f);
+	pauseSubAlpha.SetEnd(100.0f);
+	pauseSubAlpha.SetPar(100.0f);
+	pauseBackSubAlpha.SetStart(70.0f);
+	pauseBackSubAlpha.SetEnd(100.0f);
+	pauseBackSubAlpha.SetPar(100.0f);
+
 }
 
 void Pause::Update()
@@ -49,8 +73,7 @@ void Pause::Update()
 		pauseEnd = true;
 	}
 
-	if (isPause)return;
-
+	if (!isPause)return;
 
 	static const float PAUSE_SUB_ALPHA_SPEED = 10.0f;
 	//スプライトのアルファ値の減算値増減
@@ -135,4 +158,8 @@ void Pause::Update()
 
 void Pause::Draw()
 {
+	if (isPause) 
+	{
+		pauseBackSpr.Draw();
+	}
 }
