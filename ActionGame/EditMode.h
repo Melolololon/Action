@@ -11,6 +11,10 @@ class EditMode
 {
 private:
 	
+	bool editPossible = true;
+	bool isEdit = false;
+
+	
 	int objectType = EditMode::OBJ_TYPE_ENEMY;
 	int objectNum = 0;
 	MelLib::Vector3 addObjectPos;
@@ -75,5 +79,7 @@ public:
 
 	void Update();
 	void Draw();
+
+	bool GetIsEdit() { return isEdit; }
 };
 

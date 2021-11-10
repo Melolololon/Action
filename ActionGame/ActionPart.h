@@ -55,8 +55,6 @@ private:
 private:
 	void LoadResources();
 
-	void PauseUpdate();
-	void PauseDraw();
 
 public:
 	void Initialize()override;//‰Šú‰»

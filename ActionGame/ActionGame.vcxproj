@@ -163,6 +163,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NoemalEnemy.cpp" />
     <ClCompile Include="Option.cpp" />
+    <ClCompile Include="Pause.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerSlush.cpp" />
     <ClCompile Include="StageObject.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="Ground.h" />
     <ClInclude Include="NoemalEnemy.h" />
     <ClInclude Include="Option.h" />
+    <ClInclude Include="Pause.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerSlush.h" />
     <ClInclude Include="StageObject.h" />

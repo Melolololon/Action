@@ -152,6 +152,9 @@ bool EditMode::Load(std::shared_ptr<Player>& p)
 
 void EditMode::Update()
 {
+	if (MelLib::Input::KeyTrigger(DIK_F5))isEdit = isEdit == false ? true : false;
+	if (!(editPossible && isEdit)) return;
+
 	if (MelLib::Input::KeyState(DIK_LCONTROL) && MelLib::Input::KeyTrigger(DIK_S))Save();
 
 
@@ -185,6 +188,7 @@ void EditMode::Update()
 
 void EditMode::Draw()
 {
+	if (!(editPossible && isEdit)) return;
 }
 
 void EditMode::AddObject()

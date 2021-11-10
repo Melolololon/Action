@@ -43,6 +43,12 @@
     <Filter Include="ヘッダー ファイル\Object\Enemy">
       <UniqueIdentifier>{3d031fd2-d0d9-43b0-8f36-128eb401a83a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\SceneCommon">
+      <UniqueIdentifier>{ee0f21b2-3f10-4664-9e8b-2cd0409f9c8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\SceneCommon">
+      <UniqueIdentifier>{4cff0403-d2e8-4e3c-ae15-df180a13aca7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -75,23 +81,26 @@
     <ClCompile Include="Fade.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Option.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="NoemalEnemy.cpp">
       <Filter>ソース ファイル\Object\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="Bamboo.cpp">
       <Filter>ソース ファイル\Object\Stage</Filter>
     </ClCompile>
-    <ClCompile Include="EditMode.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="StageObject.cpp">
+      <Filter>ソース ファイル\Object\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Option.cpp">
+      <Filter>ソース ファイル\SceneCommon</Filter>
     </ClCompile>
     <ClCompile Include="EnemyAttack.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="StageObject.cpp">
-      <Filter>ソース ファイル\Object\Stage</Filter>
+    <ClCompile Include="Pause.cpp">
+      <Filter>ソース ファイル\SceneCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="EditMode.cpp">
+      <Filter>ソース ファイル\SceneCommon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -122,23 +131,26 @@
     <ClInclude Include="Fade.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Option.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="NoemalEnemy.h">
       <Filter>ヘッダー ファイル\Object\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="Bamboo.h">
       <Filter>ヘッダー ファイル\Object\Stage</Filter>
     </ClInclude>
-    <ClInclude Include="EditMode.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="EnemyAttack.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="StageObject.h">
       <Filter>ヘッダー ファイル\Object\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Pause.h">
+      <Filter>ヘッダー ファイル\SceneCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Option.h">
+      <Filter>ヘッダー ファイル\SceneCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="EditMode.h">
+      <Filter>ヘッダー ファイル\SceneCommon</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

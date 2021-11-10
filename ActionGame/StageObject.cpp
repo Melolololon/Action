@@ -8,6 +8,23 @@
 
 Player* StageObject::pPlayer;
 
+void StageObject::MeshCat(const MelLib::GameObject* const object, MelLib::ModelData*& pFront, MelLib::ModelData*& pBack)
+{
+	// プレイヤーの武器と接触したら、MeshCat関数を呼び出す
+	if (typeid(*object) == typeid(PlayerSlush))
+	{
+		PlayerSlush* pPlayerSlush = pPlayer->GetPPlayerSlush();
+
+		// 攻撃を元に平面の情報を作成
+		MelLib::PlaneData playerSlushPlane;
+
+
+		modelObjects["main"].MeshCat(playerSlushPlane, pFront, pBack, true);
+
+		// GameObjectの追加は基底クラスでやらないといけない
+	}
+}
+
 StageObject::StageObject(const MelLib::Vector3& pos, const std::string& modelName)
 {
 	modelObjects["main"];
@@ -48,19 +65,5 @@ void StageObject::Draw()
 
 void StageObject::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)
 {	
-	// プレイヤーの武器と接触したら、MeshCat関数を呼び出す
-	if (typeid(*object) == typeid(PlayerSlush))
-	{
-		PlayerSlush* pPlayerSlush = pPlayer->GetPPlayerSlush();
-
-		// 攻撃を元に平面の情報を作成
-		MelLib::PlaneData playerSlushPlane;
-
-
-		MelLib::ModelData* pFrontModel = nullptr;
-		MelLib::ModelData* pBackModel = nullptr;
-		modelObjects["main"].MeshCat(playerSlushPlane, pFrontModel, pBackModel, true);
-
-		// GameObjectの追加は基底クラスでやらないといけない
-	}
+	
 }

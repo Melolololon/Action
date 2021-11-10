@@ -7,6 +7,16 @@ class StageObject :public MelLib::GameObject
 {
 private:
 	static Player* pPlayer;
+
+protected:
+	/// <summary>
+	/// プレイヤーの攻撃と当たったら切断処理をします。
+	/// </summary>
+	/// <param name="object"></param>
+	/// <param name="pFront"></param>
+	/// <param name="pBack"></param>
+	void MeshCat(const MelLib::GameObject* const object, MelLib::ModelData*& pFront, MelLib::ModelData*& pBack);
+
 public:
 	StageObject(const MelLib::Vector3& pos, const std::string& modelName);
 	StageObject(const MelLib::Vector3& pos, MelLib::ModelData* pCatModelData);

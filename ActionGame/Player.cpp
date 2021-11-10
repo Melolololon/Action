@@ -11,6 +11,9 @@
 
 #include"Ground.h"
 
+#include"Pause.h"
+#include"EditMode.h"
+
 
 std::unordered_map<PlayerSlush::AttackType, const int>Player::attackTime =
 {
@@ -63,7 +66,7 @@ Player::Player(const MelLib::Vector3& pos)
 
 void Player::Update()
 {
-	if (ActionPart::GetStopFlag())return;
+	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())return;
 
 	prePos = GetPosition();
 	Move();
