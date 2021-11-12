@@ -15,6 +15,7 @@ private:
 	bool isEdit = false;
 
 	
+	std::shared_ptr<MelLib::GameObject> selectObject;
 	int objectType = EditMode::OBJ_TYPE_ENEMY;
 	int objectNum = 0;
 	MelLib::Vector3 addObjectPos;
@@ -63,6 +64,7 @@ private:
 	/// </summary>
 	void Save();
 
+	void SetSelectObject();
 	void AddObject();
 public:
 
@@ -75,7 +77,7 @@ public:
 	/// </summary>
 	/// <param name="p">プレイヤーのポインタ</param>
 	/// <returns>読み込みが成功したかどうか</returns>
-	bool CreateSprite(std::shared_ptr<Player>& p);
+	bool Load(std::shared_ptr<Player>& p);
 
 	void Update();
 	void Draw();

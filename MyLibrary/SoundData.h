@@ -45,7 +45,7 @@ namespace MelLib
 	public:
 		~SoundData();
 
-		static bool CreateSprite(const std::string& path, const std::string& name);
+		static bool Load(const std::string& path, const std::string& name);
 		static SoundData* Get(const std::string& name) { return pSoundDatas[name].get(); }
 		static void Delete(const std::string& name);
 		static void Finalize();

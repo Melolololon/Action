@@ -61,7 +61,7 @@ void MelLib::Texture::GetImage(const size_t textureNum)
 	}
 }
 
-bool Texture::CreateSprite(const std::string& path, const std::string& name)
+bool Texture::Load(const std::string& path, const std::string& name)
 {
 	pTextures.emplace(name, std::make_unique<Texture>());
 	return pTextures[name]->LoadSpriteTexture(path);

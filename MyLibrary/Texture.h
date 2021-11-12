@@ -59,7 +59,7 @@ namespace MelLib
 		//空いたヒープを使用するために使用
 		static std::vector<UINT>eraseTextureNumber;
 
-		static bool CreateSprite(const std::string& path, const std::string& name);
+		static bool Load(const std::string& path, const std::string& name);
 		static void Delete(const std::string& name);
 		static Texture* Get(const std::string& name) { return pTextures[name].get(); }
 

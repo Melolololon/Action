@@ -23,7 +23,7 @@ namespace MelLib
 	
 	public:
 
-		static bool CreateSprite(const std::vector<std::string>& path, const std::string& name);
+		static bool Load(const std::vector<std::string>& path, const std::string& name);
 		static void Delete(const std::string& name);
 		static Texture3D* Get(const std::string& name) { return pTextures[name].get(); }
 

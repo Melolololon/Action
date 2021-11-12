@@ -98,15 +98,14 @@ void PlayerSlush::Attack()
 	(capsuleData[0].GetRefSegment3DData().GetAngle() + attackAngle);
 }
 
-PlayerSlush::PlayerSlush(const MelLib::Vector3& pos, const MelLib::Vector3& playerDir, const AttackType type,const int attackTime):
-	attackType(type)
+PlayerSlush::PlayerSlush(const MelLib::Vector3& pos, const MelLib::Vector3& playerDir, const AttackType type,const int attackTime)
+	:attackType(type)
 {
 
 	eraseTimer.SetMaxTime(attackTime);
 
 	//ƒvƒŒƒCƒ„[‚ÌŒü‚¢‚Ä‚é•ûŒü‚É‰ñ“]‚·‚éˆ×‚Ìˆ—
-	playerAngle =
-		MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(playerDir.x, playerDir.z), true);
+	playerAngle = MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(playerDir.x, playerDir.z), true);
 	
 	//playerAngle = 0;
 

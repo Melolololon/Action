@@ -3,7 +3,7 @@
 
 std::unordered_map < std::string, std::unique_ptr < MelLib::Texture3D >> MelLib::Texture3D::pTextures;
 
-bool MelLib::Texture3D::CreateSprite(const std::vector<std::string>& path, const std::string& name)
+bool MelLib::Texture3D::Load(const std::vector<std::string>& path, const std::string& name)
 {
     pTextures.emplace(name, std::make_unique<Texture3D>());
     return pTextures[name]->Load3DTexture(path);

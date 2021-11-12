@@ -85,7 +85,7 @@ void EditMode::Save()
 
 
 
-bool EditMode::CreateSprite(std::shared_ptr<Player>& p)
+bool EditMode::Load(std::shared_ptr<Player>& p)
 {
 
 	std::string filePath = GetFileName();
@@ -169,11 +169,13 @@ void EditMode::Update()
 	// カメラを移動できるようにする
 	// imguiで座標いじって追加する感じでいい?
 
-	imguiManager->DrawRadioButton("OBJ_Enemy", objectType, OBJ_TYPE_ENEMY);
-	imguiManager->DrawRadioButton("OBJ_Stage", objectType, OBJ_TYPE_STAGE);
-	imguiManager->DrawRadioButton("OBJ_Fierd", objectType, OBJ_TYPE_FIERD);
+	bool changeObject = false;
 
-	imguiManager->DrawSliderInt("ObjectNum", objectNum, 0, 10);
+	changeObject = changeObject || imguiManager->DrawRadioButton("OBJ_Enemy", objectType, OBJ_TYPE_ENEMY);
+	changeObject = changeObject || imguiManager->DrawRadioButton("OBJ_Stage", objectType, OBJ_TYPE_STAGE);
+	changeObject = changeObject || imguiManager->DrawRadioButton("OBJ_Fierd", objectType, OBJ_TYPE_FIERD);
+
+	changeObject = changeObject || imguiManager->DrawSliderInt("ObjectNum", objectNum, 0, 10);
 
 	imguiManager->DrawSliderVector3("Position", addObjectPos, -1000.0f, 1000.0f);
 	imguiManager->DrawSliderVector3("Angle", addObjectAngle, 0.0f, 359.9999f);
@@ -181,47 +183,72 @@ void EditMode::Update()
 
 	imguiManager->EndDrawWindow();
 
-	if (MelLib::Input::KeyTrigger(DIK_SPACE))AddObject();
+	// オブジェクトの変更があったらselectObjectを変更
+	if(changeObject)
+	{
+		selectObject.reset();
+		SetSelectObject();
+	}
 
+	if(selectObject)
+	{
+		selectObject->SetPosition(addObjectPos);
+		selectObject->SetAngle(addObjectAngle);
+		selectObject->SetScale(addObjectScale);
+	}
+	else
+	{
+		SetSelectObject();
+	}
+
+	if (MelLib::Input::KeyTrigger(DIK_SPACE))AddObject();
 
 }
 
 void EditMode::Draw()
 {
 	if (!(editPossible && isEdit)) return;
+
+	if(selectObject)
+	{
+		selectObject->Draw();
+	}
 }
 
-void EditMode::AddObject()
+void EditMode::SetSelectObject()
 {
-	
-	auto add = [](std::shared_ptr<MelLib::GameObject> pObj)
-	{
-		MelLib::GameObjectManager::GetInstance()->AddObject(pObj);
-	};
-
 	switch (objectType + objectNum)
 	{
 
 	case NORMAL_ENEMY:
-		add(std::make_shared<NoemalEnemy>(addObjectPos));
+		selectObject = std::make_shared<NoemalEnemy>(addObjectPos);
 		break;
 
 	case BAMBOO:
-		add(std::make_shared<Bamboo>(addObjectPos));
+		selectObject = std::make_shared<Bamboo>(addObjectPos);
 		break;
 
 	case GROUND:
-		add(std::make_shared<Ground>(addObjectPos, addObjectAngle, addObjectScale.ToVector2()));
+		selectObject = std::make_shared<Ground>(addObjectPos, addObjectAngle, addObjectScale.ToVector2());
 		break;
 
 	default:
 		return;
 		break;
 	}
+}
+
+void EditMode::AddObject()
+{
+	MelLib::GameObjectManager::GetInstance()->AddObject(selectObject);
 
 	// 追加に成功したら、オブジェクト番号を格納
 	objectTypes.push_back(objectType);
 	objectNums.push_back(objectNum);
+
+	// 選択オブジェクトを消す
+	selectObject.reset();
+
 }
 
 EditMode* EditMode::GetInstance()

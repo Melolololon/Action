@@ -284,7 +284,7 @@ namespace MelLib
 		/// <param name="batchDeletionFlag">一括削除対象かどうか</param>
 		/// <param name="name">登録名</param>
 		/// <returns></returns>
-		static bool CreateSprite(const std::string& path,const bool batchDeletionFlag, const std::string& name);
+		static bool Load(const std::string& path,const bool batchDeletionFlag, const std::string& name);
 
 		/// <summary>
 		///	モデルデータを取得します。
