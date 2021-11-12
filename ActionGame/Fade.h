@@ -20,6 +20,7 @@ public:
 
 	void Initializ();
 	void Update();
+	void Draw();
 
 	void Start() { isFade = true; }
 	bool GetIsFade() { return isFade; }

@@ -78,9 +78,6 @@
     <ClCompile Include="Title.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Fade.cpp">
-      <Filter>ソース ファイル\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="NoemalEnemy.cpp">
       <Filter>ソース ファイル\Object\Enemy</Filter>
     </ClCompile>
@@ -100,6 +97,9 @@
       <Filter>ソース ファイル\SceneCommon</Filter>
     </ClCompile>
     <ClCompile Include="EditMode.cpp">
+      <Filter>ソース ファイル\SceneCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="Fade.cpp">
       <Filter>ソース ファイル\SceneCommon</Filter>
     </ClCompile>
   </ItemGroup>
@@ -128,9 +128,6 @@
     <ClInclude Include="Title.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Fade.h">
-      <Filter>ヘッダー ファイル\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="NoemalEnemy.h">
       <Filter>ヘッダー ファイル\Object\Enemy</Filter>
     </ClInclude>
@@ -150,6 +147,9 @@
       <Filter>ヘッダー ファイル\SceneCommon</Filter>
     </ClInclude>
     <ClInclude Include="EditMode.h">
+      <Filter>ヘッダー ファイル\SceneCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Fade.h">
       <Filter>ヘッダー ファイル\SceneCommon</Filter>
     </ClInclude>
   </ItemGroup>

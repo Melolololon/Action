@@ -13,6 +13,7 @@
 
 #include"Ground.h"
 
+#include"Fade.h"
 #include"Option.h"
 #include"Pause.h"
 #include"EditMode.h"
@@ -102,6 +103,19 @@ void ActionPart::Update()
 	if (MelLib::Input::KeyTrigger(DIK_ESCAPE))
 	{
 		MelLib::GameObjectManager::GetInstance()->AllEraseObject();
+		Fade::GetInstance()->Start();
+	}
+
+	// && ‚Ì¶‚ÉØ‚è‘Ö‚¦ðŒ‚ð‹Lq
+	//if ( && !Fade::GetInstance()->GetIsFade())
+	//{
+	//	Fade::GetInstance()->Start();
+	//}
+
+	Fade::GetInstance()->Update();
+
+	if (Fade::GetInstance()->GetChangeSceneFlag())
+	{
 		isEnd = true;
 	}
 }
@@ -113,8 +127,9 @@ void ActionPart::Draw()
 
 	MelLib::GameObjectManager::GetInstance()->Draw();
 	Pause::GetInstance()->Draw();
+	Fade::GetInstance()->Draw();
 
-	obj.Draw();
+	//obj.Draw();
 }
 
 void ActionPart::Finalize()
