@@ -19,8 +19,11 @@ private:
 	// デバッグ用
 	MelLib::ModelObject routeObj[100];
 
-	int hp = 0;
 	
+	bool isDead = false;
+
+	bool isMuteki = false;
+	MelLib::FrameTimer mutekiTimer;
 private:
 	/// <summary>
 	/// 経路探索の結果の加算関数
@@ -29,15 +32,18 @@ private:
 
 protected:
 
+	unsigned int hp = 0;
 	float moveSpeed = 0.0f;
 protected:
 	/// <summary>
 	/// プレイヤーへ向かう処理
 	/// </summary>
 	void CalcPlayerRoute();
+
+	void CheckMutekiEnd();
 public:
 
-	Enemy(const MelLib::Vector3& pos,const std::string& modelName);
+	Enemy(const MelLib::Vector3& pos,unsigned int hp,float moveSpeed,const std::string& modelName = "");
 	virtual ~Enemy(){}
 	void Update()override;
 	void Draw()override;

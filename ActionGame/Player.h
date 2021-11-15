@@ -18,7 +18,7 @@ private:
 	//前フレームの座標を格納する変数
 	MelLib::Vector3 prePos;
 	//向いてる向き
-	MelLib::Vector3 playerDir = MelLib::Vector3(0, 0, 1);
+	MelLib::Vector3 direction = MelLib::Vector3(0, 0, 1);
 
 	static const unsigned int HP_MAX = 200;
 	unsigned int hp = HP_MAX;
@@ -50,6 +50,9 @@ private:
 
 	//攻撃の時間
 	static std::unordered_map<PlayerSlush::AttackType, const int>attackTime;
+
+	// 攻撃力
+	static std::unordered_map<PlayerSlush::AttackType, const unsigned int>attackPower;
 
 	//キャンセル可能になるまでの時間
 	//現在は攻撃判定のある時間にもなっているが、変える可能性あり
@@ -106,6 +109,11 @@ public:
 		const int hitObjArrayNum
 	)override;
 
+#pragma region Get
+	unsigned int GetCurrentAttackPower()const { return attackPower[currentAttack]; }
+
+	MelLib::Vector3 GetDirection() { return direction; }
+#pragma endregion
 
 };
 

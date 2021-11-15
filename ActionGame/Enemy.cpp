@@ -5,13 +5,13 @@
 
 
 
-// デバッグ用
-#include<Input.h>
 
 Player* Enemy::pPlayer;
 std::vector<std::vector<std::vector<MelLib::AStarNode>>> Enemy::nodes;
 
-Enemy::Enemy(const MelLib::Vector3& pos, const std::string& modelName)
+Enemy::Enemy(const MelLib::Vector3& pos, const unsigned int hp, const float moveSpeed, const std::string& modelName) :
+	hp(hp)
+	, moveSpeed(moveSpeed)
 {
 	SetPosition(pos);
 
@@ -30,11 +30,13 @@ Enemy::Enemy(const MelLib::Vector3& pos, const std::string& modelName)
 	routeSearchTimer.SetMaxTime(1);
 	routeSearchTimer.SetStopFlag(false);
 
-	for (int i = 0; i < _countof(routeObj); i++)
+	/*for (int i = 0; i < _countof(routeObj); i++)
 	{
 		routeObj[i].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX), nullptr);
 		routeObj[i].SetScale(MelLib::Vector3(nodes[0][0][0].size.x,1, nodes[0][0][0].size.z));
-	}
+	}*/
+
+	mutekiTimer.SetMaxTime(60 * 0.2);
 }
 
 void Enemy::Update()
@@ -50,6 +52,22 @@ void Enemy::Draw()
 
 void Enemy::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)
 {
+	if (typeid(*object) == typeid(PlayerSlush) && !isMuteki)
+	{
+		// プレイヤーから現在の攻撃の攻撃力を取得し、体力を減らす
+		hp -= pPlayer->GetCurrentAttackPower();
+		
+		isMuteki = true;
+		mutekiTimer.SetStopFlag(false);
+
+		if(hp <= 0)
+		{
+			isDead = true;
+
+			// 仮処理
+			eraseManager = true;
+		}
+	}
 }
 
 void Enemy::SetAStarNodeDatas
@@ -116,12 +134,6 @@ void Enemy::CalcPlayerRoute()
 
 	AddRouteVector();
 
-	// デバッグ用
-	if(MelLib::Input::KeyState(DIK_SPACE))
-	{
-  		MelLib::RouteSearch::CalcRoute(GetPosition(), playerPos, nodes, &routeVectors, &routeNodePos);
-	}
-	if(MelLib::Input::KeyState(DIK_Z))AddRouteVector();
 	
 	for(int i = 0;i < routeNodePos.size();i++)
 	{
@@ -133,3 +145,14 @@ void Enemy::CalcPlayerRoute()
 	// ゴールに近いノードを優先的に通るようにする?(コストだけで判断しないようにする?)
 }
 
+void Enemy::CheckMutekiEnd()
+{
+	if(mutekiTimer.GetMaxOverFlag())
+	{
+		mutekiTimer.ResetTimeZero();
+
+		mutekiTimer.SetStopFlag(true);
+
+		isMuteki = false;
+	}
+}

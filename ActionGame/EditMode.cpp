@@ -132,6 +132,8 @@ bool EditMode::Load(std::shared_ptr<Player>& p)
 			file.read(reinterpret_cast<char*>(&addObjectScale), sizeof(addObjectScale));
 		}
 
+		// ƒZƒbƒg
+		SetSelectObject();
 		// “Ç‚İ‚ñ‚¾î•ñ‚ğŒ³‚É’Ç‰Á
 		AddObject();
 	}

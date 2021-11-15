@@ -22,8 +22,6 @@
 void ActionPart::LoadResources()
 {
 	Ground::LoadResource();
-
-
 }
 
 void ActionPart::Initialize()
@@ -129,11 +127,13 @@ void ActionPart::Draw()
 	Pause::GetInstance()->Draw();
 	Fade::GetInstance()->Draw();
 
-	//obj.Draw();
+	obj.Draw();
 }
 
 void ActionPart::Finalize()
 {
+	// 全消しして問題ない場合は、コメントアウト解除
+	//MelLib::GameObjectManager::GetInstance()->AllEraseObject();
 }
 
 MelLib::Scene* ActionPart::GetNextScene()

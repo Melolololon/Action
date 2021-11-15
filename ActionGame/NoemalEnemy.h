@@ -10,7 +10,7 @@ public:
 	~NoemalEnemy(){}
 
 	void Update()override;
-	/// <summary>
+	/*/// <summary>
 	/// 当たった時の処理
 	/// </summary>
 	/// <param name="object">相手オブジェトのポインタ</param>
@@ -25,7 +25,7 @@ public:
 		const int arrayNum,
 		const MelLib::ShapeType3D& hitObjColType,
 		const int hitObjArrayNum
-	)override;
+	)override;*/
 
 	void Attack();
 };

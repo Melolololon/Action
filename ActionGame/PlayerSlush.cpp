@@ -3,6 +3,8 @@
 
 void PlayerSlush::SetAttackParam()
 {
+	// v1 èŒ³‘¤ v2 Øæ‘¤
+
 	//”»’è‚Ì’·‚³(•Ší‚Ì’·‚³)
 	static const float COLLISION_LENGTH = 5.0f;
 
@@ -54,6 +56,9 @@ void PlayerSlush::SetAttackParam()
 	default:
 		break;
 	}
+
+	// ‰ñ“]‘O‚ÌÀ•W‚ğ•Û‘¶
+	preSegmentPosition = capsuleData[0].GetSegment3DData().GetRotatePosition();
 
 	//‰ñ“]
 	//‚±‚êƒ‰ƒ€ƒ_®‚É‚µ‚È‚­‚Ä‚¢‚¢‚©‚à

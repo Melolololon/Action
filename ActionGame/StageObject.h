@@ -8,6 +8,10 @@ class StageObject :public MelLib::GameObject
 private:
 	static Player* pPlayer;
 
+private:
+	// プレイヤーの攻撃情報の変換
+	MelLib::PlaneData SegmentToPlane();
+
 protected:
 	/// <summary>
 	/// プレイヤーの攻撃と当たったら切断処理をします。

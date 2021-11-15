@@ -1,5 +1,8 @@
 #pragma once
 #include <Scene.h>
+
+// タイトルとかのスプライト(シーン共通じゃないスプライト)は、GameObject2Dで作ること
+
 class Title :
     public MelLib::Scene
 {

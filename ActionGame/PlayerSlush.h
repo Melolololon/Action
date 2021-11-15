@@ -25,9 +25,14 @@ private:
 
 
 	float playerAngle = 0.0f;
+
+	// 前フレームの線分の座標
+	MelLib::Value2<MelLib::Vector3>preSegmentPosition;
+
 private:
 	MelLib::FrameTimer eraseTimer;
 	AttackType attackType = AttackType::NORMAL_1;
+
 private:
 	void SetAttackParam();
 
@@ -61,6 +66,12 @@ public:
 		const int hitObjArrayNum
 	)override;
 
+#pragma region ゲット
+
+	MelLib::Value2<MelLib::Vector3>GetSegmentPosition()const { return capsuleData[0].GetSegment3DData().GetPosition(); }
+	MelLib::Value2<MelLib::Vector3>GetSegmentPrePosition()const { return preSegmentPosition; }
+
+#pragma endregion
 
 };
 

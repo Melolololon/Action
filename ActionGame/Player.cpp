@@ -33,6 +33,15 @@ std::unordered_map<PlayerSlush::AttackType, const int>Player::nextAttackTime =
 	{PlayerSlush::AttackType::NORMAL_3,10},
 };
 
+std::unordered_map<PlayerSlush::AttackType,const unsigned int>Player::attackPower =
+{
+	{PlayerSlush::AttackType::NONE,0},
+	{PlayerSlush::AttackType::NORMAL_1,1},
+	{PlayerSlush::AttackType::NORMAL_2,1},
+	{PlayerSlush::AttackType::NORMAL_3,1},
+};
+
+
 Player::Player(const MelLib::Vector3& pos)
 {
 	//物理演算のためにseterとgeter作る?
@@ -104,9 +113,9 @@ void Player::Move()
 		|| MelLib::Input::LeftStickRight(WALK_STICK_PAR)
 		|| MelLib::Input::LeftStickLeft(WALK_STICK_PAR))
 	{
-		playerDir = MelLib::Input::LeftStickVector3(MelLib::Camera::Get(), false, true);
+		direction = MelLib::Input::LeftStickVector3(MelLib::Camera::Get(), false, true);
 
-		MelLib::Vector3 addPos = playerDir;
+		MelLib::Vector3 addPos = direction;
 
 		//ダッシュの傾き量を超えていたらダッシュ
 		if (MelLib::Input::LeftStickUp(FAST_WARK_STICK_PAR)
@@ -156,7 +165,7 @@ void Player::Dash()
 		isDash = true;
 
 		dashEasing.SetStart(GetPosition());
-		dashEasing.SetEnd(MelLib::LibMath::FloatDistanceMoveVector3(GetPosition(), playerDir, DASH_DISTANCE));
+		dashEasing.SetEnd(MelLib::LibMath::FloatDistanceMoveVector3(GetPosition(), direction, DASH_DISTANCE));
 	}
 
 	if (isDash)
@@ -222,7 +231,7 @@ void Player::Attack()
 				pPSlush.reset();
 			}
 
-			pPSlush = std::make_shared<PlayerSlush>(GetPosition(), playerDir, currentAttack, nextAttackTime[currentAttack]);
+			pPSlush = std::make_shared<PlayerSlush>(GetPosition(), direction, currentAttack, nextAttackTime[currentAttack]);
 			MelLib::GameObjectManager::GetInstance()->AddObject(pPSlush);
 
 		}
