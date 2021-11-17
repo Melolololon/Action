@@ -41,23 +41,38 @@ private:
 
 #pragma region 攻撃
 
+	struct AttackData
+	{
+		int power = 0;
+		int time = 0;
+
+
+		//キャンセル可能になるまでの時間
+		//現在は攻撃判定のある時間にもなっているが、変える可能性あり
+		//その場合、判定のある時間を判定自身に持たせ、引数をなくす
+		// 次の攻撃に移れるようになるまでの時間
+		int nextTime = 0;
+
+
+		AttackData(const int power, const int time, const int nextTime):
+			power(power),
+			time(time),
+			nextTime(nextTime){}
+
+	};
+
 	std::shared_ptr<PlayerSlush>pPSlush = nullptr;
 	//現在の攻撃
 	PlayerSlush::AttackType currentAttack = PlayerSlush::AttackType::NONE;
 	
 	//攻撃時間タイマー
 	MelLib::FrameTimer attackTimer;
+	
 
-	//攻撃の時間
-	static std::unordered_map<PlayerSlush::AttackType, const int>attackTime;
+	// static constだと要素にアクセスできないので、const AttackDataにしてる
+	// 攻撃の情報をまとめたもの
+	static std::unordered_map<PlayerSlush::AttackType, const AttackData>attackData;
 
-	// 攻撃力
-	static std::unordered_map<PlayerSlush::AttackType, const unsigned int>attackPower;
-
-	//キャンセル可能になるまでの時間
-	//現在は攻撃判定のある時間にもなっているが、変える可能性あり
-	//その場合、判定のある時間を判定自身に持たせ、引数をなくす
-	static  std::unordered_map<PlayerSlush::AttackType, const int>nextAttackTime;
 #pragma endregion
 
 #pragma region カメラ
@@ -73,6 +88,11 @@ private:
 
 
 	void Move();
+	/// <summary>
+	/// 攻撃時の移動
+	/// </summary>
+	void AttackMove();
+
 	void Dash();
 	void Jump();
 

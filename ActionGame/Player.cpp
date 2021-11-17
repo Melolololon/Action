@@ -14,32 +14,14 @@
 #include"Pause.h"
 #include"EditMode.h"
 
-
-std::unordered_map<PlayerSlush::AttackType, const int>Player::attackTime =
+std::unordered_map<PlayerSlush::AttackType, const Player::AttackData> Player::attackData =
 {
-	{PlayerSlush::AttackType::NONE,0},
-	{PlayerSlush::AttackType::NORMAL_1,20},
-	{PlayerSlush::AttackType::NORMAL_2,20},
-	{PlayerSlush::AttackType::NORMAL_3,20},
-
+	{PlayerSlush::AttackType::NONE,AttackData(0,0,0)},
+	{PlayerSlush::AttackType::NORMAL_1,AttackData(1,20,10)},
+	{PlayerSlush::AttackType::NORMAL_2,AttackData(1,20,10)},
+	{PlayerSlush::AttackType::NORMAL_3,AttackData(1,20,10)},
 };
 
-
-std::unordered_map<PlayerSlush::AttackType, const int>Player::nextAttackTime =
-{
-	{PlayerSlush::AttackType::NONE,0},
-	{PlayerSlush::AttackType::NORMAL_1,10},
-	{PlayerSlush::AttackType::NORMAL_2,10},
-	{PlayerSlush::AttackType::NORMAL_3,10},
-};
-
-std::unordered_map<PlayerSlush::AttackType,const unsigned int>Player::attackPower =
-{
-	{PlayerSlush::AttackType::NONE,0},
-	{PlayerSlush::AttackType::NORMAL_1,1},
-	{PlayerSlush::AttackType::NORMAL_2,1},
-	{PlayerSlush::AttackType::NORMAL_3,1},
-};
 
 
 Player::Player(const MelLib::Vector3& pos)
@@ -97,8 +79,15 @@ void Player::Move()
 {
 	Dash();
 
-	if (attackTimer.GetNowTime() > 0
-		|| isDash)return;
+	if (isDash)
+	{
+		return;
+	}
+	else if (attackTimer.GetNowTime() > 0)
+	{
+		AttackMove();
+		return;
+	}
 
 
 	static const float FAST_WARK_STICK_PAR = 60.0f;
@@ -149,6 +138,32 @@ void Player::Move()
 
 	//落下するために
 	if (!GetIsFall())FallStart(0.0f);
+
+}
+
+void Player::AttackMove()
+{
+
+	switch (currentAttack)
+	{
+	case PlayerSlush::AttackType::NONE:
+		break;
+	case PlayerSlush::AttackType::NORMAL_1:
+		AddPosition(direction * 0.1f);
+		break;
+	case PlayerSlush::AttackType::NORMAL_2:
+		AddPosition(direction * 0.2f);
+		break;
+	case PlayerSlush::AttackType::NORMAL_3:
+		AddPosition(direction * 0.2f);
+		break;
+	case PlayerSlush::AttackType::DASH_1:
+		break;
+	default:
+		break;
+	}
+
+
 
 }
 
@@ -212,7 +227,7 @@ void Player::Attack()
 	//ifの2行目のタイマー確認は、コンボ終了後にNONEにするため、その攻撃中に入らないようにするために書いてる
 	if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::X)
 		&& (attackTimer.GetNowTime() == 0 && currentAttack == PlayerSlush::AttackType::NONE
-			|| attackTimer.GetNowTime() >= nextAttackTime[currentAttack] && currentAttack != PlayerSlush::AttackType::NONE))
+			|| attackTimer.GetNowTime() >= attackData[currentAttack].nextTime && currentAttack != PlayerSlush::AttackType::NONE))
 	{
 		attackTimer.ResetTimeZero();
 		attackTimer.SetStopFlag(false);
@@ -220,7 +235,7 @@ void Player::Attack()
 		//CurrentAttack更新
 		SetAttackType();
 		//攻撃時間セット
-		attackTimer.SetMaxTime(attackTime[currentAttack]);
+		attackTimer.SetMaxTime(attackData[currentAttack].time);
 
 		//コンボの最後の時にボタン押したらNONEをセットするため、コンボを終わらせるためのif
 		if (currentAttack != PlayerSlush::AttackType::NONE)
@@ -231,7 +246,7 @@ void Player::Attack()
 				pPSlush.reset();
 			}
 
-			pPSlush = std::make_shared<PlayerSlush>(GetPosition(), direction, currentAttack, nextAttackTime[currentAttack]);
+			pPSlush = std::make_shared<PlayerSlush>(GetPosition(), direction, currentAttack, attackData[currentAttack].time);
 			MelLib::GameObjectManager::GetInstance()->AddObject(pPSlush);
 
 		}
@@ -246,7 +261,16 @@ void Player::SetAttackType()
 	switch (currentAttack)
 	{
 	case PlayerSlush::AttackType::NONE:
-		if (hitGround)currentAttack = PlayerSlush::AttackType::NORMAL_1;
+		
+		//通常攻撃
+		if (hitGround)
+		{
+			currentAttack = PlayerSlush::AttackType::NORMAL_1;
+		}
+		else// ジャンプ攻撃
+		{
+		}
+
 		break;
 	case PlayerSlush::AttackType::NORMAL_1:
 		currentAttack = PlayerSlush::AttackType::NORMAL_2;
