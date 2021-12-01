@@ -53,7 +53,7 @@ private:
 		// Ÿ‚ÌUŒ‚‚ÉˆÚ‚ê‚é‚æ‚¤‚É‚È‚é‚Ü‚Å‚ÌŠÔ
 		int nextTime = 0;
 
-
+		AttackData(){}
 		AttackData(const int power, const int time, const int nextTime):
 			power(power),
 			time(time),
@@ -130,7 +130,7 @@ public:
 	)override;
 
 #pragma region Get
-	unsigned int GetCurrentAttackPower()const { return attackPower[currentAttack]; }
+	unsigned int GetCurrentAttackPower()const { return attackData[currentAttack].power; }
 
 	MelLib::Vector3 GetDirection() { return direction; }
 #pragma endregion

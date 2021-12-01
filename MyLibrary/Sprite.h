@@ -100,7 +100,7 @@ namespace MelLib
 
 
 #pragma endregion
-
+		virtual void Create(){}
 
 		/// <summary>
 		/// 生成します。
@@ -118,19 +118,35 @@ namespace MelLib
 		Sprite();
 		~Sprite();
 
-
-
 		//こいつここに定義しなくていい
 		//レンダーターゲットで使わない
 		//Drawからレンダーターゲットセットなくして、Sprite2Dと3Dにセット関数作る?
 		virtual void Draw(const std::string& rtName = "");
 
+#pragma region セット
 
-		void SetDrawArea(const Vector2& leftUpPos, const Vector2& rightDownPos)
+
+		void SetDrawLeftUpPosition(const Vector2& leftUpPos)
 		{
 			drawLeftUpPosition = leftUpPos;
+			//drawRightDownPosition = rightDownPos;
+		}
+		void SetDrawRigthDownPosition(const Vector2& rightDownPos)
+		{
 			drawRightDownPosition = rightDownPos;
 		}
+
+
+#pragma endregion
+
+#pragma region ゲット
+		Vector2 SetDrawLeftUpPosition()const { return drawLeftUpPosition; }
+		Vector2 SetDrawRigthDownPosition()const { return drawRightDownPosition; }
+
+
+#pragma endregion
+
+
 #pragma region 開発者用関数
 
 		static void Initialize(ID3D12Device* dev, ID3D12GraphicsCommandList* cmd);
@@ -147,6 +163,10 @@ namespace MelLib
 		void SetMulColor(const Color& color);
 #pragma endregion
 
+#pragma region Get
+		Color GetColor()const { return color; }
+		const Texture* GetTexture()const { return pTexture; }
+#pragma endregion
 
 
 #pragma region パイプライン

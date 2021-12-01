@@ -123,7 +123,7 @@ StageObject::StageObject(const MelLib::Vector3& pos, const std::string& modelNam
 
 
 	// テスト用
-	SegmentToPlane();
+	//SegmentToPlane();
 }
 
 StageObject::StageObject(const MelLib::Vector3& pos, MelLib::ModelData* pCatModelData)

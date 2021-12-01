@@ -12,23 +12,26 @@ namespace MelLib
 		static DirectX::XMMATRIX viewAndProjectionMatrix;
 		static PipelineState defaultPipeline;
 
-
-		bool billboardX = false;
-		bool billboardY = false;
-		bool billboardZ = false;
-		void Billboard(DirectX::XMMATRIX& worldMat);
 		static DirectX::XMFLOAT3 cameraPosition;
 		static DirectX::XMFLOAT3 cameraTargetPosition;
 		static DirectX::XMFLOAT3 cameraUpVector;
 
+		bool billboardX = false;
+		bool billboardY = false;
+		bool billboardZ = false;
+
+
+	private:
+		void Billboard(DirectX::XMMATRIX& worldMat);
 		void MatrixMap(const Camera* camera);
 
 	protected:
 
 	public:
-		Sprite3D() {}
+		Sprite3D();
 		Sprite3D(const Color& color);
 		Sprite3D(Texture* pTexture);
+		Sprite3D(const Sprite3D& sprite);
 		~Sprite3D() {}
 
 		static void Create(const Color& color, const std::string& name);
@@ -36,6 +39,7 @@ namespace MelLib
 		static void Delete(const std::string& name);
 		static Sprite3D* Get(const std::string& name) { return pSprite3D[name].get(); }
 
+		void Create()override;
 		void Create(const Color& color)override;
 		void Create(Texture* pTexture)override;
 
@@ -62,6 +66,8 @@ namespace MelLib
 		}
 #pragma endregion
 
+#pragma region セット
+
 
 		void SetColor(const Color& color) { this->color = color; }
 		void SetTexture(Texture* pTexture) { this->pTexture = pTexture; }
@@ -71,7 +77,17 @@ namespace MelLib
 		void SetAngle(const Vector3& angle) { constData.angle = angle.ToXMFLOAT3(); }
 		void SetScale(const Vector2& scale) { constData.scale = scale.ToXMFLOAT2(); }
 #pragma endregion
-		void SetBillboardFlag(const bool flagX, const bool flagY, const bool flagZ);
+		void SetBillboardFlag(bool flagX, bool flagY, bool flagZ);
+
+
+#pragma endregion
+
+#pragma region ゲット
+		Vector3 GetPosition()const { return constData.position; }
+		Vector3 GetAngle()const { return constData.angle; }
+		Vector2 GetScale()const { return constData.scale; }
+#pragma endregion
+
 
 		static PipelineState GetDefaultPipeline() { return defaultPipeline; }
 

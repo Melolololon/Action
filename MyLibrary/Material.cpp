@@ -208,9 +208,9 @@ void MelLib::ADSAMaterial::Create(const DrawData& drawData)
 	ShaderDataSet set =
 	{
 		{ L"../MyLibrary/FbxVertexShader.hlsl","main","vs_5_0" },
-		{ L"LIB","","" },
-		{ L"LIB","","" },
-		{ L"../MyLibrary/FbxGeometryShader.hlsl","main","gs_5_0" },
+		{ L"NULL","","" },
+		{ L"NULL","","" },
+		{ L"LIB","main","gs_5_0" },
 		{ L"../MyLibrary/FbxPixelShader.hlsl","main","ps_5_0" }
 	};
 
@@ -266,8 +266,8 @@ void MelLib::PBRMaterial::Create(const DrawData& drawData)
 	ShaderDataSet set =
 	{
 		{ L"../MyLibrary/FbxVertexShader.hlsl","main","vs_5_0" },
-		{ L"LIB","","" },
-		{ L"LIB","","" },
+		{ L"NULL","","" },
+		{ L"NULL","","" },
 		{ L"../MyLibrary/FbxGeometryShader.hlsl","main","gs_5_0" },
 		{ L"../MyLibrary/PBRPixelShader.hlsl","main","ps_5_0" }
 	};

@@ -154,6 +154,8 @@ void ModelObject::MapConstData(const Camera* camera)
 {
 	ModelConstBufferData* constBufferData;
 
+
+
 	for (int i = 0; i < modelFileObjectNum; i++)
 	{
 #pragma region 基本的な情報のマップ
@@ -232,8 +234,11 @@ void ModelObject::MapConstData(const Camera* camera)
 		int boneNum = pModelData->GetBoneNumber();
 
 		if (boneNum == 0
-			|| pModelData->GetModelFormat() != ModelData::ModelFormat::MODEL_FORMAT_OBJ
-			&& i != 0)return;
+			/*|| pModelData->GetModelFormat() != ModelData::ModelFormat::MODEL_FORMAT_OBJ*/
+			/*&& i != 0*/)
+		{
+			continue;
+		}
 
 		SkinConstBufferData* skinConstData;
 
@@ -422,19 +427,29 @@ void ModelObject::MapConstData(const Camera* camera)
 		}
 		else if (pModelData->GetModelFormat() == ModelData::ModelFormat::MODEL_FORMAT_FBX)
 		{
-
 			std::vector<ModelData::FbxBone> bones = pModelData->GetFbxBone();
 
-			for (int i = 0; i < boneNum; i++)
+			for (int j = 0; j < boneNum; j++)
 			{
+				//bones[j].fbxCluster.
+
 				//変換
 				DirectX::XMMATRIX matCurrentPose;
 				FbxAMatrix fbxCurrentPose =
-					bones[i].fbxCluster->GetLink()->EvaluateGlobalTransform(fbxAnimationData.currentTime);
+					bones[j].fbxCluster->GetLink()->EvaluateGlobalTransform(fbxAnimationData.currentTime);
 				FbxLoader::GetInstance()->ConvertMatrixFromFbx(&matCurrentPose, fbxCurrentPose);
 
 				//乗算
-				skinConstData->bones[i] = bones[i].invInitialPose * matCurrentPose;
+				//skinConstData->bones[j] = bones[j].invInitialPose * matCurrentPose;
+				
+				DirectX::XMMATRIX meshGlobalTransform = pModelData->GetMeshGlobalTransform(i);
+				DirectX::XMMATRIX invMeshGlobalTransform = DirectX::XMMatrixInverse(nullptr, meshGlobalTransform);
+				
+				skinConstData->bones[j] =
+					meshGlobalTransform *
+					bones[j].invInitialPose *
+					matCurrentPose *
+					invMeshGlobalTransform;
 
 			}
 		}
@@ -451,7 +466,8 @@ void ModelObject::SetCmdList()
 {
 
 	cmdLists[0]->SetGraphicsRootSignature(rootSignature.Get());
-	cmdLists[0]->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+	//cmdLists[0]->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+	cmdLists[0]->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 
 
@@ -1634,8 +1650,10 @@ void ModelObject::ResetAnimation()
 void ModelObject::SetCurrentFream(const UINT fream)
 {
 	FbxTime setTime = fbxAnimationData.animationTimes.startTime * fream;
-	if (setTime > fbxAnimationData.animationTimes.endTime)
+	
+	if (setTime > fbxAnimationData.animationTimes.endTime) {
 		setTime = fbxAnimationData.animationTimes.endTime;
+	}
 
 	fbxAnimationData.currentTime = setTime;
 }
@@ -1646,14 +1664,19 @@ void ModelObject::FbxAnimation()
 {
 	if (!isAnimation)return;
 
-	//タイムを進める
-	fbxAnimationData.currentTime += fbxAnimationData.animationTimes.freamTime * fbxAnimationData.timeMag;
 
-	if (fbxAnimationData.currentTime > fbxAnimationData.animationTimes.endTime)
+	//タイムを進める
+	fbxAnimationData.currentTime += fbxAnimationData.animationTimes.frameTime * fbxAnimationData.timeMag;
+
+	if (fbxAnimationData.currentTime > fbxAnimationData.animationTimes.endTime) {
 		fbxAnimationData.currentTime = fbxAnimationData.animationTimes.startTime;
-	if (fbxAnimationData.currentTime < fbxAnimationData.animationTimes.startTime)
+	}
+	else
+	if (fbxAnimationData.currentTime < fbxAnimationData.animationTimes.startTime) {
 		fbxAnimationData.currentTime = fbxAnimationData.animationTimes.endTime;
+	}
 }
+
 
 bool ModelObject::Create(ModelData* pModelData, ConstBufferData* userConstBufferData)
 {
@@ -1712,7 +1735,12 @@ bool ModelObject::Create(ModelData* pModelData, ConstBufferData* userConstBuffer
 	}
 	modelConstBuffer[0]->Unmap(0, nullptr);
 
-	fbxAnimationData.animationTimes = pModelData->GetFbxAnimationTimes();
+	if (pModelData->GetBoneNumber() != 0 && pModelData->GetModelFormat() == MelLib::ModelData::ModelFormat::MODEL_FORMAT_FBX) {
+		fbxAnimationData.animationTimes.frameTime.SetTime(0, 0, 0, 1, 0, FbxTime::EMode::eFrames60);
+
+		// 0番目のアニメーションの時間をセット
+		pModelData->GetAnimationTimeData(0, fbxAnimationData.animationTimes.startTime, fbxAnimationData.animationTimes.endTime);
+	}
 #pragma endregion
 
 
@@ -1765,4 +1793,13 @@ std::vector<std::vector<TriangleData>> MelLib::ModelObject::GetModelTriangleData
 	}
 
 	return result;
+}
+
+
+void MelLib::ModelObject::SetAnimation(const std::string& name)
+{
+	fbxAnimationData.currentAnimationName = name;
+	pModelData->GetAnimationTimeData(name, fbxAnimationData.animationTimes.startTime, fbxAnimationData.animationTimes.endTime);
+
+	pModelData->SetFbxAnimStack(name);
 }

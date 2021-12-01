@@ -46,7 +46,7 @@ namespace MelLib
 		/// </summary>
 		/// <param name="">モデル</param>
 		/// <param name="node">ノード</param>
-		void ParseMesh(ModelData* fbxModel, FbxNode* node);
+		void ParseMesh(ModelData* fbxModel, FbxNode* node,Node* meshNode);
 
 		/// <summary>
 		/// 頂点読み込み

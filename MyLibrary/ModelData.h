@@ -81,13 +81,8 @@ namespace MelLib
 		};
 
 		//fbxのアニメーションに必要なFbxTimeをまとめた構造体
-		struct FbxAnimationTimes
-		{
-			FbxTime startTime;
-			FbxTime endTime;
-			//1フレームの時間
-			FbxTime freamTime;
-		};
+		FbxTime freamTime;
+	
 
 #pragma endregion
 
@@ -120,8 +115,12 @@ namespace MelLib
 
 			std::vector<FbxBone>bones;
 
-			FbxAnimationTimes animationTimes;
+			//FbxAnimationTimes animationTimes;
 
+			// FbxAnimStackを取得するための番号
+			std::unordered_map<std::string, int>animStackNum;
+			// アニメーション情報を取得するための名前
+			std::unordered_map<std::string, std::string>animationDataGetName;
 		};
 
 
@@ -175,6 +174,8 @@ namespace MelLib
 		std::vector<std::array<float, 6>>directionMaxPos;
 
 		std::vector<std::vector<USHORT>> indices;
+
+		std::vector<DirectX::XMMATRIX>meshGlobalTransform;
 
 		UINT boneNum = 0;
 
@@ -340,7 +341,10 @@ namespace MelLib
 		/// <returns></returns>
 		ID3D12DescriptorHeap* GetTextureDesctiptorHeap()const { return textureDescHeap.Get(); }
 
+		void GetAnimationTimeData(int index, FbxTime& start, FbxTime& end);
+		void GetAnimationTimeData(const std::string& name, FbxTime& start, FbxTime& end);
 
+		DirectX::XMMATRIX GetMeshGlobalTransform(const size_t index)const { return meshGlobalTransform[index]; }
 #pragma region fbx関係
 
 
@@ -350,7 +354,10 @@ namespace MelLib
 		/// モデルのFbxAnimationTimesを返します。
 		/// </summary>
 		/// <returns></returns>
-		const FbxAnimationTimes& GetFbxAnimationTimes()const { return fbxData.animationTimes; }
+		//const FbxAnimationTimes& GetFbxAnimationTimes()const { return fbxData.animationTimes; }
+
+
+		void SetFbxAnimStack(const std::string& name);
 
 #pragma endregion
 
