@@ -17,24 +17,30 @@
 std::unordered_map<PlayerSlush::AttackType, const Player::AttackData> Player::attackData =
 {
 	{PlayerSlush::AttackType::NONE,AttackData(0,0,0)},
-	{PlayerSlush::AttackType::NORMAL_1,AttackData(1,20,10)},
-	{PlayerSlush::AttackType::NORMAL_2,AttackData(1,20,10)},
-	{PlayerSlush::AttackType::NORMAL_3,AttackData(1,20,10)},
+	{PlayerSlush::AttackType::NORMAL_1,AttackData(1,30,20)},
+	{PlayerSlush::AttackType::NORMAL_2,AttackData(1,40,30)},
+	{PlayerSlush::AttackType::NORMAL_3,AttackData(1,30,20)},
 };
 
 
  
+void Player::LoadResources()
+{
+	MelLib::ModelData::Load("Resources/Model/Player/Player_Test.fbx",true,"Player");
+}
+
 Player::Player(const MelLib::Vector3& pos)
 {
+
 	//物理演算のためにseterとgeter作る?
 
 
 	collisionFlag.capsule = true;
 	capsuleData.resize(1);
-	capsuleData[0].SetRadius(0.5f);
+	capsuleData[0].SetRadius(1.7f);
 	capsuleData[0].GetRefSegment3DData().
 		SetPosition(MelLib::Value2<MelLib::Vector3>
-			(GetPosition() + MelLib::Vector3(0, 3, 0), GetPosition() + MelLib::Vector3(0, -3, 0)));
+			(GetPosition() + MelLib::Vector3(0, 7, 0), GetPosition() + MelLib::Vector3(0, -3, 0)));
 
 	segment3DData.resize(1);
 	segment3DData[0] = capsuleData[0].GetSegment3DData();
@@ -42,8 +48,11 @@ Player::Player(const MelLib::Vector3& pos)
 	SetPosition(pos);
 
 	modelObjects["main"];
-	modelObjects["main"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX), nullptr);
-
+	//modelObjects["main"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX), nullptr);
+	modelObjects["main"].Create(MelLib::ModelData::Get("Player"), nullptr);
+	modelObjects["main"].SetScale(1);
+	modelObjects["main"].SetPosition(MelLib::Vector3(0, 5, -0));
+	modelObjects["main"].SetAnimationPlayFlag(true);
 #pragma region ダッシュ
 	dashEasing.SetAddPar(5.0f);
 
@@ -64,19 +73,57 @@ void Player::Update()
 	Jump();
 	Attack();
 
+
 	CalcMovePhysics();
+
+	// 落下アニメーション(仮)
+	//if (GetIsFall() && !hitGround)
+	//{
+	//	MelLib::Vector3 velocity = GetVelocity();
+	//	if (velocity.y != 0) {
+	//		modelObjects["main"].SetAnimationEndStopFlag(true);
+	//		modelObjects["main"].SetAnimation("Jump");
+	//	}
+	//}
+
 
 	//とりあえずSetPositionを使って判定セットしたり攻撃判定動かしてる
 	//SetPosition(position);
 
 	Camera();
 
+	float angle = MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(direction.x, direction.z), false) - 270;
+	// 回転処理(仮)
+	modelObjects["main"].SetAngle(MelLib::Vector3(0, angle, 0));
+
 
 	hitGround = false;
+
+
+	ChangeAnimationData();
+}
+
+void Player::ChangeAnimationData()
+{
+	std::string animationName = modelObjects["main"].GetCurrentAnimationName();
+
+	modelObjects["main"].SetAnimationSpeedMagnification(1);
+	modelObjects["main"].SetAnimationEndStopFlag(false);
+
+	if(animationName == "Dash"){
+		modelObjects["main"].SetAnimationSpeedMagnification(2);
+	}
+	else if(animationName.find("Attack") != std::string::npos){
+		modelObjects["main"].SetAnimationEndStopFlag(true);
+	}
+	
 }
 
 void Player::Move()
 {
+	// 仮
+	modelObjects["main"].SetAnimationSpeedMagnification(1);
+
 	Dash();
 
 	if (isDash)
@@ -92,8 +139,8 @@ void Player::Move()
 
 	static const float FAST_WARK_STICK_PAR = 60.0f;
 	static const float WALK_STICK_PAR = 20.0f;
-	static const float MAX_FAST_WARK_SPEED = 0.7f;
-	static const float MAX_WALK_SPEED = 0.25f;
+	static const float MAX_FAST_WARK_SPEED = 1.5f;
+	static const float MAX_WALK_SPEED = 0.5f;
 	static const float FRAME_UP_FAST_WARK_SPEED = MAX_FAST_WARK_SPEED / 10;
 	static const float FRAME_UP_WARK_SPEED = MAX_WALK_SPEED / 10;
 
@@ -115,6 +162,8 @@ void Player::Move()
 			if (moveSpeed < MAX_FAST_WARK_SPEED)moveSpeed += FRAME_UP_FAST_WARK_SPEED;
 			else moveSpeed = MAX_FAST_WARK_SPEED;
 			addPos *= moveSpeed;
+
+			modelObjects["main"].SetAnimation("Dash");
 		}
 		else
 		{
@@ -122,6 +171,8 @@ void Player::Move()
 			else moveSpeed = MAX_WALK_SPEED;
 			addPos *= moveSpeed;
 			addPos *= MAX_WALK_SPEED;
+
+			modelObjects["main"].SetAnimation("Walk");
 		}
 
 		AddPosition(addPos);
@@ -131,6 +182,8 @@ void Player::Move()
 	else
 	{
 		moveSpeed = 0.0;
+
+		modelObjects["main"].SetAnimation("No_Cont");
 	}
 
 
@@ -175,7 +228,8 @@ void Player::Dash()
 	static const float DASH_DISTANCE = 40.0f;
 
 	if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::B)
-		&& !isDash)
+		&& !isDash
+		&& currentAttack == PlayerSlush::AttackType::NONE)
 	{
 		isDash = true;
 
@@ -203,13 +257,14 @@ void Player::Dash()
 
 void Player::Jump()
 {
+	// ジャンプの着地アニメーションは、ジャンプの逆再生でOK
+
 	if (attackTimer.GetNowTime() != 0)return;
 
 	if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::A))
 	{
 		FallStart(2.0f);
 	}
-
 }
 
 
@@ -266,6 +321,8 @@ void Player::SetAttackType()
 		if (hitGround)
 		{
 			currentAttack = PlayerSlush::AttackType::NORMAL_1;
+
+			modelObjects["main"].SetAnimation("Attack_Normal_1");
 		}
 		else// ジャンプ攻撃
 		{
@@ -274,9 +331,13 @@ void Player::SetAttackType()
 		break;
 	case PlayerSlush::AttackType::NORMAL_1:
 		currentAttack = PlayerSlush::AttackType::NORMAL_2;
+
+		modelObjects["main"].SetAnimation("Attack_Normal_2");
 		break;
 	case PlayerSlush::AttackType::NORMAL_2:
 		currentAttack = PlayerSlush::AttackType::NORMAL_3;
+
+		modelObjects["main"].SetAnimation("Attack_Normal_3");
 		break;
 	case PlayerSlush::AttackType::NORMAL_3:
 		currentAttack = PlayerSlush::AttackType::NONE;
@@ -344,6 +405,7 @@ void Player::SetCameraPosition()
 
 void Player::Draw()
 {
+	modelObjects["main"].Draw();
 }
 
 void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)

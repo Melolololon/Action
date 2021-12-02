@@ -23,7 +23,7 @@
 
 namespace MelLib
 {
-	
+
 	//モデルの座標などをまとめたもの
 	class ModelObject
 	{
@@ -36,7 +36,7 @@ namespace MelLib
 		static ID3D12Device* device;
 		static std::vector<ID3D12GraphicsCommandList*>cmdLists;
 		static ComPtr<ID3D12RootSignature>rootSignature;
-	
+
 		//[モデル内のオブジェクトごと]
 		std::vector<Material*>materials;
 
@@ -71,6 +71,7 @@ namespace MelLib
 
 		FbxAnimationData fbxAnimationData;
 		bool isAnimation = false;
+		bool animationEndStop = false;
 #pragma endregion
 
 		//定数バッファ
@@ -110,7 +111,7 @@ namespace MelLib
 		//渡すとなると、生成するごとに頂点のコピーが必要になる(コピーしないとカットしたモデルの頂点参照できない)
 		//直接ModelObjectに頂点とか渡して作れるようにしてもいいかも
 		//頂点とインデックス関係のものだけをまとめたクラスを作って、それをこれに持たせるのもあり
-		
+
 		// //ModelDataないとヒープ用意できないから、
 		//マテリアルとかのコピーコンストラクタ作ったほうがいいかも
 		std::unique_ptr<ModelData> catFrontModelData;
@@ -131,7 +132,7 @@ namespace MelLib
 
 		//nullptr渡される可能性を考えると、boolをreturnできるようにしたほうがいい?
 		ModelObject() {}
-		ModelObject( ModelObject& obj);
+		ModelObject(ModelObject& obj);
 		ModelObject& operator= (ModelObject& obj);
 		~ModelObject() {}
 
@@ -153,7 +154,7 @@ namespace MelLib
 
 
 #pragma region プリミティブモデル生成
-	
+
 
 #pragma endregion プリミティブモデル生成
 
@@ -169,7 +170,7 @@ namespace MelLib
 		/// <param name="pBack">平面の裏側にあるモデル情報を格納するModelDataのポインタ<</param>
 		/// <param name="createCrossSection">断面を形成するかどうか</param>
 		/// <returns>切断できたかどうか</returns>
-		bool MeshCat(const PlaneData& plane,ModelData*& pFront, ModelData*& pBack,const bool createCrossSection);
+		bool MeshCat(const PlaneData& plane, ModelData*& pFront, ModelData*& pBack, const bool createCrossSection);
 #pragma endregion
 
 
@@ -199,6 +200,10 @@ namespace MelLib
 		void SetCurrentFream(const UINT fream);
 
 		void SetAnimationSpeedMagnification(const int magnification) { fbxAnimationData.timeMag = magnification; }
+
+		void SetAnimation(const std::string& name);
+
+		void SetAnimationEndStopFlag(const bool flag) { animationEndStop = flag; }
 #pragma endregion
 
 
@@ -207,10 +212,14 @@ namespace MelLib
 		void SetMaterial(Material* mtl, const UINT index);
 
 
-		void SetAnimation(const std::string& name);
+
+
 #pragma endregion
 
 #pragma region ゲット
+
+		std::string GetCurrentAnimationName()const { return fbxAnimationData.currentAnimationName; }
+
 
 		//この辺constにする
 
@@ -220,7 +229,7 @@ namespace MelLib
 #pragma region 操作見た目変更
 
 #pragma region 操作
-		
+
 		//今はとりあえず全部値が一緒なので、0のやつを返してる
 		Vector3 GetPosition()const { return Vector3(modelConstDatas[0].position); }
 

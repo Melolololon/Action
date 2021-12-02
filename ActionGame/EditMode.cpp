@@ -181,7 +181,7 @@ void EditMode::Update()
 
 	imguiManager->DrawSliderVector3("Position", addObjectPos, -1000.0f, 1000.0f);
 	imguiManager->DrawSliderVector3("Angle", addObjectAngle, 0.0f, 359.9999f);
-	imguiManager->DrawSliderVector3("Scale", addObjectScale, 0.0001f, 150.0f);
+	imguiManager->DrawSliderVector3("Scale", addObjectScale, 0.0001f, 400.0f);
 
 	imguiManager->EndDrawWindow();
 

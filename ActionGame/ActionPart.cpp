@@ -22,6 +22,7 @@
 void ActionPart::LoadResources()
 {
 	Ground::LoadResource();
+	Player::LoadResources();
 }
 
 void ActionPart::Initialize()

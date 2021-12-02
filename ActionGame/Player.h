@@ -73,7 +73,10 @@ private:
 	// UŒ‚‚Ìî•ñ‚ğ‚Ü‚Æ‚ß‚½‚à‚Ì
 	static std::unordered_map<PlayerSlush::AttackType, const AttackData>attackData;
 
+
+
 #pragma endregion
+
 
 #pragma region ƒJƒƒ‰
 	float cameraSpeed = 0.0f;
@@ -83,6 +86,8 @@ private:
 private:
 
 #pragma region UpdateŠÖŒW
+
+	void ChangeAnimationData();
 
 	//‘€ì•s‰Â”\‚Éif‚ÅˆÍ‚Ş‚Ì‘å•Ï‚¾‚©‚çŠÖ”‰»
 
@@ -105,6 +110,8 @@ private:
 #pragma endregion
 
 public:
+	static void LoadResources();
+
 	Player(const MelLib::Vector3& pos);
 	~Player(){}
 
