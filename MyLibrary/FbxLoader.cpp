@@ -163,7 +163,8 @@ void FbxLoader::ParseMesh(ModelData* fbxModel, FbxNode* node, Node* meshNode)
 {
 	FbxMesh* fbxMesh = node->GetMesh();
 
-	fbxModel->meshGlobalTransform.push_back(meshNode->globalTransform);
+	//fbxModel->meshGlobalTransform.push_back(meshNode->globalTransform);
+	fbxModel->meshGlobalTransform.emplace(meshNode->nodeName, meshNode->globalTransform);
 
 	ParseMeshVertices(fbxModel, fbxMesh);
 	ParseMeshFaces(fbxModel, fbxMesh);
@@ -506,6 +507,7 @@ void FbxLoader::ParseSkin(ModelData* fbxModel, FbxMesh* fbxMesh)
 		const char* boneName = fbxCluster->GetLink()->GetName();
 
 		//ボーン追加
+
 		bones.emplace_back(ModelData::FbxBone(boneName));
 		ModelData::FbxBone& bone = bones.back();
 		//自作ボーンとfbxのボーンとの紐付け
@@ -521,7 +523,8 @@ void FbxLoader::ParseSkin(ModelData* fbxModel, FbxMesh* fbxMesh)
 
 		//逆行列をボーンに渡す
 		bone.invInitialPose = DirectX::XMMatrixInverse(nullptr, initialPose);
-		//bone.invInitialPose = DirectX::XMMatrixInverse(nullptr,DirectX::XMMatrixIdentity());
+
+
 
 
 		int controlPointIndicesCount = fbxCluster->GetControlPointIndicesCount();

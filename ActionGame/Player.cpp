@@ -17,9 +17,9 @@
 std::unordered_map<PlayerSlush::AttackType, const Player::AttackData> Player::attackData =
 {
 	{PlayerSlush::AttackType::NONE,AttackData(0,0,0)},
-	{PlayerSlush::AttackType::NORMAL_1,AttackData(1,30,20)},
-	{PlayerSlush::AttackType::NORMAL_2,AttackData(1,40,30)},
-	{PlayerSlush::AttackType::NORMAL_3,AttackData(1,30,20)},
+	{PlayerSlush::AttackType::NORMAL_1,AttackData(1,20,10)},
+	{PlayerSlush::AttackType::NORMAL_2,AttackData(1,30,20)},
+	{PlayerSlush::AttackType::NORMAL_3,AttackData(1,20,10)},
 };
 
 
@@ -37,10 +37,10 @@ Player::Player(const MelLib::Vector3& pos)
 
 	collisionFlag.capsule = true;
 	capsuleData.resize(1);
-	capsuleData[0].SetRadius(1.7f);
+	capsuleData[0].SetRadius(2.5f);
 	capsuleData[0].GetRefSegment3DData().
 		SetPosition(MelLib::Value2<MelLib::Vector3>
-			(GetPosition() + MelLib::Vector3(0, 7, 0), GetPosition() + MelLib::Vector3(0, -3, 0)));
+			(GetPosition() + MelLib::Vector3(0, 3, 0), GetPosition() + MelLib::Vector3(0, -28, 0)));
 
 	segment3DData.resize(1);
 	segment3DData[0] = capsuleData[0].GetSegment3DData();
@@ -50,8 +50,8 @@ Player::Player(const MelLib::Vector3& pos)
 	modelObjects["main"];
 	//modelObjects["main"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX), nullptr);
 	modelObjects["main"].Create(MelLib::ModelData::Get("Player"), nullptr);
-	modelObjects["main"].SetScale(1);
-	modelObjects["main"].SetPosition(MelLib::Vector3(0, 5, -0));
+	modelObjects["main"].SetScale(MelLib::Vector3(3));
+	modelObjects["main"].SetPosition(MelLib::Vector3(0, 4, -0));
 	modelObjects["main"].SetAnimationPlayFlag(true);
 #pragma region ダッシュ
 	dashEasing.SetAddPar(5.0f);
@@ -114,9 +114,15 @@ void Player::ChangeAnimationData()
 		modelObjects["main"].SetAnimationSpeedMagnification(2);
 	}
 	else if(animationName.find("Attack") != std::string::npos){
+
+		modelObjects["main"].SetAnimationSpeedMagnification(2);
 		modelObjects["main"].SetAnimationEndStopFlag(true);
 	}
-	
+	else if (animationName.find("Dash_02") != std::string::npos) {
+
+		modelObjects["main"].SetAnimationEndStopFlag(true);
+	}
+
 }
 
 void Player::Move()
@@ -139,7 +145,7 @@ void Player::Move()
 
 	static const float FAST_WARK_STICK_PAR = 60.0f;
 	static const float WALK_STICK_PAR = 20.0f;
-	static const float MAX_FAST_WARK_SPEED = 1.5f;
+	static const float MAX_FAST_WARK_SPEED = 2.5f;
 	static const float MAX_WALK_SPEED = 0.5f;
 	static const float FRAME_UP_FAST_WARK_SPEED = MAX_FAST_WARK_SPEED / 10;
 	static const float FRAME_UP_WARK_SPEED = MAX_WALK_SPEED / 10;
@@ -225,7 +231,7 @@ void Player::Dash()
 	static const float MAX_DASH_SPEED = 1.5f;
 	static const float START_DASH_SPEED = 1.0f;
 
-	static const float DASH_DISTANCE = 40.0f;
+	static const float DASH_DISTANCE = 200.0f;
 
 	if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::B)
 		&& !isDash
@@ -245,6 +251,9 @@ void Player::Dash()
 
 		// Yを0にしないとダッシュ中にYが変わったらおかしくなっちゃう
 		AddPosition(MelLib::Vector3(addPos.x, 0, addPos.z));
+
+
+		modelObjects["main"].SetAnimation("Dash_02");
 
 	}
 
@@ -394,12 +403,12 @@ void Player::Camera()
 void Player::SetCameraPosition()
 {
 	MelLib::Camera* pCamera = MelLib::Camera::Get();
-	pCamera->SetRotateCriteriaPosition
+	/*pCamera->SetRotateCriteriaPosition
 	(MelLib::LibMath::FloatDistanceMoveVector3
-	(GetPosition(), MelLib::LibMath::OtherVector3(pCamera->GetCameraPosition(), pCamera->GetTargetPosition()), 30.0f));
+	(GetPosition(), MelLib::LibMath::OtherVector3(pCamera->GetCameraPosition(), pCamera->GetTargetPosition()), 30.0f));*/
 
 
-
+	pCamera->SetRotateCriteriaPosition(GetPosition() + MelLib::Vector3(0,10,0));
 
 }
 

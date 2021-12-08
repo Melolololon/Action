@@ -128,7 +128,7 @@ void ActionPart::Draw()
 	Pause::GetInstance()->Draw();
 	Fade::GetInstance()->Draw();
 
-	obj.Draw();
+	//obj.Draw();
 }
 
 void ActionPart::Finalize()
