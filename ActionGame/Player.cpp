@@ -68,6 +68,8 @@ void Player::Update()
 {
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())return;
 
+	modelObjects["main"].Update();
+
 	prePos = GetPosition();
 	Move();
 	Jump();
