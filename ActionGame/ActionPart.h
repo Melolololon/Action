@@ -20,7 +20,7 @@ private:
 private:
 	void LoadResources();
 
-
+	void Tutorial();
 public:
 	void Initialize()override;//‰Šú‰»
 	void Update()override;

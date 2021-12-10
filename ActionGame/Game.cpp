@@ -13,6 +13,7 @@
 #include"SceneManager.h"
 #include"Fade.h"
 #include"ActionPart.h"
+#include"Title.h"
 
 #include"Option.h"
 

@@ -44,6 +44,7 @@ void Title::Update()
 
 void Title::Draw()
 {
+	Fade::GetInstance()->Draw();
 }
 
 void Title::Finalize()
