@@ -2,13 +2,11 @@
 #include<LibMath.h>
 
 
-const MelLib::Value2<MelLib::Vector3> PlayerSlush::CAPSULE_START_POS = { MelLib::Vector3(14,32,3),MelLib::Vector3(12,32,14) };
+const MelLib::Value2<MelLib::Vector3> PlayerSlush::CAPSULE_START_POS_LEFT = { MelLib::Vector3(14,32,3),MelLib::Vector3(12,32,14) };
+const MelLib::Value2<MelLib::Vector3> PlayerSlush::CAPSULE_START_POS_RIGTH = { MelLib::Vector3(-14,32,3),MelLib::Vector3(-12,32,14) };
 
 void PlayerSlush::SetAttackParam()
 {
-
-	
-
 #pragma region ‹Œ
 
 
@@ -88,7 +86,6 @@ void PlayerSlush::Attack()
 {
 	//capsuleData[0].GetRefSegment3DData().SetPosition(CAPSULE_START_POS);
 	
-	// ˆÚ“®‚µ‚Ä‚é‚Ì‚ÉCAPSULE_START_POS‚ð•Ï‚¦‚Ä‚È‚¢‚©‚çƒoƒO‚é
 
 	//const MelLib::Value2 < MelLib::Vector3> CALC_POS
 	//(PLAYER_MODEL.CalcAnimationPosition
@@ -96,14 +93,25 @@ void PlayerSlush::Attack()
 	//	PLAYER_MODEL.CalcAnimationPosition
 	//	(CAPSULE_START_POS.v2, 1.0f, "Bone_L.003", "Body", PLAYER_START_POS, PLAYER_START_ANGLE, PLAYER_START_SCALE));
 
-	const MelLib::Value2 < MelLib::Vector3> CALC_POS
-	(PLAYER_MODEL.CalcAnimationPosition
-	(CAPSULE_START_POS.v1, 1.0f, "Bone_L.003", "Body", PLAYER_START_POS, PLAYER_START_ANGLE, PLAYER_START_SCALE),
-		PLAYER_MODEL.CalcAnimationPosition
-		(CAPSULE_START_POS.v2, 1.0f, "Bone_L.003", "Body", PLAYER_START_POS, PLAYER_START_ANGLE, PLAYER_START_SCALE)); 
+	if (slushLeft) 
+	{
+		const MelLib::Value2 < MelLib::Vector3> CALC_POS
+		(PLAYER_MODEL.CalcAnimationPosition
+		(CAPSULE_START_POS_LEFT.v1, 1.0f, "Bone_L.003", "Body", PLAYER_START_POS, PLAYER_START_ANGLE, PLAYER_START_SCALE),
+			PLAYER_MODEL.CalcAnimationPosition
+			(CAPSULE_START_POS_LEFT.v2, 1.0f, "Bone_L.003", "Body", PLAYER_START_POS, PLAYER_START_ANGLE, PLAYER_START_SCALE));
 
-	capsuleData[0].GetRefSegment3DData().SetPosition(CALC_POS);
+		capsuleData[0].GetRefSegment3DData().SetPosition(CALC_POS);
+	}else
+	{
+		const MelLib::Value2 < MelLib::Vector3> CALC_POS
+		(PLAYER_MODEL.CalcAnimationPosition
+		(CAPSULE_START_POS_RIGTH.v1, 1.0f, "Bone_R.003", "Body", PLAYER_START_POS, PLAYER_START_ANGLE, PLAYER_START_SCALE),
+			PLAYER_MODEL.CalcAnimationPosition
+			(CAPSULE_START_POS_RIGTH.v2, 1.0f, "Bone_R.003", "Body", PLAYER_START_POS, PLAYER_START_ANGLE, PLAYER_START_SCALE));
 
+		capsuleData[0].GetRefSegment3DData().SetPosition(CALC_POS);
+	}
 
 
 	//MelLib::Vector3 attackAngle = 0;
@@ -141,14 +149,15 @@ PlayerSlush::PlayerSlush
 	const MelLib::ModelObject& model,
 	const MelLib::Vector3 playerStartPos,
 	const MelLib::Vector3 playerStartAngle,
-	const MelLib::Vector3 playerStartScale
+	const MelLib::Vector3 playerStartScale,
+	const bool slushLeft
 )
 	:attackType(type)
 	,PLAYER_MODEL(model)
 	, PLAYER_START_POS(playerStartPos)
 	, PLAYER_START_ANGLE(playerStartAngle)
 	, PLAYER_START_SCALE(playerStartScale)
-
+	, slushLeft(slushLeft)
 {
 
 	eraseTimer.SetMaxTime(attackTime);
@@ -176,7 +185,7 @@ PlayerSlush::PlayerSlush
 
 void PlayerSlush::Update()
 {
-	//if (eraseTimer.GetSameAsMaxFlag())eraseManager = true;
+	if (eraseTimer.GetSameAsMaxFlag())eraseManager = true;
 	Attack();
 
 	

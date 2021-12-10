@@ -21,7 +21,8 @@ public:
 
 private:
 	// Tポーズ時の判定の位置
-	static const MelLib::Value2<MelLib::Vector3>CAPSULE_START_POS;
+	static const MelLib::Value2<MelLib::Vector3>CAPSULE_START_POS_LEFT;
+	static const MelLib::Value2<MelLib::Vector3>CAPSULE_START_POS_RIGTH;
 
 
 	// 線分から平面情報取得を考えてみて無理だったら定義
@@ -42,6 +43,7 @@ private:
 	MelLib::FrameTimer eraseTimer;
 	AttackType attackType = AttackType::NORMAL_1;
 
+	bool slushLeft = false;
 private:
 	void SetAttackParam();
 
@@ -63,7 +65,8 @@ public:
 		const MelLib::ModelObject& model,
 		const MelLib::Vector3 playerStartPos,
 		const MelLib::Vector3 playerStartAngle,
-		const MelLib::Vector3 playerStartScale
+		const MelLib::Vector3 playerStartScale,
+		bool slushLeft
 	);
 
 	void Update()override;

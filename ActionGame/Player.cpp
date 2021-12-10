@@ -107,10 +107,6 @@ void Player::Update()
 
 	ChangeAnimationData();
 
-	if(pPSlush)
-	{
-		SetAttackData();
-	}
 
 	
 
@@ -332,15 +328,12 @@ void Player::Attack()
 		//コンボの最後の時にボタン押したらNONEをセットするため、コンボを終わらせるためのif
 		if (currentAttack != PlayerSlush::AttackType::NONE)
 		{
-			if (pPSlush)
-			{
-				//解放
-				pPSlush.reset();
-			}
+			if (pPSlush)pPSlush.reset();
+			if (pRigthSlush)pRigthSlush.reset();
 
-			pPSlush = std::make_shared<PlayerSlush>
-				(GetPosition(), direction, currentAttack, attackData[currentAttack].time,modelObjects["main"],startPos,startAngle,startScale);
-			MelLib::GameObjectManager::GetInstance()->AddObject(pPSlush);
+
+
+			CreateAttackSlush();
 
 		}
 	}
@@ -389,11 +382,44 @@ void Player::SetAttackType()
 
 }
 
-void Player::SetAttackData()
+void Player::CreateAttackSlush()
 {
-	// アニメーションに合わせて判定を動かす
 
 
+
+	switch (currentAttack)
+	{
+	case PlayerSlush::AttackType::NONE:
+		break;
+	case PlayerSlush::AttackType::NORMAL_1:
+		pRigthSlush = std::make_shared<PlayerSlush>
+			(GetPosition(), direction, currentAttack, attackData[currentAttack].time, modelObjects["main"], startPos, startAngle, startScale, false);
+
+		break;
+	case PlayerSlush::AttackType::NORMAL_2:
+	
+
+		pPSlush = std::make_shared<PlayerSlush>
+			(GetPosition(), direction, currentAttack, attackData[currentAttack].time, modelObjects["main"], startPos, startAngle, startScale, true);
+
+		break;
+	case PlayerSlush::AttackType::NORMAL_3:
+		pPSlush = std::make_shared<PlayerSlush>
+			(GetPosition(), direction, currentAttack, attackData[currentAttack].time, modelObjects["main"], startPos, startAngle, startScale, true);
+
+		pRigthSlush = std::make_shared<PlayerSlush>
+			(GetPosition(), direction, currentAttack, attackData[currentAttack].time, modelObjects["main"], startPos, startAngle, startScale, false);
+
+
+		break;
+	case PlayerSlush::AttackType::DASH_1:
+		break;
+	default:
+		break;
+	}
+
+	if(pPSlush)MelLib::GameObjectManager::GetInstance()->AddObject(pPSlush);
+	if(pRigthSlush)MelLib::GameObjectManager::GetInstance()->AddObject(pRigthSlush);
 }
 
 void Player::Camera()

@@ -62,7 +62,7 @@ private:
 	};
 
 	std::shared_ptr<PlayerSlush>pPSlush = nullptr;
-	std::shared_ptr<PlayerSlush>pLeftSlush = nullptr;
+	std::shared_ptr<PlayerSlush>pRigthSlush = nullptr;
 	//Œ»İ‚ÌUŒ‚
 	PlayerSlush::AttackType currentAttack = PlayerSlush::AttackType::NONE;
 	
@@ -109,11 +109,8 @@ private:
 	//UŒ‚ˆ—AUŒ‚”»’è‚Ì‘€ì
 	void Attack();
 	void SetAttackType();
+	void CreateAttackSlush();
 
-	/// <summary>
-	/// ƒvƒŒƒCƒ„[‚ÌUŒ‚‚ÉÀ•W‚ğ“n‚·ŠÖ”
-	/// </summary>
-	void SetAttackData();
 
 	void Camera();
 	void SetCameraPosition();
