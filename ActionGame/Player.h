@@ -62,6 +62,7 @@ private:
 	};
 
 	std::shared_ptr<PlayerSlush>pPSlush = nullptr;
+	std::shared_ptr<PlayerSlush>pLeftSlush = nullptr;
 	//現在の攻撃
 	PlayerSlush::AttackType currentAttack = PlayerSlush::AttackType::NONE;
 	
@@ -73,8 +74,10 @@ private:
 	// 攻撃の情報をまとめたもの
 	static std::unordered_map<PlayerSlush::AttackType, const AttackData>attackData;
 
-
-
+	bool setStartParam = false;
+	MelLib::Vector3 startPos;
+	MelLib::Vector3 startScale;
+	MelLib::Vector3 startAngle;
 #pragma endregion
 
 
@@ -82,6 +85,8 @@ private:
 	float cameraSpeed = 0.0f;
 #pragma endregion
 
+	// デバッグ用
+	bool isTPause = false;
 
 private:
 
@@ -104,6 +109,11 @@ private:
 	//攻撃処理、攻撃判定の操作
 	void Attack();
 	void SetAttackType();
+
+	/// <summary>
+	/// プレイヤーの攻撃に座標を渡す関数
+	/// </summary>
+	void SetAttackData();
 
 	void Camera();
 	void SetCameraPosition();

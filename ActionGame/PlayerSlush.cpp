@@ -1,110 +1,154 @@
 #include "PlayerSlush.h"
 #include<LibMath.h>
 
+
+const MelLib::Value2<MelLib::Vector3> PlayerSlush::CAPSULE_START_POS = { MelLib::Vector3(14,32,3),MelLib::Vector3(12,32,14) };
+
 void PlayerSlush::SetAttackParam()
 {
-	// v1 手元側 v2 切先側
 
-	//判定の長さ(武器の長さ)
-	static const float COLLISION_LENGTH = 5.0f;
-
-	//v1に加算する座標
-	MelLib::Vector3 v1AddPos;
-	//v2の移動方向
-	MelLib::Vector3 v2MoveVector;
 	
-	const float PLAYER_ANGLE = playerAngle;
-	auto rotSegmentPosData = [&v1AddPos, &v2MoveVector,&PLAYER_ANGLE]()
-	{
-		const float V1_ADD_POS_Y = v1AddPos.y;
-		v1AddPos = 
-			MelLib::LibMath::RotateVector3(v1AddPos, MelLib::Vector3(0, 1, 0), PLAYER_ANGLE);
-		v1AddPos.y = V1_ADD_POS_Y;
 
-		const float V2_MOVE_VECTOR_Y = v2MoveVector.y;
-		v2MoveVector =
-			MelLib::LibMath::RotateVector3(v2MoveVector, MelLib::Vector3(0, 1, 0), PLAYER_ANGLE);
-		v2MoveVector.y = V2_MOVE_VECTOR_Y;
-	};
+#pragma region 旧
 
-	switch (attackType)
-	{
-	case PlayerSlush::AttackType::NORMAL_1:
 
-		capsuleData[0].GetRefSegment3DData().SetRotatePoint(0.1f);
-		
-		v1AddPos = MelLib::Vector3(0, -1, 1);
-		v2MoveVector = MelLib::Vector3(-4, 4, 2).Normalize();
+	//// v1 手元側 v2 切先側
 
-		break;
+	////判定の長さ(武器の長さ)
+	//static const float COLLISION_LENGTH = 5.0f;
 
-	case PlayerSlush::AttackType::NORMAL_2:
+	////v1に加算する座標
+	//MelLib::Vector3 v1AddPos;
+	////v2の移動方向
+	//MelLib::Vector3 v2MoveVector;
+	//
+	//const float PLAYER_ANGLE = playerAngle;
+	//auto rotSegmentPosData = [&v1AddPos, &v2MoveVector,&PLAYER_ANGLE]()
+	//{
+	//	const float V1_ADD_POS_Y = v1AddPos.y;
+	//	v1AddPos = 
+	//		MelLib::LibMath::RotateVector3(v1AddPos, MelLib::Vector3(0, 1, 0), PLAYER_ANGLE);
+	//	v1AddPos.y = V1_ADD_POS_Y;
 
-		capsuleData[0].GetRefSegment3DData().SetRotatePoint(0.1f);
+	//	const float V2_MOVE_VECTOR_Y = v2MoveVector.y;
+	//	v2MoveVector =
+	//		MelLib::LibMath::RotateVector3(v2MoveVector, MelLib::Vector3(0, 1, 0), PLAYER_ANGLE);
+	//	v2MoveVector.y = V2_MOVE_VECTOR_Y;
+	//};
 
-		v1AddPos = MelLib::Vector3(1, -1, 1);
-		v2MoveVector = MelLib::Vector3(4, -2, 4).Normalize();
+	//switch (attackType)
+	//{
+	//case PlayerSlush::AttackType::NORMAL_1:
 
-		break;
-	case PlayerSlush::AttackType::NORMAL_3:
+	//	capsuleData[0].GetRefSegment3DData().SetRotatePoint(0.1f);
+	//	
+	//	v1AddPos = MelLib::Vector3(0, -1, 1);
+	//	v2MoveVector = MelLib::Vector3(-4, 4, 2).Normalize();
 
-		capsuleData[0].GetRefSegment3DData().SetRotatePoint(0.1f);
-		v1AddPos = MelLib::Vector3(0, 1, 1);
-		v2MoveVector = MelLib::Vector3(0, 5, 4).Normalize();
-		
-		break;
-	default:
-		break;
-	}
+	//	break;
 
-	// 回転前の座標を保存
-	preSegmentPosition = capsuleData[0].GetSegment3DData().GetRotatePosition();
+	//case PlayerSlush::AttackType::NORMAL_2:
 
-	//回転
-	//これラムダ式にしなくていいかも
-	rotSegmentPosData();
-	//座標セット
-	MelLib::Value2<MelLib::Vector3>pos;
-	pos.v1 = GetPosition() + v1AddPos;
-	pos.v2 = MelLib::LibMath::FloatDistanceMoveVector3(pos.v1, v2MoveVector, COLLISION_LENGTH);
-	capsuleData[0].GetRefSegment3DData().SetPosition(pos);
+	//	capsuleData[0].GetRefSegment3DData().SetRotatePoint(0.1f);
 
-	//軸回転
-	capsuleData[0].GetRefSegment3DData().SetAxisAngle(MelLib::Vector3(0, -playerAngle, 0));
+	//	v1AddPos = MelLib::Vector3(1, -1, 1);
+	//	v2MoveVector = MelLib::Vector3(4, -2, 4).Normalize();
 
+	//	break;
+	//case PlayerSlush::AttackType::NORMAL_3:
+
+	//	capsuleData[0].GetRefSegment3DData().SetRotatePoint(0.1f);
+	//	v1AddPos = MelLib::Vector3(0, 1, 1);
+	//	v2MoveVector = MelLib::Vector3(0, 5, 4).Normalize();
+	//	
+	//	break;
+	//default:
+	//	break;
+	//}
+
+	//// 回転前の座標を保存
+	//preSegmentPosition = capsuleData[0].GetSegment3DData().GetRotatePosition();
+
+	////回転
+	////これラムダ式にしなくていいかも
+	//rotSegmentPosData();
+	////座標セット
+	//MelLib::Value2<MelLib::Vector3>pos;
+	//pos.v1 = GetPosition() + v1AddPos;
+	//pos.v2 = MelLib::LibMath::FloatDistanceMoveVector3(pos.v1, v2MoveVector, COLLISION_LENGTH);
+	//capsuleData[0].GetRefSegment3DData().SetPosition(pos);
+
+	////軸回転
+	//capsuleData[0].GetRefSegment3DData().SetAxisAngle(MelLib::Vector3(0, -playerAngle, 0));
+
+#pragma endregion
 }
 
 void PlayerSlush::Attack()
 {
+	//capsuleData[0].GetRefSegment3DData().SetPosition(CAPSULE_START_POS);
+	
+	// 移動してるのにCAPSULE_START_POSを変えてないからバグる
 
-	MelLib::Vector3 attackAngle = 0;
+	//const MelLib::Value2 < MelLib::Vector3> CALC_POS
+	//(PLAYER_MODEL.CalcAnimationPosition
+	//(CAPSULE_START_POS.v1, 1.0f, "Bone_L.003", "Body", PLAYER_START_POS, PLAYER_START_ANGLE, PLAYER_START_SCALE),
+	//	PLAYER_MODEL.CalcAnimationPosition
+	//	(CAPSULE_START_POS.v2, 1.0f, "Bone_L.003", "Body", PLAYER_START_POS, PLAYER_START_ANGLE, PLAYER_START_SCALE));
 
-	//判定の角度(0,0,1向いてるとき)セット
-	//SetAxisAngleで軸の角度変えてるため、0,0,1向いてるときのでいい
-	switch (attackType)
-	{
-	case PlayerSlush::AttackType::NORMAL_1:
-		attackAngle = MelLib::Vector3(8, 8, 0);
-		break;
+	const MelLib::Value2 < MelLib::Vector3> CALC_POS
+	(PLAYER_MODEL.CalcAnimationPosition
+	(CAPSULE_START_POS.v1, 1.0f, "Bone_L.003", "Body", PLAYER_START_POS, PLAYER_START_ANGLE, PLAYER_START_SCALE),
+		PLAYER_MODEL.CalcAnimationPosition
+		(CAPSULE_START_POS.v2, 1.0f, "Bone_L.003", "Body", PLAYER_START_POS, PLAYER_START_ANGLE, PLAYER_START_SCALE)); 
 
-	case PlayerSlush::AttackType::NORMAL_2:
-		attackAngle = MelLib::Vector3(0, -8, 0);
-		break;
+	capsuleData[0].GetRefSegment3DData().SetPosition(CALC_POS);
 
-	case PlayerSlush::AttackType::NORMAL_3:
-		attackAngle = MelLib::Vector3(8, 0, 0);
-		break;
 
-	default:
-		break;
-	}
 
-	capsuleData[0].GetRefSegment3DData().SetAngle
-	(capsuleData[0].GetRefSegment3DData().GetAngle() + attackAngle);
+	//MelLib::Vector3 attackAngle = 0;
+
+	////判定の角度(0,0,1向いてるとき)セット
+	////SetAxisAngleで軸の角度変えてるため、0,0,1向いてるときのでいい
+	//switch (attackType)
+	//{
+	//case PlayerSlush::AttackType::NORMAL_1:
+	//	attackAngle = MelLib::Vector3(8, 8, 0);
+	//	break;
+
+	//case PlayerSlush::AttackType::NORMAL_2:
+	//	attackAngle = MelLib::Vector3(0, -8, 0);
+	//	break;
+
+	//case PlayerSlush::AttackType::NORMAL_3:
+	//	attackAngle = MelLib::Vector3(8, 0, 0);
+	//	break;
+
+	//default:
+	//	break;
+	//}
+
+	//capsuleData[0].GetRefSegment3DData().SetAngle
+	//(capsuleData[0].GetRefSegment3DData().GetAngle() + attackAngle);
 }
 
-PlayerSlush::PlayerSlush(const MelLib::Vector3& pos, const MelLib::Vector3& playerDir, const AttackType type,const int attackTime)
+PlayerSlush::PlayerSlush
+(
+	const MelLib::Vector3& pos, 
+	const MelLib::Vector3& playerDir,
+	const AttackType type,
+	const int attackTime, 
+	const MelLib::ModelObject& model,
+	const MelLib::Vector3 playerStartPos,
+	const MelLib::Vector3 playerStartAngle,
+	const MelLib::Vector3 playerStartScale
+)
 	:attackType(type)
+	,PLAYER_MODEL(model)
+	, PLAYER_START_POS(playerStartPos)
+	, PLAYER_START_ANGLE(playerStartAngle)
+	, PLAYER_START_SCALE(playerStartScale)
+
 {
 
 	eraseTimer.SetMaxTime(attackTime);
@@ -120,21 +164,22 @@ PlayerSlush::PlayerSlush(const MelLib::Vector3& pos, const MelLib::Vector3& play
 
 
 	capsuleData.resize(1);
-	capsuleData[0].SetRadius(0.2f);	
+	capsuleData[0].SetRadius(1);	
 	SetPosition(pos);
 
 
 
 	eraseTimer.SetStopFlag(false);
 
-	SetAttackParam();
+	//SetAttackParam();
 }
 
 void PlayerSlush::Update()
 {
-	if (eraseTimer.GetSameAsMaxFlag())eraseManager = true;
+	//if (eraseTimer.GetSameAsMaxFlag())eraseManager = true;
 	Attack();
 
+	
 }
 
 void PlayerSlush::Draw()
@@ -144,3 +189,4 @@ void PlayerSlush::Draw()
 void PlayerSlush::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)
 {
 }
+

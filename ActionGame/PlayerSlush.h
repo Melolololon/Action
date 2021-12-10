@@ -20,6 +20,10 @@ public:
 	};
 
 private:
+	// Tポーズ時の判定の位置
+	static const MelLib::Value2<MelLib::Vector3>CAPSULE_START_POS;
+
+
 	// 線分から平面情報取得を考えてみて無理だったら定義
 	//static const std::unordered_map<AttackType, MelLib::PlaneData> attackPlane;
 
@@ -29,6 +33,11 @@ private:
 	// 前フレームの線分の座標
 	MelLib::Value2<MelLib::Vector3>preSegmentPosition;
 
+	const MelLib::ModelObject& PLAYER_MODEL;
+
+	const MelLib::Vector3 PLAYER_START_POS;
+	const MelLib::Vector3 PLAYER_START_ANGLE;
+	const MelLib::Vector3 PLAYER_START_SCALE;
 private:
 	MelLib::FrameTimer eraseTimer;
 	AttackType attackType = AttackType::NORMAL_1;
@@ -45,7 +54,17 @@ public:
 	/// </summary>
 	/// <param name="pos"></param>
 	/// <param name="playerDir">プレイやーの向き</param>
-	PlayerSlush(const MelLib::Vector3& pos,const MelLib::Vector3& playerDir,const AttackType type,const int attackTime);
+	PlayerSlush
+	(
+		const MelLib::Vector3& pos,
+		const MelLib::Vector3& playerDir,
+		const AttackType type,
+		const int attackTime,
+		const MelLib::ModelObject& model,
+		const MelLib::Vector3 playerStartPos,
+		const MelLib::Vector3 playerStartAngle,
+		const MelLib::Vector3 playerStartScale
+	);
 
 	void Update()override;
 	void Draw()override;

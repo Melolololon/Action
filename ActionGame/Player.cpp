@@ -40,7 +40,7 @@ Player::Player(const MelLib::Vector3& pos)
 	capsuleData[0].SetRadius(2.5f);
 	capsuleData[0].GetRefSegment3DData().
 		SetPosition(MelLib::Value2<MelLib::Vector3>
-			(GetPosition() + MelLib::Vector3(0, 3, 0), GetPosition() + MelLib::Vector3(0, -28, 0)));
+			(GetPosition() + MelLib::Vector3(0, 3, 0), GetPosition() + MelLib::Vector3(0, -26, 0)));
 
 	segment3DData.resize(1);
 	segment3DData[0] = capsuleData[0].GetSegment3DData();
@@ -51,7 +51,8 @@ Player::Player(const MelLib::Vector3& pos)
 	//modelObjects["main"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX), nullptr);
 	modelObjects["main"].Create(MelLib::ModelData::Get("Player"), nullptr);
 	modelObjects["main"].SetScale(MelLib::Vector3(3));
-	modelObjects["main"].SetPosition(MelLib::Vector3(0, 4, -0));
+	modelObjects["main"].SetAngle(0);
+	modelObjects["main"].SetPosition(MelLib::Vector3(0, -16, -0));
 	modelObjects["main"].SetAnimationPlayFlag(true);
 #pragma region ダッシュ
 	dashEasing.SetAddPar(5.0f);
@@ -62,11 +63,13 @@ Player::Player(const MelLib::Vector3& pos)
 
 	//浮き防止
 	FallStart(0.0f);
+
+
 }
 
 void Player::Update()
 {
-	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())return;
+	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause() || !setStartParam)return;
 
 	modelObjects["main"].Update();
 
@@ -103,6 +106,14 @@ void Player::Update()
 
 
 	ChangeAnimationData();
+
+	if(pPSlush)
+	{
+		SetAttackData();
+	}
+
+	
+
 }
 
 void Player::ChangeAnimationData()
@@ -123,6 +134,19 @@ void Player::ChangeAnimationData()
 	else if (animationName.find("Dash_02") != std::string::npos) {
 
 		modelObjects["main"].SetAnimationEndStopFlag(true);
+	}
+
+	// デバッグ用
+	if(MelLib::Input::KeyTrigger(DIK_1))
+	{
+		isTPause = !isTPause;
+	}
+
+	if(isTPause)
+	{
+		modelObjects["main"].SetAnimation("_T");
+		modelObjects["main"].SetAnimationSpeedMagnification(1);
+		modelObjects["main"].SetAnimationEndStopFlag(false);
 	}
 
 }
@@ -200,6 +224,8 @@ void Player::Move()
 	//落下するために
 	if (!GetIsFall())FallStart(0.0f);
 
+
+
 }
 
 void Player::AttackMove()
@@ -210,7 +236,7 @@ void Player::AttackMove()
 	case PlayerSlush::AttackType::NONE:
 		break;
 	case PlayerSlush::AttackType::NORMAL_1:
-		AddPosition(direction * 0.1f);
+		//AddPosition(direction * 0.1f);
 		break;
 	case PlayerSlush::AttackType::NORMAL_2:
 		AddPosition(direction * 0.2f);
@@ -312,14 +338,15 @@ void Player::Attack()
 				pPSlush.reset();
 			}
 
-			pPSlush = std::make_shared<PlayerSlush>(GetPosition(), direction, currentAttack, attackData[currentAttack].time);
+			pPSlush = std::make_shared<PlayerSlush>
+				(GetPosition(), direction, currentAttack, attackData[currentAttack].time,modelObjects["main"],startPos,startAngle,startScale);
 			MelLib::GameObjectManager::GetInstance()->AddObject(pPSlush);
 
 		}
 	}
 
 	//攻撃判定も動かす
-	if (pPSlush)pPSlush->AddPosition(GetPosition() - prePos);
+	//if (pPSlush)pPSlush->AddPosition(GetPosition() - prePos);
 }
 
 void Player::SetAttackType()
@@ -334,6 +361,7 @@ void Player::SetAttackType()
 			currentAttack = PlayerSlush::AttackType::NORMAL_1;
 
 			modelObjects["main"].SetAnimation("Attack_Normal_1");
+
 		}
 		else// ジャンプ攻撃
 		{
@@ -356,6 +384,16 @@ void Player::SetAttackType()
 	default:
 		break;
 	}
+
+
+
+}
+
+void Player::SetAttackData()
+{
+	// アニメーションに合わせて判定を動かす
+
+
 }
 
 void Player::Camera()
@@ -451,5 +489,17 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 		SetCameraPosition();
 
 		hitGround = true;
+
+
+		if(!setStartParam)
+		{
+			setStartParam = true;
+
+			// 攻撃判定移動用
+			// 攻撃判定をセットしたときのプレイヤーのデータを保存
+			startPos = modelObjects["main"].GetPosition();
+			startAngle = modelObjects["main"].GetAngle();
+			startScale = modelObjects["main"].GetScale();
+		}
 	}
 }
