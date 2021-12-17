@@ -2,16 +2,19 @@
 
 #include<LibMath.h>
 #include<Collision.h>
+#include<GameObjectManager.h>
 
+#include"EnemyAttack.h"
 
 
 
 Player* Enemy::pPlayer;
 std::vector<std::vector<std::vector<MelLib::AStarNode>>> Enemy::nodes;
 
-Enemy::Enemy(const MelLib::Vector3& pos, const unsigned int hp, const float moveSpeed, const std::string& modelName) :
+Enemy::Enemy(const MelLib::Vector3& pos, const unsigned int hp, const float moveSpeed, int attackStartTime, const std::string& modelName) :
 	hp(hp)
 	, moveSpeed(moveSpeed)
+	,ATTACK_START_TIME(attackStartTime)
 {
 	SetPosition(pos);
 
@@ -98,14 +101,15 @@ void Enemy::AddRouteVector()
 	}
 }
 
-void Enemy::CalcPlayerRoute()
+bool Enemy::CheckPlayerDistance(const float distance)
 {
 	MelLib::Vector3 playerPos = pPlayer->GetPosition();
 
-	// 敵が自分からプレイヤーに近づける最小距離
-	static const float MIN_DISTANCE = 3.0f;
-	if (MelLib::LibMath::CalcDistance3D(playerPos, GetPosition()) < MIN_DISTANCE)return;
+	return MelLib::LibMath::CalcDistance3D(playerPos, GetPosition()) < distance;
+}
 
+void Enemy::CalcPlayerRoute()
+{
 
 	// 毎フレーム計算するとがくがくする(フレームごとに向きが変わるから)一定フレームでいいかも
 	// ノードに辿りつくごとがベスト?
@@ -114,7 +118,7 @@ void Enemy::CalcPlayerRoute()
 	// デバッグ用
 	std::vector<MelLib::Vector3>routeNodePos;
 
-
+	MelLib::Vector3 playerPos = pPlayer->GetPosition();
 	MelLib::Vector3 myToPlayer;
 	bool straightMove = MelLib::RouteSearch::CheckStraightMove(GetPosition(), playerPos, nodes, 4.0f,myToPlayer);
 	
@@ -154,5 +158,24 @@ void Enemy::CheckMutekiEnd()
 		mutekiTimer.SetStopFlag(true);
 
 		isMuteki = false;
+	}
+}
+
+void Enemy::Attack()
+{
+	if(attackTimer.GetNowTime() == ATTACK_START_TIME)
+	{
+		MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<EnemyAttack>
+			(
+				3,
+				GetPosition(),
+				3.0f,
+				60 * 0.3,
+				modelObjects["main"],
+				0,
+				0,
+				0
+			)
+		);
 	}
 }

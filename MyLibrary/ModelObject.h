@@ -23,7 +23,7 @@
 
 namespace MelLib
 {
-	
+
 	//モデルの座標などをまとめたもの
 	class ModelObject
 	{
@@ -36,7 +36,7 @@ namespace MelLib
 		static ID3D12Device* device;
 		static std::vector<ID3D12GraphicsCommandList*>cmdLists;
 		static ComPtr<ID3D12RootSignature>rootSignature;
-	
+
 		std::vector<std::string>objectNames;
 
 		//[モデル内のオブジェクトごと]
@@ -97,7 +97,7 @@ namespace MelLib
 
 		//定数にセットする座標などの値
 		//[モデル内のオブジェクト数]
-		std::unordered_map < std::string , ModelConstData > modelConstDatas;
+		std::unordered_map < std::string, ModelConstData > modelConstDatas;
 
 		//モデル(クリエイトしたら割り当てる)
 		ModelData* pModelData = nullptr;
@@ -114,7 +114,7 @@ namespace MelLib
 		//渡すとなると、生成するごとに頂点のコピーが必要になる(コピーしないとカットしたモデルの頂点参照できない)
 		//直接ModelObjectに頂点とか渡して作れるようにしてもいいかも
 		//頂点とインデックス関係のものだけをまとめたクラスを作って、それをこれに持たせるのもあり
-		
+
 		// //ModelDataないとヒープ用意できないから、
 		//マテリアルとかのコピーコンストラクタ作ったほうがいいかも
 		std::unique_ptr<ModelData> catFrontModelData;
@@ -135,7 +135,7 @@ namespace MelLib
 
 		//nullptr渡される可能性を考えると、boolをreturnできるようにしたほうがいい?
 		ModelObject() {}
-		ModelObject( ModelObject& obj);
+		ModelObject(ModelObject& obj);
 		ModelObject& operator= (ModelObject& obj);
 		~ModelObject() {}
 
@@ -161,7 +161,7 @@ namespace MelLib
 
 
 #pragma region プリミティブモデル生成
-	
+
 
 #pragma endregion プリミティブモデル生成
 
@@ -177,7 +177,7 @@ namespace MelLib
 		/// <param name="pBack">平面の裏側にあるモデル情報を格納するModelDataのポインタ<</param>
 		/// <param name="createCrossSection">断面を形成するかどうか</param>
 		/// <returns>切断できたかどうか</returns>
-		bool MeshCat(const PlaneData& plane,ModelData*& pFront, ModelData*& pBack,const bool createCrossSection);
+		bool MeshCat(const PlaneData& plane, ModelData*& pFront, ModelData*& pBack, const bool createCrossSection);
 #pragma endregion
 
 
@@ -188,7 +188,7 @@ namespace MelLib
 #pragma region 操作
 
 
-		void SetPosition(const Vector3& position,const std::string& name = "");
+		void SetPosition(const Vector3& position, const std::string& name = "");
 		void SetScale(const Vector3& scale, const std::string& name = "");
 		void SetAngle(const Vector3& angle, const std::string& name = "");
 
@@ -216,7 +216,7 @@ namespace MelLib
 
 #pragma endregion
 
-		void SetMaterial(Material* mtl,const std::string& name = "");
+		void SetMaterial(Material* mtl, const std::string& name = "");
 
 
 
@@ -233,7 +233,7 @@ namespace MelLib
 #pragma region 操作見た目変更
 
 #pragma region 操作
-		
+
 		//今はとりあえず全部値が一緒なので、0のやつを返してる
 		Vector3 GetPosition(const std::string& name = "")const;
 
@@ -242,7 +242,19 @@ namespace MelLib
 #pragma endregion
 #pragma endregion
 
+
+#pragma region アニメーション
+
+
 		std::string GetCurrentAnimationName()const { return fbxAnimationData.currentAnimationName; }
+
+		/// <summary>
+		/// アニメーションが終了しているかどうかを取得します。
+		/// </summary>
+		/// <returns></returns>
+		bool GetAnimationEndFlag()const { return fbxAnimationData.currentTime == fbxAnimationData.animationTimes.endTime; }
+
+#pragma endregion
 
 		//コンピュートシェーダーで計算したほうがいい。
 		//できそうなら描画時に頂点シェーダーで計算した結果を持ってきたほうがいい?
@@ -278,8 +290,8 @@ namespace MelLib
 		/// <returns>行列乗算後の座標</returns>
 		Vector3 CalcAnimationPosition
 		(
-			const Vector3& pos,float weigth, const std::string& boneName,const std::string& meshName
-		, const MelLib::Vector3& startPos, const MelLib::Vector3& startAngle, const MelLib::Vector3& startScale)const;
+			const Vector3& pos, float weigth, const std::string& boneName, const std::string& meshName
+			, const MelLib::Vector3& startPos, const MelLib::Vector3& startAngle, const MelLib::Vector3& startScale)const;
 
 	};
 }

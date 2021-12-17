@@ -27,6 +27,7 @@ public:
 		const int hitObjArrayNum
 	)override;*/
 
-	void Attack();
+	//void Attack();
 };
 
+ 

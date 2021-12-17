@@ -9,6 +9,7 @@ class Enemy :
 {
 private:
 
+
 	static Player* pPlayer;
 	static std::vector<std::vector<std::vector<MelLib::AStarNode>>> nodes;
 	
@@ -34,16 +35,30 @@ protected:
 
 	unsigned int hp = 0;
 	float moveSpeed = 0.0f;
+
+	bool isAttack = false;
+
+	const int ATTACK_START_TIME;
+	MelLib::FrameTimer attackTimer;
 protected:
+	/// <summary>
+	/// プレイヤーとの距離が指定した数値未満か確認
+	/// </summary>
+	/// <param name="distance"></param>
+	/// <returns></returns>
+	bool CheckPlayerDistance(float distance);
+
 	/// <summary>
 	/// プレイヤーへ向かう処理
 	/// </summary>
 	void CalcPlayerRoute();
 
 	void CheckMutekiEnd();
+
+	void Attack();
 public:
 
-	Enemy(const MelLib::Vector3& pos,unsigned int hp,float moveSpeed,const std::string& modelName = "");
+	Enemy(const MelLib::Vector3& pos,unsigned int hp,float moveSpeed,int attackStartTime,const std::string& modelName = "");
 	virtual ~Enemy(){}
 	void Update()override;
 	void Draw()override;

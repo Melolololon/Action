@@ -4,6 +4,8 @@
 #include"Camera.h"
 #include"LibMath.h"
 #include"GameObjectManager.h"
+#include"SceneManager.h"
+#include"Title.h"
 
 #include"ActionPart.h"
 
@@ -13,6 +15,8 @@
 
 #include"Pause.h"
 #include"EditMode.h"
+
+#include"EnemyAttack.h"
 
 std::unordered_map<PlayerSlush::AttackType, const Player::AttackData> Player::attackData =
 {
@@ -26,7 +30,8 @@ std::unordered_map<PlayerSlush::AttackType, const Player::AttackData> Player::at
  
 void Player::LoadResources()
 {
-	MelLib::ModelData::Load("Resources/Model/Player/Player_Test.fbx",true,"Player");
+	// タイトルでも使うから自動削除削除
+	MelLib::ModelData::Load("Resources/Model/Player/Player_Test.fbx",false,"Player");
 }
 
 Player::Player(const MelLib::Vector3& pos)
@@ -40,39 +45,74 @@ Player::Player(const MelLib::Vector3& pos)
 	capsuleData[0].SetRadius(2.5f);
 	capsuleData[0].GetRefSegment3DData().
 		SetPosition(MelLib::Value2<MelLib::Vector3>
-			(GetPosition() + MelLib::Vector3(0, 3, 0), GetPosition() + MelLib::Vector3(0, -26, 0)));
+			(GetPosition() + MelLib::Vector3(0, 3, 0), GetPosition() + MelLib::Vector3(0, -18, 0)));
 
 	segment3DData.resize(1);
 	segment3DData[0] = capsuleData[0].GetSegment3DData();
 
-	SetPosition(pos);
 
 	modelObjects["main"];
 	//modelObjects["main"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX), nullptr);
 	modelObjects["main"].Create(MelLib::ModelData::Get("Player"), nullptr);
-	modelObjects["main"].SetScale(MelLib::Vector3(3));
-	modelObjects["main"].SetAngle(0);
-	modelObjects["main"].SetPosition(MelLib::Vector3(0, -16, -0));
+
 	modelObjects["main"].SetAnimationPlayFlag(true);
 #pragma region ダッシュ
 	dashEasing.SetAddPar(5.0f);
 
 
-
 #pragma endregion
+
+	mutekiTimer.SetMaxTime(60 * 1.5);
+
 
 	//浮き防止
 	FallStart(0.0f);
 
+	// タイトル用処理
+	MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
+	if (typeid(*currentScene) == typeid(Title))
+	{
+		modelObjects["main"].SetScale(MelLib::Vector3(3));
+		modelObjects["main"].SetAngle(0);
+		modelObjects["main"].SetAnimation("No_Cont");
+	}
+	else
+	{
+		modelObjects["main"].SetScale(MelLib::Vector3(3));
+		modelObjects["main"].SetAngle(0);
+		modelObjects["main"].SetPosition(MelLib::Vector3(0, -16, -0));
+	}
 
+	SetPosition(pos);
 }
 
 void Player::Update()
 {
+	// タイトル用処理
+	if(typeid(MelLib::SceneManager::GetInstance()->GetCurrentScene()) == typeid(Title))
+	{
+		return;
+	}
+
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause() || !setStartParam)return;
 
 	modelObjects["main"].Update();
 
+	if (hitGroundNotMove) 
+	{
+		if (hitGroundNotMoveTimer.GetMaxOverFlag())
+		{
+			hitGroundNotMoveTimer.ResetTimeZero();
+			hitGroundNotMoveTimer.SetStopFlag(true);
+			hitGroundNotMove = false;
+		}
+		else 
+		{
+			Camera();
+			return;
+		}
+	}
+	
 	prePos = GetPosition();
 	Move();
 	Jump();
@@ -81,20 +121,6 @@ void Player::Update()
 
 	CalcMovePhysics();
 
-	// 落下アニメーション(仮)
-	//if (GetIsFall() && !hitGround)
-	//{
-	//	MelLib::Vector3 velocity = GetVelocity();
-	//	if (velocity.y != 0) {
-	//		modelObjects["main"].SetAnimationEndStopFlag(true);
-	//		modelObjects["main"].SetAnimation("Jump");
-	//	}
-	//}
-
-
-	//とりあえずSetPositionを使って判定セットしたり攻撃判定動かしてる
-	//SetPosition(position);
-
 	Camera();
 
 	float angle = MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(direction.x, direction.z), false) - 270;
@@ -102,9 +128,11 @@ void Player::Update()
 	modelObjects["main"].SetAngle(MelLib::Vector3(0, angle, 0));
 
 
+
+	preHitGround = hitGround;
 	hitGround = false;
 
-
+	// アニメーションに合わせて再生速度やループを設定する
 	ChangeAnimationData();
 
 
@@ -131,6 +159,10 @@ void Player::ChangeAnimationData()
 
 		modelObjects["main"].SetAnimationEndStopFlag(true);
 	}
+	else if(animationName.find("Jump_Up") != std::string::npos)
+	{
+		modelObjects["main"].SetAnimationEndStopFlag(true);
+	}
 
 	// デバッグ用
 	if(MelLib::Input::KeyTrigger(DIK_1))
@@ -138,6 +170,7 @@ void Player::ChangeAnimationData()
 		isTPause = !isTPause;
 	}
 
+	// 強制Tポーズ
 	if(isTPause)
 	{
 		modelObjects["main"].SetAnimation("_T");
@@ -298,6 +331,18 @@ void Player::Jump()
 	{
 		FallStart(2.0f);
 	}
+
+	
+	// 条件満たしたらジャンプアニメーション
+	if(!hitGround && !preHitGround && !isDash && currentAttack == PlayerSlush::AttackType::NONE)
+	{
+		if(!jumpResetAnimation)
+		{
+			jumpResetAnimation = true;
+			modelObjects["main"].ResetAnimation();
+		}
+		modelObjects["main"].SetAnimation("Jump_Up");
+	}
 }
 
 
@@ -332,9 +377,10 @@ void Player::Attack()
 			if (pRigthSlush)pRigthSlush.reset();
 
 
-
 			CreateAttackSlush();
-
+			
+			//アニメーションをリセット
+			modelObjects["main"].ResetAnimation();
 		}
 	}
 
@@ -422,6 +468,16 @@ void Player::CreateAttackSlush()
 	if(pRigthSlush)MelLib::GameObjectManager::GetInstance()->AddObject(pRigthSlush);
 }
 
+void Player::Muteki()
+{
+	if(mutekiTimer.GetMaxOverFlag())
+	{
+		isMuteki = false;
+		mutekiTimer.ResetTimeZero();
+		mutekiTimer.SetStopFlag(true);
+	}
+}
+
 void Player::Camera()
 {
 
@@ -489,6 +545,26 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 	if (typeid(*object) == typeid(Ground)
 		&& collisionType == MelLib::ShapeType3D::SEGMENT)
 	{
+
+		// 着地処理
+		if (!hitGroundNotMove)
+		{
+			float velocityY = GetVelocity().y;
+
+			if (velocityY <= -3.0f)// 超落下
+			{
+				hitGroundNotMoveTimer.SetMaxTime(60 * 0.75);
+				hitGroundNotMoveTimer.SetStopFlag(false);
+				hitGroundNotMove = true;
+
+				modelObjects["main"].SetAnimation("Jump_End_1");
+			}
+			jumpResetAnimation = false;
+		}
+
+
+
+
 		MelLib::Vector3 addPos;
 
 		//velocity分戻すと戻しすぎちゃう
@@ -517,6 +593,7 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 		hitGround = true;
 
 
+
 		if(!setStartParam)
 		{
 			setStartParam = true;
@@ -528,4 +605,16 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 			startScale = modelObjects["main"].GetScale();
 		}
 	}
+	
+	// 攻撃を受けた時(体力減算はEnemyAttack側で行ってる)
+	if (!isMuteki) 
+	{
+
+		if (typeid(*object) == typeid(EnemyAttack))
+		{
+			isMuteki = true;
+			mutekiTimer.SetStopFlag(false);
+		}
+	}
+
 }

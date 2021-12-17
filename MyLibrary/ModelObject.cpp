@@ -2035,7 +2035,7 @@ Vector3 MelLib::ModelObject::CalcAnimationPosition
 void MelLib::ModelObject::SetAnimation(const std::string& name)
 {
 	if (fbxAnimationData.currentAnimationName == name)return;
-	fbxAnimationData.currentTime = fbxAnimationData.animationTimes.startTime;
+	//fbxAnimationData.currentTime = fbxAnimationData.animationTimes.startTime;
 	fbxAnimationData.currentAnimationName = name;
 	pModelData->GetAnimationTimeData(name, fbxAnimationData.animationTimes.startTime, fbxAnimationData.animationTimes.endTime);
 

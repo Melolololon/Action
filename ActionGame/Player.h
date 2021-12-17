@@ -23,7 +23,8 @@ private:
 	static const unsigned int HP_MAX = 200;
 	unsigned int hp = HP_MAX;
 	bool hitGround = false;
-
+	bool preHitGround = false;
+	bool jumpResetAnimation = false;
 #pragma region 移動
 	float moveSpeed = 0.5f;
 
@@ -38,6 +39,7 @@ private:
 #pragma endregion
 
 #pragma endregion
+
 
 #pragma region 攻撃
 
@@ -80,12 +82,22 @@ private:
 	MelLib::Vector3 startAngle;
 #pragma endregion
 
+#pragma region 無敵
+
+	bool isMuteki = false;
+	MelLib::FrameTimer mutekiTimer;
+#pragma endregion
+
+	// 低いところは、着地アニメーションをジャンプの逆再生にし、硬直はなし
+	// 地面に着地した時の動けない時間
+	MelLib::FrameTimer hitGroundNotMoveTimer;
+	bool hitGroundNotMove = false;
 
 #pragma region カメラ
 	float cameraSpeed = 0.0f;
 #pragma endregion
 
-	// デバッグ用
+	// デバッグ用(trueにすると強制Tポーズ)
 	bool isTPause = false;
 
 private:
@@ -110,6 +122,8 @@ private:
 	void Attack();
 	void SetAttackType();
 	void CreateAttackSlush();
+
+	void Muteki();
 
 
 	void Camera();
@@ -142,6 +156,8 @@ public:
 		const MelLib::ShapeType3D& hitObjColType,
 		const int hitObjArrayNum
 	)override;
+
+	void DownHP(const unsigned int power) { hp -= power; }
 
 #pragma region Get
 	unsigned int GetCurrentAttackPower()const { return attackData[currentAttack].power; }

@@ -8,6 +8,7 @@
 #include"Player.h"
 
 #include"Enemy.h"
+#include"EnemyAttack.h"
 #include"StageObject.h"
 
 
@@ -22,7 +23,6 @@
 void ActionPart::LoadResources()
 {
 	Ground::LoadResource();
-	Player::LoadResources();
 }
 
 void ActionPart::Initialize()
@@ -51,6 +51,7 @@ void ActionPart::Initialize()
 	}
 
 	Enemy::SetPPlayer(p.get());
+	EnemyAttack::SetPPlayer(p.get());
 	StageObject::SetPPlayer(p.get());
 
 	//経路探索用
@@ -99,13 +100,13 @@ void ActionPart::Update()
 	MelLib::GameObjectManager::GetInstance()->Update();
 
 	// デバッグ用
-	if (MelLib::Input::KeyTrigger(DIK_ESCAPE))
+	if (MelLib::Input::KeyTrigger(DIK_ESCAPE) && !Fade::GetInstance()->GetIsFade())
 	{
 		MelLib::GameObjectManager::GetInstance()->AllEraseObject();
 		Fade::GetInstance()->Start();
 	}
 
-	// && の左に切り替え条件を記述
+	// && の左にシーン切り替え条件を記述
 	//if ( && !Fade::GetInstance()->GetIsFade())
 	//{
 	//	Fade::GetInstance()->Start();
@@ -113,6 +114,7 @@ void ActionPart::Update()
 
 	Fade::GetInstance()->Update();
 
+	// フェードが終了したら切り替え
 	if (Fade::GetInstance()->GetChangeSceneFlag())
 	{
 		isEnd = true;

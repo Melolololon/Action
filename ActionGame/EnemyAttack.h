@@ -2,15 +2,38 @@
 #include <GameObject.h>
 #include<FrameTimer.h>
 
+#include"Player.h"
+
 //ìGÇÃçUåÇ
 class EnemyAttack :
     public MelLib::GameObject
 {
 private:
+	int power;
+
 	MelLib::FrameTimer deadTimer;
 
+
+	const MelLib::ModelObject& MODEL;
+
+	const MelLib::Vector3 START_POS;
+	const MelLib::Vector3 START_ANGLE;
+	const MelLib::Vector3 START_SCALE;
+
+	static Player* pPlayer;
+
 public:
-	EnemyAttack(const MelLib::Vector3& pos,float radius,int deadTime);
+	EnemyAttack
+	(
+		unsigned int power,
+		const MelLib::Vector3& pos,
+		float radius,
+		int deadTime,
+		const MelLib::ModelObject& model,
+		const MelLib::Vector3& startPos,
+		const MelLib::Vector3& startAngle, 
+		const MelLib::Vector3& startScale
+	);
 	~EnemyAttack(){}
 
 	void Update()override;
@@ -32,5 +55,6 @@ public:
 		const int hitObjArrayNum
 	)override;
 
+	static void SetPPlayer(Player* p) { pPlayer = p; }
 };
 
