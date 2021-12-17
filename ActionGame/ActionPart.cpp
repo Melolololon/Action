@@ -1,6 +1,7 @@
 #include "ActionPart.h"
 
 #include"DirectionalLight.h"
+#include<TextWrite.h>
 
 #include"GameObjectManager.h"
 #include"Input.h"
@@ -91,6 +92,12 @@ void ActionPart::Initialize()
 
 void ActionPart::Update()
 {
+	// このシーンにて開始時に急激なメモリ確保あり
+	// 17フレーム目で確保されてるから、16で確保されてる可能性あり
+	// DrectWriteのせいでした。仕様。
+	// 2021 12/17
+
+
 	/*if (MelLib::Input::KeyTrigger(DIK_F5))isEdit = isEdit == false ? true : false;
 	if(editOn && isEdit) EditMode::GetInstance()->Update();*/
 	EditMode::GetInstance()->Update();
@@ -134,6 +141,10 @@ void ActionPart::Draw()
 	Fade::GetInstance()->Draw();
 
 	//obj.Draw();
+
+
+	// テスト
+	MelLib::TextWrite::Draw(MelLib::Vector2(0,670),MelLib::Color(255,255,255,255),L"左スティック　移動","test");
 }
 
 void ActionPart::Finalize()

@@ -4,6 +4,7 @@
 #include"ModelData.h"
 #include"ModelObject.h"
 #include"ImguiManager.h"
+#include<TextWrite.h>
 
 // オブジェクト
 #include"GameObject.h"
@@ -66,7 +67,7 @@ void Game::Initialize()
 	Option::GetInstance()->Initialize();
 	
 
-
+	MelLib::TextWrite::CreateFontData(/*L"HGPｺﾞｼｯｸE"*/L"Arial", "test");
 }
 
 void Game::Finalize()

@@ -11,6 +11,7 @@ private:
 	std::shared_ptr<Player>pPlayer;
 
 	bool pushGameStart = false;
+
 private:
 	void LoadResources();
 
