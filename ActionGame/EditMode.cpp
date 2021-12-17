@@ -93,6 +93,8 @@ bool EditMode::Load(std::shared_ptr<Player>& p)
 	std::ifstream file;
 	file.open(filePath, std::ios_base::binary);
 
+
+
 	if (!file)
 	{
 		// °‚Ìî•ñ“ü‚ê‚é
@@ -172,6 +174,11 @@ void EditMode::Update()
 	// imgui‚ÅÀ•W‚¢‚¶‚Á‚Ä’Ç‰Á‚·‚éŠ´‚¶‚Å‚¢‚¢?
 
 	bool changeObject = false;
+
+	MelLib::Vector3 playerPos = pPlayer->GetPosition();
+	imguiManager->DrawSliderVector3("PlayerPosition", playerPos, -1000.0f, 1000.0f);
+	pPlayer->SetPosition(playerPos);
+
 
 	changeObject = changeObject || imguiManager->DrawRadioButton("OBJ_Enemy", objectType, OBJ_TYPE_ENEMY);
 	changeObject = changeObject || imguiManager->DrawRadioButton("OBJ_Stage", objectType, OBJ_TYPE_STAGE);

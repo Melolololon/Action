@@ -33,26 +33,27 @@ void ActionPart::Initialize()
 	MelLib::Camera::Get()->SetAngle(MelLib::Vector3(20, 0, 0));
 
 	// プレイヤーのポインタ
-	std::shared_ptr<Player>p;
+	std::shared_ptr<Player>pPlayer;
 
 	// ファイルがなかったら必要最低限のものだけ用意
 	// プレイヤーを必ず最初に追加するために、elseで追加処理を分ける
-	if (!EditMode::GetInstance()->Load(p))
+	if (!EditMode::GetInstance()->Load(pPlayer))
 	{
-		p = std::make_shared<Player>(MelLib::Vector3(0, 5, 0));
-		MelLib::GameObjectManager::GetInstance()->AddObject(p);
+		pPlayer = std::make_shared<Player>(MelLib::Vector3(0, 5, 0));
+		MelLib::GameObjectManager::GetInstance()->AddObject(pPlayer);
 
 		MelLib::GameObjectManager::GetInstance()->AddObject
 		(std::make_shared<Ground>(0, MelLib::Vector3(90, 0, 0), 10));
 	}
 	else
 	{
-		MelLib::GameObjectManager::GetInstance()->AddObject(p);
+		MelLib::GameObjectManager::GetInstance()->AddObject(pPlayer);
 	}
+	EditMode::GetInstance()->SetPPlayer(pPlayer.get());
 
-	Enemy::SetPPlayer(p.get());
-	EnemyAttack::SetPPlayer(p.get());
-	StageObject::SetPPlayer(p.get());
+	Enemy::SetPPlayer(pPlayer.get());
+	EnemyAttack::SetPPlayer(pPlayer.get());
+	StageObject::SetPPlayer(pPlayer.get());
 
 	//経路探索用
 	std::vector<MelLib::BoxData>bData;
@@ -102,7 +103,6 @@ void ActionPart::Update()
 	// デバッグ用
 	if (MelLib::Input::KeyTrigger(DIK_ESCAPE) && !Fade::GetInstance()->GetIsFade())
 	{
-		MelLib::GameObjectManager::GetInstance()->AllEraseObject();
 		Fade::GetInstance()->Start();
 	}
 
@@ -118,6 +118,9 @@ void ActionPart::Update()
 	if (Fade::GetInstance()->GetChangeSceneFlag())
 	{
 		isEnd = true;
+
+		
+		MelLib::GameObjectManager::GetInstance()->AllEraseObject();
 	}
 }
 

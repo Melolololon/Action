@@ -95,15 +95,30 @@ void Player::Update()
 	modelObjects["main"].Update();
 
 
-	// タイトル用処理
-	if(typeid(MelLib::SceneManager::GetInstance()->GetCurrentScene()) == typeid(Title))
+
+	MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
+	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())
 	{
-		TitleUpdate();
+		MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
+		if(typeid(*currentScene) != typeid(Title))
+		{
+			SetCameraPosition();
+		}
 		return;
 	}
 
-	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause() || !setStartParam)return;
+	if(!setStartParam)
+	{
+		if (typeid(*currentScene) != typeid(Title)) 
+		{
+			JumpAnimation();
+			ChangeAnimationData();
 
+			SetCameraPosition();
+			CalcMovePhysics();
+		}
+		return;
+	}
 	
 
 	if (hitGroundNotMove) 

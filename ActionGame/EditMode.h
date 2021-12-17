@@ -7,9 +7,10 @@
 #include"Player.h"
 
 // シーン内で呼び出すエディットモード
-class EditMode
+class EditMode final
 {
 private:
+	Player* pPlayer = nullptr;
 	
 	bool editPossible = true;
 	bool isEdit = false;
@@ -66,6 +67,7 @@ private:
 
 	void SetSelectObject();
 	void AddObject();
+
 public:
 
 	EditMode(EditMode& e) = delete;
@@ -83,5 +85,7 @@ public:
 	void Draw();
 
 	bool GetIsEdit() { return isEdit; }
+
+	void SetPPlayer(Player* p) { pPlayer = p; }
 };
 
