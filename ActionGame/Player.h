@@ -40,6 +40,10 @@ private:
 
 #pragma endregion
 
+#pragma region ジャンプ
+	static const float JUMP_POWER;
+#pragma endregion
+
 
 #pragma region 攻撃
 
@@ -95,14 +99,19 @@ private:
 
 #pragma region カメラ
 	float cameraSpeed = 0.0f;
+
+	bool lockOn = false;
 #pragma endregion
 
 	// デバッグ用(trueにすると強制Tポーズ)
 	bool isTPause = false;
 
+
+
 private:
 
 #pragma region Update関係
+
 
 	void ChangeAnimationData();
 
@@ -117,6 +126,7 @@ private:
 
 	void Dash();
 	void Jump();
+	void JumpAnimation();
 
 	//攻撃処理、攻撃判定の操作
 	void Attack();
@@ -128,6 +138,9 @@ private:
 
 	void Camera();
 	void SetCameraPosition();
+
+	void LockOn();
+
 #pragma endregion
 
 public:
@@ -164,6 +177,9 @@ public:
 
 	MelLib::Vector3 GetDirection() { return direction; }
 #pragma endregion
+
+
+	void TitleUpdate();
 
 };
 

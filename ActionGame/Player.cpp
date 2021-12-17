@@ -18,6 +18,8 @@
 
 #include"EnemyAttack.h"
 
+const float Player::JUMP_POWER = 2.0f;
+
 std::unordered_map<PlayerSlush::AttackType, const Player::AttackData> Player::attackData =
 {
 	{PlayerSlush::AttackType::NONE,AttackData(0,0,0)},
@@ -65,8 +67,6 @@ Player::Player(const MelLib::Vector3& pos)
 	mutekiTimer.SetMaxTime(60 * 1.5);
 
 
-	//浮き防止
-	FallStart(0.0f);
 
 	// タイトル用処理
 	MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
@@ -81,6 +81,10 @@ Player::Player(const MelLib::Vector3& pos)
 		modelObjects["main"].SetScale(MelLib::Vector3(3));
 		modelObjects["main"].SetAngle(0);
 		modelObjects["main"].SetPosition(MelLib::Vector3(0, -16, -0));
+
+
+		//浮き防止
+		FallStart(0.0f);
 	}
 
 	SetPosition(pos);
@@ -88,15 +92,19 @@ Player::Player(const MelLib::Vector3& pos)
 
 void Player::Update()
 {
+	modelObjects["main"].Update();
+
+
 	// タイトル用処理
 	if(typeid(MelLib::SceneManager::GetInstance()->GetCurrentScene()) == typeid(Title))
 	{
+		TitleUpdate();
 		return;
 	}
 
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause() || !setStartParam)return;
 
-	modelObjects["main"].Update();
+	
 
 	if (hitGroundNotMove) 
 	{
@@ -122,6 +130,7 @@ void Player::Update()
 	CalcMovePhysics();
 
 	Camera();
+	LockOn();
 
 	float angle = MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(direction.x, direction.z), false) - 270;
 	// 回転処理(仮)
@@ -138,6 +147,23 @@ void Player::Update()
 
 	
 
+}
+
+void Player::TitleUpdate()
+{
+	// 移動
+	AddPosition(MelLib::Vector3(0,0,0.5f));
+
+
+	// ジャンプ
+	if(!GetIsFall())
+	{
+		FallStart(JUMP_POWER);
+	}
+	CalcMovePhysics();
+
+	JumpAnimation();
+	ChangeAnimationData();
 }
 
 void Player::ChangeAnimationData()
@@ -329,14 +355,19 @@ void Player::Jump()
 
 	if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::A))
 	{
-		FallStart(2.0f);
+		FallStart(JUMP_POWER);
 	}
 
 	
+	JumpAnimation();
+}
+
+void Player::JumpAnimation()
+{
 	// 条件満たしたらジャンプアニメーション
-	if(!hitGround && !preHitGround && !isDash && currentAttack == PlayerSlush::AttackType::NONE)
+	if (!hitGround && !preHitGround && !isDash && currentAttack == PlayerSlush::AttackType::NONE)
 	{
-		if(!jumpResetAnimation)
+		if (!jumpResetAnimation)
 		{
 			jumpResetAnimation = true;
 			modelObjects["main"].ResetAnimation();
@@ -481,6 +512,7 @@ void Player::Muteki()
 void Player::Camera()
 {
 
+	if (lockOn)return;
 
 	//スティックの倒し具合でスピード変える
 	//緩急あったほうがいい?だんだん加速してく。早めにスピードマックスになる
@@ -531,6 +563,27 @@ void Player::SetCameraPosition()
 
 
 	pCamera->SetRotateCriteriaPosition(GetPosition() + MelLib::Vector3(0,10,0));
+
+}
+
+void Player::LockOn()
+{
+	// 全敵を取得
+	// 距離以内かつ最短のやつにカメラ向ける
+	// ロックオン中はカメラは動かせない
+	// プレイヤーが映るかつ、注視点を敵にセットしていい感じに映るようにする。
+	// 既存のゲームを参考にしたほうがいいかも
+	// プレイヤーと敵の方向ベクトルに応じてカメラ回転させれば、いい感じになるかも?
+
+
+	// ロックオン有効、無効
+	if(MelLib::Input::PadButtonTrigger(MelLib::PadButton::R_STICK))
+	{
+		lockOn = !lockOn;
+	}
+
+	if (!lockOn)return;
+
 
 }
 

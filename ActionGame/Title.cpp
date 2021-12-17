@@ -2,7 +2,6 @@
 
 #include"Input.h"
 
-#include"Player.h"
 #include"GameObjectManager.h"
 
 #include"Fade.h"
@@ -19,8 +18,8 @@ void Title::Initialize()
 {
 	LoadResources();
 
-	
-	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<Player>(MelLib::Vector3(0, 0, 0)));
+	pPlayer = std::make_shared<Player>(MelLib::Vector3(0, 0, 0));
+	MelLib::GameObjectManager::GetInstance()->AddObject(pPlayer);
 
 
 	MelLib::Camera* pCamera = MelLib::Camera::Get();
@@ -45,6 +44,14 @@ void Title::Update()
 		|| MelLib::Input::PadButtonTrigger(MelLib::PadButton::START);
 
 	if(pushSceneChangeButton && !Fade::GetInstance()->GetIsFade())
+	{
+		pushGameStart = true;
+	}
+
+	// プレイヤーのアニメーション
+	if (pushGameStart) pPlayer->TitleUpdate();
+
+	if(pPlayer->GetPosition().y <= -20.0f)
 	{
 		Fade::GetInstance()->Start();
 	}

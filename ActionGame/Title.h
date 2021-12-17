@@ -1,11 +1,16 @@
 #pragma once
 #include <Scene.h>
+#include"Player.h"
 
 // タイトルとかのスプライト(シーン共通じゃないスプライト)は、GameObject2Dで作ること
 
 class Title :
     public MelLib::Scene
 {
+private:
+	std::shared_ptr<Player>pPlayer;
+
+	bool pushGameStart = false;
 private:
 	void LoadResources();
 
