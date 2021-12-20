@@ -160,6 +160,7 @@ PlayerSlush::PlayerSlush
 	, slushLeft(slushLeft)
 {
 
+	
 	eraseTimer.SetMaxTime(attackTime);
 
 	//ƒvƒŒƒCƒ„[‚ÌŒü‚¢‚Ä‚é•ûŒü‚É‰ñ“]‚·‚éˆ×‚Ìˆ—
@@ -197,5 +198,6 @@ void PlayerSlush::Draw()
 
 void PlayerSlush::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)
 {
+
 }
 

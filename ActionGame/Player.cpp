@@ -408,8 +408,14 @@ void Player::Attack()
 		&& (attackTimer.GetNowTime() == 0 && currentAttack == PlayerSlush::AttackType::NONE
 			|| attackTimer.GetNowTime() >= attackData[currentAttack].nextTime && currentAttack != PlayerSlush::AttackType::NONE))
 	{
+
+
 		attackTimer.ResetTimeZero();
 		attackTimer.SetStopFlag(false);
+
+
+		// Œü‚«Ø‚è‘Ö‚¦
+		Move();
 
 		//CurrentAttackXV
 		SetAttackType();
@@ -476,7 +482,7 @@ void Player::SetAttackType()
 
 void Player::CreateAttackSlush()
 {
-
+	// Á‚¦‚éŠÔ‚ğŸ‚ÌUŒ‚‚ÖˆÚs‚Å‚«‚é‚æ‚¤‚É‚È‚éŠÔ‚Æ“¯‚¶‚É‚·‚é‚±‚Æ
 
 
 	switch (currentAttack)
@@ -485,22 +491,22 @@ void Player::CreateAttackSlush()
 		break;
 	case PlayerSlush::AttackType::NORMAL_1:
 		pRigthSlush = std::make_shared<PlayerSlush>
-			(GetPosition(), direction, currentAttack, attackData[currentAttack].time, modelObjects["main"], startPos, startAngle, startScale, false);
+			(GetPosition(), direction, currentAttack, attackData[currentAttack].nextTime, modelObjects["main"], startPos, startAngle, startScale, false);
 
 		break;
 	case PlayerSlush::AttackType::NORMAL_2:
 	
 
 		pPSlush = std::make_shared<PlayerSlush>
-			(GetPosition(), direction, currentAttack, attackData[currentAttack].time, modelObjects["main"], startPos, startAngle, startScale, true);
+			(GetPosition(), direction, currentAttack, attackData[currentAttack].nextTime, modelObjects["main"], startPos, startAngle, startScale, true);
 
 		break;
 	case PlayerSlush::AttackType::NORMAL_3:
 		pPSlush = std::make_shared<PlayerSlush>
-			(GetPosition(), direction, currentAttack, attackData[currentAttack].time, modelObjects["main"], startPos, startAngle, startScale, true);
+			(GetPosition(), direction, currentAttack, attackData[currentAttack].nextTime, modelObjects["main"], startPos, startAngle, startScale, true);
 
 		pRigthSlush = std::make_shared<PlayerSlush>
-			(GetPosition(), direction, currentAttack, attackData[currentAttack].time, modelObjects["main"], startPos, startAngle, startScale, false);
+			(GetPosition(), direction, currentAttack, attackData[currentAttack].nextTime, modelObjects["main"], startPos, startAngle, startScale, false);
 
 
 		break;

@@ -2,6 +2,7 @@
 
 #include"Input.h"
 
+#include"TextWrite.h"
 #include"GameObjectManager.h"
 
 #include"Fade.h"
@@ -70,6 +71,9 @@ void Title::Draw()
 {
 	MelLib::GameObjectManager::GetInstance()->Draw();
 	Fade::GetInstance()->Draw();
+
+	MelLib::TextWrite::Draw
+	(MelLib::Vector2(470, 400), MelLib::Color(255, 255, 255, 255), L"Aƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢", "test");
 }
 
 void Title::Finalize()

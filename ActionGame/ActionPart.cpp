@@ -144,7 +144,8 @@ void ActionPart::Draw()
 
 
 	// テスト
-	MelLib::TextWrite::Draw(MelLib::Vector2(0,670),MelLib::Color(255,255,255,255),L"左スティック　移動","test");
+	MelLib::TextWrite::Draw
+	(MelLib::Vector2(0,670),MelLib::Color(255,255,255,255),L"メニューボタン　メニューを開く","test");
 }
 
 void ActionPart::Finalize()

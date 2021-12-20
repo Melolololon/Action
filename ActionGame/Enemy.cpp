@@ -55,6 +55,7 @@ void Enemy::Draw()
 
 void Enemy::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)
 {
+	std::string n = typeid(*object).name();
 	if (typeid(*object) == typeid(PlayerSlush) && !isMuteki)
 	{
 		// プレイヤーから現在の攻撃の攻撃力を取得し、体力を減らす
