@@ -5,6 +5,7 @@
 #include<Easing.h>
 
 #include"PlayerSlush.h"
+#include"Input.h"
 
 
 //攻撃時間終わったかどうか判定から受け取ってプレイヤー制御する?
@@ -13,7 +14,16 @@
 
 class Player :public MelLib::GameObject
 {
+public:
+	enum class ActionType
+	{
+		JUMP,
+		ATTACK,
+		DASH,
+	};
+
 private:
+	static std::unordered_map<ActionType, MelLib::PadButton> keyConfigData;
 	
 	//前フレームの座標を格納する変数
 	MelLib::Vector3 prePos;
@@ -178,6 +188,10 @@ public:
 	MelLib::Vector3 GetDirection() { return direction; }
 #pragma endregion
 
+#pragma region Set
+
+	static void SetActionButton(const ActionType type, const MelLib::PadButton button) { keyConfigData[type] = button; }
+#pragma endregion
 
 	void TitleUpdate();
 

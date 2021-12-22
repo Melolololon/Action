@@ -199,11 +199,15 @@ void EditMode::Update()
 		SetSelectObject();
 	}
 
-	if(selectObject)
+	if (selectObject)
 	{
 		selectObject->SetPosition(addObjectPos);
 		selectObject->SetAngle(addObjectAngle);
-		selectObject->SetScale(addObjectScale);
+
+		if (objectType == OBJ_TYPE_FIERD)
+		{
+			selectObject->SetScale(addObjectScale);
+		}
 	}
 	else
 	{

@@ -40,6 +40,8 @@ Enemy::Enemy(const MelLib::Vector3& pos, const unsigned int hp, const float move
 	}*/
 
 	mutekiTimer.SetMaxTime(60 * 0.2);
+
+	tags.push_back(typeid(Enemy).name());
 }
 
 void Enemy::Update()

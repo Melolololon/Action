@@ -7,6 +7,8 @@
 //テスト用
 #include<ModelObject.h>
 
+#include"Enemy.h"
+
 //アクションパートのシーン
 class ActionPart :public MelLib::Scene
 {
@@ -16,11 +18,11 @@ private:
 	//テスト用
 	MelLib::ModelObject obj;
 
-
+	// ロックオン用
+	std::vector<std::shared_ptr<Enemy>>pEnemys;
 private:
 	void LoadResources();
 
-	void Tutorial();
 public:
 	void Initialize()override;//初期化
 	void Update()override;

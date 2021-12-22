@@ -18,6 +18,14 @@
 
 #include"EnemyAttack.h"
 
+std::unordered_map<Player::ActionType, MelLib::PadButton> Player::keyConfigData =
+{
+	{ActionType::JUMP, MelLib::PadButton::A},
+	{ActionType::ATTACK, MelLib::PadButton::X},
+	{ActionType::DASH, MelLib::PadButton::B},
+
+};
+
 const float Player::JUMP_POWER = 2.0f;
 
 std::unordered_map<PlayerSlush::AttackType, const Player::AttackData> Player::attackData =
@@ -331,7 +339,7 @@ void Player::Dash()
 
 	static const float DASH_DISTANCE = 200.0f;
 
-	if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::B)
+	if (MelLib::Input::PadButtonTrigger(keyConfigData[ActionType::DASH])
 		&& !isDash
 		&& currentAttack == PlayerSlush::AttackType::NONE)
 	{
@@ -368,7 +376,7 @@ void Player::Jump()
 
 	if (attackTimer.GetNowTime() != 0)return;
 
-	if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::A))
+	if (MelLib::Input::PadButtonTrigger(keyConfigData[ActionType::JUMP]))
 	{
 		FallStart(JUMP_POWER);
 	}
@@ -404,7 +412,7 @@ void Player::Attack()
 	}
 
 	//ifの2行目のタイマー確認は、コンボ終了後にNONEにするため、その攻撃中に入らないようにするために書いてる
-	if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::X)
+	if (MelLib::Input::PadButtonTrigger(keyConfigData[ActionType::ATTACK])
 		&& (attackTimer.GetNowTime() == 0 && currentAttack == PlayerSlush::AttackType::NONE
 			|| attackTimer.GetNowTime() >= attackData[currentAttack].nextTime && currentAttack != PlayerSlush::AttackType::NONE))
 	{

@@ -15,6 +15,7 @@ NoemalEnemy::NoemalEnemy(const MelLib::Vector3& pos) :
 
 
 	attackTimer.SetMaxTime(60 * 3);
+
 }
 
 void NoemalEnemy::Update()
@@ -24,12 +25,15 @@ void NoemalEnemy::Update()
 	if(attackTimer.GetMaxOverFlag())
 	{
 		isAttack = false;
+		attackTimer.ResetTimeZero();
+		attackTimer.SetStopFlag(true);
 	}
 
 	if (CheckPlayerDistance(3.0f) || isAttack) 
 	{
 		isAttack = true;
-		Attack();
+		attackTimer.SetStopFlag(false);
+		//Attack();
 	}
 	else 
 	{

@@ -2,8 +2,8 @@
 #include<LibMath.h>
 
 
-const MelLib::Value2<MelLib::Vector3> PlayerSlush::CAPSULE_START_POS_LEFT = { MelLib::Vector3(14,32,3),MelLib::Vector3(12,32,14) };
-const MelLib::Value2<MelLib::Vector3> PlayerSlush::CAPSULE_START_POS_RIGTH = { MelLib::Vector3(-14,32,3),MelLib::Vector3(-12,32,14) };
+const MelLib::Value2<MelLib::Vector3> PlayerSlush::CAPSULE_START_POS_LEFT = { MelLib::Vector3(14,30,3),MelLib::Vector3(12,30,14) };
+const MelLib::Value2<MelLib::Vector3> PlayerSlush::CAPSULE_START_POS_RIGTH = { MelLib::Vector3(-14,30,3),MelLib::Vector3(-12,30,14) };
 
 void PlayerSlush::SetAttackParam()
 {
@@ -154,9 +154,9 @@ PlayerSlush::PlayerSlush
 )
 	:attackType(type)
 	,PLAYER_MODEL(model)
-	, PLAYER_START_POS(playerStartPos)
-	, PLAYER_START_ANGLE(playerStartAngle)
-	, PLAYER_START_SCALE(playerStartScale)
+	, PLAYER_START_POS(MelLib::Vector3(0,0,0))
+	, PLAYER_START_ANGLE(0)
+	, PLAYER_START_SCALE(3)
 	, slushLeft(slushLeft)
 {
 
