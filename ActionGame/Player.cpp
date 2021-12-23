@@ -34,6 +34,7 @@ std::unordered_map<PlayerSlush::AttackType, const Player::AttackData> Player::at
 	{PlayerSlush::AttackType::NORMAL_1,AttackData(1,20,10)},
 	{PlayerSlush::AttackType::NORMAL_2,AttackData(1,30,20)},
 	{PlayerSlush::AttackType::NORMAL_3,AttackData(1,20,10)},
+	{PlayerSlush::AttackType::DASH_1,AttackData(1,20,10)},
 };
 
 
@@ -359,7 +360,11 @@ void Player::Dash()
 		AddPosition(MelLib::Vector3(addPos.x, 0, addPos.z));
 
 
-		modelObjects["main"].SetAnimation("Dash_02");
+		// ダッシュ攻撃中じゃなかったらダッシュアニメーション
+		if (currentAttack != PlayerSlush::AttackType::DASH_1) 
+		{
+			modelObjects["main"].SetAnimation("Dash_02");
+		}
 
 	}
 
@@ -450,12 +455,20 @@ void Player::Attack()
 
 void Player::SetAttackType()
 {
+
+
 	switch (currentAttack)
 	{
 	case PlayerSlush::AttackType::NONE:
 		
-		//通常攻撃
-		if (hitGround)
+		// ダッシュ攻撃
+		if(isDash)
+		{
+			currentAttack = PlayerSlush::AttackType::DASH_1;
+
+			modelObjects["main"].SetAnimation("Attack_Normal_1");
+		}
+		else if (hitGround)// 通常攻撃
 		{
 			currentAttack = PlayerSlush::AttackType::NORMAL_1;
 
@@ -480,6 +493,11 @@ void Player::SetAttackType()
 	case PlayerSlush::AttackType::NORMAL_3:
 		currentAttack = PlayerSlush::AttackType::NONE;
 		break;
+
+	case PlayerSlush::AttackType::DASH_1:
+		currentAttack = PlayerSlush::AttackType::NONE;
+		break;
+
 	default:
 		break;
 	}
