@@ -62,7 +62,6 @@ Player::Player(const MelLib::Vector3& pos)
 	segment3DData[0] = capsuleData[0].GetSegment3DData();
 
 
-	modelObjects["main"];
 	//modelObjects["main"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX), nullptr);
 	modelObjects["main"].Create(MelLib::ModelData::Get("Player"), nullptr);
 

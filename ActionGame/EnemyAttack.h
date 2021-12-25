@@ -23,6 +23,19 @@ private:
 	static Player* pPlayer;
 
 public:
+
+	// startPosを引数で渡すようにせず、クラス名わたしてこっちに定義した座標を持ってくるなりstatic関数で取得してもいい?
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="power">パワー</param>
+	/// <param name="pos">これ攻撃側でセットするから消すこと</param>
+	/// <param name="radius">半径</param>
+	/// <param name="deadTime">消える時間</param>
+	/// <param name="model">敵のモデル(アニメーションの状態を取得するのに使用)</param>
+	/// <param name="startPos">攻撃の判定をセットしたときの座標(敵ごとに位置が違うので渡す)</param>
+	/// <param name="startAngle"></param>
+	/// <param name="startScale"></param>
 	EnemyAttack
 	(
 		unsigned int power,

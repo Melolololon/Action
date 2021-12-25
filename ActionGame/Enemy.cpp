@@ -6,19 +6,19 @@
 
 #include"EnemyAttack.h"
 
-
+// やること
+// 敵のモデル作成(木人)
 
 Player* Enemy::pPlayer;
 std::vector<std::vector<std::vector<MelLib::AStarNode>>> Enemy::nodes;
 
-Enemy::Enemy(const MelLib::Vector3& pos, const unsigned int hp, const float moveSpeed, int attackStartTime, const std::string& modelName) :
+Enemy::Enemy(const MelLib::Vector3& pos, const unsigned int hp, const float moveSpeed, const std::string& modelName) :
 	hp(hp)
 	, moveSpeed(moveSpeed)
-	,ATTACK_START_TIME(attackStartTime)
 {
 	SetPosition(pos);
 
-	modelObjects["main"];
+	
 	if (modelName == "")
 	{
 		modelObjects["main"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX), nullptr);
@@ -164,21 +164,21 @@ void Enemy::CheckMutekiEnd()
 	}
 }
 
-void Enemy::Attack()
+void Enemy::AttackStart()
 {
-	if(attackTimer.GetNowTime() == ATTACK_START_TIME)
+	isAttack = true;
+	attackTimer.SetStopFlag(false);
+
+	// 攻撃アニメーションセット
+	modelObjects["main"].SetAnimation("Attack_Normal_1");
+}
+
+void Enemy::CheckAttackEnd()
+{
+	if (attackTimer.GetMaxOverFlag())
 	{
-		MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<EnemyAttack>
-			(
-				3,
-				GetPosition(),
-				3.0f,
-				60 * 0.3,
-				modelObjects["main"],
-				0,
-				0,
-				0
-			)
-		);
+		isAttack = false;
+		attackTimer.ResetTimeZero();
+		attackTimer.SetStopFlag(true);
 	}
 }

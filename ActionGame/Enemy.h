@@ -38,7 +38,6 @@ protected:
 
 	bool isAttack = false;
 
-	const int ATTACK_START_TIME;
 	MelLib::FrameTimer attackTimer;
 protected:
 	/// <summary>
@@ -55,10 +54,11 @@ protected:
 
 	void CheckMutekiEnd();
 
-	void Attack();
+	void AttackStart();
+	void CheckAttackEnd();
 public:
 
-	Enemy(const MelLib::Vector3& pos,unsigned int hp,float moveSpeed,int attackStartTime,const std::string& modelName = "");
+	Enemy(const MelLib::Vector3& pos,unsigned int hp,float moveSpeed,const std::string& modelName = "");
 	virtual ~Enemy(){}
 	void Update()override;
 	void Draw()override;

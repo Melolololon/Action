@@ -5,8 +5,17 @@
 #include"Pause.h"
 #include"EditMode.h"
 
+#include"EnemyAttack.h"
+
+#include<GameObjectManager.h>
+
+void NoemalEnemy::LoadResources()
+{
+	MelLib::ModelData::Load("Resources/Model/Enemy/Mokuzin/Mokuzin.fbx", false, "NormalEnemy");
+}
+
 NoemalEnemy::NoemalEnemy(const MelLib::Vector3& pos) :
-	Enemy(pos, 3, 0.2f, 60 * 0.7, "")
+	Enemy(pos, 3, 0.2f, "")
 {
 	capsuleData.resize(1);
 	capsuleData[0].SetRadius(10.0f);
@@ -14,7 +23,7 @@ NoemalEnemy::NoemalEnemy(const MelLib::Vector3& pos) :
 		SetPosition(MelLib::Value2<MelLib::Vector3>(pos + MelLib::Vector3(0,25.0f,0), pos + MelLib::Vector3(0, -25.0f, 0)));
 
 
-	attackTimer.SetMaxTime(60 * 3);
+	attackTimer.SetMaxTime(60 * 2);
 
 }
 
@@ -22,24 +31,35 @@ void NoemalEnemy::Update()
 {
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())return;
 	
-	if(attackTimer.GetMaxOverFlag())
+	// ‚±‚±‚ÉUŒ‚ðŒ‚ð‹Lq
+	if (CheckPlayerDistance(3.0f)) 
 	{
-		isAttack = false;
-		attackTimer.ResetTimeZero();
-		attackTimer.SetStopFlag(true);
-	}
-
-	if (CheckPlayerDistance(3.0f) || isAttack) 
-	{
-		isAttack = true;
-		attackTimer.SetStopFlag(false);
-		//Attack();
+		AttackStart();
 	}
 	else 
 	{
 		CalcPlayerRoute();
 	}//AddPosition(routeVectors[0] * 0.2f);
+	CheckAttackEnd();
 
+	// ŽžŠÔ‚É‚È‚Á‚½‚çUŒ‚
+	if (attackTimer.GetNowTime() == ATTACK_START_TIME)
+	{
+		// UŒ‚”»’è‚Ì’Ç‰Á
+		MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<EnemyAttack>
+			(
+				3,
+				GetPosition(),
+				3.0f,
+				60 * 0.3,
+				modelObjects["main"],
+				0,
+				0,
+				0
+				)
+		);
+
+	}
 
 	CheckMutekiEnd();
 }
