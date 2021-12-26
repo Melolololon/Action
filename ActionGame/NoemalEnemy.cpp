@@ -20,7 +20,7 @@ NoemalEnemy::NoemalEnemy(const MelLib::Vector3& pos) :
 	capsuleData.resize(1);
 	capsuleData[0].SetRadius(10.0f);
 	capsuleData[0].GetRefSegment3DData().
-		SetPosition(MelLib::Value2<MelLib::Vector3>(pos + MelLib::Vector3(0,25.0f,0), pos + MelLib::Vector3(0, -25.0f, 0)));
+		SetPosition(MelLib::Value2<MelLib::Vector3>(pos + MelLib::Vector3(0, 25.0f, 0), pos + MelLib::Vector3(0, -25.0f, 0)));
 
 
 	attackTimer.SetMaxTime(60 * 2);
@@ -29,14 +29,15 @@ NoemalEnemy::NoemalEnemy(const MelLib::Vector3& pos) :
 
 void NoemalEnemy::Update()
 {
+
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())return;
-	
+
 	// ‚±‚±‚ÉUŒ‚ğŒ‚ğ‹Lq
-	if (CheckPlayerDistance(3.0f)) 
+	if (CheckPlayerDistance(3.0f))
 	{
 		AttackStart();
 	}
-	else 
+	else
 	{
 		CalcPlayerRoute();
 	}//AddPosition(routeVectors[0] * 0.2f);

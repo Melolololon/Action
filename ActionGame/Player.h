@@ -24,7 +24,7 @@ public:
 
 private:
 	static std::unordered_map<ActionType, MelLib::PadButton> keyConfigData;
-	
+
 	//前フレームの座標を格納する変数
 	MelLib::Vector3 prePos;
 	//向いてる向き
@@ -69,11 +69,11 @@ private:
 		// 次の攻撃に移れるようになるまでの時間
 		int nextTime = 0;
 
-		AttackData(){}
-		AttackData(const int power, const int time, const int nextTime):
+		AttackData() {}
+		AttackData(const int power, const int time, const int nextTime) :
 			power(power),
 			time(time),
-			nextTime(nextTime){}
+			nextTime(nextTime) {}
 
 	};
 
@@ -81,10 +81,10 @@ private:
 	std::shared_ptr<PlayerSlush>pRigthSlush = nullptr;
 	//現在の攻撃
 	PlayerSlush::AttackType currentAttack = PlayerSlush::AttackType::NONE;
-	
+
 	//攻撃時間タイマー
 	MelLib::FrameTimer attackTimer;
-	
+
 
 	// static constだと要素にアクセスできないので、const AttackDataにしてる
 	// 攻撃の情報をまとめたもの
@@ -143,6 +143,8 @@ private:
 	void SetAttackType();
 	void CreateAttackSlush();
 
+	void Guard();
+
 	void Muteki();
 
 
@@ -157,7 +159,7 @@ public:
 	static void LoadResources();
 
 	Player(const MelLib::Vector3& pos);
-	~Player(){}
+	~Player() {}
 
 	PlayerSlush* GetPPlayerSlush() { return pPSlush.get(); }
 

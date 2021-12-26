@@ -38,11 +38,12 @@ std::unordered_map<PlayerSlush::AttackType, const Player::AttackData> Player::at
 };
 
 
- 
+
 void Player::LoadResources()
 {
 	// タイトルでも使うから自動削除削除
-	MelLib::ModelData::Load("Resources/Model/Player/Player_Test.fbx",false,"Player");
+	MelLib::ModelData::Load("Resources/Model/Player/Player_Test.fbx", false, "Player");
+
 }
 
 Player::Player(const MelLib::Vector3& pos)
@@ -102,22 +103,20 @@ void Player::Update()
 {
 	modelObjects["main"].Update();
 
-
-
 	MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())
 	{
 		MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
-		if(typeid(*currentScene) != typeid(Title))
+		if (typeid(*currentScene) != typeid(Title))
 		{
 			SetCameraPosition();
 		}
 		return;
 	}
 
-	if(!setStartParam)
+	if (!setStartParam)
 	{
-		if (typeid(*currentScene) != typeid(Title)) 
+		if (typeid(*currentScene) != typeid(Title))
 		{
 			JumpAnimation();
 			ChangeAnimationData();
@@ -127,9 +126,9 @@ void Player::Update()
 		}
 		return;
 	}
-	
 
-	if (hitGroundNotMove) 
+
+	if (hitGroundNotMove)
 	{
 		if (hitGroundNotMoveTimer.GetMaxOverFlag())
 		{
@@ -137,13 +136,13 @@ void Player::Update()
 			hitGroundNotMoveTimer.SetStopFlag(true);
 			hitGroundNotMove = false;
 		}
-		else 
+		else
 		{
 			Camera();
 			return;
 		}
 	}
-	
+
 	prePos = GetPosition();
 	Move();
 	Jump();
@@ -168,18 +167,18 @@ void Player::Update()
 	ChangeAnimationData();
 
 
-	
+
 
 }
 
 void Player::TitleUpdate()
 {
 	// 移動
-	AddPosition(MelLib::Vector3(0,0,0.5f));
+	AddPosition(MelLib::Vector3(0, 0, 0.5f));
 
 
 	// ジャンプ
-	if(!GetIsFall())
+	if (!GetIsFall())
 	{
 		FallStart(JUMP_POWER);
 	}
@@ -196,10 +195,10 @@ void Player::ChangeAnimationData()
 	modelObjects["main"].SetAnimationSpeedMagnification(1);
 	modelObjects["main"].SetAnimationEndStopFlag(false);
 
-	if(animationName == "Dash"){
+	if (animationName == "Dash") {
 		modelObjects["main"].SetAnimationSpeedMagnification(2);
 	}
-	else if(animationName.find("Attack") != std::string::npos){
+	else if (animationName.find("Attack") != std::string::npos) {
 
 		modelObjects["main"].SetAnimationSpeedMagnification(2);
 		modelObjects["main"].SetAnimationEndStopFlag(true);
@@ -208,19 +207,19 @@ void Player::ChangeAnimationData()
 
 		modelObjects["main"].SetAnimationEndStopFlag(true);
 	}
-	else if(animationName.find("Jump_Up") != std::string::npos)
+	else if (animationName.find("Jump_Up") != std::string::npos)
 	{
 		modelObjects["main"].SetAnimationEndStopFlag(true);
 	}
 
 	// デバッグ用
-	if(MelLib::Input::KeyTrigger(DIK_1))
+	if (MelLib::Input::KeyTrigger(DIK_1))
 	{
 		isTPause = !isTPause;
 	}
 
 	// 強制Tポーズ
-	if(isTPause)
+	if (isTPause)
 	{
 		modelObjects["main"].SetAnimation("_T");
 		modelObjects["main"].SetAnimationSpeedMagnification(1);
@@ -360,7 +359,7 @@ void Player::Dash()
 
 
 		// ダッシュ攻撃中じゃなかったらダッシュアニメーション
-		if (currentAttack != PlayerSlush::AttackType::DASH_1) 
+		if (currentAttack != PlayerSlush::AttackType::DASH_1)
 		{
 			modelObjects["main"].SetAnimation("Dash_02");
 		}
@@ -385,7 +384,7 @@ void Player::Jump()
 		FallStart(JUMP_POWER);
 	}
 
-	
+
 	JumpAnimation();
 }
 
@@ -442,7 +441,7 @@ void Player::Attack()
 
 
 			CreateAttackSlush();
-			
+
 			//アニメーションをリセット
 			modelObjects["main"].ResetAnimation();
 		}
@@ -459,9 +458,9 @@ void Player::SetAttackType()
 	switch (currentAttack)
 	{
 	case PlayerSlush::AttackType::NONE:
-		
+
 		// ダッシュ攻撃
-		if(isDash)
+		if (isDash)
 		{
 			currentAttack = PlayerSlush::AttackType::DASH_1;
 
@@ -520,7 +519,7 @@ void Player::CreateAttackSlush()
 
 		break;
 	case PlayerSlush::AttackType::NORMAL_2:
-	
+
 
 		pPSlush = std::make_shared<PlayerSlush>
 			(GetPosition(), direction, currentAttack, attackData[currentAttack].nextTime, modelObjects["main"], startPos, startAngle, startScale, true);
@@ -541,13 +540,13 @@ void Player::CreateAttackSlush()
 		break;
 	}
 
-	if(pPSlush)MelLib::GameObjectManager::GetInstance()->AddObject(pPSlush);
-	if(pRigthSlush)MelLib::GameObjectManager::GetInstance()->AddObject(pRigthSlush);
+	if (pPSlush)MelLib::GameObjectManager::GetInstance()->AddObject(pPSlush);
+	if (pRigthSlush)MelLib::GameObjectManager::GetInstance()->AddObject(pRigthSlush);
 }
 
 void Player::Muteki()
 {
-	if(mutekiTimer.GetMaxOverFlag())
+	if (mutekiTimer.GetMaxOverFlag())
 	{
 		isMuteki = false;
 		mutekiTimer.ResetTimeZero();
@@ -608,7 +607,7 @@ void Player::SetCameraPosition()
 	(GetPosition(), MelLib::LibMath::OtherVector3(pCamera->GetCameraPosition(), pCamera->GetTargetPosition()), 30.0f));*/
 
 
-	pCamera->SetRotateCriteriaPosition(GetPosition() + MelLib::Vector3(0,10,0));
+	pCamera->SetRotateCriteriaPosition(GetPosition() + MelLib::Vector3(0, 10, 0));
 
 }
 
@@ -623,12 +622,25 @@ void Player::LockOn()
 
 
 	// ロックオン有効、無効
-	if(MelLib::Input::PadButtonTrigger(MelLib::PadButton::R_STICK))
+	if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::R_STICK))
 	{
 		lockOn = !lockOn;
 	}
 
 	if (!lockOn)return;
+
+
+	//float minDistance = FLT_MAX;
+	// 近い敵を取得
+	//for (const auto& enemy : ActionPart::GetEnemys())
+	//{
+	//	float distance = MelLib::LibMath::CalcDistance3D(GetPosition(), enemy->GetPosition());
+	//	if (distance <= minDistance)
+	//	{
+	//		minDistance = distance;
+	//	}
+	//}
+
 
 
 }
@@ -693,7 +705,7 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 
 
 
-		if(!setStartParam)
+		if (!setStartParam)
 		{
 			setStartParam = true;
 
@@ -704,9 +716,9 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 			startScale = modelObjects["main"].GetScale();
 		}
 	}
-	
+
 	// 攻撃を受けた時(体力減算はEnemyAttack側で行ってる)
-	if (!isMuteki) 
+	if (!isMuteki)
 	{
 
 		if (typeid(*object) == typeid(EnemyAttack))

@@ -12,12 +12,12 @@ EnemyAttack::EnemyAttack
 	const MelLib::Vector3& startPos,
 	const MelLib::Vector3& startAngle,
 	const MelLib::Vector3& startScale
-):
+) :
 	power(power)
-	,MODEL(model)
-	,START_POS(startPos)
-	,START_ANGLE(startAngle)
-	,START_SCALE(startScale)
+	, MODEL(model)
+	, START_POS(startPos)
+	, START_ANGLE(startAngle)
+	, START_SCALE(startScale)
 {
 	// アニメーションに合わせてsphereを動かす
 
@@ -42,10 +42,10 @@ void EnemyAttack::Update()
 		START_POS,
 		START_ANGLE,
 		START_SCALE
-		)
+	)
 	);
 
-	if(deadTimer.GetMaxOverFlag())
+	if (deadTimer.GetMaxOverFlag())
 	{
 		eraseManager = true;
 	}
@@ -53,7 +53,7 @@ void EnemyAttack::Update()
 
 void EnemyAttack::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)
 {
-	if(typeid(*object) == typeid(Player))
+	if (typeid(*object) == typeid(Player))
 	{
 		pPlayer->DownHP(power);
 	}

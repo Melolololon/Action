@@ -5,14 +5,14 @@
 #include"Player.h"
 //敵クラス
 class Enemy :
-    public MelLib::GameObject
+	public MelLib::GameObject
 {
 private:
 
 
 	static Player* pPlayer;
 	static std::vector<std::vector<std::vector<MelLib::AStarNode>>> nodes;
-	
+
 	// 現在選ばれている進行方向
 	int currentMoveVector = 0;
 	MelLib::FrameTimer routeSearchTimer;
@@ -20,7 +20,7 @@ private:
 	// デバッグ用
 	MelLib::ModelObject routeObj[100];
 
-	
+
 	bool isDead = false;
 
 	bool isMuteki = false;
@@ -58,8 +58,8 @@ protected:
 	void CheckAttackEnd();
 public:
 
-	Enemy(const MelLib::Vector3& pos,unsigned int hp,float moveSpeed,const std::string& modelName = "");
-	virtual ~Enemy(){}
+	Enemy(const MelLib::Vector3& pos, unsigned int hp, float moveSpeed, const std::string& modelName = "");
+	virtual ~Enemy() {}
 	void Update()override;
 	void Draw()override;
 	/// <summary>
@@ -94,8 +94,8 @@ public:
 	(
 		const MelLib::Vector3& leftDownFrontPos,
 		const MelLib::Vector3& rightUpBackPos,
-		const MelLib::Value3<UINT>& nodeNum, 
-		const std::vector<MelLib::BoxData>& datas, 
+		const MelLib::Value3<UINT>& nodeNum,
+		const std::vector<MelLib::BoxData>& datas,
 		const std::vector<UINT>& costs
 	);
 };

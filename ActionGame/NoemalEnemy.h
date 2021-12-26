@@ -1,7 +1,7 @@
 #pragma once
 #include "Enemy.h"
 class NoemalEnemy :
-    public Enemy
+	public Enemy
 {
 private:
 	static const int ATTACK_START_TIME = 60 * 0.7;
@@ -10,7 +10,7 @@ public:
 	static void LoadResources();
 
 	NoemalEnemy(const MelLib::Vector3& pos);
-	~NoemalEnemy(){}
+	~NoemalEnemy() {}
 
 	void Update()override;
 	/*/// <summary>
@@ -33,4 +33,3 @@ public:
 	//void Attack();
 };
 
- 

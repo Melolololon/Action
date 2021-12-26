@@ -18,7 +18,7 @@ Enemy::Enemy(const MelLib::Vector3& pos, const unsigned int hp, const float move
 {
 	SetPosition(pos);
 
-	
+
 	if (modelName == "")
 	{
 		modelObjects["main"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX), nullptr);
@@ -62,11 +62,11 @@ void Enemy::Hit(const GameObject* const object, const MelLib::ShapeType3D& colli
 	{
 		// ƒvƒŒƒCƒ„[‚©‚çŒ»Ý‚ÌUŒ‚‚ÌUŒ‚—Í‚ðŽæ“¾‚µA‘Ì—Í‚ðŒ¸‚ç‚·
 		hp -= pPlayer->GetCurrentAttackPower();
-		
+
 		isMuteki = true;
 		mutekiTimer.SetStopFlag(false);
 
-		if(hp <= 0)
+		if (hp <= 0)
 		{
 			isDead = true;
 
@@ -80,14 +80,14 @@ void Enemy::SetAStarNodeDatas
 (
 	const MelLib::Vector3& leftDownFrontPos,
 	const MelLib::Vector3& rightUpBackPos,
-	const MelLib::Value3<UINT>& nodeNum, 
-	const std::vector<MelLib::BoxData>& datas, 
+	const MelLib::Value3<UINT>& nodeNum,
+	const std::vector<MelLib::BoxData>& datas,
 	const std::vector<UINT>& costs
 )
 {
 	MelLib::RouteSearch::SetNodePosition(leftDownFrontPos, rightUpBackPos, nodeNum, nodes);
 	MelLib::RouteSearch::SetHitObjectFlag(datas, nodes);
-	MelLib::RouteSearch::SetCost(datas,costs, nodes);
+	MelLib::RouteSearch::SetCost(datas, costs, nodes);
 }
 
 void Enemy::AddRouteVector()
@@ -98,7 +98,7 @@ void Enemy::AddRouteVector()
 		currentMoveVector++;
 	}
 
-	if (currentMoveVector != routeVectors.size()) 
+	if (currentMoveVector != routeVectors.size())
 	{
 		AddPosition(routeVectors[currentMoveVector] * moveSpeed);
 	}
@@ -123,15 +123,15 @@ void Enemy::CalcPlayerRoute()
 
 	MelLib::Vector3 playerPos = pPlayer->GetPosition();
 	MelLib::Vector3 myToPlayer;
-	bool straightMove = MelLib::RouteSearch::CheckStraightMove(GetPosition(), playerPos, nodes, 4.0f,myToPlayer);
-	
+	bool straightMove = MelLib::RouteSearch::CheckStraightMove(GetPosition(), playerPos, nodes, 4.0f, myToPlayer);
+
 	if (!straightMove && routeSearchTimer.GetMaxOverFlag() || routeVectors.size() == 0)
 	{
-		bool result = MelLib::RouteSearch::CalcRoute(GetPosition(), playerPos, nodes, &routeVectors,&routeNodePos);
+		bool result = MelLib::RouteSearch::CalcRoute(GetPosition(), playerPos, nodes, &routeVectors, &routeNodePos);
 		routeSearchTimer.ResetTimeZero();
 	}
-	
-	if(straightMove)
+
+	if (straightMove)
 	{
 
 		routeVectors.clear();
@@ -141,8 +141,8 @@ void Enemy::CalcPlayerRoute()
 
 	AddRouteVector();
 
-	
-	for(int i = 0;i < routeNodePos.size();i++)
+
+	for (int i = 0; i < routeNodePos.size(); i++)
 	{
 		routeObj[i].SetPosition(routeNodePos[i]);
 		routeObj[i].Draw();
@@ -154,7 +154,7 @@ void Enemy::CalcPlayerRoute()
 
 void Enemy::CheckMutekiEnd()
 {
-	if(mutekiTimer.GetMaxOverFlag())
+	if (mutekiTimer.GetMaxOverFlag())
 	{
 		mutekiTimer.ResetTimeZero();
 

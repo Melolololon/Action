@@ -6,7 +6,7 @@
 
 //ìGÇÃçUåÇ
 class EnemyAttack :
-    public MelLib::GameObject
+	public MelLib::GameObject
 {
 private:
 	int power;
@@ -44,10 +44,10 @@ public:
 		int deadTime,
 		const MelLib::ModelObject& model,
 		const MelLib::Vector3& startPos,
-		const MelLib::Vector3& startAngle, 
+		const MelLib::Vector3& startAngle,
 		const MelLib::Vector3& startScale
 	);
-	~EnemyAttack(){}
+	~EnemyAttack() {}
 
 	void Update()override;
 

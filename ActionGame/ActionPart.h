@@ -19,7 +19,8 @@ private:
 	MelLib::ModelObject obj;
 
 	// ロックオン用
-	std::vector<std::shared_ptr<Enemy>>pEnemys;
+
+	static std::vector<std::shared_ptr<Enemy>>pEnemys;
 private:
 	void LoadResources();
 
@@ -30,5 +31,5 @@ public:
 	void Finalize()override;//終了処理
 	Scene* GetNextScene()override;//次のシーン
 
+	//static const std::vector<std::shared_ptr<Enemy>>& GetEnemys() { return pEnemys; }
 };
-
