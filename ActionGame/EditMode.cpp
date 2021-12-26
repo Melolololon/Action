@@ -85,8 +85,9 @@ void EditMode::Save()
 
 
 
-bool EditMode::Load(std::shared_ptr<Player>& p)
+bool EditMode::Load(std::shared_ptr<Player>& p, std::vector<std::shared_ptr<Enemy>>* pEnemys)
 {
+	this->pEnemys = pEnemys;
 
 	std::string filePath = GetFileName();
 
@@ -234,7 +235,7 @@ void EditMode::SetSelectObject()
 	{
 
 	case NORMAL_ENEMY:
-		selectObject = std::make_shared<NoemalEnemy>(addObjectPos);
+		AddEnemy(std::make_shared<NoemalEnemy>(addObjectPos));
 		break;
 
 	case BAMBOO:
@@ -262,6 +263,13 @@ void EditMode::AddObject()
 	// 選択オブジェクトを消す
 	selectObject.reset();
 
+}
+
+void EditMode::AddEnemy(std::shared_ptr<Enemy>p)
+{
+	std::shared_ptr<Enemy>pEnemy = p;
+	pEnemys->push_back(pEnemy);
+	selectObject = pEnemy;
 }
 
 EditMode* EditMode::GetInstance()

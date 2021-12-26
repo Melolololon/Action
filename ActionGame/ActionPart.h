@@ -19,7 +19,6 @@ private:
 	MelLib::ModelObject obj;
 
 	// ロックオン用
-
 	static std::vector<std::shared_ptr<Enemy>>pEnemys;
 private:
 	void LoadResources();

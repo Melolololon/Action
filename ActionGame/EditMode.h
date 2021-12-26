@@ -5,6 +5,7 @@
 #include<Vector.h>
 
 #include"Player.h"
+#include"Enemy.h"
 
 // シーン内で呼び出すエディットモード
 class EditMode final
@@ -53,7 +54,7 @@ private:
 #pragma endregion
 
 
-
+	std::vector<std::shared_ptr<Enemy>>* pEnemys = nullptr;
 private:
 	EditMode(){}
 	~EditMode(){}
@@ -68,6 +69,7 @@ private:
 	void SetSelectObject();
 	void AddObject();
 
+	void AddEnemy(std::shared_ptr<Enemy>p);
 public:
 
 	EditMode(EditMode& e) = delete;
@@ -79,7 +81,7 @@ public:
 	/// </summary>
 	/// <param name="p">プレイヤーのポインタ</param>
 	/// <returns>読み込みが成功したかどうか</returns>
-	bool Load(std::shared_ptr<Player>& p);
+	bool Load(std::shared_ptr<Player>& p, std::vector<std::shared_ptr<Enemy>>* pEnemys);
 
 	void Update();
 	void Draw();
@@ -87,5 +89,6 @@ public:
 	bool GetIsEdit() { return isEdit; }
 
 	void SetPPlayer(Player* p) { pPlayer = p; }
+
 };
 

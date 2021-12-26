@@ -20,6 +20,7 @@
 #include"Pause.h"
 #include"EditMode.h"
 
+std::vector<std::shared_ptr<Enemy>>ActionPart::pEnemys;
 
 void ActionPart::LoadResources()
 {
@@ -38,7 +39,7 @@ void ActionPart::Initialize()
 
 	// ファイルがなかったら必要最低限のものだけ用意
 	// プレイヤーを必ず最初に追加するために、elseで追加処理を分ける
-	if (!EditMode::GetInstance()->Load(pPlayer))
+	if (!EditMode::GetInstance()->Load(pPlayer,&pEnemys))
 	{
 		pPlayer = std::make_shared<Player>(MelLib::Vector3(0, 5, 0));
 		MelLib::GameObjectManager::GetInstance()->AddObject(pPlayer);
