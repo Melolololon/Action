@@ -6,11 +6,13 @@
 
 #include"PlayerSlush.h"
 #include"Input.h"
-
+#include"Enemy.h"
 
 //攻撃時間終わったかどうか判定から受け取ってプレイヤー制御する?
 //攻撃判定の生存時間と攻撃時間は違うからとりあえず今のままでいい?
 //とりあえず攻撃時間は技ごとに定義したほうがよさそう
+
+class Enemy;
 
 class Player :public MelLib::GameObject
 {
@@ -23,6 +25,8 @@ public:
 	};
 
 private:
+
+
 	static std::unordered_map<ActionType, MelLib::PadButton> keyConfigData;
 
 	//前フレームの座標を格納する変数
@@ -111,6 +115,8 @@ private:
 	float cameraSpeed = 0.0f;
 
 	bool lockOn = false;
+	const Enemy* lockOnEnemy = nullptr;
+	float lockOnEnemyDistance = FLT_MAX;
 #pragma endregion
 
 	// デバッグ用(trueにすると強制Tポーズ)

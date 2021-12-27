@@ -101,11 +101,11 @@ Player::Player(const MelLib::Vector3& pos)
 
 void Player::Update()
 {
-	modelObjects["main"].Update();
 
 	MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())
 	{
+
 		MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
 		if (typeid(*currentScene) != typeid(Title))
 		{
@@ -114,6 +114,7 @@ void Player::Update()
 		return;
 	}
 
+	modelObjects["main"].Update();
 	if (!setStartParam)
 	{
 		if (typeid(*currentScene) != typeid(Title))
@@ -606,9 +607,10 @@ void Player::SetCameraPosition()
 	(MelLib::LibMath::FloatDistanceMoveVector3
 	(GetPosition(), MelLib::LibMath::OtherVector3(pCamera->GetCameraPosition(), pCamera->GetTargetPosition()), 30.0f));*/
 
-
-	pCamera->SetRotateCriteriaPosition(GetPosition() + MelLib::Vector3(0, 10, 0));
-
+	if (!lockOn)
+	{
+		pCamera->SetRotateCriteriaPosition(GetPosition() + MelLib::Vector3(0, 10, 0));
+	}
 }
 
 void Player::LockOn()
@@ -620,30 +622,70 @@ void Player::LockOn()
 	// 既存のゲームを参考にしたほうがいいかも
 	// プレイヤーと敵の方向ベクトルに応じてカメラ回転させれば、いい感じになるかも?
 
+	// スティックでロックオン対象を切り替えれるようにすること
+
+	// ロックオンの最高距離
+	static const float LOCK_ON_DISTANCE = 200.0f;
 
 	// ロックオン有効、無効
 	if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::R_STICK))
 	{
 		lockOn = !lockOn;
+		if(lockOn)
+		{
+			lockOnEnemyDistance = FLT_MAX;
+			// 近い敵を取得
+			for (const auto& enemy : ActionPart::GetEnemys())
+			{
+				float distance = MelLib::LibMath::CalcDistance3D(GetPosition(), enemy->GetPosition());
+				if (distance <= lockOnEnemyDistance)
+				{
+					lockOnEnemyDistance = distance;
+					lockOnEnemy = enemy.get();
+				}
+			}
+
+			// 敵いなかったら終了
+			if (lockOnEnemyDistance == FLT_MAX)return;
+
+			// 近くにいなかったら終了
+			if (lockOnEnemyDistance > LOCK_ON_DISTANCE)return;
+
+		}
 	}
 
 	if (!lockOn)return;
 
+	// カメラ操作
+	// カメラの動きを補完すること
 
-	//float minDistance = FLT_MAX;
-	// 近い敵を取得
-	//for (const auto& enemy : ActionPart::GetEnemys())
-	//{
-	//	float distance = MelLib::LibMath::CalcDistance3D(GetPosition(), enemy->GetPosition());
-	//	if (distance <= minDistance)
-	//	{
-	//		minDistance = distance;
-	//	}
-	//}
+	// まずは視点切り替えを優先して実装すること
+	
+	lockOnEnemyDistance = MelLib::LibMath::CalcDistance3D(GetPosition(), lockOnEnemy->GetPosition());
+
+	// 離れたら解除
+	if(lockOnEnemyDistance >= LOCK_ON_DISTANCE)
+	{
+		lockOn = false;
+		return;
+	}
+
+	// 注視点を敵の座標に
+	MelLib::Camera::Get()->SetRotateCriteriaPosition(lockOnEnemy->GetPosition());
+
+	// 注視点との距離を変える
+	MelLib::Camera::Get()->SetCameraToTargetDistance(lockOnEnemyDistance * 2.0f);
 
 
+	MelLib::Vector3 playerToEnemy = lockOnEnemy->GetPosition() - GetPosition();
+	float xzAngle = MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(playerToEnemy.x, playerToEnemy.z), true);
 
+	static const float CONST_ANGLE_X = 35;
+	/*float disAngle = lockOnEnemyDistance * 0.3f;
+	if (disAngle - CONST_ANGLE_X > 90 - CONST_ANGLE_X)disAngle = 90 - CONST_ANGLE_X;*/
+	MelLib::Camera::Get()->SetAngle(MelLib::Vector3(CONST_ANGLE_X , -xzAngle + 90,0));
 }
+
 
 void Player::Draw()
 {

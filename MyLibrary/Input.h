@@ -31,8 +31,8 @@ namespace MelLib
 		B = 0x2000,//PSÇÃÅõ SwitchÇÃA
 		X = 0x4000,//PSÇÃÅ† SwitchÇÃY
 		Y = 0x8000,//PSÇÃÅ¢ SwitchÇÃX
-		R_STICK = 0x0040,//PSÇÃR3
-		L_STICK = 0x0080,//PSÇÃL3
+		L_STICK = 0x0040,//PSÇÃL3
+		R_STICK = 0x0080,//PSÇÃR3
 		RB = 0x0200,//PSÇÃR1 SwitchÇÃR
 		LB = 0x0100,//PSÇÃL1 SwitchÇÃL
 	};

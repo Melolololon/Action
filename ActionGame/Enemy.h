@@ -3,6 +3,9 @@
 #include<RouteSearch.h>
 #include<FrameTimer.h>
 #include"Player.h"
+
+class Player;
+
 //“GƒNƒ‰ƒX
 class Enemy :
 	public MelLib::GameObject

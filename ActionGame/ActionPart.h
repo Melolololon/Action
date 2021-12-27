@@ -30,5 +30,5 @@ public:
 	void Finalize()override;//I—¹ˆ—
 	Scene* GetNextScene()override;//Ÿ‚ÌƒV[ƒ“
 
-	//static const std::vector<std::shared_ptr<Enemy>>& GetEnemys() { return pEnemys; }
+	static const std::vector<std::shared_ptr<Enemy>>& GetEnemys() { return pEnemys; }
 };
