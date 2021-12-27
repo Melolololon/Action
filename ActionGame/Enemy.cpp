@@ -182,3 +182,10 @@ void Enemy::CheckAttackEnd()
 		attackTimer.SetStopFlag(true);
 	}
 }
+
+void Enemy::RotModel()
+{
+	// ‰ñ“]
+	float angle = MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(direction.x, direction.z), false) - 270;
+	modelObjects["main"].SetAngle(MelLib::Vector3(0, angle, 0));
+}

@@ -5,9 +5,11 @@ class NoemalEnemy :
 {
 private:
 	static const int ATTACK_START_TIME = 60 * 0.7;
+
+
 public:
 
-	static void LoadResources();
+	static void LoadResource();
 
 	NoemalEnemy(const MelLib::Vector3& pos);
 	~NoemalEnemy() {}

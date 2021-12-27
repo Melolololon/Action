@@ -8,14 +8,16 @@
 #include"EnemyAttack.h"
 
 #include<GameObjectManager.h>
+#include<LibMath.h>
 
-void NoemalEnemy::LoadResources()
+
+void NoemalEnemy::LoadResource()
 {
 	MelLib::ModelData::Load("Resources/Model/Enemy/Mokuzin/Mokuzin.fbx", false, "NormalEnemy");
 }
 
 NoemalEnemy::NoemalEnemy(const MelLib::Vector3& pos) :
-	Enemy(pos, 3, 0.2f, "")
+	Enemy(pos, 3, 0.2f, "NormalEnemy")
 {
 	capsuleData.resize(1);
 	capsuleData[0].SetRadius(10.0f);
@@ -25,12 +27,17 @@ NoemalEnemy::NoemalEnemy(const MelLib::Vector3& pos) :
 
 	attackTimer.SetMaxTime(60 * 2);
 
+	modelObjects["main"].SetScale(3);
+
 }
 
 void NoemalEnemy::Update()
 {
 
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())return;
+	
+	// ‰ñ“]
+	RotModel();
 
 	// ‚±‚±‚ÉUŒ‚ğŒ‚ğ‹Lq
 	if (CheckPlayerDistance(3.0f))

@@ -12,6 +12,7 @@
 #include"EnemyAttack.h"
 #include"StageObject.h"
 
+#include"NoemalEnemy.h"
 
 #include"Ground.h"
 
@@ -25,6 +26,7 @@ std::vector<std::shared_ptr<Enemy>>ActionPart::pEnemys;
 void ActionPart::LoadResources()
 {
 	Ground::LoadResource();
+	NoemalEnemy::LoadResource();
 }
 
 void ActionPart::Initialize()

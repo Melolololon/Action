@@ -23,6 +23,8 @@ private:
 	// デバッグ用
 	MelLib::ModelObject routeObj[100];
 
+	MelLib::Vector3 direction;
+
 
 	bool isDead = false;
 
@@ -59,6 +61,9 @@ protected:
 
 	void AttackStart();
 	void CheckAttackEnd();
+
+	void RotModel();
+
 public:
 
 	Enemy(const MelLib::Vector3& pos, unsigned int hp, float moveSpeed, const std::string& modelName = "");
