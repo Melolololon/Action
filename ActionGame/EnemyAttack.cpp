@@ -5,27 +5,26 @@ Player* EnemyAttack::pPlayer;
 EnemyAttack::EnemyAttack
 (
 	unsigned int power,
-	const MelLib::Vector3& pos,
+	const MelLib::Vector3& attackStartPos,
 	float radius,
 	int deadTime,
 	const MelLib::ModelObject& model,
-	const MelLib::Vector3& startPos,
-	const MelLib::Vector3& startAngle,
-	const MelLib::Vector3& startScale
+	const MelLib::Vector3& modelStartPos,
+	const MelLib::Vector3& modelStartAngle,
+	const MelLib::Vector3& modelStartScale
 ) :
-	power(power)
+	SPHERE_START_POSITION(attackStartPos)
+	, power(power)
 	, MODEL(model)
-	, START_POS(startPos)
-	, START_ANGLE(startAngle)
-	, START_SCALE(startScale)
+	, MODEL_START_POS(modelStartPos)
+	, MODEL_START_ANGLE(modelStartAngle)
+	, MODEL_START_SCALE(modelStartScale)
 {
 	// アニメーションに合わせてsphereを動かす
 
 	sphereData.resize(1);
-	sphereData[0].SetPosition(pos);
 	sphereData[0].SetRadius(radius);
 
-	SetPosition(pos);
 
 	deadTimer.SetMaxTime(deadTime);
 	deadTimer.SetStopFlag(false);
@@ -33,17 +32,19 @@ EnemyAttack::EnemyAttack
 
 void EnemyAttack::Update()
 {
-	SetPosition(MODEL.CalcAnimationPosition
+	// 座標計算してセット
+	sphereData[0].SetPosition(MODEL.CalcAnimationPosition
 	(
-		GetPosition(),
+		SPHERE_START_POSITION,
 		1.0f,
-		"",
-		"",
-		START_POS,
-		START_ANGLE,
-		START_SCALE
-	)
-	);
+		"Bone_L.003",
+		"Body.001",
+		MODEL_START_POS,
+		MODEL_START_ANGLE,
+		MODEL_START_SCALE
+	));
+	//判定と位置をそのままセット
+ 	SetPosition(sphereData[0].GetPosition());
 
 	if (deadTimer.GetMaxOverFlag())
 	{

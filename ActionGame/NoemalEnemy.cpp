@@ -13,7 +13,7 @@
 
 void NoemalEnemy::LoadResource()
 {
-	MelLib::ModelData::Load("Resources/Model/Enemy/Mokuzin/Mokuzin.fbx", false, "NormalEnemy");
+	MelLib::ModelData::Load("Resources/Model/Enemy/Mokuzin/Mokuzin.fbx", true, "NormalEnemy");
 }
 
 NoemalEnemy::NoemalEnemy(const MelLib::Vector3& pos) :
@@ -29,6 +29,22 @@ NoemalEnemy::NoemalEnemy(const MelLib::Vector3& pos) :
 
 	modelObjects["main"].SetScale(3);
 
+
+
+	// ‰¼
+	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<EnemyAttack>
+		(
+			1,
+			MelLib::Vector3(20,30,10),
+			3.0f,
+			60 * 150,
+			modelObjects["main"],
+			MelLib::Vector3(0, 0, 0),
+			MelLib::Vector3(0, 28, 0),
+			3
+			)
+	);
+	modelObjects["main"].SetAngle(MelLib::Vector3(28, 0, 0));
 }
 
 void NoemalEnemy::Update()
@@ -36,19 +52,20 @@ void NoemalEnemy::Update()
 
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())return;
 	
-	// ‰ñ“]
-	RotModel();
 
 	// ‚±‚±‚ÉUŒ‚ğŒ‚ğ‹Lq
-	if (CheckPlayerDistance(3.0f))
+	if (CheckPlayerDistance(4.0f))
 	{
 		AttackStart();
 	}
 	else
 	{
-		CalcPlayerRoute();
-	}//AddPosition(routeVectors[0] * 0.2f);
+		//CalcPlayerRoute();
+	}
 	CheckAttackEnd();
+
+	// ‰ñ“]
+	//RotModel();
 
 	// ŠÔ‚É‚È‚Á‚½‚çUŒ‚
 	if (attackTimer.GetNowTime() == ATTACK_START_TIME)
@@ -62,14 +79,15 @@ void NoemalEnemy::Update()
 				60 * 0.3,
 				modelObjects["main"],
 				0,
-				0,
-				0
-				)
+				MelLib::Vector3(0, 28, 0), 
+				3
+			)
 		);
 
 	}
 
 	CheckMutekiEnd();
+
 }
 
 //void NoemalEnemy::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)

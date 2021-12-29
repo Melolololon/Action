@@ -16,9 +16,10 @@ private:
 
 	const MelLib::ModelObject& MODEL;
 
-	const MelLib::Vector3 START_POS;
-	const MelLib::Vector3 START_ANGLE;
-	const MelLib::Vector3 START_SCALE;
+	const MelLib::Vector3 SPHERE_START_POSITION;
+	const MelLib::Vector3 MODEL_START_POS;
+	const MelLib::Vector3 MODEL_START_ANGLE;
+	const MelLib::Vector3 MODEL_START_SCALE;
 
 	static Player* pPlayer;
 
@@ -39,13 +40,13 @@ public:
 	EnemyAttack
 	(
 		unsigned int power,
-		const MelLib::Vector3& pos,
+		const MelLib::Vector3& attackStartPos,
 		float radius,
 		int deadTime,
 		const MelLib::ModelObject& model,
-		const MelLib::Vector3& startPos,
-		const MelLib::Vector3& startAngle,
-		const MelLib::Vector3& startScale
+		const MelLib::Vector3& modelStartPos,
+		const MelLib::Vector3& modelStartAngle,
+		const MelLib::Vector3& modelStartScale
 	);
 	~EnemyAttack() {}
 

@@ -185,7 +185,16 @@ void Enemy::CheckAttackEnd()
 
 void Enemy::RotModel()
 {
+	//direction = (pPlayer->GetPosition() - GetPosition()).Normalize();
+
+	//// ‰ñ“]
+	//float angle = MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(direction.x, direction.z), false) - 270;
+	//modelObjects["main"].SetAngle(MelLib::Vector3(28, angle, 0));
+
+
+	direction = routeVectors[0].Normalize();
+	
 	// ‰ñ“]
 	float angle = MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(direction.x, direction.z), false) - 270;
-	modelObjects["main"].SetAngle(MelLib::Vector3(0, angle, 0));
+	modelObjects["main"].SetAngle(MelLib::Vector3(28, angle, 0));
 }

@@ -61,7 +61,7 @@ void Game::Initialize()
 	// ‹¤’Ê“Ç‚Ýž‚Ý
 	Player::LoadResources();
 
-	MelLib::SceneManager::GetInstance()->SetStartScene(new Title());
+	MelLib::SceneManager::GetInstance()->SetStartScene(new ActionPart());
 	Fade::GetInstance()->Initializ();
 
 	Option::GetInstance()->Initialize();

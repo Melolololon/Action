@@ -61,12 +61,12 @@ void ActionPart::Initialize()
 
 	//åoòHíTçıóp
 	std::vector<MelLib::BoxData>bData;
-	bData.resize(1);
+	/*bData.resize(1);
 	bData[0].SetPosition(MelLib::Vector3(0, 0, 10));
 	bData[0].SetSize(MelLib::Vector3(50, 20, 2));
 	obj.Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX), nullptr);
 	obj.SetPosition(bData[0].GetPosition());
-	obj.SetScale(bData[0].GetSize());
+	obj.SetScale(bData[0].GetSize());*/
 
 	std::vector<UINT>costs;
 
