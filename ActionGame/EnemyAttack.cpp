@@ -33,7 +33,7 @@ EnemyAttack::EnemyAttack
 void EnemyAttack::Update()
 {
 	// 座標計算してセット
-	sphereData[0].SetPosition(MODEL.CalcAnimationPosition
+ 	sphereData[0].SetPosition(MODEL.CalcAnimationPosition
 	(
 		SPHERE_START_POSITION,
 		1.0f,

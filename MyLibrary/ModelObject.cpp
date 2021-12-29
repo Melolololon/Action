@@ -2009,7 +2009,7 @@ Vector3 MelLib::ModelObject::CalcAnimationPosition
 	// 基準値を入れる場合、最後にそのままの値使ったワールド行列掛けちゃいけない
 	// 基準値との差分を入れないといけない
 	DirectX::XMMATRIX worldMat = DirectX::XMMatrixIdentity();
-	worldMat *= DirectX::XMMatrixScaling
+ 	worldMat *= DirectX::XMMatrixScaling
 	(
 		modelConstDatas.at(meshName).scale.x / startScale.x,
 		modelConstDatas.at(meshName).scale.y / startScale.y,

@@ -32,15 +32,15 @@ NoemalEnemy::NoemalEnemy(const MelLib::Vector3& pos) :
 
 
 	// ‰¼
-	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<EnemyAttack>
+ 	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<EnemyAttack>
 		(
 			1,
-			MelLib::Vector3(20,30,10),
+			MelLib::Vector3(30,30,-10),
 			3.0f,
 			60 * 150,
 			modelObjects["main"],
+			MelLib::Vector3(28, 0, 0),
 			MelLib::Vector3(0, 0, 0),
-			MelLib::Vector3(0, 28, 0),
 			3
 			)
 	);
@@ -79,7 +79,7 @@ void NoemalEnemy::Update()
 				60 * 0.3,
 				modelObjects["main"],
 				0,
-				MelLib::Vector3(0, 28, 0), 
+				MelLib::Vector3(28, 0, 0), 
 				3
 			)
 		);
