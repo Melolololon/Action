@@ -23,6 +23,7 @@ std::unordered_map<Player::ActionType, MelLib::PadButton> Player::keyConfigData 
 	{ActionType::JUMP, MelLib::PadButton::A},
 	{ActionType::ATTACK, MelLib::PadButton::X},
 	{ActionType::DASH, MelLib::PadButton::B},
+	{ActionType::GUARD, MelLib::PadButton::LB},
 
 };
 
@@ -33,7 +34,7 @@ std::unordered_map<PlayerSlush::AttackType, const Player::AttackData> Player::at
 	{PlayerSlush::AttackType::NONE,AttackData(0,0,0)},
 	{PlayerSlush::AttackType::NORMAL_1,AttackData(1,20,10)},
 	{PlayerSlush::AttackType::NORMAL_2,AttackData(1,30,20)},
-	{PlayerSlush::AttackType::NORMAL_3,AttackData(1,20,10)},
+	{PlayerSlush::AttackType::NORMAL_3,AttackData(1,30,20)},// これのアニメーションバグるのアニメーション終わる前にキャンセルされて立ちに戻るから?
 	{PlayerSlush::AttackType::DASH_1,AttackData(1,20,10)},
 };
 
@@ -150,8 +151,8 @@ void Player::Update()
 	prePos = GetPosition();
 	Move();
 	Jump();
+	Guard();
 	Attack();
-
 
 	CalcMovePhysics();
 
@@ -548,6 +549,18 @@ void Player::CreateAttackSlush()
 	if (pRigthSlush)MelLib::GameObjectManager::GetInstance()->AddObject(pRigthSlush);
 }
 
+void Player::Guard()
+{
+	if (MelLib::Input::PadButtonState(keyConfigData[ActionType::GUARD]))
+	{
+		isGuard = true;
+	}
+	else
+	{
+		isGuard = false;
+	}
+}
+
 void Player::Muteki()
 {
 	if (mutekiTimer.GetMaxOverFlag())
@@ -698,6 +711,37 @@ void Player::Draw()
 void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)
 {
 
+	// ここに、敵に当たった時に押し返す処理実装する
+	for (const auto& tag : object->GetTags()) 
+	{
+		if(tag == "Enemy")
+		{
+			/*MelLib::Vector3 addPosition(-GetVelocity().x, 0, -GetVelocity().z);
+			AddPosition(addPosition);*/
+			//SetPosition(MelLib::Vector3(prePos.x, prePos, prePos.z));
+			//AddPosition(MelLib::Vector3(prePos.x - GetPosition().x,0, prePos.z - GetPosition().z));
+
+			// 真上から移動せずに乗っかっても押し出すようにする
+			// 敵から自分へのベクトルを求め、その方向に押し出す。
+			// 真上の場合は、適当に押し出す
+			MelLib::Vector3 enemyToPlayer = GetPosition() - object->GetPosition();
+			enemyToPlayer = enemyToPlayer.Normalize();
+
+			if(GetIsFall())
+			{
+				AddPosition(MelLib::Vector3(enemyToPlayer.x, 0, enemyToPlayer.z) * 3.0f);
+				
+			}
+			else
+			{
+				AddPosition(MelLib::Vector3(prePos.x - GetPosition().x, 0, prePos.z - GetPosition().z));
+			}
+		}
+
+	}
+
+
+
 	if (typeid(*object) == typeid(Ground)
 		&& collisionType == MelLib::ShapeType3D::SEGMENT)
 	{
@@ -773,4 +817,13 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 		}
 	}
 
+}
+
+void Player::LifeUp(const unsigned int upNum)
+{
+	hp += upNum;
+	if (hp > HP_MAX)
+	{
+		hp = HP_MAX;
+	}
 }

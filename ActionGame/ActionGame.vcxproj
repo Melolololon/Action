@@ -93,6 +93,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)DirectXTex;$(SolutionDir)MyLibrary</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -109,6 +110,7 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)DirectXTex;$(SolutionDir)MyLibrary</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -160,12 +162,14 @@
     <ClCompile Include="Floor.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Ground.cpp" />
+    <ClCompile Include="GameItem.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NoemalEnemy.cpp" />
     <ClCompile Include="Option.cpp" />
     <ClCompile Include="Pause.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerSlush.cpp" />
+    <ClCompile Include="RecoveryItem.cpp" />
     <ClCompile Include="StageObject.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="Tutorial.cpp" />
@@ -180,11 +184,13 @@
     <ClInclude Include="Floor.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Ground.h" />
+    <ClInclude Include="GameItem.h" />
     <ClInclude Include="NoemalEnemy.h" />
     <ClInclude Include="Option.h" />
     <ClInclude Include="Pause.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerSlush.h" />
+    <ClInclude Include="RecoveryItem.h" />
     <ClInclude Include="StageObject.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="Tutorial.h" />

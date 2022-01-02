@@ -22,6 +22,7 @@ public:
 		JUMP,
 		ATTACK,
 		DASH,
+		GUARD,
 	};
 
 private:
@@ -100,11 +101,19 @@ private:
 	MelLib::Vector3 startAngle;
 #pragma endregion
 
+#pragma region 防御
+	bool isGuard = false;
+
+#pragma endregion
+
+
 #pragma region 無敵
 
 	bool isMuteki = false;
 	MelLib::FrameTimer mutekiTimer;
 #pragma endregion
+
+	
 
 	// 低いところは、着地アニメーションをジャンプの逆再生にし、硬直はなし
 	// 地面に着地した時の動けない時間
@@ -189,7 +198,7 @@ public:
 	)override;
 
 	void DownHP(const unsigned int power) { hp -= power; }
-
+	void LifeUp(const unsigned int upNum);
 #pragma region Get
 	unsigned int GetCurrentAttackPower()const { return attackData[currentAttack].power; }
 

@@ -32,19 +32,19 @@ NoemalEnemy::NoemalEnemy(const MelLib::Vector3& pos) :
 
 
 	// ‰¼
- 	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<EnemyAttack>
+	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<EnemyAttack>
 		(
 			1,
-			MelLib::Vector3(30,30,-10),
+			MelLib::Vector3(40.5f, 29, -4), 
 			3.0f,
 			60 * 150,
 			modelObjects["main"],
-			MelLib::Vector3(28, 0, 0),
+			MelLib::Vector3(0, 0, 0),
 			MelLib::Vector3(0, 0, 0),
 			3
 			)
 	);
-	modelObjects["main"].SetAngle(MelLib::Vector3(28, 0, 0));
+	modelObjects["main"].SetAngle(MelLib::Vector3(0, 0, 0));
 }
 
 void NoemalEnemy::Update()
@@ -52,6 +52,7 @@ void NoemalEnemy::Update()
 
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())return;
 	
+	modelObjects["main"].Update();
 
 	// ‚±‚±‚ÉUŒ‚ğŒ‚ğ‹Lq
 	if (CheckPlayerDistance(4.0f))
@@ -79,7 +80,7 @@ void NoemalEnemy::Update()
 				60 * 0.3,
 				modelObjects["main"],
 				0,
-				MelLib::Vector3(28, 0, 0), 
+				MelLib::Vector3(0, 0, 0), 
 				3
 			)
 		);
@@ -88,6 +89,7 @@ void NoemalEnemy::Update()
 
 	CheckMutekiEnd();
 
+	modelObjects["main"].SetAnimation("No_Cont");
 }
 
 //void NoemalEnemy::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)

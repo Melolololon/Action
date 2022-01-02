@@ -42,6 +42,11 @@ Enemy::Enemy(const MelLib::Vector3& pos, const unsigned int hp, const float move
 	mutekiTimer.SetMaxTime(60 * 0.2);
 
 	tags.push_back(typeid(Enemy).name());
+
+
+	attackTimer.SetStopFlag(false);
+
+	tags.push_back("Enemy");
 }
 
 void Enemy::Update()
@@ -167,7 +172,6 @@ void Enemy::CheckMutekiEnd()
 void Enemy::AttackStart()
 {
 	isAttack = true;
-	attackTimer.SetStopFlag(false);
 
 	// 攻撃アニメーションセット
 	modelObjects["main"].SetAnimation("Attack_Normal_1");
@@ -175,11 +179,14 @@ void Enemy::AttackStart()
 
 void Enemy::CheckAttackEnd()
 {
-	if (attackTimer.GetMaxOverFlag())
+	//if (attackTimer.GetMaxOverFlag())
+
+	// 攻撃中にアニメーションが終わったら攻撃終了
+	if (isAttack && modelObjects["main"].GetAnimationEndFlag())
 	{
 		isAttack = false;
 		attackTimer.ResetTimeZero();
-		attackTimer.SetStopFlag(true);
+		//attackTimer.SetStopFlag(true);
 	}
 }
 
