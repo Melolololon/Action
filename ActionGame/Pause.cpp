@@ -2,15 +2,17 @@
 
 #include<Input.h>
 
+#include"Game.h"
+
 void Pause::ActionPartPauseUpdate()
 {
-	// 横目選択をここに移す
+	// 項目選択をここに移す
 
 }
 
 void Pause::ActionPartPauseDraw()
 {
-	pauseBackSpr.Draw();
+	//pauseBackSpr.Draw();
 
 	switch (pushPauseSelect)
 	{
@@ -38,6 +40,29 @@ void Pause::CreateSprite()
 	pauseBackSpr.Create(MelLib::Color(0, 0, 0, 255));
 	pauseBackSpr.SetScale(MelLib::Vector2(1280, 720));
 
+
+	std::string texturePath = Game::GetInstance()->GetPath(Game::ResourcePathType::TEXTURE);
+
+	MelLib::Texture::Load(texturePath + "UIText/Stop.png","pauseStr");
+	pauseStringSpr.Create(MelLib::Texture::Get("pauseStr"));
+	pauseStringSpr.SetPosition(MelLib::Vector2(400,170));
+
+	MelLib::Texture::Load(texturePath + "UIText/PauseEnd.png", "pauseEnd");
+	menuStringSprites[PauseMenu::PAUSE_END].Create(MelLib::Texture::Get("pauseEnd"));
+
+	MelLib::Texture::Load(texturePath + "UIText/ReStart.png", "reStart");
+	menuStringSprites[PauseMenu::RESTART].Create(MelLib::Texture::Get("reStart"));
+
+	MelLib::Texture::Load(texturePath + "UIText/Option.png", "option");
+	menuStringSprites[PauseMenu::OPTION].Create(MelLib::Texture::Get("option"));
+
+	MelLib::Texture::Load(texturePath + "UIText/CheckOperation.png", "checkOperation");
+	menuStringSprites[PauseMenu::CHECK_OPERATION].Create(MelLib::Texture::Get("checkOperation"));
+
+	MelLib::Texture::Load(texturePath + "UIText/ReturnTitle.png", "returnTitle");
+	menuStringSprites[PauseMenu::RETURN_TITLE].Create(MelLib::Texture::Get("returnTitle"));
+
+	
 }
 
 Pause* Pause::GetInstance()
@@ -57,6 +82,18 @@ void Pause::Initialize()
 	pauseBackSubAlpha.SetEnd(100.0f);
 	pauseBackSubAlpha.SetPar(100.0f);
 
+	static const MelLib::Vector2 TOP_MENU_POSITION = MelLib::Vector2(300,300);
+	static const MelLib::Vector2 MOVE_POSITION = MelLib::Vector2(0, 60);
+	int loopCount = 0;
+	// 位置をずらしながらセット
+	for(auto& sprite : menuStringSprites)
+	{
+		sprite.second.SetPosition(TOP_MENU_POSITION + MOVE_POSITION * loopCount);
+		loopCount++;
+	}
+
+	// 最初の項目の大きさをセット
+	//menuStringSprites[0].SetScale(SELECT_SCALE);
 }
 
 void Pause::Update()
@@ -67,8 +104,8 @@ void Pause::Update()
 		pushPauseSelect = -1;
 	}
 	// ポーズ終了
-	else if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::B)
-		|| MelLib::Input::PadButtonTrigger(MelLib::PadButton::START))
+	else if (isPause &&(MelLib::Input::PadButtonTrigger(MelLib::PadButton::B)
+		|| MelLib::Input::PadButtonTrigger(MelLib::PadButton::START)))
 	{
 		pauseEnd = true;
 	}
@@ -119,20 +156,28 @@ void Pause::Update()
 
 	// 項目変更
 	if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::UP)
-		|| MelLib::Input::LeftStickUpTrigger(30.0f, 30.0f))
+		|| MelLib::Input::LeftStickUpTrigger(80.0f))
 	{
+		menuStringSprites[currentPauseSelect].SetScale(UN_SELECTED_SCALE);
+
 		currentPauseSelect--;
 		if (currentPauseSelect < 0)currentPauseSelect = PauseMenu::NUM_MAX;
+
+		menuStringSprites[currentPauseSelect].SetScale(SELECT_SCALE);
 	}
 	else if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::DOWN)
-		|| MelLib::Input::LeftStickDownTrigger(30.0f, 30.0f))
+		|| MelLib::Input::LeftStickDownTrigger(80.0f))
 	{
-		currentPauseSelect--;
+		menuStringSprites[currentPauseSelect].SetScale(UN_SELECTED_SCALE);
+
+		currentPauseSelect++;
 		if (currentPauseSelect > PauseMenu::NUM_MAX)currentPauseSelect = 0;
+
+		menuStringSprites[currentPauseSelect].SetScale(SELECT_SCALE);
 	}
 
 
-	// 選択
+	// 決定
 	if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::A))pushPauseSelect = currentPauseSelect;
 
 	// 選択したものに応じて処理を行う
@@ -154,12 +199,19 @@ void Pause::Update()
 	}
 
 
+
 }
 
 void Pause::Draw()
 {
-	if (isPause) 
+	if (!isPause) return;
+	
+	pauseBackSpr.Draw();
+	pauseStringSpr.Draw();
+
+	for (auto& sprite : menuStringSprites)
 	{
-		pauseBackSpr.Draw();
+		sprite.second.Draw();
 	}
+
 }

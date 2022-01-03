@@ -710,17 +710,11 @@ void Player::Draw()
 
 void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)
 {
-
-	// ここに、敵に当たった時に押し返す処理実装する
+	// 敵と当たった時の処理
 	for (const auto& tag : object->GetTags()) 
 	{
 		if(tag == "Enemy")
 		{
-			/*MelLib::Vector3 addPosition(-GetVelocity().x, 0, -GetVelocity().z);
-			AddPosition(addPosition);*/
-			//SetPosition(MelLib::Vector3(prePos.x, prePos, prePos.z));
-			//AddPosition(MelLib::Vector3(prePos.x - GetPosition().x,0, prePos.z - GetPosition().z));
-
 			// 真上から移動せずに乗っかっても押し出すようにする
 			// 敵から自分へのベクトルを求め、その方向に押し出す。
 			// 真上の場合は、適当に押し出す

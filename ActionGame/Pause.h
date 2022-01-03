@@ -22,9 +22,18 @@ private:
 		static const int PAUSE_END = 0;
 		static const int RESTART = 1;
 		static const int OPTION = 2;
-		static const int RETURN_TITLE = 3;
-		static const int NUM_MAX = 3;
+		static const int CHECK_OPERATION = 3;
+		static const int RETURN_TITLE = 4;
+		static const int NUM_MAX = 4;
 	};
+	// ポーズメニューのスプライトの大きさ
+	std::unordered_map<int, MelLib::Sprite2D>menuStringSprites;
+
+	// 非選択時の項目の大きさ
+	const MelLib::Vector2 UN_SELECTED_SCALE = MelLib::Vector2(1, 1);
+	// 選択した項目の大きさ
+	const MelLib::Vector2 SELECT_SCALE = UN_SELECTED_SCALE * 1.2f;
+
 
 	// ポーズ関係のスプライトのアルファ値
 	MelLib::Easing<float>pauseSubAlpha;
@@ -33,6 +42,8 @@ private:
 	// これObject2Dにしてもいいかも
 	// ポーズ中の背景
 	MelLib::Sprite2D pauseBackSpr;
+	MelLib::Sprite2D pauseStringSpr;
+
 
 private:
 	Pause(){}

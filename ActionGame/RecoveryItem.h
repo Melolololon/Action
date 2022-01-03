@@ -2,7 +2,7 @@
 #include "GameItem.h"
 
 class RecoveryItem :
-    public Game::GameItem
+    public GameItem
 {
 private:
     static const unsigned int RECOVERY_HP = 20;
