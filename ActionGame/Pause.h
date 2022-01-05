@@ -29,10 +29,10 @@ private:
 	// ポーズメニューのスプライトの大きさ
 	std::unordered_map<int, MelLib::Sprite2D>menuStringSprites;
 
-	// 非選択時の項目の大きさ
-	const MelLib::Vector2 UN_SELECTED_SCALE = MelLib::Vector2(1, 1);
 	// 選択した項目の大きさ
-	const MelLib::Vector2 SELECT_SCALE = UN_SELECTED_SCALE * 1.2f;
+	const MelLib::Vector2 SELECT_SCALE = 1;
+	// 非選択時の項目の大きさ
+	const MelLib::Vector2 UN_SELECTED_SCALE = SELECT_SCALE - 0.3f;
 
 
 	// ポーズ関係のスプライトのアルファ値
@@ -44,7 +44,7 @@ private:
 	MelLib::Sprite2D pauseBackSpr;
 	MelLib::Sprite2D pauseStringSpr;
 
-
+	bool isEnd = false;
 private:
 	Pause(){}
 	~Pause(){}
@@ -63,5 +63,6 @@ public:
 	void Draw();
 
 	bool GetIsPause() { return isPause; }
+	bool GetIsEnd() { return isEnd; }
 };
 

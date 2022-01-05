@@ -347,9 +347,9 @@ namespace MelLib
 		/// <returns></returns>
 		static bool LeftStickLeftTrigger(float lXPar, UCHAR padNum = 1);
 
-		static bool LeftStickRightTrigger(float lXPar,  UCHAR padNum = 1);
+		static bool LeftStickRightTrigger(float lXPar, UCHAR padNum = 1);
 
-		static bool LeftStickUpTrigger(float lXPar,  UCHAR padNum = 1);
+		static bool LeftStickUpTrigger(float lXPar, UCHAR padNum = 1);
 
 		static bool LeftStickDownTrigger(float lXPar, UCHAR padNum = 1);
 
@@ -389,9 +389,9 @@ namespace MelLib
 
 		static bool RightStickRightTrigger(float lXPar, UCHAR padNum = 1);
 
-		static bool RightStickUpTrigger(float lYPar,UCHAR padNum = 1);
+		static bool RightStickUpTrigger(float lYPar, UCHAR padNum = 1);
 
-		static bool RightStickDownTrigger(float lYPar,  UCHAR padNum = 1);
+		static bool RightStickDownTrigger(float lYPar, UCHAR padNum = 1);
 #pragma endregion
 
 

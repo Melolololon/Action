@@ -93,7 +93,7 @@ void FbxLoader::ParseNodeRecursive
 	FbxDouble3 scaling = fbxNode->LclScaling.Get();
 	FbxDouble3 translation = fbxNode->LclTranslation.Get();
 
- 	node.rotation =
+	node.rotation =
 	{
 		(float)rotation[0],
 		(float)rotation[1],

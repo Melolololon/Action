@@ -45,7 +45,6 @@ void Pause::CreateSprite()
 
 	MelLib::Texture::Load(texturePath + "UIText/Stop.png","pauseStr");
 	pauseStringSpr.Create(MelLib::Texture::Get("pauseStr"));
-	pauseStringSpr.SetPosition(MelLib::Vector2(400,170));
 
 	MelLib::Texture::Load(texturePath + "UIText/PauseEnd.png", "pauseEnd");
 	menuStringSprites[PauseMenu::PAUSE_END].Create(MelLib::Texture::Get("pauseEnd"));
@@ -73,6 +72,7 @@ Pause* Pause::GetInstance()
 
 void Pause::Initialize()
 {
+	isEnd = false;
 	CreateSprite();
 
 	pauseSubAlpha.SetStart(0.0f);
@@ -82,18 +82,28 @@ void Pause::Initialize()
 	pauseBackSubAlpha.SetEnd(100.0f);
 	pauseBackSubAlpha.SetPar(100.0f);
 
-	static const MelLib::Vector2 TOP_MENU_POSITION = MelLib::Vector2(300,300);
-	static const MelLib::Vector2 MOVE_POSITION = MelLib::Vector2(0, 60);
+
+	pauseStringSpr.SetPosition(MelLib::Vector2(400, 100));
+	
+	// メニューの初期化
+	static const MelLib::Vector2 TOP_MENU_POSITION = MelLib::Vector2(400,300);
+	static const MelLib::Vector2 MOVE_POSITION = MelLib::Vector2(0, 80);
 	int loopCount = 0;
-	// 位置をずらしながらセット
 	for(auto& sprite : menuStringSprites)
 	{
+		// 拡縮基準を設定
+		sprite.second.SetScalingPoint(sprite.second.GetTexture()->GetTextureSize() / 2);
+		
+		// 項目の文字の大きさをセット
+		if(sprite.first == 0)sprite.second.SetScale(SELECT_SCALE);
+		else sprite.second.SetScale(UN_SELECTED_SCALE);
+
+		// 位置をずらしながらセット
 		sprite.second.SetPosition(TOP_MENU_POSITION + MOVE_POSITION * loopCount);
 		loopCount++;
 	}
 
-	// 最初の項目の大きさをセット
-	//menuStringSprites[0].SetScale(SELECT_SCALE);
+	
 }
 
 void Pause::Update()
@@ -150,9 +160,14 @@ void Pause::Update()
 
 	}
 
-	//こいつだけ50.0fで止める
-	//pauseBackSpr.SetSubColor(MelLib::Color(0,0,0, pauseBackSubAlpha2.GetValue()));
+	// アルファのセット
 	pauseBackSpr.SetSubColor(MelLib::Color(0, 0, 0, MelLib::Color::ParToUChar(pauseBackSubAlpha.GetValue())));
+	pauseStringSpr.SetSubColor(MelLib::Color(0, 0, 0, MelLib::Color::ParToUChar(pauseSubAlpha.GetValue())));
+	for (auto& sprite : menuStringSprites)
+	{
+		sprite.second.SetSubColor(MelLib::Color(0, 0, 0, MelLib::Color::ParToUChar(pauseSubAlpha.GetValue())));
+	}
+
 
 	// 項目変更
 	if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::UP)
@@ -195,6 +210,7 @@ void Pause::Update()
 		break;
 
 	case PauseMenu::RETURN_TITLE:
+		isEnd = true;
 		break;
 	}
 

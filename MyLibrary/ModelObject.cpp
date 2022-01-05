@@ -217,9 +217,8 @@ void ModelObject::MapConstData(const Camera* camera)
 			modelConstDatas[objectName].position.z
 		);
 
-
-		constBufferData->mat = matWorld * camera->GetViewAndProjectionMat();
 		constBufferData->worldMat = matWorld;
+		constBufferData->mat = camera->GetViewAndProjectionMat();
 
 #pragma endregion
 
@@ -487,8 +486,8 @@ void ModelObject::SetCmdList()
 {
 
 	cmdLists[0]->SetGraphicsRootSignature(rootSignature.Get());
-	//cmdLists[0]->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
-	cmdLists[0]->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	cmdLists[0]->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+	//cmdLists[0]->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 
 
@@ -2009,7 +2008,7 @@ Vector3 MelLib::ModelObject::CalcAnimationPosition
 	// 基準値を入れる場合、最後にそのままの値使ったワールド行列掛けちゃいけない
 	// 基準値との差分を入れないといけない
 	DirectX::XMMATRIX worldMat = DirectX::XMMatrixIdentity();
- 	worldMat *= DirectX::XMMatrixScaling
+	worldMat *= DirectX::XMMatrixScaling
 	(
 		modelConstDatas.at(meshName).scale.x / startScale.x,
 		modelConstDatas.at(meshName).scale.y / startScale.y,

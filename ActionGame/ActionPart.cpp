@@ -21,6 +21,8 @@
 #include"Pause.h"
 #include"EditMode.h"
 
+#include"Title.h"
+
 std::vector<std::shared_ptr<Enemy>>ActionPart::pEnemys;
 
 void ActionPart::LoadResources()
@@ -116,21 +118,23 @@ void ActionPart::Update()
 		Fade::GetInstance()->Start();
 	}
 
-	// && の左にシーン切り替え条件を記述
-	//if ( && !Fade::GetInstance()->GetIsFade())
-	//{
-	//	Fade::GetInstance()->Start();
-	//}
+
+	// フェードしてなかったら終了確認
+	if (!Fade::GetInstance()->GetIsFade())
+	{
+		// ポーズから終了したら入る
+		if (Pause::GetInstance()->GetIsEnd())
+		{
+			Fade::GetInstance()->Start();
+		}
+	}
 
 	Fade::GetInstance()->Update();
 
-	// フェードが終了したら切り替え
+	// フェードが終了したら終了
 	if (Fade::GetInstance()->GetChangeSceneFlag())
 	{
 		isEnd = true;
-
-		
-		MelLib::GameObjectManager::GetInstance()->AllEraseObject();
 	}
 }
 
@@ -154,10 +158,10 @@ void ActionPart::Draw()
 void ActionPart::Finalize()
 {
 	// 全消しして問題ない場合は、コメントアウト解除
-	//MelLib::GameObjectManager::GetInstance()->AllEraseObject();
+	MelLib::GameObjectManager::GetInstance()->AllEraseObject();
 }
 
 MelLib::Scene* ActionPart::GetNextScene()
 {
-	return new ActionPart();
+	return new Title();
 }
