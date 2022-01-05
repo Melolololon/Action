@@ -1,5 +1,6 @@
 #pragma once
 #include <Scene.h>
+#include<Sprite2D.h>
 #include"Player.h"
 
 // タイトルとかのスプライト(シーン共通じゃないスプライト)は、GameObject2Dで作ること
@@ -12,6 +13,7 @@ private:
 
 	bool pushGameStart = false;
 
+	std::shared_ptr<MelLib::Sprite2D> titleSprite;
 private:
 	void LoadResources();
 

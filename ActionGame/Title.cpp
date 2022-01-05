@@ -7,12 +7,17 @@
 
 #include"Fade.h"
 
+#include"Game.h"
+
 // Next Scene
 #include"ActionPart.h"
 
 
 void Title::LoadResources()
 {
+	const std::string TEXTURE_PATH = Game::GetInstance()->GetPath(Game::ResourcePathType::TEXTURE);
+	
+	MelLib::Texture::Load(TEXTURE_PATH + "Title/Title.png","title");
 }
 
 void Title::Initialize()
@@ -22,12 +27,17 @@ void Title::Initialize()
 	pPlayer = std::make_shared<Player>(MelLib::Vector3(0, 0, 0));
 	MelLib::GameObjectManager::GetInstance()->AddObject(pPlayer);
 
+	titleSprite = std::make_shared<MelLib::Sprite2D>();
+	titleSprite->Create(MelLib::Texture::Get("title"));
+	titleSprite->SetPosition(MelLib::Vector2(270,30));
 
 	MelLib::Camera* pCamera = MelLib::Camera::Get();
 	pCamera->SetAngle(MelLib::Vector3(20,-5,0));
 	pCamera->SetRotatePoint(MelLib::Camera::RotatePoint::ROTATE_POINT_TARGET_POSITION);
 	pCamera->SetCameraToTargetDistance(90.0f);
 	pCamera->SetRotateCriteriaPosition(MelLib::Vector3(23,16,40));
+
+
 }
 
 void Title::Update()
@@ -70,6 +80,8 @@ void Title::Update()
 void Title::Draw()
 {
 	MelLib::GameObjectManager::GetInstance()->Draw();
+	titleSprite->Draw();
+
 	Fade::GetInstance()->Draw();
 
 	MelLib::TextWrite::Draw

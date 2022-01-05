@@ -1,6 +1,8 @@
 #include "PlayerSlush.h"
 #include<LibMath.h>
+#include<GameObjectManager.h>
 
+#include"SlushEffect.h"
 
 const MelLib::Value2<MelLib::Vector3> PlayerSlush::CAPSULE_START_POS_LEFT = { MelLib::Vector3(14,30,3),MelLib::Vector3(12,30,14) };
 const MelLib::Value2<MelLib::Vector3> PlayerSlush::CAPSULE_START_POS_RIGTH = { MelLib::Vector3(-14,30,3),MelLib::Vector3(-12,30,14) };
@@ -189,7 +191,12 @@ void PlayerSlush::Update()
 	if (eraseTimer.GetSameAsMaxFlag())eraseManager = true;
 	Attack();
 
+	MelLib::Value2<MelLib::Vector3>segmentVector = capsuleData[0].GetSegment3DData().GetPosition();
+	MelLib::Vector3 slushVector =
+		segmentVector.v2 - segmentVector.v1;
 	
+	MelLib::GameObjectManager::GetInstance()->AddObject
+	(std::make_shared<SlushEffect>(segmentVector.v1 + slushVector / 2, slushVector, eraseTimer.GetNowTime()));
 }
 
 void PlayerSlush::Draw()
