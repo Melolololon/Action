@@ -43,7 +43,7 @@ SlushEffect::SlushEffect(const MelLib::Vector3& pos, const MelLib::Vector3& slus
 	for (int i = 0; i < _countof(sprite); i++)
 	{
 		// ˆÚ“®—Ê‚ð‰ñ“]‚³‚¹‚é
-		movePosition[i] = MelLib::LibMath::RotateVector3(movePosition[i], MelLib::Vector3(0, 1, 0), angle.y);
+		movePosition[i] = MelLib::LibMath::RotateVector3(movePosition[i], MelLib::Vector3(0, 1, 0), -angle.y);
 
 		sprite[i].Create(MelLib::Texture::Get("slushEffect"));
 		sprite[i].SetPosition(pos + movePosition[i]);
