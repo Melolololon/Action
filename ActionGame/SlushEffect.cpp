@@ -9,7 +9,7 @@ void SlushEffect::LoadResources()
 	MelLib::Texture::Load(TEXTURE_PATH + "Player/SlushEffect.png", "slushEffect");
 }
 
-SlushEffect::SlushEffect(const MelLib::Vector3& pos, const MelLib::Vector3& slushVector,const unsigned int frame, const MelLib::Vector3& direction)
+SlushEffect::SlushEffect(const MelLib::Vector3& pos, const MelLib::Vector3& slushVector, const MelLib::Vector3& moveDirection,const unsigned int frame, const MelLib::Vector3& direction)
 {
 	SetPosition(pos);
 
@@ -39,6 +39,9 @@ SlushEffect::SlushEffect(const MelLib::Vector3& pos, const MelLib::Vector3& slus
 	angle.z += MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(slushVector.x, slushVector.y), true) - 90;
 	angle.x += MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(slushVector.z, slushVector.y), true) - 90;
 
+	// X方向に振る場合、回転
+	angle.y += MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(moveDirection.x, moveDirection.y), true);
+
 
 	for (int i = 0; i < _countof(sprite); i++)
 	{
@@ -67,6 +70,7 @@ SlushEffect::SlushEffect(const MelLib::Vector3& pos, const MelLib::Vector3& slus
 
 	// スプライト2つを剣にかぶせるように八の字に並べたらトーラスかぶせた時と同じようになるのでは?
 
+	// 剣の進行方向と剣の向きどっちも必要
 }
 
 void SlushEffect::Update()

@@ -113,7 +113,7 @@ void Player::Update()
 	{
 		MelLib::GameObjectManager::GetInstance()->AddObject
 		(
-			std::make_shared<SlushEffect>(MelLib::Vector3(0, 10, 0), MelLib::Vector3(0, 1, 0), 10, direction)
+			std::make_shared<SlushEffect>(MelLib::Vector3(0, 10, 0), MelLib::Vector3(0, 0, 0), MelLib::Vector3(0, 1, 0), 10, direction)
 		);
 	}
 

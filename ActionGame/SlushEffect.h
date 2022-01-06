@@ -15,7 +15,7 @@ private:
 public:
 	static void LoadResources();
 
-	SlushEffect(const MelLib::Vector3& pos,const MelLib::Vector3& slushVector,unsigned int frame,const MelLib::Vector3& direction);
+	SlushEffect(const MelLib::Vector3& pos, const MelLib::Vector3& slushVector,const MelLib::Vector3& moveDirection,unsigned int frame,const MelLib::Vector3& direction);
 
 	void Update()override;
 	void Draw()override;
