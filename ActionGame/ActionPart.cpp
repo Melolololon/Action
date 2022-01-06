@@ -23,6 +23,9 @@
 
 #include"Title.h"
 
+// テスト用
+#include"SlushEffect.h"
+
 std::vector<std::shared_ptr<Enemy>>ActionPart::pEnemys;
 
 void ActionPart::LoadResources()
@@ -97,6 +100,16 @@ void ActionPart::Initialize()
 
 void ActionPart::Update()
 {
+	//　テスト
+	if(MelLib::Input::KeyTrigger(DIK_SPACE))
+	{
+		MelLib::GameObjectManager::GetInstance()->AddObject
+		(
+			std::make_shared<SlushEffect>(MelLib::Vector3(0,5,0),MelLib::Vector3(0,1,0),10,MelLib::Vector3(0,0,1))
+		);
+	}
+
+
 	// このシーンにて開始時に急激なメモリ確保あり
 	// 17フレーム目で確保されてるから、16で確保されてる可能性あり
 	// DrectWriteのせいでした。仕様。

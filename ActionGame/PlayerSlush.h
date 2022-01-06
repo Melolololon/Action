@@ -35,6 +35,7 @@ private:
 	MelLib::Value2<MelLib::Vector3>preSegmentPosition;
 
 	const MelLib::ModelObject& PLAYER_MODEL;
+	const MelLib::Vector3 PLAYER_DIRECTION;
 
 	const MelLib::Vector3 PLAYER_START_POS;
 	const MelLib::Vector3 PLAYER_START_ANGLE;

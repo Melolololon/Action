@@ -156,6 +156,7 @@ PlayerSlush::PlayerSlush
 )
 	:attackType(type)
 	,PLAYER_MODEL(model)
+	, PLAYER_DIRECTION(playerDir)
 	, PLAYER_START_POS(MelLib::Vector3(0,0,0))
 	, PLAYER_START_ANGLE(0)
 	, PLAYER_START_SCALE(3)
@@ -195,8 +196,8 @@ void PlayerSlush::Update()
 	MelLib::Vector3 slushVector =
 		segmentVector.v2 - segmentVector.v1;
 	
-	MelLib::GameObjectManager::GetInstance()->AddObject
-	(std::make_shared<SlushEffect>(segmentVector.v1 + slushVector / 2, slushVector, eraseTimer.GetNowTime()));
+	/*MelLib::GameObjectManager::GetInstance()->AddObject
+	(std::make_shared<SlushEffect>(segmentVector.v1 + slushVector / 2, slushVector, eraseTimer.GetNowTime()));*/
 }
 
 void PlayerSlush::Draw()
