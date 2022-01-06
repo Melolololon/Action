@@ -9,7 +9,7 @@
 class SlushEffect :public MelLib::GameObject
 {
 private:
-	MelLib::Sprite3D sprite;
+	MelLib::Sprite3D sprite[2];
 	float subAlpha = 0.0f;
 
 public:

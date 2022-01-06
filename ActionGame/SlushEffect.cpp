@@ -13,35 +13,49 @@ SlushEffect::SlushEffect(const MelLib::Vector3& pos, const MelLib::Vector3& slus
 {
 	SetPosition(pos);
 
-	sprite.Create(MelLib::Texture::Get("slushEffect"));
-	sprite.SetPosition(pos);
-	
 	// frameに応じて範囲を調整
 	static const unsigned int X_AREA = 5;
 	unsigned int areaStart = 0;
 	if (frame >= 10)areaStart = X_AREA * 10;
 	else areaStart = X_AREA * frame;
 
-	sprite.SetDrawLeftUpPosition(MelLib::Vector2(areaStart, 0));
-	sprite.SetDrawRigthDownPosition(MelLib::Vector2(areaStart + X_AREA, sprite.GetTexture()->GetTextureSize().y));
-
+	
 	// 刀のベクトルを元に角度を設定
 	// プレイヤーの向きも反映させる
 
+	static const MelLib::Vector3 START_ANGLE[2] = { MelLib::Vector3(7,0,0),MelLib::Vector3(-7,0,0) };
+	
+	// 移動量 プレイヤーの向きに応じて回転させる
+	MelLib::Vector3 movePosition[2] = { MelLib::Vector3(0,0,-2),MelLib::Vector3(0,0,2) };
+
+
 	// まずはプレイヤーの向きに応じて回転
 	MelLib::Vector3 angle;
-	angle.y = MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(direction.x, direction.z), true);
+	angle.y = -MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(direction.x, direction.z), true);
 
 	// 剣のベクトルをXYZごとに適応
 	// X方向に向くほどZ軸を、
 	// Z方向に向くほどX軸の回転角度を加算
 	angle.z += MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(slushVector.x, slushVector.y), true) - 90;
-	angle.x += MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(slushVector.z, slushVector.y), true) -90;
+	angle.x += MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(slushVector.z, slushVector.y), true) - 90;
 
-	sprite.SetAngle(angle);
 
-	sprite.SetScale(MelLib::Vector2(10,50));
+	for (int i = 0; i < _countof(sprite); i++)
+	{
+		// 移動量を回転させる
+		movePosition[i] = MelLib::LibMath::RotateVector3(movePosition[i], MelLib::Vector3(0, 1, 0), angle.y);
 
+		sprite[i].Create(MelLib::Texture::Get("slushEffect"));
+		sprite[i].SetPosition(pos + movePosition[i]);
+	
+		sprite[i].SetDrawLeftUpPosition(MelLib::Vector2(areaStart, 0));
+		sprite[i].SetDrawRigthDownPosition(MelLib::Vector2(areaStart + X_AREA, sprite[i].GetTexture()->GetTextureSize().y));
+
+		sprite[i].SetAngle(angle + START_ANGLE[i]);
+		
+		sprite[i].SetScale(MelLib::Vector2(10,30));
+
+	}
 
 	// スプライトだと、Z方向を向いたときに見えない
 	// あと剣の進行方向も考慮して回転させないといけない
@@ -60,10 +74,16 @@ void SlushEffect::Update()
 	subAlpha += 10.0f;
 	if (subAlpha >= 100.0f)eraseManager = true;
 
-	sprite.SetSubColor(MelLib::Color(0, 0, 0, subAlpha));
+	for (int i = 0; i < _countof(sprite); i++) 
+	{
+		sprite[i].SetSubColor(MelLib::Color(0, 0, 0, subAlpha));
+	}
 }
 
 void SlushEffect::Draw()
 {
-	sprite.Draw();
+	for (int i = 0; i < _countof(sprite); i++)
+	{
+		sprite[i].Draw();
+	}
 }

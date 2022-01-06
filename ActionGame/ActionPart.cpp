@@ -100,14 +100,7 @@ void ActionPart::Initialize()
 
 void ActionPart::Update()
 {
-	//　テスト
-	if(MelLib::Input::KeyTrigger(DIK_SPACE))
-	{
-		MelLib::GameObjectManager::GetInstance()->AddObject
-		(
-			std::make_shared<SlushEffect>(MelLib::Vector3(0,5,0),MelLib::Vector3(0,1,0),10,MelLib::Vector3(0,0,1))
-		);
-	}
+
 
 
 	// このシーンにて開始時に急激なメモリ確保あり

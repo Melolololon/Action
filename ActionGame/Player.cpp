@@ -18,6 +18,9 @@
 
 #include"EnemyAttack.h"
 
+// テスト
+#include"SlushEffect.h"
+
 std::unordered_map<Player::ActionType, MelLib::PadButton> Player::keyConfigData =
 {
 	{ActionType::JUMP, MelLib::PadButton::A},
@@ -105,6 +108,14 @@ Player::Player(const MelLib::Vector3& pos)
 
 void Player::Update()
 {
+	//　テスト
+	if (MelLib::Input::KeyTrigger(DIK_SPACE))
+	{
+		MelLib::GameObjectManager::GetInstance()->AddObject
+		(
+			std::make_shared<SlushEffect>(MelLib::Vector3(0, 10, 0), MelLib::Vector3(0, 1, 0), 10, direction)
+		);
+	}
 
 	MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())
