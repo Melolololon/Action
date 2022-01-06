@@ -31,23 +31,25 @@ NoemalEnemy::NoemalEnemy(const MelLib::Vector3& pos) :
 
 
 
-	// âº
-	//MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<EnemyAttack>
-	//	(
-	//		1,
-	//		MelLib::Vector3(40.5f, 29, -4), 
-	//		3.0f,
-	//		60 * 150,
-	//		modelObjects["main"],
-	//		MelLib::Vector3(0, 0, 0),
-	//		MelLib::Vector3(0, 0, 0),
-	//		3
-	//		)
-	//);
+
 	modelObjects["main"].SetAngle(MelLib::Vector3(0, 0, 0));
 	modelObjects["main"].SetAnimationPlayFlag(true);
 
 	modelObjects["main"].Update();
+
+	// âº
+	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<EnemyAttack>
+		(
+			3,
+			MelLib::Vector3(12,17,0),
+			3.0f,
+			60 * 0.3,
+			modelObjects["main"],
+			MelLib::Vector3(0,0,0),
+			MelLib::Vector3(0, 0, 0),
+			3
+			)
+	);
 }
 
 void NoemalEnemy::Update()
@@ -64,14 +66,14 @@ void NoemalEnemy::Update()
 	}
 	else
 	{
-		CalcPlayerRoute();
+		//CalcPlayerRoute();
 
 		modelObjects["main"].SetAnimation("Move");
 	}
 	CheckAttackEnd();
 
 	// âÒì]
-	RotModel();
+	//RotModel();
 
 	// éûä‘Ç…Ç»Ç¡ÇΩÇÁçUåÇ
 	if (attackTimer.GetNowTime() == ATTACK_START_TIME)
@@ -94,7 +96,10 @@ void NoemalEnemy::Update()
 
 	CheckMutekiEnd();
 
-	//modelObjects["main"].SetAnimation("No_Cont");
+	modelObjects["main"].SetAnimation("No_Move");
+
+	// å≈íË
+	//modelObjects["main"].SetAnimation("Test");
 }
 
 //void NoemalEnemy::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)

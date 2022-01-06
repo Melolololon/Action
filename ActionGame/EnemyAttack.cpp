@@ -33,12 +33,12 @@ EnemyAttack::EnemyAttack
 void EnemyAttack::Update()
 {
 	// 座標計算してセット
- 	sphereData[0].SetPosition(MODEL.CalcAnimationPosition
+  	sphereData[0].SetPosition(MODEL.CalcAnimationPosition
 	(
 		SPHERE_START_POSITION,
 		1.0f,
-		"Bone_L.003",
-		"Body.001",
+		"Bone_L.002",
+		"Body",
 		MODEL_START_POS,
 		MODEL_START_ANGLE,
 		MODEL_START_SCALE
@@ -48,7 +48,7 @@ void EnemyAttack::Update()
 
 	if (deadTimer.GetMaxOverFlag())
 	{
-		eraseManager = true;
+		//eraseManager = true;
 	}
 }
 
