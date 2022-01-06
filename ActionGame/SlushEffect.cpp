@@ -41,6 +41,14 @@ SlushEffect::SlushEffect(const MelLib::Vector3& pos, const MelLib::Vector3& slus
 	sprite.SetAngle(angle);
 
 	sprite.SetScale(MelLib::Vector2(10,50));
+
+
+	// スプライトだと、Z方向を向いたときに見えない
+	// あと剣の進行方向も考慮して回転させないといけない
+	// 同じ方向向いてても、上下と左右で違ってくる
+	// トーラス薄くしたモデル作って、時間送れるようにして、表示範囲テクスチャで透明度指定すればいい感じになる?
+	// 仮で作るんだったら、切り取ったトーラス用意してテクスチャとマテリアル複数個用意してフレームに応じて切り替えてもよさそう
+
 }
 
 void SlushEffect::Update()
