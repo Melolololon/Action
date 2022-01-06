@@ -108,14 +108,7 @@ Player::Player(const MelLib::Vector3& pos)
 
 void Player::Update()
 {
-	//　テスト
-	if (MelLib::Input::KeyTrigger(DIK_SPACE))
-	{
-		MelLib::GameObjectManager::GetInstance()->AddObject
-		(
-			std::make_shared<SlushEffect>(MelLib::Vector3(0, 10, 0), MelLib::Vector3(0, 0, 0), MelLib::Vector3(0, 1, 0), 10, direction)
-		);
-	}
+	
 
 	MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())
@@ -734,7 +727,7 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 
 			if(GetIsFall())
 			{
-				AddPosition(MelLib::Vector3(enemyToPlayer.x, 0, enemyToPlayer.z) * 3.0f);
+				AddPosition(MelLib::Vector3(enemyToPlayer.x, 0, enemyToPlayer.z) * 5.0f);
 				
 			}
 			else

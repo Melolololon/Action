@@ -118,6 +118,11 @@ bool Enemy::CheckPlayerDistance(const float distance)
 
 void Enemy::CalcPlayerRoute()
 {
+	// 仮
+	routeVectors.clear();
+	routeVectors.resize(1, (pPlayer->GetPosition() - GetPosition()).Normalize());
+	AddRouteVector();
+	return;
 
 	// 毎フレーム計算するとがくがくする(フレームごとに向きが変わるから)一定フレームでいいかも
 	// ノードに辿りつくごとがベスト?

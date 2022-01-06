@@ -1,8 +1,13 @@
 #include "PlayerSlush.h"
 #include<LibMath.h>
 #include<GameObjectManager.h>
+#include<SceneManager.h>
 
 #include"SlushEffect.h"
+
+#include"ActionPart.h"
+#include"EditMode.h"
+#include"Pause.h"
 
 const MelLib::Value2<MelLib::Vector3> PlayerSlush::CAPSULE_START_POS_LEFT = { MelLib::Vector3(14,30,3),MelLib::Vector3(12,30,14) };
 const MelLib::Value2<MelLib::Vector3> PlayerSlush::CAPSULE_START_POS_RIGTH = { MelLib::Vector3(-14,30,3),MelLib::Vector3(-12,30,14) };
@@ -189,15 +194,39 @@ PlayerSlush::PlayerSlush
 
 void PlayerSlush::Update()
 {
+	MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
+	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())
+	{
+		eraseTimer.SetStopFlag(true);
+		return;
+	}
+
+	eraseTimer.SetStopFlag(false);
+
+	preSegmentPosition = capsuleData[0].GetSegment3DData().GetRotatePosition();
+
 	if (eraseTimer.GetSameAsMaxFlag())eraseManager = true;
 	Attack();
 
 	MelLib::Value2<MelLib::Vector3>segmentVector = capsuleData[0].GetSegment3DData().GetPosition();
 	MelLib::Vector3 slushVector =
 		segmentVector.v2 - segmentVector.v1;
+	slushVector = slushVector.Normalize();
 	
 	/*MelLib::GameObjectManager::GetInstance()->AddObject
 	(std::make_shared<SlushEffect>(segmentVector.v1 + slushVector / 2, slushVector, eraseTimer.GetNowTime()));*/
+
+	MelLib::Vector3 moveVector = capsuleData[0].GetSegment3DData().GetRotatePosition().v2 - preSegmentPosition.v2;
+	moveVector = moveVector.Normalize();
+	moveVector = 0;
+	// ƒeƒXƒg
+	if (eraseTimer.GetNowTime() <= 1)
+	{
+		MelLib::GameObjectManager::GetInstance()->AddObject
+		(
+			std::make_shared<SlushEffect>(MelLib::Vector3(0, 10, 0), slushVector, moveVector, 10, PLAYER_DIRECTION)
+		);
+	}
 }
 
 void PlayerSlush::Draw()

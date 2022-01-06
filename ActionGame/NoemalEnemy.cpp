@@ -13,7 +13,7 @@
 
 void NoemalEnemy::LoadResource()
 {
-	MelLib::ModelData::Load("Resources/Model/Enemy/Mokuzin/Mokuzin.fbx", true, "NormalEnemy");
+	MelLib::ModelData::Load("Resources/Model/Enemy/Mokuzin/Mokuzin_02.fbx", true, "NormalEnemy");
 }
 
 NoemalEnemy::NoemalEnemy(const MelLib::Vector3& pos) :
@@ -32,19 +32,22 @@ NoemalEnemy::NoemalEnemy(const MelLib::Vector3& pos) :
 
 
 	// ‰¼
-	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<EnemyAttack>
-		(
-			1,
-			MelLib::Vector3(40.5f, 29, -4), 
-			3.0f,
-			60 * 150,
-			modelObjects["main"],
-			MelLib::Vector3(0, 0, 0),
-			MelLib::Vector3(0, 0, 0),
-			3
-			)
-	);
+	//MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<EnemyAttack>
+	//	(
+	//		1,
+	//		MelLib::Vector3(40.5f, 29, -4), 
+	//		3.0f,
+	//		60 * 150,
+	//		modelObjects["main"],
+	//		MelLib::Vector3(0, 0, 0),
+	//		MelLib::Vector3(0, 0, 0),
+	//		3
+	//		)
+	//);
 	modelObjects["main"].SetAngle(MelLib::Vector3(0, 0, 0));
+	modelObjects["main"].SetAnimationPlayFlag(true);
+
+	modelObjects["main"].Update();
 }
 
 void NoemalEnemy::Update()
@@ -52,27 +55,29 @@ void NoemalEnemy::Update()
 
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())return;
 	
-	modelObjects["main"].Update();
 
+	modelObjects["main"].Update();
 	// ‚±‚±‚ÉUŒ‚ðŒ‚ð‹Lq
-	if (CheckPlayerDistance(4.0f))
+	if (CheckPlayerDistance(20.0f))
 	{
-		AttackStart();
+		//AttackStart();
 	}
 	else
 	{
-		//CalcPlayerRoute();
+		CalcPlayerRoute();
+
+		modelObjects["main"].SetAnimation("Move");
 	}
 	CheckAttackEnd();
 
 	// ‰ñ“]
-	//RotModel();
+	RotModel();
 
 	// ŽžŠÔ‚É‚È‚Á‚½‚çUŒ‚
 	if (attackTimer.GetNowTime() == ATTACK_START_TIME)
 	{
 		// UŒ‚”»’è‚Ì’Ç‰Á
-		MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<EnemyAttack>
+		/*MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<EnemyAttack>
 			(
 				3,
 				GetPosition(),
@@ -83,13 +88,13 @@ void NoemalEnemy::Update()
 				MelLib::Vector3(0, 0, 0), 
 				3
 			)
-		);
+		);*/
 
 	}
 
 	CheckMutekiEnd();
 
-	modelObjects["main"].SetAnimation("No_Cont");
+	//modelObjects["main"].SetAnimation("No_Cont");
 }
 
 //void NoemalEnemy::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)

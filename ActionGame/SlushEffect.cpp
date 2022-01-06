@@ -31,22 +31,24 @@ SlushEffect::SlushEffect(const MelLib::Vector3& pos, const MelLib::Vector3& slus
 
 	// まずはプレイヤーの向きに応じて回転
 	MelLib::Vector3 angle;
-	angle.y = -MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(direction.x, direction.z), true);
+	//angle.y = -MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(direction.x, direction.z), true);
 
 	// 剣のベクトルをXYZごとに適応
 	// X方向に向くほどZ軸を、
-	// Z方向に向くほどX軸の回転角度を加算
+	// Z方向に向くほどY軸の回転角度を加算
 	angle.z += MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(slushVector.x, slushVector.y), true) - 90;
-	angle.x += MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(slushVector.z, slushVector.y), true) - 90;
+	angle.y += MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(slushVector.z, slushVector.y), true) - 90;
 
 	// X方向に振る場合、回転
 	angle.y += MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(moveDirection.x, moveDirection.y), true);
 
+	// Z方向に振る場合、回転
 
 	for (int i = 0; i < _countof(sprite); i++)
 	{
 		// 移動量を回転させる
-		movePosition[i] = MelLib::LibMath::RotateVector3(movePosition[i], MelLib::Vector3(0, 1, 0), -angle.y);
+		movePosition[i] = 
+			MelLib::LibMath::RotateVector3(movePosition[i], MelLib::Vector3(0, 1, 0), MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(direction.x, direction.z), true));
 
 		sprite[i].Create(MelLib::Texture::Get("slushEffect"));
 		sprite[i].SetPosition(pos + movePosition[i]);
@@ -71,6 +73,10 @@ SlushEffect::SlushEffect(const MelLib::Vector3& pos, const MelLib::Vector3& slus
 	// スプライト2つを剣にかぶせるように八の字に並べたらトーラスかぶせた時と同じようになるのでは?
 
 	// 剣の進行方向と剣の向きどっちも必要
+
+	// 剣の面の向き取得したほうがいい?
+
+	// いったん保留
 }
 
 void SlushEffect::Update()
