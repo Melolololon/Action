@@ -208,5 +208,17 @@ void Enemy::RotModel()
 	
 	// ‰ñ“]
 	float angle = MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(direction.x, direction.z), false) - 270;
-	modelObjects["main"].SetAngle(MelLib::Vector3(0, angle, 0));
+	float preAngle = modelObjects["main"].GetAngle().y;
+	float setAngle = 0.0f;
+	static const float ROT_ANGLE = 3.0f;
+
+	// ·‚ª180ˆÈã‚Å“ü‚é
+	if (abs(angle - preAngle) > 180) preAngle += 360;
+
+	if (angle > preAngle)setAngle = preAngle + ROT_ANGLE;
+	else setAngle = preAngle - ROT_ANGLE;
+
+	if (setAngle >= 360)setAngle -= 360;
+
+	modelObjects["main"].SetAngle(MelLib::Vector3(0, setAngle, 0));
 }
