@@ -37,7 +37,7 @@ void EnemyAttack::Update()
 	(
 		SPHERE_START_POSITION,
 		1.0f,
-		"Bone_L.002",
+		"Bone_R.002",
 		"Body",
 		MODEL_START_POS,
 		MODEL_START_ANGLE,

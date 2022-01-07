@@ -345,7 +345,7 @@ void Player::Dash()
 	static const float MAX_DASH_SPEED = 1.5f;
 	static const float START_DASH_SPEED = 1.0f;
 
-	static const float DASH_DISTANCE = 200.0f;
+	static const float DASH_DISTANCE = 100.0f;
 
 	if (MelLib::Input::PadButtonTrigger(keyConfigData[ActionType::DASH])
 		&& !isDash
@@ -692,6 +692,10 @@ void Player::LockOn()
 
 	// 注視点を敵の座標に
 	MelLib::Camera::Get()->SetRotateCriteriaPosition(lockOnEnemy->GetPosition());
+
+	// 近づける限界地
+	static const float MIN_DISTANCE = 50.0f;
+	if (lockOnEnemyDistance < MIN_DISTANCE)lockOnEnemyDistance = MIN_DISTANCE;
 
 	// 注視点との距離を変える
 	MelLib::Camera::Get()->SetCameraToTargetDistance(lockOnEnemyDistance * 2.0f);

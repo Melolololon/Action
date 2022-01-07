@@ -20,7 +20,7 @@ NoemalEnemy::NoemalEnemy(const MelLib::Vector3& pos) :
 	Enemy(pos, 3, 0.2f, "NormalEnemy")
 {
 	capsuleData.resize(1);
-	capsuleData[0].SetRadius(10.0f);
+	capsuleData[0].SetRadius(6.0f);
 	capsuleData[0].GetRefSegment3DData().
 		SetPosition(MelLib::Value2<MelLib::Vector3>(pos + MelLib::Vector3(0, 25.0f, 0), pos + MelLib::Vector3(0, -25.0f, 0)));
 
@@ -41,7 +41,7 @@ NoemalEnemy::NoemalEnemy(const MelLib::Vector3& pos) :
 	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<EnemyAttack>
 		(
 			3,
-			MelLib::Vector3(12,17,0),
+			MelLib::Vector3(-12,17,0),
 			3.0f,
 			60 * 0.3,
 			modelObjects["main"],
@@ -60,20 +60,30 @@ void NoemalEnemy::Update()
 
 	modelObjects["main"].Update();
 	// Ç±Ç±Ç…çUåÇèåèÇãLèq
-	if (CheckPlayerDistance(20.0f))
+	if (CheckPlayerDistance(20.0f) )
 	{
-		//AttackStart();
+		AttackStart();
 	}
-	else
+	else if(!isAttack)
 	{
-		//CalcPlayerRoute();
+		CalcPlayerRoute();
 
 		modelObjects["main"].SetAnimation("Move");
 	}
+	if(isAttack)
+	{
+		//modelObjects["main"].SetAnimation("Attack");
+
+		if(modelObjects["main"].GetAnimationEndFlag())
+		{
+			isAttack = false;
+		}
+	}
+
 	CheckAttackEnd();
 
 	// âÒì]
-	//RotModel();
+	RotModel();
 
 	// éûä‘Ç…Ç»Ç¡ÇΩÇÁçUåÇ
 	if (attackTimer.GetNowTime() == ATTACK_START_TIME)
@@ -96,10 +106,11 @@ void NoemalEnemy::Update()
 
 	CheckMutekiEnd();
 
-	modelObjects["main"].SetAnimation("No_Move");
+	//modelObjects["main"].SetAnimation("No_Move");
 
 	// å≈íË
 	//modelObjects["main"].SetAnimation("Test");
+	//modelObjects["main"].SetAnimation("_T");
 }
 
 //void NoemalEnemy::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)

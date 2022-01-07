@@ -179,7 +179,7 @@ void Enemy::AttackStart()
 	isAttack = true;
 
 	// 攻撃アニメーションセット
-	modelObjects["main"].SetAnimation("Attack_Normal_1");
+	modelObjects["main"].SetAnimation("Attack");
 }
 
 void Enemy::CheckAttackEnd()
@@ -208,5 +208,5 @@ void Enemy::RotModel()
 	
 	// 回転
 	float angle = MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(direction.x, direction.z), false) - 270;
-	modelObjects["main"].SetAngle(MelLib::Vector3(28, angle, 0));
+	modelObjects["main"].SetAngle(MelLib::Vector3(0, angle, 0));
 }
