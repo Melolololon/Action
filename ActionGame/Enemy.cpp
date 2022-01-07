@@ -6,6 +6,8 @@
 
 #include"EnemyAttack.h"
 
+#include"Ground.h"
+
 // ‚â‚é‚±‚Æ
 // “G‚Ìƒ‚ƒfƒ‹ì¬(–Øl)
 
@@ -47,6 +49,9 @@ Enemy::Enemy(const MelLib::Vector3& pos, const unsigned int hp, const float move
 	attackTimer.SetStopFlag(false);
 
 	tags.push_back("Enemy");
+
+	// •‚‚«–h~
+	FallStart(0.0f);
 }
 
 void Enemy::Update()
@@ -78,6 +83,20 @@ void Enemy::Hit(const GameObject* const object, const MelLib::ShapeType3D& colli
 			// ‰¼ˆ—
 			eraseManager = true;
 		}
+	}
+
+	if (typeid(*object) == typeid(Ground)
+		&& collisionType == MelLib::ShapeType3D::SEGMENT)
+	{
+
+		MelLib::Vector3 addPos;
+
+		//“Š‚°ã‚°ˆ—I—¹
+		FallEnd();
+
+		addPos.y += segment3DData[0].GetCalcResult().boardHitPos.y - segment3DData[0].GetPosition().v2.y;
+	
+		AddPosition(addPos);
 	}
 }
 
@@ -146,7 +165,7 @@ void Enemy::CalcPlayerRoute()
 
 		routeVectors.clear();
 		routeVectors.resize(1, myToPlayer);
-		routeVectors[0] = myToPlayer;
+		routeVectors[0] = MelLib::Vector3(myToPlayer.x, 0, myToPlayer.z);
 	}
 
 	AddRouteVector();
@@ -209,6 +228,9 @@ void Enemy::RotModel()
 	// ‰ñ“]
 	float angle = MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(direction.x, direction.z), false) - 270;
 	float preAngle = modelObjects["main"].GetAngle().y;
+	
+	if (MelLib::LibMath::AngleDifference(angle, preAngle, 5))return;
+
 	float setAngle = 0.0f;
 	static const float ROT_ANGLE = 3.0f;
 

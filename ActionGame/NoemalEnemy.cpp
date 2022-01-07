@@ -17,13 +17,15 @@ void NoemalEnemy::LoadResource()
 }
 
 NoemalEnemy::NoemalEnemy(const MelLib::Vector3& pos) :
-	Enemy(pos, 3, 0.2f, "NormalEnemy")
+	Enemy(pos, 3, 0.8f, "NormalEnemy")
 {
 	capsuleData.resize(1);
-	capsuleData[0].SetRadius(6.0f);
+	capsuleData[0].SetRadius(5.0f);
 	capsuleData[0].GetRefSegment3DData().
-		SetPosition(MelLib::Value2<MelLib::Vector3>(pos + MelLib::Vector3(0, 25.0f, 0), pos + MelLib::Vector3(0, -25.0f, 0)));
+		SetPosition(MelLib::Value2<MelLib::Vector3>(pos + MelLib::Vector3(0, 25.0f, 0), pos + MelLib::Vector3(0, -10.0f, 0)));
 
+	segment3DData.resize(1);
+	segment3DData[0].SetPosition(capsuleData[0].GetSegment3DData().GetPosition());
 
 	attackTimer.SetMaxTime(60 * 2);
 
@@ -60,7 +62,7 @@ void NoemalEnemy::Update()
 
 	modelObjects["main"].Update();
 	// Ç±Ç±Ç…çUåÇèåèÇãLèq
-	if (CheckPlayerDistance(20.0f) )
+	if (CheckPlayerDistance(10.0f) )
 	{
 		AttackStart();
 	}
@@ -111,6 +113,10 @@ void NoemalEnemy::Update()
 	// å≈íË
 	//modelObjects["main"].SetAnimation("Test");
 	//modelObjects["main"].SetAnimation("_T");
+
+
+	// ïÇÇ´ñhé~
+	FallStart(0.0f);
 }
 
 //void NoemalEnemy::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)
