@@ -22,6 +22,7 @@
 
 #pragma region OBJ_TYPE_FIERD
 #include"Ground.h"
+#include"Wall.h"
 #pragma endregion
 
 
@@ -276,6 +277,10 @@ void EditMode::SetSelectObject()
 
 	case GROUND:
 		selectObject = std::make_shared<Ground>(addObjectPos, addObjectAngle, addObjectScale.ToVector2());
+		break;
+
+	case WALL:
+		selectObject = std::make_shared<Wall>(addObjectPos, addObjectAngle, addObjectScale.ToVector2());
 		break;
 
 	default:

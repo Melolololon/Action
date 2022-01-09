@@ -12,6 +12,7 @@
 #include"PlayerSlush.h"
 
 #include"Ground.h"
+#include"Wall.h"
 
 #include"Pause.h"
 #include"EditMode.h"
@@ -66,8 +67,22 @@ Player::Player(const MelLib::Vector3& pos)
 		SetPosition(MelLib::Value2<MelLib::Vector3>
 			(GetPosition() + MelLib::Vector3(0, 3, 0), GetPosition() + MelLib::Vector3(0, -18, 0)));
 
-	segment3DData.resize(1);
+	segment3DData.resize(3);
 	segment3DData[0] = capsuleData[0].GetSegment3DData();
+
+	// ï«Ç∆ÇÃîªíËóp
+	segment3DData[1].SetPosition
+	(
+		MelLib::Value2<MelLib::Vector3>
+		(GetPosition() + MelLib::Vector3(0, 0, 10), GetPosition() + MelLib::Vector3(0, 0, -10))
+	);
+
+	segment3DData[2].SetPosition
+	(
+		MelLib::Value2<MelLib::Vector3>
+		(GetPosition() + MelLib::Vector3(10, 0, 0), GetPosition() + MelLib::Vector3(-10, 0, 0))
+	);
+
 
 
 	//modelObjects["main"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX), nullptr);
@@ -380,9 +395,14 @@ void Player::Dash()
 
 	if (dashEasing.GetPar() >= 100.0f)
 	{
-		dashEasing.SetPar(0.0f);
-		isDash = false;
+		DashEnd();
 	}
+}
+
+void Player::DashEnd()
+{
+	dashEasing.SetPar(0.0f);
+	isDash = false;
 }
 
 void Player::Jump()
@@ -825,6 +845,14 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 			startAngle = modelObjects["main"].GetAngle();
 			startScale = modelObjects["main"].GetScale();
 		}
+	}
+
+	if (typeid(*object) == typeid(Wall) 
+		&& collisionType == MelLib::ShapeType3D::SEGMENT)
+	{
+		AddPosition(MelLib::Vector3(prePos.x - GetPosition().x, 0, prePos.z - GetPosition().z));
+
+		DashEnd();
 	}
 
 	// çUåÇÇéÛÇØÇΩéû(ëÃóÕå∏éZÇÕEnemyAttackë§Ç≈çsÇ¡ÇƒÇÈ)

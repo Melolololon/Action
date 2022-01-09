@@ -48,6 +48,7 @@ private:
 
 #pragma region OBJ_TYPE_FIERD
 	static ObjID GROUND = OBJ_TYPE_FIERD + 0;
+	static ObjID WALL = OBJ_TYPE_FIERD + 1;
 #pragma endregion
 
 

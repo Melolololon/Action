@@ -120,6 +120,9 @@
     <ClCompile Include="SlushEffect.cpp">
       <Filter>ソース ファイル\Object\Player</Filter>
     </ClCompile>
+    <ClCompile Include="Wall.cpp">
+      <Filter>ソース ファイル\Object\Stage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -181,6 +184,9 @@
     </ClInclude>
     <ClInclude Include="SlushEffect.h">
       <Filter>ヘッダー ファイル\Object\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Wall.h">
+      <Filter>ヘッダー ファイル\Object\Stage</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

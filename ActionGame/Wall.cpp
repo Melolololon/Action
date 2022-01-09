@@ -1,13 +1,6 @@
-#include "Ground.h"
+#include "Wall.h"
 
-#include"Game.h"
-
-#include<ModelData.h>
-
-
-const MelLib::Vector2 Ground::GROUND_SIZE = MelLib::Vector2(500, 500);
-
-Ground::Ground(const MelLib::Vector3& pos, const MelLib::Vector3& angle, const MelLib::Vector2& scale)
+Wall::Wall(const MelLib::Vector3& pos, const MelLib::Vector3& angle, const MelLib::Vector2& scale)
 {
 	SetPosition(pos);
 
@@ -36,24 +29,17 @@ Ground::Ground(const MelLib::Vector3& pos, const MelLib::Vector3& angle, const M
 	boardData[0].SetAngle(angle);
 	boardData[0].SetSize(scale);
 	boardData[0].SetPosition(pos);
-
 }
 
-void Ground::Update()
+void Wall::Update()
 {
 }
 
-void Ground::Draw()
+void Wall::Draw()
 {
 	modelObjects["main"].Draw();
 }
 
-void Ground::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)
+void Wall::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)
 {
-}
-
-void Ground::LoadResource()
-{
-	const std::string texturePath = Game::GetInstance()->GetPath(Game::ResourcePathType::TEXTURE);
-	MelLib::Texture::Load(texturePath + "ground.png","ground");
 }

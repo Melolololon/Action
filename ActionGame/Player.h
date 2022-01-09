@@ -150,6 +150,8 @@ private:
 	void AttackMove();
 
 	void Dash();
+	void DashEnd();
+
 	void Jump();
 	void JumpAnimation();
 
