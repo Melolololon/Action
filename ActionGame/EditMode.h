@@ -31,6 +31,8 @@ private:
 	std::vector<int>objectNums;
 	std::vector<MelLib::GameObject*>pGameObjects;
 
+	int currentAddObject = 0;
+
 	using ObjID = const int;
 
 	static ObjID OBJ_TYPE_ENEMY = 0;
