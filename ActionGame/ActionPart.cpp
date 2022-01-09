@@ -32,6 +32,9 @@ void ActionPart::LoadResources()
 {
 	Ground::LoadResource();
 	NoemalEnemy::LoadResource();
+
+	MelLib::ModelData::Load("Resources/Model/Stage/Stage.obj",true,"stage");
+
 }
 
 void ActionPart::Initialize()
@@ -40,6 +43,10 @@ void ActionPart::Initialize()
 
 	MelLib::DirectionalLight::Get().SetDirection(MelLib::Vector3(0, -1, 0));
 	MelLib::Camera::Get()->SetAngle(MelLib::Vector3(20, 0, 0));
+
+	// ステージ
+	stage.Create(MelLib::ModelData::Get("stage"),nullptr);
+	stage.SetPosition(MelLib::Vector3(0,10,0));
 
 	// プレイヤーのポインタ
 	std::shared_ptr<Player>pPlayer;
@@ -96,6 +103,7 @@ void ActionPart::Initialize()
 
 
 	Pause::GetInstance()->Initialize();
+
 }
 
 void ActionPart::Update()
@@ -150,6 +158,9 @@ void ActionPart::Draw()
 	EditMode::GetInstance()->Draw();
 
 	MelLib::GameObjectManager::GetInstance()->Draw();
+
+	stage.Draw();
+
 	Pause::GetInstance()->Draw();
 	Fade::GetInstance()->Draw();
 

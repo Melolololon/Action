@@ -767,10 +767,11 @@ bool ModelData::LoadModel(const std::string& path, const std::string& name)
 			mtlData,
 			&materialNum
 		);
-		if (!result)loadFalseEndProcess();
+		//if (!result)loadFalseEndProcess();
 
 
-		if (materialNum != 0) {
+		if (materialNum != 0) 
+		{
 			pTexture.reserve(materialNum);
 			material.reserve(materialNum);
 			for(const auto& objectName:objectNames)
@@ -783,7 +784,8 @@ bool ModelData::LoadModel(const std::string& path, const std::string& name)
 				material[objectName]->SetMaterialData(mtlData[objectName]);
 			}
 		}
-		else{
+		else
+		{
 
 
 		}
@@ -944,8 +946,11 @@ std::vector<ADSAMaterial*> MelLib::ModelData::GetPMaterial()
 	size_t size = material.size();
 	if (size == 0)
 	{
-		size++;
-		material["main"] = nullptr;
+		size = objectNames.size();
+		for (int i = 0; i < objectNames.size(); i++)
+		{
+			material[objectNames[i]] = nullptr;
+		}
 	}
 
 	std::vector<ADSAMaterial*>pMtls(size);

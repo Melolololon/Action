@@ -18,6 +18,9 @@ void Title::LoadResources()
 	const std::string TEXTURE_PATH = Game::GetInstance()->GetPath(Game::ResourcePathType::TEXTURE);
 	
 	MelLib::Texture::Load(TEXTURE_PATH + "Title/Title.png","title");
+
+
+	MelLib::ModelData::Load("Resources/Model/Fierd/TitleFierd/TitleFierd.obj", true, "titleFierd");
 }
 
 void Title::Initialize()
@@ -37,7 +40,10 @@ void Title::Initialize()
 	pCamera->SetCameraToTargetDistance(90.0f);
 	pCamera->SetRotateCriteriaPosition(MelLib::Vector3(23,16,40));
 
-
+	fierd.Create(MelLib::ModelData::Get("titleFierd"),nullptr);
+	fierd.SetScale(MelLib::Vector3(5,5,5));
+	fierd.SetPosition(MelLib::Vector3(0,-13,-35));
+	fierd.SetAngle(MelLib::Vector3(0, 180, 0));
 }
 
 void Title::Update()
@@ -81,6 +87,8 @@ void Title::Draw()
 {
 	MelLib::GameObjectManager::GetInstance()->Draw();
 	titleSprite->Draw();
+
+	fierd.Draw();
 
 	Fade::GetInstance()->Draw();
 

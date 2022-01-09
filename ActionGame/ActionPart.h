@@ -18,6 +18,8 @@ private:
 	//テスト用
 	MelLib::ModelObject obj;
 
+	MelLib::ModelObject stage;
+
 	// ロックオン用
 	static std::vector<std::shared_ptr<Enemy>>pEnemys;
 private:

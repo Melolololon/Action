@@ -386,7 +386,8 @@ void Player::Jump()
 {
 	// ジャンプの着地アニメーションは、ジャンプの逆再生でOK
 
-	if (attackTimer.GetNowTime() != 0)return;
+	if (attackTimer.GetNowTime() != 0 
+		|| isDash)return;
 
 	if (MelLib::Input::PadButtonTrigger(keyConfigData[ActionType::JUMP]))
 	{
@@ -482,7 +483,7 @@ void Player::SetAttackType()
 			modelObjects["main"].SetAnimation("Attack_Normal_1");
 
 		}
-		else// ジャンプ攻撃
+		else// 空中攻撃
 		{
 		}
 
@@ -544,6 +545,9 @@ void Player::CreateAttackSlush()
 
 		break;
 	case PlayerSlush::AttackType::DASH_1:
+		pRigthSlush = std::make_shared<PlayerSlush>
+		(GetPosition(), direction, currentAttack, attackData[currentAttack].nextTime, modelObjects["main"], startPos, startAngle, startScale, false);
+
 		break;
 	default:
 		break;
@@ -672,6 +676,14 @@ void Player::LockOn()
 			if (lockOnEnemyDistance > LOCK_ON_DISTANCE)return;
 
 		}
+	}
+
+	// 切り替え
+	if(MelLib::Input::RightStickRight(40.0f))
+	{
+	}
+	else if(MelLib::Input::RightStickLeft(40.0f))
+	{
 	}
 
 	if (!lockOn)return;
