@@ -47,6 +47,8 @@ void ActionPart::Initialize()
 	// ステージ
 	stage.Create(MelLib::ModelData::Get("stage"),nullptr);
 	stage.SetPosition(MelLib::Vector3(0,10,0));
+	stage.SetScale(MelLib::Vector3(8, 8, 8));
+	stage.SetAngle(MelLib::Vector3(0, 180, 0));
 
 	// プレイヤーのポインタ
 	std::shared_ptr<Player>pPlayer;
