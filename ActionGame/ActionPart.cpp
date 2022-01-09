@@ -55,15 +55,12 @@ void ActionPart::Initialize()
 	// プレイヤーを必ず最初に追加するために、elseで追加処理を分ける
 	if (!EditMode::GetInstance()->Load(pPlayer,&pEnemys))
 	{
-		pPlayer = std::make_shared<Player>(MelLib::Vector3(0, 5, 0));
-		MelLib::GameObjectManager::GetInstance()->AddObject(pPlayer);
 
-		MelLib::GameObjectManager::GetInstance()->AddObject
-		(std::make_shared<Ground>(0, MelLib::Vector3(90, 0, 0), 10));
+	/*	MelLib::GameObjectManager::GetInstance()->AddObject
+		(std::make_shared<Ground>(0, MelLib::Vector3(90, 0, 0), 10));*/
 	}
 	else
 	{
-		MelLib::GameObjectManager::GetInstance()->AddObject(pPlayer);
 	}
 	EditMode::GetInstance()->SetPPlayer(pPlayer.get());
 

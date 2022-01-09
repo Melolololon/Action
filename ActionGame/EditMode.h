@@ -29,6 +29,7 @@ private:
 
 	std::vector<int>objectTypes;
 	std::vector<int>objectNums;
+	std::vector<MelLib::GameObject*>pGameObjects;
 
 	using ObjID = const int;
 

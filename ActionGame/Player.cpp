@@ -113,6 +113,9 @@ void Player::Update()
 	MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())
 	{
+		if(EditMode::GetInstance()->GetIsEdit())Camera();
+		
+
 
 		MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
 		if (typeid(*currentScene) != typeid(Title))

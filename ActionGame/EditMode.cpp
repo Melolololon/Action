@@ -50,13 +50,30 @@ void EditMode::Save()
 	const std::vector<std::shared_ptr<MelLib::GameObject>>& refGameObjects = 
 		MelLib::GameObjectManager::GetInstance()->GetRefGameObject();
 
+	int objectNumber = 0;
 	for (size_t i = 0; i < refGameObjects.size(); i++)
 	{
 		if (i != 0) 
 		{
+			bool addObjectFlag = false;
+			// 保存しなくていいやつは無視
+			for(auto& p : pGameObjects)
+			{
+				if(refGameObjects[i].get() == p)
+				{
+					addObjectFlag = true;
+					break;
+				}
+			}
+
+			if (!addObjectFlag) 
+			{
+				continue;
+			}
+
 			// 識別番号書き込み
-			file.write(reinterpret_cast<char*>(&objectTypes[i - 1]), sizeof(int));
-			file.write(reinterpret_cast<char*>(&objectNums[i - 1]), sizeof(int));
+			file.write(reinterpret_cast<char*>(&objectTypes[objectNumber]), sizeof(int));
+			file.write(reinterpret_cast<char*>(&objectNums[objectNumber]), sizeof(int));
 		}
 
 		// 座標の書き込み
@@ -77,6 +94,11 @@ void EditMode::Save()
 
 			writeParam = model.second.GetScale();
 			file.write(reinterpret_cast<char*>(&writeParam), sizeof(writeParam));
+		}
+
+		if (i != 0) 
+		{
+			objectNumber++;
 		}
 	}
 
@@ -99,8 +121,16 @@ bool EditMode::Load(std::shared_ptr<Player>& p, std::vector<std::shared_ptr<Enem
 	if (!file)
 	{
 		// 床の情報入れる
-		objectTypes.push_back(OBJ_TYPE_FIERD);
-		objectNums.push_back(GROUND - OBJ_TYPE_FIERD);
+		/*objectTypes.push_back(OBJ_TYPE_FIERD);
+		objectNums.push_back(GROUND - OBJ_TYPE_FIERD);*/
+
+
+		p = std::make_shared<Player>(MelLib::Vector3(0, 5, 0));
+		MelLib::GameObjectManager::GetInstance()->AddObject(p);
+		pGameObjects.push_back(p.get());
+		// 強制的にエディットから開始
+		isEdit = true;
+
 
 		return false;
 	}
@@ -117,6 +147,8 @@ bool EditMode::Load(std::shared_ptr<Player>& p, std::vector<std::shared_ptr<Enem
 		file.read(reinterpret_cast<char*>(&addObjectScale), sizeof(addObjectScale));
 	}
 	p = std::make_shared<Player>(addObjectPos);
+	MelLib::GameObjectManager::GetInstance()->AddObject(p);
+	pGameObjects.push_back(p.get());
 	
 	// 残り全部読み込む
 	size_t fileSize = std::filesystem::file_size(filePath);
@@ -259,6 +291,7 @@ void EditMode::AddObject()
 	// 追加に成功したら、オブジェクト番号を格納
 	objectTypes.push_back(objectType);
 	objectNums.push_back(objectNum);
+	pGameObjects.push_back(selectObject.get());
 
 	// 選択オブジェクトを消す
 	selectObject.reset();
