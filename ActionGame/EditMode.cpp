@@ -224,13 +224,14 @@ void EditMode::Update()
 	imguiManager->DrawSliderVector3("Angle", addObjectAngle, 0.0f, 359.9999f);
 	imguiManager->DrawSliderVector3("Scale", addObjectScale, 0.0001f, 400.0f);
 
-
-	imguiManager->DrawSliderInt("CurrentAddObject", currentAddObject, 0, pGameObjects.size() - 1);
-
 	// 削除するかどうかのフラグ
 	bool deleteCurrentAddObject = false;
-	imguiManager->DrawCheckBox("DeleteCurrentAddObject", deleteCurrentAddObject);
+	if (pGameObjects.size() >= 2) 
+	{
+		imguiManager->DrawSliderInt("CurrentAddObject", currentAddObject, 1, pGameObjects.size() - 1);
 
+		imguiManager->DrawCheckBox("DeleteCurrentAddObject", deleteCurrentAddObject);
+	}
 	imguiManager->EndDrawWindow();
 
 	// オブジェクトの変更があったらselectObjectを変更
@@ -258,7 +259,7 @@ void EditMode::Update()
 	if (MelLib::Input::KeyTrigger(DIK_SPACE))AddObject();
 
 	// 削除
-	if(deleteCurrentAddObject && currentAddObject != 0)
+	if(deleteCurrentAddObject)
 	{
 		pGameObjects[currentAddObject]->TrueEraseManager();
 		

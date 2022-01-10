@@ -31,7 +31,7 @@ private:
 	std::vector<int>objectNums;
 	std::vector<MelLib::GameObject*>pGameObjects;
 
-	int currentAddObject = 0;
+	int currentAddObject = 1;
 
 	using ObjID = const int;
 

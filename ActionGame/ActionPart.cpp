@@ -108,8 +108,6 @@ void ActionPart::Initialize()
 void ActionPart::Update()
 {
 
-
-
 	// このシーンにて開始時に急激なメモリ確保あり
 	// 17フレーム目で確保されてるから、16で確保されてる可能性あり
 	// DrectWriteのせいでした。仕様。
@@ -120,7 +118,6 @@ void ActionPart::Update()
 	if(editOn && isEdit) EditMode::GetInstance()->Update();*/
 	EditMode::GetInstance()->Update();
 	Pause::GetInstance()->Update();
-
 
 
 	MelLib::GameObjectManager::GetInstance()->Update();
