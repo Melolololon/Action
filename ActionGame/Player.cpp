@@ -47,7 +47,7 @@ std::unordered_map<PlayerSlush::AttackType, const Player::AttackData> Player::at
 void Player::LoadResources()
 {
 	// タイトルでも使うから自動削除削除
-	MelLib::ModelData::Load("Resources/Model/Player/Player_Test.fbx", false, "Player");
+	MelLib::ModelData::Load("Resources/Model/Player/Player.fbx", false, "Player");
 	//MelLib::ModelData::Load("Resources/Model/Enemy/Mokuzin/Mokuzin.fbx", false, "Player");
 
 	// メッシュ2つ以上の時にマテリアル読むとエラーでる
@@ -713,7 +713,6 @@ void Player::LockOn()
 
 	// カメラ操作
 	// カメラの動きを補完すること
-
 	// まずは視点切り替えを優先して実装すること
 	
 	lockOnEnemyDistance = MelLib::LibMath::CalcDistance3D(GetPosition(), lockOnEnemy->GetPosition());
