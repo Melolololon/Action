@@ -15,16 +15,19 @@ class ActionPart :public MelLib::Scene
 private:
 
 private:
+	// プレイヤーのポインタ
+	std::shared_ptr<Player>pPlayer;
+
 	//テスト用
 	MelLib::ModelObject obj;
 
 	MelLib::ModelObject stage;
 
 	// ロックオン用
-	static std::vector<std::shared_ptr<Enemy>>pEnemys;
+	static std::vector<std::shared_ptr<MelLib::GameObject>>pEnemys;
 private:
 	void LoadResources();
-
+	void Fade();
 public:
 	void Initialize()override;//初期化
 	void Update()override;
@@ -32,5 +35,5 @@ public:
 	void Finalize()override;//終了処理
 	Scene* GetNextScene()override;//次のシーン
 
-	static const std::vector<std::shared_ptr<Enemy>>& GetEnemys() { return pEnemys; }
+	static const std::vector<std::shared_ptr<MelLib::GameObject>>& GetEnemys() { return pEnemys; }
 };

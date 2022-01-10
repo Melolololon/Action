@@ -46,6 +46,9 @@ private:
 
 #pragma region OBJ_TYPE_STAGE
 	static ObjID BAMBOO = OBJ_TYPE_STAGE + 0;
+	static ObjID ROCK = OBJ_TYPE_STAGE + 1;
+	static ObjID ROCK_2 = OBJ_TYPE_STAGE + 2;
+	static ObjID ROCK_3 = OBJ_TYPE_STAGE + 3;
 #pragma endregion
 
 #pragma region OBJ_TYPE_FIERD
@@ -58,7 +61,7 @@ private:
 #pragma endregion
 
 
-	std::vector<std::shared_ptr<Enemy>>* pEnemys = nullptr;
+	std::vector<std::shared_ptr<MelLib::GameObject>>* pEnemys = nullptr;
 private:
 	EditMode(){}
 	~EditMode(){}
@@ -70,10 +73,9 @@ private:
 	/// </summary>
 	void Save();
 
-	void SetSelectObject();
+	std::shared_ptr<MelLib::GameObject> GetPObject();
 	void AddObject();
 
-	void AddEnemy(std::shared_ptr<Enemy>p);
 public:
 
 	EditMode(EditMode& e) = delete;
@@ -85,7 +87,7 @@ public:
 	/// </summary>
 	/// <param name="p">プレイヤーのポインタ</param>
 	/// <returns>読み込みが成功したかどうか</returns>
-	bool Load(std::shared_ptr<Player>& p, std::vector<std::shared_ptr<Enemy>>* pEnemys);
+	bool Load(std::shared_ptr<Player>& p, std::vector<std::shared_ptr<MelLib::GameObject>>* pEnemys);
 
 	void Update();
 	void Draw();

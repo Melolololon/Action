@@ -16,6 +16,8 @@
 
 #include"Ground.h"
 
+#include"Rock.h"
+
 #include"Fade.h"
 #include"Option.h"
 #include"Pause.h"
@@ -26,15 +28,37 @@
 // テスト用
 #include"SlushEffect.h"
 
-std::vector<std::shared_ptr<Enemy>>ActionPart::pEnemys;
+std::vector<std::shared_ptr<MelLib::GameObject>>ActionPart::pEnemys;
 
 void ActionPart::LoadResources()
 {
 	Ground::LoadResource();
 	NoemalEnemy::LoadResource();
+	Rock::LoadResources();
 
 	MelLib::ModelData::Load("Resources/Model/Stage/Stage.obj",true,"stage");
 
+}
+
+void ActionPart::Fade()
+{
+	// フェードしてなかったら終了確認
+	if (!Fade::GetInstance()->GetIsFade())
+	{
+		// ポーズから終了したら入る
+		if (Pause::GetInstance()->GetIsEnd())
+		{
+			Fade::GetInstance()->Start();
+		}
+	}
+
+	Fade::GetInstance()->Update();
+
+	// フェードが終了したら終了
+	if (Fade::GetInstance()->GetChangeSceneFlag())
+	{
+		isEnd = true;
+	}
 }
 
 void ActionPart::Initialize()
@@ -50,8 +74,7 @@ void ActionPart::Initialize()
 	stage.SetScale(MelLib::Vector3(8, 8, 8));
 	stage.SetAngle(MelLib::Vector3(0, 180, 0));
 
-	// プレイヤーのポインタ
-	std::shared_ptr<Player>pPlayer;
+	
 
 	// ファイルがなかったら必要最低限のものだけ用意
 	// プレイヤーを必ず最初に追加するために、elseで追加処理を分ける
@@ -108,44 +131,30 @@ void ActionPart::Initialize()
 void ActionPart::Update()
 {
 
-	// このシーンにて開始時に急激なメモリ確保あり
-	// 17フレーム目で確保されてるから、16で確保されてる可能性あり
-	// DrectWriteのせいでした。仕様。
-	// 2021 12/17
-
-
-	/*if (MelLib::Input::KeyTrigger(DIK_F5))isEdit = isEdit == false ? true : false;
-	if(editOn && isEdit) EditMode::GetInstance()->Update();*/
 	EditMode::GetInstance()->Update();
 	Pause::GetInstance()->Update();
 
 
 	MelLib::GameObjectManager::GetInstance()->Update();
 
-	// デバッグ用
-	if (MelLib::Input::KeyTrigger(DIK_ESCAPE) && !Fade::GetInstance()->GetIsFade())
+	for(int i = 0; i < pEnemys.size();i++)
 	{
-		Fade::GetInstance()->Start();
-	}
-
-
-	// フェードしてなかったら終了確認
-	if (!Fade::GetInstance()->GetIsFade())
-	{
-		// ポーズから終了したら入る
-		if (Pause::GetInstance()->GetIsEnd())
+		// 倒した敵は敵リストから消す
+		if(pEnemys[i]->GetEraseManager())
 		{
-			Fade::GetInstance()->Start();
+			// ロックしてる敵を倒したら、ロック解除
+			if(pPlayer->GetPLockOnEnemy() == pEnemys[i].get())
+			{
+				pPlayer->LockOnEnd();
+			}
+
+			pEnemys.erase(pEnemys.begin() + i);
+			i--;
 		}
 	}
 
-	Fade::GetInstance()->Update();
-
-	// フェードが終了したら終了
-	if (Fade::GetInstance()->GetChangeSceneFlag())
-	{
-		isEnd = true;
-	}
+	// フェードが関わる処理
+	Fade();
 }
 
 void ActionPart::Draw()

@@ -124,7 +124,7 @@ private:
 	float cameraSpeed = 0.0f;
 
 	bool lockOn = false;
-	const Enemy* lockOnEnemy = nullptr;
+	const MelLib::GameObject* lockOnEnemy = nullptr;
 	float lockOnEnemyDistance = FLT_MAX;
 #pragma endregion
 
@@ -205,11 +205,24 @@ public:
 	unsigned int GetCurrentAttackPower()const { return attackData[currentAttack].power; }
 
 	MelLib::Vector3 GetDirection() { return direction; }
+
+	const MelLib::GameObject* GetPLockOnEnemy()const { return lockOnEnemy; }
+	
+
 #pragma endregion
 
 #pragma region Set
 
 	static void SetActionButton(const ActionType type, const MelLib::PadButton button) { keyConfigData[type] = button; }
+
+	/// <summary>
+	/// ロックオン強制終了
+	/// </summary>
+	void LockOnEnd() 
+	{ 
+		lockOnEnemy = nullptr;
+		lockOn = false;
+	}
 #pragma endregion
 
 	void TitleUpdate();

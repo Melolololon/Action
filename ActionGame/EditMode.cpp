@@ -18,6 +18,7 @@
 
 #pragma region OBJ_TYPE_STAGE
 #include"Bamboo.h"
+#include"Rock.h"
 #pragma endregion
 
 #pragma region OBJ_TYPE_FIERD
@@ -108,7 +109,7 @@ void EditMode::Save()
 
 
 
-bool EditMode::Load(std::shared_ptr<Player>& p, std::vector<std::shared_ptr<Enemy>>* pEnemys)
+bool EditMode::Load(std::shared_ptr<Player>& p, std::vector<std::shared_ptr<MelLib::GameObject>>* pEnemys)
 {
 	this->pEnemys = pEnemys;
 
@@ -169,7 +170,7 @@ bool EditMode::Load(std::shared_ptr<Player>& p, std::vector<std::shared_ptr<Enem
 		}
 
 		// セット
-		SetSelectObject();
+		selectObject = GetPObject();
 		// 読み込んだ情報を元に追加
 		AddObject();
 	}
@@ -224,7 +225,7 @@ void EditMode::Update()
 	imguiManager->DrawSliderFloat("PositionY", addObjectPos.y, playerPos.y - 300.0f, playerPos.y + 300.0f);
 	imguiManager->DrawSliderFloat("PositionZ", addObjectPos.z, playerPos.z - 300.0f, playerPos.z + 300.0f);
 	imguiManager->DrawSliderVector3("Angle", addObjectAngle, 0.0f, 359.9999f);
-	imguiManager->DrawSliderVector3("Scale", addObjectScale, 0.0001f, 400.0f);
+	imguiManager->DrawSliderVector3("Scale", addObjectScale, 0.0001f, 1000.0f);
 
 	// 削除するかどうかのフラグ
 	bool deleteCurrentAddObject = false;
@@ -246,7 +247,7 @@ void EditMode::Update()
 	if (changeObject)
 	{
 		selectObject.reset();
-		SetSelectObject();
+		selectObject = GetPObject();
 	}
 
 	if (selectObject)
@@ -254,16 +255,17 @@ void EditMode::Update()
 		selectObject->SetPosition(addObjectPos);
 		selectObject->SetAngle(addObjectAngle);
 
-		if (objectType == OBJ_TYPE_FIERD)
+		if (objectType == OBJ_TYPE_FIERD || objectType == OBJ_TYPE_STAGE)
 		{
 			selectObject->SetScale(addObjectScale);
 		}
 	}
 	else
 	{
-		SetSelectObject();
+		selectObject = GetPObject();
 	}
 
+	// 追加
 	if (MelLib::Input::KeyTrigger(DIK_SPACE))AddObject();
 
 	// 削除
@@ -290,7 +292,7 @@ void EditMode::Update()
 		addObjectScale = pObj->GetRefModelObjects().at("main").GetScale();
 
 		selectObject.reset();
-		SetSelectObject();
+		selectObject = GetPObject();
 	}
 
 }
@@ -305,53 +307,72 @@ void EditMode::Draw()
 	}
 }
 
-void EditMode::SetSelectObject()
+std::shared_ptr<MelLib::GameObject> EditMode::GetPObject()
 {
 	switch (objectType + objectNum)
 	{
 
 	case NORMAL_ENEMY:
-		AddEnemy(std::make_shared<NoemalEnemy>(addObjectPos));
+		return std::make_shared<NoemalEnemy>(addObjectPos);
 		break;
+
 
 	case BAMBOO:
-		selectObject = std::make_shared<Bamboo>(addObjectPos);
+		return std::make_shared<Bamboo>(addObjectPos);
 		break;
 
+	case ROCK:
+		return std::make_shared<Rock>(addObjectPos, addObjectAngle, addObjectScale,1);
+		break;
+
+	case ROCK_2:
+		return std::make_shared<Rock>(addObjectPos, addObjectAngle, addObjectScale, 2);
+		break;
+
+	case ROCK_3:
+		return std::make_shared<Rock>(addObjectPos, addObjectAngle, addObjectScale, 3);
+		break;
+
+
 	case GROUND:
-		selectObject = std::make_shared<Ground>(addObjectPos, addObjectAngle, addObjectScale.ToVector2());
+		return std::make_shared<Ground>(addObjectPos, addObjectAngle, addObjectScale.ToVector2());
 		break;
 
 	case WALL:
-		selectObject = std::make_shared<Wall>(addObjectPos, addObjectAngle, addObjectScale.ToVector2());
+		return std::make_shared<Wall>(addObjectPos, addObjectAngle, addObjectScale.ToVector2());
 		break;
 
+
 	default:
-		return;
+		return nullptr;
 		break;
 	}
 }
 
 void EditMode::AddObject()
 {
-	MelLib::GameObjectManager::GetInstance()->AddObject(selectObject);
+	std::shared_ptr<MelLib::GameObject> getP = GetPObject();
 
-	// 追加に成功したら、オブジェクト番号を格納
+	getP->SetPosition(addObjectPos);
+	getP->SetAngle(addObjectAngle);
+
+	if (objectType == OBJ_TYPE_FIERD || objectType == OBJ_TYPE_STAGE)
+	{
+		getP->SetScale(addObjectScale);
+	}
+
+	MelLib::GameObjectManager::GetInstance()->AddObject(getP);
+
+	// 追加に成功したら、オブジェクト番号などを格納
 	objectTypes.push_back(objectType);
 	objectNums.push_back(objectNum);
-	pGameObjects.push_back(selectObject.get());
+	pGameObjects.push_back(getP.get());
 
-	// 選択オブジェクトを消す
-	selectObject.reset();
+	// 敵だったら敵リストに追加
+	if(objectType == OBJ_TYPE_ENEMY)pEnemys->push_back(getP);
 
 }
 
-void EditMode::AddEnemy(std::shared_ptr<Enemy>p)
-{
-	std::shared_ptr<Enemy>pEnemy = p;
-	pEnemys->push_back(pEnemy);
-	selectObject = pEnemy;
-}
 
 EditMode* EditMode::GetInstance()
 {

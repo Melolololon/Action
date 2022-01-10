@@ -123,6 +123,9 @@
     <ClCompile Include="Wall.cpp">
       <Filter>ソース ファイル\Object\Stage</Filter>
     </ClCompile>
+    <ClCompile Include="Rock.cpp">
+      <Filter>ソース ファイル\Object\Stage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -186,6 +189,9 @@
       <Filter>ヘッダー ファイル\Object\Player</Filter>
     </ClInclude>
     <ClInclude Include="Wall.h">
+      <Filter>ヘッダー ファイル\Object\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Rock.h">
       <Filter>ヘッダー ファイル\Object\Stage</Filter>
     </ClInclude>
   </ItemGroup>

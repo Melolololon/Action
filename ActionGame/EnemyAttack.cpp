@@ -48,7 +48,7 @@ void EnemyAttack::Update()
 
 	if (deadTimer.GetMaxOverFlag())
 	{
-		//eraseManager = true;
+		eraseManager = true;
 	}
 }
 

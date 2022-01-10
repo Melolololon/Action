@@ -40,7 +40,7 @@ NoemalEnemy::NoemalEnemy(const MelLib::Vector3& pos) :
 	modelObjects["main"].Update();
 
 	// ‰¼
-	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<EnemyAttack>
+	/*MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<EnemyAttack>
 		(
 			3,
 			MelLib::Vector3(-12,17,0),
@@ -51,7 +51,7 @@ NoemalEnemy::NoemalEnemy(const MelLib::Vector3& pos) :
 			MelLib::Vector3(0, 0, 0),
 			3
 			)
-	);
+	);*/
 }
 
 void NoemalEnemy::Update()
@@ -117,6 +117,7 @@ void NoemalEnemy::Update()
 
 	// •‚‚«–hŽ~
 	FallStart(0.0f);
+	CalcMovePhysics();
 }
 
 //void NoemalEnemy::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)

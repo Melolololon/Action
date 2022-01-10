@@ -107,7 +107,9 @@ void StageObject::MeshCat(const MelLib::GameObject* const object, MelLib::ModelD
 
 StageObject::StageObject(const MelLib::Vector3& pos, const std::string& modelName)
 {
-	modelObjects["main"];
+
+	SetPosition(pos);
+
 	if (modelName == "")
 	{
 		modelObjects["main"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX),nullptr);
@@ -119,19 +121,22 @@ StageObject::StageObject(const MelLib::Vector3& pos, const std::string& modelNam
 		modelObjects["main"].Create(MelLib::ModelData::Get(modelName), nullptr);
 	}
 	modelObjects["main"].SetPosition(pos);
-	SetPosition(pos);
 
 
 	// テスト用
 	//SegmentToPlane();
+
+
+	tags.push_back("StageObject");
 }
 
 StageObject::StageObject(const MelLib::Vector3& pos, MelLib::ModelData* pCatModelData)
 {
-	modelObjects["main"];
 	modelObjects["main"].Create(pCatModelData, nullptr);
 	modelObjects["main"].SetPosition(pos);
 	SetPosition(pos);
+
+	tags.push_back("StageObject");
 }
 
 StageObject::~StageObject()

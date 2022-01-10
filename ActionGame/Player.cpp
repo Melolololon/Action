@@ -65,7 +65,7 @@ Player::Player(const MelLib::Vector3& pos)
 	capsuleData[0].SetRadius(2.5f);
 	capsuleData[0].GetRefSegment3DData().
 		SetPosition(MelLib::Value2<MelLib::Vector3>
-			(GetPosition() + MelLib::Vector3(0, 3, 0), GetPosition() + MelLib::Vector3(0, -18, 0)));
+			(GetPosition() + MelLib::Vector3(0, 15, 0), GetPosition() + MelLib::Vector3(0, -18, 0)));
 
 	segment3DData.resize(3);
 	segment3DData[0] = capsuleData[0].GetSegment3DData();
@@ -111,7 +111,7 @@ Player::Player(const MelLib::Vector3& pos)
 	{
 		modelObjects["main"].SetScale(MelLib::Vector3(3));
 		modelObjects["main"].SetAngle(0);
-		modelObjects["main"].SetPosition(MelLib::Vector3(0, -18, -0));
+		modelObjects["main"].SetPosition(MelLib::Vector3(0, -21, -0));
 
 
 		//浮き防止
@@ -691,11 +691,13 @@ void Player::LockOn()
 				}
 			}
 
-			// 敵いなかったら終了
-			if (lockOnEnemyDistance == FLT_MAX)return;
-
-			// 近くにいなかったら終了
-			if (lockOnEnemyDistance > LOCK_ON_DISTANCE)return;
+			// 敵いなかったら、または、近くにいなかったら終了
+			
+			if (lockOnEnemyDistance == FLT_MAX || lockOnEnemyDistance > LOCK_ON_DISTANCE)
+			{
+				LockOnEnd();
+				return;
+			}
 
 		}
 	}
@@ -708,7 +710,8 @@ void Player::LockOn()
 	{
 	}
 
-	if (!lockOn)return;
+	// ロックオンを解除した、または、ロックオンした敵がやられてnullptrになったらreturn
+	if (!lockOn || !lockOnEnemy)return;
 
 	// カメラ操作
 	// カメラの動きを補完すること
@@ -754,7 +757,7 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 	// 敵と当たった時の処理
 	for (const auto& tag : object->GetTags()) 
 	{
-		if(tag == "Enemy")
+		if(tag == "Enemy" || tag == "StageObject")
 		{
 			// 真上から移動せずに乗っかっても押し出すようにする
 			// 敵から自分へのベクトルを求め、その方向に押し出す。
@@ -777,6 +780,10 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 			}
 		}
 
+		if (tag == "StageObject")
+		{
+			DashEnd();
+		}
 	}
 
 
