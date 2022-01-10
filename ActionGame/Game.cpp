@@ -70,6 +70,8 @@ void Game::Initialize()
 	
 
 	MelLib::TextWrite::CreateFontData(/*L"HGPºÞ¼¯¸E"*/L"Arial", "test");
+
+	MelLib::Camera::Get()->SetFar(10000.0f);
 }
 
 void Game::Finalize()
