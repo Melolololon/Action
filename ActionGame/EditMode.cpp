@@ -34,8 +34,8 @@ std::string EditMode::GetFileName()
 	path = typeid(*currentScene).name();
 
 	// 先頭6文字("class ")を削除
-	path.erase(path.begin(),path.begin() + 6);
-	
+	path.erase(path.begin(), path.begin() + 6);
+
 	path += "_EditData.edit";
 
 	return path;
@@ -48,26 +48,26 @@ void EditMode::Save()
 	std::ofstream file;
 	file.open(filePath, std::ios_base::binary);
 
-	const std::vector<std::shared_ptr<MelLib::GameObject>>& refGameObjects = 
+	const std::vector<std::shared_ptr<MelLib::GameObject>>& refGameObjects =
 		MelLib::GameObjectManager::GetInstance()->GetRefGameObject();
 
 	int objectNumber = 0;
 	for (size_t i = 0; i < refGameObjects.size(); i++)
 	{
-		if (i != 0) 
+		if (i != 0)
 		{
 			bool addObjectFlag = false;
 			// 保存しなくていいやつは無視
-			for(auto& p : pGameObjects)
+			for (auto& p : pGameObjects)
 			{
-				if(refGameObjects[i].get() == p)
+				if (refGameObjects[i].get() == p)
 				{
 					addObjectFlag = true;
 					break;
 				}
 			}
 
-			if (!addObjectFlag) 
+			if (!addObjectFlag)
 			{
 				continue;
 			}
@@ -97,7 +97,7 @@ void EditMode::Save()
 			file.write(reinterpret_cast<char*>(&writeParam), sizeof(writeParam));
 		}
 
-		if (i != 0) 
+		if (i != 0)
 		{
 			objectNumber++;
 		}
@@ -150,7 +150,7 @@ bool EditMode::Load(std::shared_ptr<Player>& p, std::vector<std::shared_ptr<Enem
 	p = std::make_shared<Player>(addObjectPos);
 	MelLib::GameObjectManager::GetInstance()->AddObject(p);
 	pGameObjects.push_back(p.get());
-	
+
 	// 残り全部読み込む
 	size_t fileSize = std::filesystem::file_size(filePath);
 	while (fileSize != file.tellg())
@@ -220,13 +220,15 @@ void EditMode::Update()
 
 	changeObject = changeObject || imguiManager->DrawSliderInt("ObjectNum", objectNum, 0, 10);
 
-	imguiManager->DrawSliderVector3("Position", addObjectPos, -1000.0f, 1000.0f);
+	imguiManager->DrawSliderFloat("PositionX", addObjectPos.x, playerPos.x - 300.0f, playerPos.x + 300.0f);
+	imguiManager->DrawSliderFloat("PositionY", addObjectPos.y, playerPos.y - 300.0f, playerPos.y + 300.0f);
+	imguiManager->DrawSliderFloat("PositionZ", addObjectPos.z, playerPos.z - 300.0f, playerPos.z + 300.0f);
 	imguiManager->DrawSliderVector3("Angle", addObjectAngle, 0.0f, 359.9999f);
 	imguiManager->DrawSliderVector3("Scale", addObjectScale, 0.0001f, 400.0f);
 
 	// 削除するかどうかのフラグ
 	bool deleteCurrentAddObject = false;
-	if (pGameObjects.size() >= 2) 
+	if (pGameObjects.size() >= 2)
 	{
 		imguiManager->DrawSliderInt("CurrentAddObject", currentAddObject, 1, pGameObjects.size() - 1);
 
@@ -235,7 +237,7 @@ void EditMode::Update()
 	imguiManager->EndDrawWindow();
 
 	// オブジェクトの変更があったらselectObjectを変更
-	if(changeObject)
+	if (changeObject)
 	{
 		selectObject.reset();
 		SetSelectObject();
@@ -259,13 +261,16 @@ void EditMode::Update()
 	if (MelLib::Input::KeyTrigger(DIK_SPACE))AddObject();
 
 	// 削除
-	if(deleteCurrentAddObject)
+	if (deleteCurrentAddObject)
 	{
+
 		pGameObjects[currentAddObject]->TrueEraseManager();
-		
+
 		pGameObjects.erase(pGameObjects.begin() + currentAddObject);
 		objectTypes.erase(objectTypes.begin() + currentAddObject - 1);
 		objectNums.erase(objectNums.begin() + currentAddObject - 1);
+
+		if (currentAddObject > 1) currentAddObject--;
 	}
 
 }
@@ -274,7 +279,7 @@ void EditMode::Draw()
 {
 	if (!(editPossible && isEdit)) return;
 
-	if(selectObject)
+	if (selectObject)
 	{
 		selectObject->Draw();
 	}
