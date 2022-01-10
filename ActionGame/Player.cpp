@@ -111,7 +111,7 @@ Player::Player(const MelLib::Vector3& pos)
 	{
 		modelObjects["main"].SetScale(MelLib::Vector3(3));
 		modelObjects["main"].SetAngle(0);
-		modelObjects["main"].SetPosition(MelLib::Vector3(0, -16, -0));
+		modelObjects["main"].SetPosition(MelLib::Vector3(0, -18, -0));
 
 
 		//•‚‚«–hŽ~

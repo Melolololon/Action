@@ -228,11 +228,17 @@ void EditMode::Update()
 
 	// íœ‚·‚é‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO
 	bool deleteCurrentAddObject = false;
+
+	bool getParam = false;
+
 	if (pGameObjects.size() >= 2)
 	{
 		imguiManager->DrawSliderInt("CurrentAddObject", currentAddObject, 1, pGameObjects.size() - 1);
 
 		imguiManager->DrawCheckBox("DeleteCurrentAddObject", deleteCurrentAddObject);
+
+
+		imguiManager->DrawCheckBox("GetCurrentAddObjectParam", getParam);
 	}
 	imguiManager->EndDrawWindow();
 
@@ -271,6 +277,20 @@ void EditMode::Update()
 		objectNums.erase(objectNums.begin() + currentAddObject - 1);
 
 		if (currentAddObject > 1) currentAddObject--;
+	}
+
+	if(getParam)
+	{
+		objectType = objectTypes[currentAddObject - 1];
+		objectNum = objectNums[currentAddObject - 1];
+
+		MelLib::GameObject* pObj = pGameObjects[currentAddObject];
+		addObjectPos = pObj->GetPosition();
+		addObjectAngle = pObj->GetRefModelObjects().at("main").GetAngle();
+		addObjectScale = pObj->GetRefModelObjects().at("main").GetScale();
+
+		selectObject.reset();
+		SetSelectObject();
 	}
 
 }
