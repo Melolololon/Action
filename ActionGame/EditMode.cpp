@@ -263,9 +263,9 @@ void EditMode::Update()
 	{
 		pGameObjects[currentAddObject]->TrueEraseManager();
 		
-		pGameObjects.erase(pGameObjects.begin() , pGameObjects.begin() + currentAddObject);
-		objectTypes.erase(objectTypes.begin() , objectTypes.begin() + currentAddObject);
-		objectNums.erase(objectNums.begin() , objectNums.begin() + currentAddObject);
+		pGameObjects.erase(pGameObjects.begin() + currentAddObject);
+		objectTypes.erase(objectTypes.begin() + currentAddObject - 1);
+		objectNums.erase(objectNums.begin() + currentAddObject - 1);
 	}
 
 }
