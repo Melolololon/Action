@@ -126,6 +126,9 @@
     <ClCompile Include="Rock.cpp">
       <Filter>ソース ファイル\Object\Stage</Filter>
     </ClCompile>
+    <ClCompile Include="HPGauge.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -193,6 +196,9 @@
     </ClInclude>
     <ClInclude Include="Rock.h">
       <Filter>ヘッダー ファイル\Object\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="HPGauge.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

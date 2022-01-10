@@ -35,7 +35,7 @@ private:
 	//Œü‚¢‚Ä‚éŒü‚«
 	MelLib::Vector3 direction = MelLib::Vector3(0, 0, 1);
 
-	static const unsigned int HP_MAX = 200;
+	static const unsigned int HP_MAX = 150;
 	unsigned int hp = HP_MAX;
 	bool hitGround = false;
 	bool preHitGround = false;
@@ -208,7 +208,7 @@ public:
 
 	const MelLib::GameObject* GetPLockOnEnemy()const { return lockOnEnemy; }
 	
-
+	unsigned int GetHP()const { return hp; }
 #pragma endregion
 
 #pragma region Set

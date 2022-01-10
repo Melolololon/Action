@@ -163,6 +163,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="GameItem.cpp" />
+    <ClCompile Include="HPGauge.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NoemalEnemy.cpp" />
     <ClCompile Include="Option.cpp" />
@@ -188,6 +189,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="Ground.h" />
     <ClInclude Include="GameItem.h" />
+    <ClInclude Include="HPGauge.h" />
     <ClInclude Include="NoemalEnemy.h" />
     <ClInclude Include="Option.h" />
     <ClInclude Include="Pause.h" />

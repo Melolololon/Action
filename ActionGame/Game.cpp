@@ -11,6 +11,7 @@
 #include"GameObjectManager.h"
 #include"Player.h"
 #include"SlushEffect.h"
+#include"HPGauge.h"
 
 // ƒV[ƒ“
 #include"SceneManager.h"
@@ -62,6 +63,7 @@ void Game::Initialize()
 	// ‹¤’Ê“Ç‚Ýž‚Ý
 	Player::LoadResources();
 	SlushEffect::LoadResources();
+	HPGauge::LoadResources();
 
 	MelLib::SceneManager::GetInstance()->SetStartScene(new ActionPart());
 	Fade::GetInstance()->Initializ();

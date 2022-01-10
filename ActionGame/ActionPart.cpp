@@ -7,6 +7,7 @@
 #include"Input.h"
 
 #include"Player.h"
+#include"HPGauge.h"
 
 #include"Enemy.h"
 #include"EnemyAttack.h"
@@ -93,6 +94,8 @@ void ActionPart::Initialize()
 	EnemyAttack::SetPPlayer(pPlayer.get());
 	StageObject::SetPPlayer(pPlayer.get());
 
+	HPGauge::SetPPlayer(pPlayer.get());
+
 	//åoòHíTçıóp
 	std::vector<MelLib::BoxData>bData;
 	/*bData.resize(1);
@@ -126,6 +129,9 @@ void ActionPart::Initialize()
 
 	Pause::GetInstance()->Initialize();
 
+
+	// UIí«â¡
+	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<HPGauge>());
 }
 
 void ActionPart::Update()
@@ -162,9 +168,9 @@ void ActionPart::Draw()
 	//if (editOn && isEdit)  EditMode::GetInstance()->Draw();
 	EditMode::GetInstance()->Draw();
 
+	stage.Draw();
 	MelLib::GameObjectManager::GetInstance()->Draw();
 
-	stage.Draw();
 
 	Pause::GetInstance()->Draw();
 	Fade::GetInstance()->Draw();
