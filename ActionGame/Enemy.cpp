@@ -124,7 +124,14 @@ void Enemy::AddRouteVector()
 
 	if (currentMoveVector != routeVectors.size())
 	{
-		AddPosition(routeVectors[currentMoveVector] * moveSpeed);
+		if (slowMove)
+		{
+			AddPosition(routeVectors[currentMoveVector] * moveSpeed * 0.25f);
+		}
+		else
+		{
+			AddPosition(routeVectors[currentMoveVector] * moveSpeed);
+		}
 	}
 }
 
@@ -137,6 +144,8 @@ bool Enemy::CheckPlayerDistance(const float distance)
 
 void Enemy::CalcPlayerRoute()
 {
+
+
 	// ‰¼
 	routeVectors.clear();
 	routeVectors.resize(1, (pPlayer->GetPosition() - GetPosition()).Normalize());
@@ -216,28 +225,38 @@ void Enemy::CheckAttackEnd()
 
 void Enemy::RotModel()
 {
+	// UŒ‚’†‚Í‰ñ“]‚µ‚È‚¢
+	if (isAttack)return;
+
 	//direction = (pPlayer->GetPosition() - GetPosition()).Normalize();
 
 	//// ‰ñ“]
 	//float angle = MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(direction.x, direction.z), false) - 270;
 	//modelObjects["main"].SetAngle(MelLib::Vector3(28, angle, 0));
 
-
+	// is•ûŒü‚ÉŒü‚­‚æ‚¤‚É
 	direction = routeVectors[0].Normalize();
 	
 	// ‰ñ“]
-	float angle = MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(direction.x, direction.z), false) - 270;
+	float directionAngle = MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(direction.x, direction.z), false) - 270;
 	float preAngle = modelObjects["main"].GetAngle().y;
 	
-	if (MelLib::LibMath::AngleDifference(angle, preAngle, 5))return;
+	// ƒvƒŒƒCƒ„[‚ÌŒü‚«‚ÌŠp“x‚Æ¡‚ÌŠp“x‚ª90“xˆÈ“à‚¾‚Á‚½‚ç‚ä‚Á‚­‚è•à‚­
+	if (!MelLib::LibMath::AngleDifference(directionAngle, preAngle, 90))slowMove = true;
+	else slowMove = false;
+
+	// ƒvƒŒƒCƒ„[‚ÌŒü‚«‚ÌŠp“x‚Æ¡‚ÌŠp“x‚ª5“xˆÈ“à‚¾‚Á‚½‚çreturn
+	if (MelLib::LibMath::AngleDifference(directionAngle, preAngle, 5))return;
 
 	float setAngle = 0.0f;
+	
+	// 1ƒtƒŒ[ƒ€‚Ì‰ñ“]—Ê
 	static const float ROT_ANGLE = 3.0f;
 
 	// ·‚ª180ˆÈã‚Å“ü‚é
-	if (abs(angle - preAngle) > 180) preAngle += 360;
+	if (abs(directionAngle - preAngle) > 180) preAngle += 360;
 
-	if (angle > preAngle)setAngle = preAngle + ROT_ANGLE;
+	if (directionAngle > preAngle)setAngle = preAngle + ROT_ANGLE;
 	else setAngle = preAngle - ROT_ANGLE;
 
 	if (setAngle >= 360)setAngle -= 360;

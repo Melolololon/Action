@@ -219,14 +219,15 @@ void PlayerSlush::Update()
 	MelLib::Vector3 moveVector = capsuleData[0].GetSegment3DData().GetRotatePosition().v2 - preSegmentPosition.v2;
 	moveVector = moveVector.Normalize();
 	moveVector = 0;
+	
 	// ƒeƒXƒg
-	if (eraseTimer.GetNowTime() <= 1)
+	/*if (eraseTimer.GetNowTime() <= 1)
 	{
 		MelLib::GameObjectManager::GetInstance()->AddObject
 		(
 			std::make_shared<SlushEffect>(MelLib::Vector3(0, 10, 0), slushVector, moveVector, 10, PLAYER_DIRECTION)
 		);
-	}
+	}*/
 }
 
 void PlayerSlush::Draw()

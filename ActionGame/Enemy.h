@@ -30,6 +30,8 @@ private:
 
 	bool isMuteki = false;
 	MelLib::FrameTimer mutekiTimer;
+
+	bool slowMove = false;
 private:
 	/// <summary>
 	/// Œo˜H’Tõ‚ÌŒ‹‰Ê‚Ì‰ÁZŠÖ”
