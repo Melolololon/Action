@@ -49,34 +49,54 @@ void EditMode::Save()
 	std::ofstream file;
 	file.open(filePath, std::ios_base::binary);
 
+	// プレイヤー書き込み
+	// 座標の書き込み
+	MelLib::Vector3 writeParam = pPlayer->GetPosition();
+	file.write(reinterpret_cast<char*>(&writeParam), sizeof(writeParam));
+
+	// モデルの数書き込み
+	int modelNum = pPlayer->GetRefModelObjects().size();
+	file.write(reinterpret_cast<char*>(&modelNum), sizeof(modelNum));
+
+	// モデルの角度と大きさの書き込み
+	const std::unordered_map<std::string, MelLib::ModelObject>& refModels = pPlayer->GetRefModelObjects();
+
+	for (const auto& model : refModels)
+	{
+		writeParam = model.second.GetAngle();
+		file.write(reinterpret_cast<char*>(&writeParam), sizeof(writeParam));
+
+		writeParam = model.second.GetScale();
+		file.write(reinterpret_cast<char*>(&writeParam), sizeof(writeParam));
+	}
+
+
+
 	const std::vector<std::shared_ptr<MelLib::GameObject>>& refGameObjects =
 		MelLib::GameObjectManager::GetInstance()->GetRefGameObject();
 
 	int objectNumber = 0;
 	for (size_t i = 0; i < refGameObjects.size(); i++)
 	{
-		if (i != 0)
+		bool addObjectFlag = false;
+		// 保存しなくていいやつは無視
+		for (auto& p : pGameObjects)
 		{
-			bool addObjectFlag = false;
-			// 保存しなくていいやつは無視
-			for (auto& p : pGameObjects)
+			if (refGameObjects[i].get() == p)
 			{
-				if (refGameObjects[i].get() == p)
-				{
-					addObjectFlag = true;
-					break;
-				}
+				addObjectFlag = true;
+				break;
 			}
-
-			if (!addObjectFlag)
-			{
-				continue;
-			}
-
-			// 識別番号書き込み
-			file.write(reinterpret_cast<char*>(&objectTypes[objectNumber]), sizeof(int));
-			file.write(reinterpret_cast<char*>(&objectNums[objectNumber]), sizeof(int));
 		}
+
+		if (!addObjectFlag)
+		{
+			continue;
+		}
+
+		// 識別番号書き込み
+		file.write(reinterpret_cast<char*>(&objectTypes[objectNumber]), sizeof(int));
+		file.write(reinterpret_cast<char*>(&objectNums[objectNumber]), sizeof(int));
 
 		// 座標の書き込み
 		MelLib::Vector3 writeParam = refGameObjects[i]->GetPosition();
@@ -98,10 +118,7 @@ void EditMode::Save()
 			file.write(reinterpret_cast<char*>(&writeParam), sizeof(writeParam));
 		}
 
-		if (i != 0)
-		{
-			objectNumber++;
-		}
+	
 	}
 
 	file.close();
@@ -127,9 +144,10 @@ bool EditMode::Load(std::shared_ptr<Player>& p, std::vector<std::shared_ptr<MelL
 		objectNums.push_back(GROUND - OBJ_TYPE_FIERD);*/
 
 
+
 		p = std::make_shared<Player>(MelLib::Vector3(0, 5, 0));
 		MelLib::GameObjectManager::GetInstance()->AddObject(p);
-		pGameObjects.push_back(p.get());
+		//pGameObjects.push_back(p.get());
 		// 強制的にエディットから開始
 		isEdit = true;
 
@@ -150,12 +168,16 @@ bool EditMode::Load(std::shared_ptr<Player>& p, std::vector<std::shared_ptr<MelL
 	}
 	p = std::make_shared<Player>(addObjectPos);
 	MelLib::GameObjectManager::GetInstance()->AddObject(p);
-	pGameObjects.push_back(p.get());
+	//pGameObjects.push_back(p.get());
 
 	// 残り全部読み込む
 	size_t fileSize = std::filesystem::file_size(filePath);
 	while (fileSize != file.tellg())
 	{
+
+		
+
+
 		file.read(reinterpret_cast<char*>(&objectType), sizeof(objectType));
 		file.read(reinterpret_cast<char*>(&objectNum), sizeof(objectNum));
 
@@ -168,6 +190,9 @@ bool EditMode::Load(std::shared_ptr<Player>& p, std::vector<std::shared_ptr<MelL
 			file.read(reinterpret_cast<char*>(&addObjectAngle), sizeof(addObjectAngle));
 			file.read(reinterpret_cast<char*>(&addObjectScale), sizeof(addObjectScale));
 		}
+
+
+		if (objectNum + objectType == GROUND)continue;
 
 		// セット
 		selectObject = GetPObject();
@@ -232,7 +257,7 @@ void EditMode::Update()
 
 	bool getParam = false;
 
-	if (pGameObjects.size() >= 2)
+	if (pGameObjects.size() >= 1)
 	{
 		imguiManager->DrawSliderInt("CurrentAddObject", currentAddObject, 1, pGameObjects.size() - 1);
 
@@ -274,7 +299,7 @@ void EditMode::Update()
 
 		pGameObjects[currentAddObject]->TrueEraseManager();
 
-		pGameObjects.erase(pGameObjects.begin() + currentAddObject);
+		pGameObjects.erase(pGameObjects.begin() + currentAddObject - 1);
 		objectTypes.erase(objectTypes.begin() + currentAddObject - 1);
 		objectNums.erase(objectNums.begin() + currentAddObject - 1);
 
