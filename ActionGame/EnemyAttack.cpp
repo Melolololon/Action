@@ -43,8 +43,6 @@ void EnemyAttack::Update()
 		MODEL_START_ANGLE,
 		MODEL_START_SCALE
 	));
-	//判定と位置をそのままセット
- 	SetPosition(sphereData[0].GetPosition());
 
 	if (deadTimer.GetMaxOverFlag())
 	{

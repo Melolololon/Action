@@ -209,6 +209,7 @@ public:
 	const MelLib::GameObject* GetPLockOnEnemy()const { return lockOnEnemy; }
 	
 	unsigned int GetHP()const { return hp; }
+	unsigned int GetHPMax()const { return HP_MAX; }
 #pragma endregion
 
 #pragma region Set

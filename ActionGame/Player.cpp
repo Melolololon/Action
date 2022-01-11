@@ -62,7 +62,7 @@ Player::Player(const MelLib::Vector3& pos)
 
 	collisionFlag.capsule = true;
 	capsuleData.resize(1);
-	capsuleData[0].SetRadius(2.5f);
+	capsuleData[0].SetRadius(3.0f);
 	capsuleData[0].GetRefSegment3DData().
 		SetPosition(MelLib::Value2<MelLib::Vector3>
 			(GetPosition() + MelLib::Vector3(0, 15, 0), GetPosition() + MelLib::Vector3(0, -18, 0)));

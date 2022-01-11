@@ -27,7 +27,6 @@ NoemalEnemy::NoemalEnemy(const MelLib::Vector3& pos) :
 	segment3DData.resize(1);
 	segment3DData[0].SetPosition(capsuleData[0].GetSegment3DData().GetPosition());
 
-	attackTimer.SetMaxTime(60 * 2);
 
 	modelObjects["main"].SetScale(3);
 
@@ -62,7 +61,7 @@ void NoemalEnemy::Update()
 
 	modelObjects["main"].Update();
 	// ‚±‚±‚ÉUŒ‚ðŒ‚ð‹Lq
-	if (CheckPlayerDistance(10.0f) )
+	if (CheckPlayerDistance(10.0f) && !isAttack)
 	{
 		AttackStart();
 	}
@@ -91,20 +90,23 @@ void NoemalEnemy::Update()
 	if (attackTimer.GetNowTime() == ATTACK_START_TIME)
 	{
 		// UŒ‚”»’è‚Ì’Ç‰Á
-		/*MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<EnemyAttack>
+		MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<EnemyAttack>
 			(
-				15,
-				GetPosition(),
+				3,
+				MelLib::Vector3(-12, 17, 0),
 				3.0f,
-				60 * 0.3,
+				60 * 0.1,
 				modelObjects["main"],
-				0,
-				MelLib::Vector3(0, 0, 0), 
+				MelLib::Vector3(0, 0, 0),
+				MelLib::Vector3(0, 0, 0),
 				3
-			)
-		);*/
+				)
+		);
 
+		attackTimer.ResetTimeZero();
+		attackTimer.SetStopFlag(true);
 	}
+
 
 	CheckMutekiEnd();
 

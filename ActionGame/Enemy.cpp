@@ -205,6 +205,7 @@ void Enemy::CheckMutekiEnd()
 void Enemy::AttackStart()
 {
 	isAttack = true;
+	attackTimer.SetStopFlag(false);
 
 	// 攻撃アニメーションセット
 	modelObjects["main"].SetAnimation("Attack");
