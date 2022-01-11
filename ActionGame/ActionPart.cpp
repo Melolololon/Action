@@ -48,7 +48,7 @@ void ActionPart::Fade()
 	if (!Fade::GetInstance()->GetIsFade())
 	{
 		// ポーズから終了したら入る
-		if (Pause::GetInstance()->GetIsEnd())
+		if (Pause::GetInstance()->GetIsEnd() || Pause::GetInstance()->GetIsReStart())
 		{
 			Fade::GetInstance()->Start();
 		}
@@ -194,5 +194,6 @@ void ActionPart::Finalize()
 
 MelLib::Scene* ActionPart::GetNextScene()
 {
-	return new Title();
+	if(Pause::GetInstance()->GetIsEnd()) return new Title();
+	else if (Pause::GetInstance()->GetIsReStart()) return new ActionPart();
 }

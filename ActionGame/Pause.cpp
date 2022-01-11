@@ -74,6 +74,7 @@ void Pause::Initialize()
 {
 	isEnd = false;
 	isPause = false;
+	isReStart = false;
 	currentPauseSelect = 0;
 
 	CreateSprite();
@@ -207,7 +208,7 @@ void Pause::Update()
 			break;
 
 		case PauseMenu::RESTART:
-
+			isReStart = true;
 			break;
 
 		case PauseMenu::OPTION:

@@ -45,6 +45,7 @@ private:
 	MelLib::Sprite2D pauseStringSpr;
 
 	bool isEnd = false;
+	bool isReStart = false;
 private:
 	Pause(){}
 	~Pause(){}
@@ -64,5 +65,6 @@ public:
 
 	bool GetIsPause() { return isPause; }
 	bool GetIsEnd() { return isEnd; }
+	bool GetIsReStart() { return isReStart; }
 };
 
