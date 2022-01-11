@@ -73,6 +73,9 @@ Pause* Pause::GetInstance()
 void Pause::Initialize()
 {
 	isEnd = false;
+	isPause = false;
+	currentPauseSelect = 0;
+
 	CreateSprite();
 
 	pauseSubAlpha.SetStart(0.0f);
@@ -111,13 +114,13 @@ void Pause::Update()
 	if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::START) && !isPause)
 	{
 		isPause = true;
-		pushPauseSelect = -1;
 	}
 	// ポーズ終了
 	else if (isPause &&(MelLib::Input::PadButtonTrigger(MelLib::PadButton::B)
 		|| MelLib::Input::PadButtonTrigger(MelLib::PadButton::START)))
 	{
 		pauseEnd = true;
+		currentPauseSelect = 0;
 	}
 
 	if (!isPause)return;
@@ -193,25 +196,27 @@ void Pause::Update()
 
 
 	// 決定
-	if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::A))pushPauseSelect = currentPauseSelect;
-
-	// 選択したものに応じて処理を行う
-	switch (pushPauseSelect)
+	if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::A))
 	{
-	case PauseMenu::PAUSE_END:
-		pauseEnd = true;
-		break;
 
-	case PauseMenu::RESTART:
+		// 選択したものに応じて処理を行う
+		switch (currentPauseSelect)
+		{
+		case PauseMenu::PAUSE_END:
+			pauseEnd = true;
+			break;
 
-		break;
+		case PauseMenu::RESTART:
 
-	case PauseMenu::OPTION:
-		break;
+			break;
 
-	case PauseMenu::RETURN_TITLE:
-		isEnd = true;
-		break;
+		case PauseMenu::OPTION:
+			break;
+
+		case PauseMenu::RETURN_TITLE:
+			isEnd = true;
+			break;
+		}
 	}
 
 
