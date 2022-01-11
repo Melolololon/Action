@@ -117,6 +117,9 @@ Player::Player(const MelLib::Vector3& pos)
 
 		//浮き防止
 		FallStart(0.0f);
+
+		// 落下アニメーションからスタート
+		modelObjects["main"].SetAnimation("Jump_Up");
 	}
 
 	SetPosition(pos);
@@ -124,24 +127,33 @@ Player::Player(const MelLib::Vector3& pos)
 
 void Player::Update()
 {
-	
 
 	MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())
 	{
-		if(EditMode::GetInstance()->GetIsEdit())Camera();
+		if(EditMode::GetInstance()->GetIsEdit())RotCamera();
 		
 
 
 		MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
 		if (typeid(*currentScene) != typeid(Title))
 		{
-			SetCameraPosition();
+			SetCameraData();
 		}
 		return;
 	}
 
 	modelObjects["main"].Update();
+	
+	if (isStun)
+	{
+		Stun();
+		SetCameraData();
+		RotCamera();
+		LockOn();
+		return;
+	}
+
 	if (!setStartParam)
 	{
 		if (typeid(*currentScene) != typeid(Title))
@@ -149,7 +161,7 @@ void Player::Update()
 			JumpAnimation();
 			ChangeAnimationData();
 
-			SetCameraPosition();
+			SetCameraData();
 			CalcMovePhysics();
 		}
 		return;
@@ -166,7 +178,7 @@ void Player::Update()
 		}
 		else
 		{
-			Camera();
+			RotCamera();
 			return;
 		}
 	}
@@ -179,7 +191,7 @@ void Player::Update()
 
 	CalcMovePhysics();
 
-	Camera();
+	RotCamera();
 	LockOn();
 
 	float angle = MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(direction.x, direction.z), false) - 270;
@@ -509,6 +521,9 @@ void Player::SetAttackType()
 			currentAttack = PlayerSlush::AttackType::DASH_1;
 
 			modelObjects["main"].SetAnimation("Attack_Normal_1");
+
+			isDash = false;
+			DashEnd();
 		}
 		else if (hitGround)// 通常攻撃
 		{
@@ -613,7 +628,15 @@ void Player::Muteki()
 	}
 }
 
-void Player::Camera()
+void Player::Stun()
+{
+	if(modelObjects["main"].GetAnimationEndFlag())
+	{
+		isStun = false;
+	}
+}
+
+void Player::RotCamera()
 {
 
 	if (lockOn)return;
@@ -651,19 +674,21 @@ void Player::Camera()
 	if (cameraAngle.x <= MIX_CAMERA_ANGLE_X)cameraAngle.x = MIX_CAMERA_ANGLE_X;
 
 	pCamera->SetAngle(cameraAngle);
-	pCamera->SetRotatePoint(MelLib::Camera::RotatePoint::ROTATE_POINT_TARGET_POSITION);
-	pCamera->SetCameraToTargetDistance(80.0f);
+	
 
 	//pCamera->SetRotateCriteriaPosition(position);
-	SetCameraPosition();
+	SetCameraData();
 }
 
-void Player::SetCameraPosition()
+void Player::SetCameraData()
 {
 	MelLib::Camera* pCamera = MelLib::Camera::Get();
 	/*pCamera->SetRotateCriteriaPosition
 	(MelLib::LibMath::FloatDistanceMoveVector3
 	(GetPosition(), MelLib::LibMath::OtherVector3(pCamera->GetCameraPosition(), pCamera->GetTargetPosition()), 30.0f));*/
+
+	pCamera->SetRotatePoint(MelLib::Camera::RotatePoint::ROTATE_POINT_TARGET_POSITION);
+	pCamera->SetCameraToTargetDistance(80.0f);
 
 	if (!lockOn)
 	{
@@ -803,6 +828,8 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 	if(typeid(*object) == typeid(EnemyAttack))
 	{
 		isStun = true;
+		modelObjects["main"].SetAnimation("Stun");
+
 		/*MelLib::Vector3 enemyToPlayer = GetPosition() - object->GetPosition();
 		enemyToPlayer = enemyToPlayer.Normalize();
 		AddPosition(-enemyToPlayer * 0.3f);*/
@@ -861,7 +888,7 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 		//segment3DData[0] = capsuleData[0].GetSegment3DData();
 
 		AddPosition(addPos);
-		SetCameraPosition();
+		SetCameraData();
 
 		hitGround = true;
 

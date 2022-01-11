@@ -81,7 +81,7 @@ void NoemalEnemy::Update()
 	}
 
 	// ‚±‚±‚ÉUŒ‚ğŒ‚ğ‹Lq
-	if (CheckPlayerDistance(10.0f) && !isAttack)
+	if (CheckPlayerDistance(15.0f) && !isAttack)
 	{
 		AttackStart();
 	}
@@ -115,7 +115,7 @@ void NoemalEnemy::Update()
 				3,
 				MelLib::Vector3(-12, 17, 0),
 				3.0f,
-				60 * 0.1,
+				60 * 0.2,
 				modelObjects["main"],
 				MelLib::Vector3(0, 0, 0),
 				MelLib::Vector3(0, 0, 0),

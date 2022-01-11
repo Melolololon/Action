@@ -62,7 +62,6 @@ private:
 	float dropStartPosY = 0.0f;
 #pragma endregion
 
-
 #pragma region UŒ‚
 
 	struct AttackData
@@ -168,9 +167,11 @@ private:
 
 	void Muteki();
 
+	// UŒ‚d’¼
+	void Stun();
 
-	void Camera();
-	void SetCameraPosition();
+	void RotCamera();
+	void SetCameraData();
 
 	void LockOn();
 
