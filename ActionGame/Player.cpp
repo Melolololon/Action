@@ -194,7 +194,17 @@ void Player::Update()
 	// アニメーションに合わせて再生速度やループを設定する
 	ChangeAnimationData();
 
+	// 落下中差を追加
+	if(GetIsFall())
+	{
+		dropStartPosY -= prePos.y - GetPosition().y;
+	}
 
+	// この数値以上落下したら落下扱い
+	static const float DROP_POS_Y = 10.0f;
+
+	// 一定量落下したら落下扱い
+	if (dropStartPosY >= DROP_POS_Y)isDrop = true;
 
 }
 
@@ -239,11 +249,11 @@ void Player::ChangeAnimationData()
 		modelObjects["main"].SetAnimationEndStopFlag(true);
 	}
 
-	// デバッグ用
-	if (MelLib::Input::KeyTrigger(DIK_1))
-	{
-		isTPause = !isTPause;
-	}
+	//// デバッグ用
+	//if (MelLib::Input::KeyTrigger(DIK_1))
+	//{
+	//	isTPause = !isTPause;
+	//}
 
 	// 強制Tポーズ
 	if (isTPause)
@@ -423,8 +433,9 @@ void Player::Jump()
 
 void Player::JumpAnimation()
 {
+
 	// 条件満たしたらジャンプアニメーション
-	if (!hitGround && !preHitGround && !isDash && currentAttack == PlayerSlush::AttackType::NONE)
+	if (!hitGround && !preHitGround && !isDash && currentAttack == PlayerSlush::AttackType::NONE && isDrop)
 	{
 		if (!jumpResetAnimation)
 		{
@@ -789,12 +800,22 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 		}
 	}
 
+	if(typeid(*object) == typeid(EnemyAttack))
+	{
+		isStun = true;
+		/*MelLib::Vector3 enemyToPlayer = GetPosition() - object->GetPosition();
+		enemyToPlayer = enemyToPlayer.Normalize();
+		AddPosition(-enemyToPlayer * 0.3f);*/
+	}
+
 
 	// 線分がステージの判定に当たったら入る
 	//if (typeid(*object) == typeid(Ground)
 	if (typeid(*object) == typeid(Stage)
 		&& collisionType == MelLib::ShapeType3D::SEGMENT)
 	{
+		// 落下距離をリセット
+		dropStartPosY = 0.0f;
 
 		// 着地処理
 		if (!hitGroundNotMove)
@@ -810,6 +831,8 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 				modelObjects["main"].SetAnimation("Jump_End_1");
 			}
 			jumpResetAnimation = false;
+
+			isDrop = false;
 		}
 
 

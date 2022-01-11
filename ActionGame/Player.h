@@ -57,6 +57,9 @@ private:
 
 #pragma region ジャンプ
 	static const float JUMP_POWER;
+
+	bool isDrop = false;
+	float dropStartPosY = 0.0f;
 #pragma endregion
 
 
@@ -106,14 +109,15 @@ private:
 
 #pragma endregion
 
-
 #pragma region 無敵
 
 	bool isMuteki = false;
 	MelLib::FrameTimer mutekiTimer;
 #pragma endregion
 
-	
+	bool isStun = false;
+
+
 
 	// 低いところは、着地アニメーションをジャンプの逆再生にし、硬直はなし
 	// 地面に着地した時の動けない時間
