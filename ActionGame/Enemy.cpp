@@ -74,6 +74,13 @@ void Enemy::Stun()
 		isStun = false;
 		//modelObjects["main"].SetAnimation("No_Move");
 	}
+
+	MelLib::Vector3 playerPos = pPlayer->GetPosition();
+	MelLib::Vector3 myToPlayer(playerPos - GetPosition());
+	myToPlayer = myToPlayer.Normalize();
+
+	// ノックバック
+	AddPosition(-myToPlayer * 0.3f);
 }
 
 void Enemy::Dead()
@@ -105,9 +112,11 @@ void Enemy::Hit(const GameObject* const object, const MelLib::ShapeType3D& colli
 	std::string n = typeid(*object).name();
 	if (typeid(*object) == typeid(PlayerSlush) && !isMuteki)
 	{
+
 		// プレイヤーから現在の攻撃の攻撃力を取得し、体力を減らす
 		hp -= pPlayer->GetCurrentAttackPower();
 
+		// 無敵に
 		isMuteki = true;
 		mutekiTimer.SetStopFlag(false);
 
@@ -119,6 +128,7 @@ void Enemy::Hit(const GameObject* const object, const MelLib::ShapeType3D& colli
 		// 攻撃強制終了
 		isAttack = false;
 
+		// 0になったらやられ処理
 		if (hp <= 0)
 		{
 			isDead = true;
