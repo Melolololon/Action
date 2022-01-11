@@ -11,6 +11,7 @@
 
 #include"PlayerSlush.h"
 
+#include"Stage.h"
 #include"Ground.h"
 #include"Wall.h"
 
@@ -789,8 +790,9 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 	}
 
 
-
-	if (typeid(*object) == typeid(Ground)
+	// 線分がステージの判定に当たったら入る
+	//if (typeid(*object) == typeid(Ground)
+	if (typeid(*object) == typeid(Stage)
 		&& collisionType == MelLib::ShapeType3D::SEGMENT)
 	{
 
@@ -832,7 +834,7 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 
 
 			//カプセルじゃなくて線分で判定取ってるときの処理
-		addPos.y += segment3DData[0].GetCalcResult().boardHitPos.y - segment3DData[0].GetPosition().v2.y;
+		addPos.y += segment3DData[0].GetCalcResult().triangleHitPos.y - segment3DData[0].GetPosition().v2.y;
 		//segment3DData[0] = capsuleData[0].GetSegment3DData();
 
 		AddPosition(addPos);

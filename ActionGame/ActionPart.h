@@ -9,6 +9,8 @@
 
 #include"Enemy.h"
 
+#include"Stage.h"
+
 //アクションパートのシーン
 class ActionPart :public MelLib::Scene
 {
@@ -21,7 +23,8 @@ private:
 	//テスト用
 	MelLib::ModelObject obj;
 
-	MelLib::ModelObject stage;
+	//MelLib::ModelObject stage;
+	std::shared_ptr<Stage>stage;
 
 	// ロックオン用
 	static std::vector<std::shared_ptr<MelLib::GameObject>>pEnemys;

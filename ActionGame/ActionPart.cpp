@@ -36,6 +36,7 @@ void ActionPart::LoadResources()
 	Ground::LoadResource();
 	NoemalEnemy::LoadResource();
 	Rock::LoadResources();
+	Stage::LoadResources(1);
 
 	MelLib::ModelData::Load("Resources/Model/Stage/Stage.obj",true,"stage");
 
@@ -70,10 +71,12 @@ void ActionPart::Initialize()
 	MelLib::Camera::Get()->SetAngle(MelLib::Vector3(20, 0, 0));
 
 	// ステージ
-	stage.Create(MelLib::ModelData::Get("stage"),nullptr);
+	stage = std::make_shared<Stage>(1);
+	MelLib::GameObjectManager::GetInstance()->AddObject(stage);
+	/*stage.Create(MelLib::ModelData::Get("stage"),nullptr);
 	stage.SetPosition(MelLib::Vector3(0,10,0));
 	stage.SetScale(MelLib::Vector3(8, 8, 8));
-	stage.SetAngle(MelLib::Vector3(0, 180, 0));
+	stage.SetAngle(MelLib::Vector3(0, 180, 0));*/
 
 	
 
@@ -168,7 +171,7 @@ void ActionPart::Draw()
 	//if (editOn && isEdit)  EditMode::GetInstance()->Draw();
 	EditMode::GetInstance()->Draw();
 
-	stage.Draw();
+	//stage.Draw();
 	MelLib::GameObjectManager::GetInstance()->Draw();
 
 
