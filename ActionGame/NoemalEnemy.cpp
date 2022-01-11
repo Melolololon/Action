@@ -17,7 +17,7 @@ void NoemalEnemy::LoadResource()
 }
 
 NoemalEnemy::NoemalEnemy(const MelLib::Vector3& pos) :
-	Enemy(pos, 3, 0.8f, "NormalEnemy")
+	Enemy(pos, 3, 3.0f, "NormalEnemy")
 {
 	capsuleData.resize(1);
 	capsuleData[0].SetRadius(5.0f);

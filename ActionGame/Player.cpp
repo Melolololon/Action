@@ -774,7 +774,7 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 			}
 			else if(prePos - GetPosition() == 0)
 			{
-				AddPosition(MelLib::Vector3(enemyToPlayer.x, 0, enemyToPlayer.z) * 1.0f);
+				AddPosition(MelLib::Vector3(enemyToPlayer.x, 0, enemyToPlayer.z) * 4.0f);
 			}
 			else 
 			{
