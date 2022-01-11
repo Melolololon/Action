@@ -7,7 +7,7 @@
 #include"EnemyAttack.h"
 
 #include"Ground.h"
-
+#include"Stage.h"
 
 #include"EditMode.h"
 #include"Pause.h"
@@ -72,6 +72,7 @@ void Enemy::Stun()
 	if(modelObjects["main"].GetAnimationEndFlag())
 	{
 		isStun = false;
+		//modelObjects["main"].SetAnimation("No_Move");
 	}
 }
 
@@ -115,6 +116,9 @@ void Enemy::Hit(const GameObject* const object, const MelLib::ShapeType3D& colli
 		modelObjects["main"].SetAnimation("Stun");
 		modelObjects["main"].ResetAnimation();
 
+		// çUåÇã≠êßèIóπ
+		isAttack = false;
+
 		if (hp <= 0)
 		{
 			isDead = true;
@@ -124,7 +128,7 @@ void Enemy::Hit(const GameObject* const object, const MelLib::ShapeType3D& colli
 		}
 	}
 
-	if (typeid(*object) == typeid(Ground)
+	if (typeid(*object) == typeid(Stage)
 		&& collisionType == MelLib::ShapeType3D::SEGMENT)
 	{
 
@@ -133,7 +137,7 @@ void Enemy::Hit(const GameObject* const object, const MelLib::ShapeType3D& colli
 		//ìäÇ∞è„Ç∞èàóùèIóπ
 		FallEnd();
 
-		addPos.y += segment3DData[0].GetCalcResult().boardHitPos.y - segment3DData[0].GetPosition().v2.y;
+		addPos.y += segment3DData[0].GetCalcResult().triangleHitPos.y - segment3DData[0].GetPosition().v2.y;
 	
 		AddPosition(addPos);
 	}
