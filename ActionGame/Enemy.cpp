@@ -8,8 +8,9 @@
 
 #include"Ground.h"
 
-// やること
-// 敵のモデル作成(木人)
+
+#include"EditMode.h"
+#include"Pause.h"
 
 Player* Enemy::pPlayer;
 std::vector<std::vector<std::vector<MelLib::AStarNode>>> Enemy::nodes;
@@ -65,8 +66,41 @@ void Enemy::Draw()
 	modelObjects["main"].Draw();
 }
 
+void Enemy::Stun()
+{
+	// 硬直アニメーション終了でfalseに
+	if(modelObjects["main"].GetAnimationEndFlag())
+	{
+		isStun = false;
+	}
+}
+
+void Enemy::Dead()
+{
+	// 倒れるアニメーションが終わったらタイマー動かす
+	if(modelObjects["main"].GetAnimationEndFlag())
+	{
+		// 死亡アニメーション終了後の何秒後に消すか
+		static const int ERASE_TIME = 60 * 1;
+		eraseTimer.SetMaxTime(ERASE_TIME);
+		eraseTimer.SetStopFlag(false);
+	}
+
+	if(eraseTimer.GetMaxOverFlag())
+	{
+		eraseManager = true;
+
+		// ここにエフェクトなどを追加する処理を記述
+
+	}
+}
+
 void Enemy::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)
 {
+	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())return;
+
+	if (isDead)return;
+
 	std::string n = typeid(*object).name();
 	if (typeid(*object) == typeid(PlayerSlush) && !isMuteki)
 	{
@@ -76,12 +110,17 @@ void Enemy::Hit(const GameObject* const object, const MelLib::ShapeType3D& colli
 		isMuteki = true;
 		mutekiTimer.SetStopFlag(false);
 
+		// 硬直処理
+		isStun = true;
+		modelObjects["main"].SetAnimation("Stun");
+		modelObjects["main"].ResetAnimation();
+
 		if (hp <= 0)
 		{
 			isDead = true;
 
-			// 仮処理
-			eraseManager = true;
+			modelObjects["main"].SetAnimation("Dead");
+			modelObjects["main"].SetAnimationEndStopFlag(true);
 		}
 	}
 

@@ -2,6 +2,9 @@
 
 Player* EnemyAttack::pPlayer;
 
+#include"EditMode.h"
+#include"Pause.h"
+
 EnemyAttack::EnemyAttack
 (
 	unsigned int power,
@@ -32,6 +35,8 @@ EnemyAttack::EnemyAttack
 
 void EnemyAttack::Update()
 {
+	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())return;
+
 	// 座標計算してセット
   	sphereData[0].SetPosition(MODEL.CalcAnimationPosition
 	(

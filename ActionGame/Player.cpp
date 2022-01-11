@@ -754,6 +754,8 @@ void Player::Draw()
 
 void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)
 {
+	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())return;
+
 	// “G‚Æ“–‚½‚Á‚½‚Ìˆ—
 	for (const auto& tag : object->GetTags()) 
 	{

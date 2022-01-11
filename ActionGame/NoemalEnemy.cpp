@@ -13,7 +13,7 @@
 
 void NoemalEnemy::LoadResource()
 {
-	MelLib::ModelData::Load("Resources/Model/Enemy/Mokuzin/Mokuzin_02.fbx", true, "NormalEnemy");
+	MelLib::ModelData::Load("Resources/Model/Enemy/Mokuzin/Mokuzin_03.fbx", true, "NormalEnemy");
 }
 
 NoemalEnemy::NoemalEnemy(const MelLib::Vector3& pos) :
@@ -39,14 +39,15 @@ NoemalEnemy::NoemalEnemy(const MelLib::Vector3& pos) :
 	modelObjects["main"].Update();
 
 	// ‰¼
+	
 	/*MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<EnemyAttack>
 		(
 			3,
-			MelLib::Vector3(-12,17,0),
+			MelLib::Vector3(-12, 17, 0),
 			3.0f,
-			60 * 0.3,
+			60 * 15,
 			modelObjects["main"],
-			MelLib::Vector3(0,0,0),
+			MelLib::Vector3(0, 0, 0),
 			MelLib::Vector3(0, 0, 0),
 			3
 			)
@@ -60,6 +61,25 @@ void NoemalEnemy::Update()
 	
 
 	modelObjects["main"].Update();
+
+	// €‚ñ‚Å‚½‚çreturn
+	if (isDead)
+	{
+		Dead();
+		return;
+	}
+
+	// –³“G‚ÌŠÔi‚ß‚é
+	CheckMutekiEnd();
+	
+	// d’¼’†‚¾‚Á‚½‚çreturn
+	if (isStun)
+	{
+		// d’¼ŠÖŒW‚Ìˆ—
+		Stun();
+		return;
+	}
+
 	// ‚±‚±‚ÉUŒ‚ğŒ‚ğ‹Lq
 	if (CheckPlayerDistance(10.0f) && !isAttack)
 	{
@@ -108,18 +128,18 @@ void NoemalEnemy::Update()
 	}
 
 
-	CheckMutekiEnd();
-
 	//modelObjects["main"].SetAnimation("No_Move");
 
 	// ŒÅ’è
 	//modelObjects["main"].SetAnimation("Test");
-	//modelObjects["main"].SetAnimation("_T");
+	
 
 
 	// •‚‚«–h~
 	FallStart(0.0f);
 	CalcMovePhysics();
+
+	//modelObjects["main"].SetAnimation("_T");
 }
 
 //void NoemalEnemy::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)

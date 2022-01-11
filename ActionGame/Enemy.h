@@ -26,7 +26,6 @@ private:
 	MelLib::Vector3 direction;
 
 
-	bool isDead = false;
 
 	bool isMuteki = false;
 	MelLib::FrameTimer mutekiTimer;
@@ -45,7 +44,18 @@ protected:
 
 	bool isAttack = false;
 
+	// 攻撃食らって硬直してるかどうか
+	bool isStun = false;
+
+	// やられたかどうか
+	bool isDead = false;
+
+	// 攻撃を出すためのタイマー
 	MelLib::FrameTimer attackTimer;
+
+	// 消すまでの時間
+	MelLib::FrameTimer eraseTimer;
+
 protected:
 	/// <summary>
 	/// プレイヤーとの距離が指定した数値未満か確認
@@ -59,6 +69,7 @@ protected:
 	/// </summary>
 	void CalcPlayerRoute();
 
+	
 	void CheckMutekiEnd();
 
 	void AttackStart();
@@ -66,6 +77,9 @@ protected:
 
 	void RotModel();
 
+	void Stun();
+
+	void Dead();
 public:
 
 	Enemy(const MelLib::Vector3& pos, unsigned int hp, float moveSpeed, const std::string& modelName = "");
