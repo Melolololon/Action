@@ -20,6 +20,8 @@
 
 #include"EnemyAttack.h"
 
+#include<Physics.h>
+
 // テスト
 #include"SlushEffect.h"
 
@@ -815,7 +817,9 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 			}
 			else 
 			{
+				
 				AddPosition(MelLib::Vector3(prePos.x - GetPosition().x, 0, prePos.z - GetPosition().z));
+				
 			}
 		}
 
@@ -910,6 +914,34 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 		&& collisionType == MelLib::ShapeType3D::SEGMENT)
 	{
 		AddPosition(MelLib::Vector3(prePos.x - GetPosition().x, 0, prePos.z - GetPosition().z));
+
+
+	//	MelLib::BoardData board = GetHitBoardData();
+	//	MelLib::Vector3 boardNormal(board.GetNormal());
+	//	MelLib::Vector3 moveVector = GetPosition() - prePos;
+
+	//	// テスト
+	///*	boardNormal = MelLib::Vector3(0.5,0,-0.5).Normalize();
+	//	moveVector = MelLib::Vector3(-0.5, 0, 0.5);*/
+
+	//	//// 進行方向と一致で反転
+	//	if (std::signbit(boardNormal.x) == std::signbit(moveVector.x))boardNormal.x *= -1;
+	//	if (std::signbit(boardNormal.z) == std::signbit(moveVector.z))boardNormal.z *= -1;
+
+	//	float max = abs(boardNormal.x) + abs(boardNormal.z);
+	//	float hirituX = abs(boardNormal.x) / max;
+	//	float hirituZ = abs(boardNormal.z) / max;
+
+	//	//float length = boardNormal.Length();
+	//	float sum = abs(moveVector.x) + abs(moveVector.z);
+	//	MelLib::Vector3 addPos(sum * hirituX, 0, sum * hirituZ);
+
+	//	// 法線に応じて向きを変える
+	//	if (std::signbit(boardNormal.x))addPos.x *= -1;
+	//	if (std::signbit(boardNormal.z))addPos.z *= -1;
+	//	
+
+	//	AddPosition(addPos);
 
 		DashEnd();
 	}

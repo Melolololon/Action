@@ -169,6 +169,7 @@ void Enemy::SetAStarNodeDatas
 
 void Enemy::AddRouteVector()
 {
+
 	if (MelLib::LibMath::CalcDistance3D(routeVectors[currentMoveVector], GetPosition()) <= 0.3f
 		&& currentMoveVector + 1 != routeVectors.size())
 	{
@@ -198,9 +199,19 @@ bool Enemy::CheckPlayerDistance(const float distance)
 void Enemy::CalcPlayerRoute()
 {
 
-
 	// ‰¼
 	routeVectors.clear();
+
+	static const float MOVE_DISTANCE = 400.0f;
+	if (MelLib::LibMath::CalcDistance3D(pPlayer->GetPosition(), GetPosition()) >= MOVE_DISTANCE)
+	{
+		modelObjects["main"].SetAnimation("No_Move");
+		return;
+	}
+
+	modelObjects["main"].SetAnimation("Move");
+
+
 	routeVectors.resize(1, (pPlayer->GetPosition() - GetPosition()).Normalize());
 	AddRouteVector();
 	return;
@@ -280,7 +291,7 @@ void Enemy::CheckAttackEnd()
 void Enemy::RotModel()
 {
 	// UŒ‚’†‚Í‰ñ“]‚µ‚È‚¢
-	if (isAttack)return;
+	if (isAttack || routeVectors.size() == 0)return;
 
 	//direction = (pPlayer->GetPosition() - GetPosition()).Normalize();
 

@@ -89,7 +89,6 @@ void NoemalEnemy::Update()
 	{
 		CalcPlayerRoute();
 
-		modelObjects["main"].SetAnimation("Move");
 	}
 	if(isAttack)
 	{
