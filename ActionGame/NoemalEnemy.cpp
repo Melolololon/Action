@@ -38,20 +38,6 @@ NoemalEnemy::NoemalEnemy(const MelLib::Vector3& pos) :
 
 	modelObjects["main"].Update();
 
-	// ‰¼
-	
-	/*MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<EnemyAttack>
-		(
-			3,
-			MelLib::Vector3(-12, 17, 0),
-			3.0f,
-			60 * 15,
-			modelObjects["main"],
-			MelLib::Vector3(0, 0, 0),
-			MelLib::Vector3(0, 0, 0),
-			3
-			)
-	);*/
 }
 
 void NoemalEnemy::Update()

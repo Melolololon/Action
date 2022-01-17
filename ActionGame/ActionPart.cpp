@@ -14,6 +14,7 @@
 #include"StageObject.h"
 
 #include"NoemalEnemy.h"
+#include"JumpEnemy.h"
 
 #include"Ground.h"
 
@@ -34,7 +35,10 @@ std::vector<std::shared_ptr<MelLib::GameObject>>ActionPart::pEnemys;
 void ActionPart::LoadResources()
 {
 	Ground::LoadResource();
+
 	NoemalEnemy::LoadResource();
+	JumpEnemy::LoadResources();
+
 	Rock::LoadResources();
 	Stage::LoadResources(1);
 
@@ -60,6 +64,22 @@ void ActionPart::Fade()
 	if (Fade::GetInstance()->GetChangeSceneFlag())
 	{
 		isEnd = true;
+	}
+}
+
+void ActionPart::Event()
+{
+
+	// イベント終了
+	if(pPlayer->GetHitEventFlag())
+	{
+		switch (currentEvent)
+		{
+		case EventType::TUTORIAL:
+			tutorial.reset();
+			currentEvent = EventType::NONE;
+			break;
+		}
 	}
 }
 
@@ -135,6 +155,10 @@ void ActionPart::Initialize()
 
 	// UI追加
 	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<HPGauge>());
+
+
+	tutorial = std::make_shared<Tutorial>();
+
 }
 
 void ActionPart::Update()
@@ -143,6 +167,9 @@ void ActionPart::Update()
 	EditMode::GetInstance()->Update();
 	Pause::GetInstance()->Update();
 
+	
+
+	tutorial->Update();
 
 	MelLib::GameObjectManager::GetInstance()->Update();
 
@@ -173,6 +200,9 @@ void ActionPart::Draw()
 
 	//stage.Draw();
 	MelLib::GameObjectManager::GetInstance()->Draw();
+
+	tutorial->Draw();
+
 
 
 	Pause::GetInstance()->Draw();

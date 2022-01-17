@@ -14,6 +14,7 @@
 
 #pragma region OBJ_TYPE_ENEMY
 #include"NoemalEnemy.h"
+#include"JumpEnemy.h"
 #pragma endregion
 
 #pragma region OBJ_TYPE_STAGE
@@ -341,6 +342,9 @@ std::shared_ptr<MelLib::GameObject> EditMode::GetPObject()
 		return std::make_shared<NoemalEnemy>(addObjectPos);
 		break;
 
+	case JUMP_ENEMY:
+		return std::make_shared<JumpEnemy>(addObjectPos);
+		break;
 
 	case BAMBOO:
 		return std::make_shared<Bamboo>(addObjectPos);

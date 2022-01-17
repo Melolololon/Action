@@ -41,6 +41,7 @@ private:
 
 #pragma region OBJ_TYPE_ENEMY
 	static ObjID NORMAL_ENEMY = OBJ_TYPE_ENEMY + 0;
+	static ObjID JUMP_ENEMY = OBJ_TYPE_ENEMY + 1;
 
 #pragma endregion
 
@@ -52,7 +53,7 @@ private:
 #pragma endregion
 
 #pragma region OBJ_TYPE_FIERD
-	static ObjID GROUND = OBJ_TYPE_FIERD + 0;
+	static ObjID GROUND = OBJ_TYPE_FIERD + 92929;
 	static ObjID WALL = OBJ_TYPE_FIERD + 1;
 #pragma endregion
 

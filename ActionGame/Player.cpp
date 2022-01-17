@@ -20,6 +20,8 @@
 
 #include"EnemyAttack.h"
 
+#include"EventFlag.h"
+
 #include<Physics.h>
 
 // ƒeƒXƒg
@@ -281,6 +283,8 @@ void Player::ChangeAnimationData()
 
 void Player::Move()
 {
+	hitEventFlag = false;
+
 	// ‰¼
 	modelObjects["main"].SetAnimationSpeedMagnification(1);
 
@@ -957,6 +961,10 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 		}
 	}
 
+	if(typeid(*object) == typeid(EventFlag))
+	{
+		hitEventFlag = true;
+	}
 }
 
 void Player::LifeUp(const unsigned int upNum)

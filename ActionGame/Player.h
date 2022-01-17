@@ -114,8 +114,11 @@ private:
 	MelLib::FrameTimer mutekiTimer;
 #pragma endregion
 
+	// 攻撃を受けて硬直しているじゃどうか
 	bool isStun = false;
 
+	//イベントフラグに衝突したかどうか
+	bool hitEventFlag = false;
 
 
 	// 低いところは、着地アニメーションをジャンプの逆再生にし、硬直はなし
@@ -215,6 +218,8 @@ public:
 	
 	unsigned int GetHP()const { return hp; }
 	unsigned int GetHPMax()const { return HP_MAX; }
+
+	bool GetHitEventFlag()const { return hitEventFlag; }
 #pragma endregion
 
 #pragma region Set

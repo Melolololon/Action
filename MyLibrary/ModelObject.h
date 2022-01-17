@@ -211,6 +211,12 @@ namespace MelLib
 		void SetAnimation(const std::string& name);
 
 		void SetAnimationEndStopFlag(const bool flag) { animationEndStop = flag; }
+
+		/// <summary>
+		/// アニメーションのフレームをセットします。
+		/// </summary>
+		/// <param name="frame"></param>
+		void SetAnimationFrame(const unsigned int frame) { fbxAnimationData.animationTimes.frameTime.SetFrame(frame, FbxTime::eFrames60); }
 #pragma endregion
 
 
@@ -253,6 +259,12 @@ namespace MelLib
 		/// </summary>
 		/// <returns></returns>
 		bool GetAnimationEndFlag()const { return fbxAnimationData.currentTime == fbxAnimationData.animationTimes.endTime; }
+
+		/// <summary>
+		///	アニメーションの現在のフレームを取得します。
+		/// </summary>
+		/// <returns></returns>
+		unsigned int GetAnimationFrame()const { return fbxAnimationData.animationTimes.frameTime.GetFrameCount(); }
 
 #pragma endregion
 

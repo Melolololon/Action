@@ -4,7 +4,9 @@
 #include<Easing.h>
 #include<Sprite2D.h>
 
+#include"Tutorial.h"
 //テスト用
+
 #include<ModelObject.h>
 
 #include"Enemy.h"
@@ -17,6 +19,14 @@ class ActionPart :public MelLib::Scene
 private:
 
 private:
+	enum class EventType
+	{
+		NONE,
+		TUTORIAL,
+		BOSS_MOVIE,
+	};
+	EventType currentEvent = EventType::TUTORIAL;
+
 	// プレイヤーのポインタ
 	std::shared_ptr<Player>pPlayer;
 
@@ -26,11 +36,16 @@ private:
 	//MelLib::ModelObject stage;
 	std::shared_ptr<Stage>stage;
 
+
+	std::shared_ptr<Tutorial>tutorial;
+
 	// ロックオン用
 	static std::vector<std::shared_ptr<MelLib::GameObject>>pEnemys;
 private:
 	void LoadResources();
 	void Fade();
+
+	void Event();
 public:
 	void Initialize()override;//初期化
 	void Update()override;

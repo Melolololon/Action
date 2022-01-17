@@ -129,11 +129,17 @@
     <ClCompile Include="HPGauge.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Stage.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Boss.cpp">
       <Filter>ソース ファイル\Object\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="JumpEnemy.cpp">
+      <Filter>ソース ファイル\Object\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="EventFlag.cpp">
+      <Filter>ソース ファイル\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Stage.cpp">
+      <Filter>ソース ファイル\Object\Stage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -206,11 +212,17 @@
     <ClInclude Include="HPGauge.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Stage.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Boss.h">
       <Filter>ヘッダー ファイル\Object\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="JumpEnemy.h">
+      <Filter>ヘッダー ファイル\Object\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage.h">
+      <Filter>ヘッダー ファイル\Object\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="EventFlag.h">
+      <Filter>ヘッダー ファイル\Object</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

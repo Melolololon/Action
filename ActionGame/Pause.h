@@ -7,6 +7,7 @@ class Pause
 private:
 	bool loadResource = false;
 
+	// ポーズ中かどうか
 	bool isPause = false;
 
 	// ポーズが終わったか(終了処理を行うか)
@@ -44,8 +45,15 @@ private:
 	MelLib::Sprite2D pauseBackSpr;
 	MelLib::Sprite2D pauseStringSpr;
 
-	bool isEnd = false;
+	MelLib::Sprite2D operationSpr;
+
+	// ゲーム終了フラグがtrueになったかどうか
+	bool returnTitle = false;
+	// リスタートするかどうか
 	bool isReStart = false;
+	// 操作説明を表示するかどうか
+	bool drawOperation = false;
+
 private:
 	Pause(){}
 	~Pause(){}
@@ -64,7 +72,7 @@ public:
 	void Draw();
 
 	bool GetIsPause() { return isPause; }
-	bool GetIsEnd() { return isEnd; }
+	bool GetIsEnd() { return returnTitle; }
 	bool GetIsReStart() { return isReStart; }
 };
 

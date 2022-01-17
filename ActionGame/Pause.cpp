@@ -61,7 +61,9 @@ void Pause::CreateSprite()
 	MelLib::Texture::Load(texturePath + "UIText/ReturnTitle.png", "returnTitle");
 	menuStringSprites[PauseMenu::RETURN_TITLE].Create(MelLib::Texture::Get("returnTitle"));
 
-	
+	// 操作説明スプライトの準備
+	//MelLib::Texture::Load();
+	operationSpr.Create();
 }
 
 Pause* Pause::GetInstance()
@@ -72,9 +74,10 @@ Pause* Pause::GetInstance()
 
 void Pause::Initialize()
 {
-	isEnd = false;
+	returnTitle = false;
 	isPause = false;
 	isReStart = false;
+	drawOperation = false;
 	currentPauseSelect = 0;
 
 	CreateSprite();
@@ -125,6 +128,14 @@ void Pause::Update()
 	}
 
 	if (!isPause)return;
+
+	if(drawOperation)
+	{
+		if (isPause && (MelLib::Input::PadButtonTrigger(MelLib::PadButton::B)
+			|| MelLib::Input::PadButtonTrigger(MelLib::PadButton::START)))drawOperation = false;
+
+		return;
+	}
 
 	static const float PAUSE_SUB_ALPHA_SPEED = 10.0f;
 	//スプライトのアルファ値の減算値増減
@@ -213,9 +224,12 @@ void Pause::Update()
 
 		case PauseMenu::OPTION:
 			break;
+		case PauseMenu::CHECK_OPERATION:
+			drawOperation = true;
+			break;
 
 		case PauseMenu::RETURN_TITLE:
-			isEnd = true;
+			returnTitle = true;
 			break;
 		}
 	}
@@ -229,6 +243,14 @@ void Pause::Draw()
 	if (!isPause) return;
 	
 	pauseBackSpr.Draw();
+
+	
+	if(drawOperation)
+	{
+		operationSpr.Draw();
+		return;
+	}
+
 	pauseStringSpr.Draw();
 
 	for (auto& sprite : menuStringSprites)

@@ -6,15 +6,19 @@ class Tutorial
 private:
 
 	// チュートリアルのタイプ
-	enum class TutorialType
+	struct TutorialType
 	{
-		MOVE,
-		ATTACK,
-		JUMP,
-		CAMERA,
+		static const int MOVE = 0;
+		static const int CAMERA = 1;
+		static const int ATTACK = 2;
+		static const int JUMP = 3;
+		static const int END = 4;
 	};
-	TutorialType currentTutorial = TutorialType::MOVE;
+	int currentTutorial = TutorialType::MOVE;
 public:
+	void NextTutorial() { currentTutorial++; }
+	bool TutorialEnd()const { return currentTutorial == TutorialType::END; }
+
 	void Update();
 	void Draw();
 
