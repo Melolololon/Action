@@ -66,7 +66,7 @@ void JumpEnemy::AttackRot()
 
 void JumpEnemy::LoadResources()
 {
-	//MelLib::ModelData::Load("Resources/Model/Enemy/JumpEnemy/JumpEnemy.fbx", true, "jumpEnemy");
+	MelLib::ModelData::Load("Resources/Model/Enemy/JumpEnemy/JumpEnemy.fbx", true, "jumpEnemy");
 }
 
 JumpEnemy::JumpEnemy(const MelLib::Vector3 pos)
@@ -77,6 +77,12 @@ JumpEnemy::JumpEnemy(const MelLib::Vector3 pos)
 	sphereData.resize(1);
 	sphereData[0].SetPosition(pos); 
 	sphereData[0].SetRadius(5.0f);
+
+	segment3DData.resize(1);
+	MelLib::Value2<MelLib::Vector3>segmentPos(GetPosition());
+	segmentPos.v1 += MelLib::Vector3(0, -4, 0);
+	segmentPos.v2 += MelLib::Vector3(0, 4, 0);
+	segment3DData[0].SetPosition(segmentPos);
 
 	FallStart(0.0f);
 }
