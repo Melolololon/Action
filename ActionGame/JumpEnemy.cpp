@@ -122,11 +122,6 @@ JumpEnemy::JumpEnemy(const MelLib::Vector3 pos)
 	segmentPos.v2 += MelLib::Vector3(0, -4, 0);
 	segment3DData[0].SetPosition(segmentPos);
 
-	segment3DData.resize(1);
-	MelLib::Value2<MelLib::Vector3>segmentPos(GetPosition());
-	segmentPos.v1 += MelLib::Vector3(0, -4, 0);
-	segmentPos.v2 += MelLib::Vector3(0, 4, 0);
-	segment3DData[0].SetPosition(segmentPos);
 
 	FallStart(0.0f);
 

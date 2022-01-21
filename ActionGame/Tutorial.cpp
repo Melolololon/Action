@@ -74,11 +74,11 @@ void Tutorial::Draw()
 	//	break;
 	//}
 
-	MelLib::TextWrite::Draw
-	(
-		MelLib::Vector2(300,400),
-		MelLib::Color(0,255),
-		operationText.at(currentTutorial) + TUTORIAL_TEXT.at(currentTutorial),
-		"Arial"
-	);
+	//MelLib::TextWrite::Draw
+	//(
+	//	MelLib::Vector2(300,400),
+	//	MelLib::Color(0,255),
+	//	operationText.at(currentTutorial) + TUTORIAL_TEXT.at(currentTutorial),
+	//	"Arial"
+	//);
 }
