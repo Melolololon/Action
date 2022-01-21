@@ -122,6 +122,7 @@ JumpEnemy::JumpEnemy(const MelLib::Vector3 pos)
 	segmentPos.v2 += MelLib::Vector3(0, -4, 0);
 	segment3DData[0].SetPosition(segmentPos);
 
+
 	FallStart(0.0f);
 
 	modelObjects["main"].SetAnimation("Jump");

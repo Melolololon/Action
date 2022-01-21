@@ -1,5 +1,6 @@
 #pragma once
 #include<Sprite2D.h>
+#include<Input.h>
 
 // チュートリアル
 class Tutorial
