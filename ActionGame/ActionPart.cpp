@@ -69,19 +69,64 @@ void ActionPart::Fade()
 
 void ActionPart::Event()
 {
-
-	// イベント終了
+	// イベントフラグに触れたら進むイベントの管理
 	if(pPlayer->GetHitEventFlag())
 	{
 		switch (currentEvent)
 		{
 		case EventType::TUTORIAL:
-			tutorial.reset();
-			currentEvent = EventType::NONE;
+			
+			if(tutorial.TutorialEnd())
+			{
+				// チュートリアル終了
+				endEvents.push_back(currentEvent);
+				currentEvent = EventType::NONE;
+			}
+			else
+			{
+				// 次に進める
+				tutorial.NextTutorial();
+			}
+			
+			break;
+
+
+		case EventType::NONE:
+			
+			// チュートリアルが終わっていてイベントに触れたら次のイベントへ
+			if(CheckEndEvent(EventType::TUTORIAL))
+			{
+				currentEvent = EventType::BOSS_MOVIE;
+			}
+
 			break;
 		}
 	}
 }
+
+bool ActionPart::CheckEndEvent(const std::vector<EventType>& checkEvents)
+{
+	int count = 0;
+	for(const auto end : endEvents)
+	{
+		for (const auto check: checkEvents)
+		{
+			if (end == check)count++;
+			if (count == checkEvents.size())return true;
+		}
+	}
+	return false;
+}
+
+bool ActionPart::CheckEndEvent(const EventType checkEvent)
+{
+	for (const auto end : endEvents)
+	{
+		if (end == checkEvent)return true;
+	}
+	return false;
+}
+
 
 void ActionPart::Initialize()
 {
@@ -157,7 +202,7 @@ void ActionPart::Initialize()
 	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<HPGauge>());
 
 
-	tutorial = std::make_shared<Tutorial>();
+	
 
 }
 
@@ -168,8 +213,8 @@ void ActionPart::Update()
 	Pause::GetInstance()->Update();
 
 	
-
-	tutorial->Update();
+	if (currentEvent == EventType::TUTORIAL)tutorial.Update();
+	
 
 	MelLib::GameObjectManager::GetInstance()->Update();
 
@@ -201,7 +246,7 @@ void ActionPart::Draw()
 	//stage.Draw();
 	MelLib::GameObjectManager::GetInstance()->Draw();
 
-	tutorial->Draw();
+	if (currentEvent == EventType::TUTORIAL)tutorial.Draw();
 
 
 
@@ -213,7 +258,7 @@ void ActionPart::Draw()
 
 	// テスト
 	MelLib::TextWrite::Draw
-	(MelLib::Vector2(0,670),MelLib::Color(255,255,255,255),L"メニューボタン　メニューを開く","test");
+	(MelLib::Vector2(0,670),MelLib::Color(255,255,255,255),L"メニューボタン　メニューを開く","Arial");
 }
 
 void ActionPart::Finalize()

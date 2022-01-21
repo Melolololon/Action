@@ -6,7 +6,11 @@ class EventFlag :
 private:
 
 public:
+    static void LoadResources();
 
-    EventFlag(const MelLib::Vector3& pos,float radius);
+    EventFlag(const MelLib::Vector3& pos,const MelLib::Vector3& scale);
+
+    void Draw()override;
+
 };
 

@@ -26,6 +26,7 @@ private:
 		BOSS_MOVIE,
 	};
 	EventType currentEvent = EventType::TUTORIAL;
+	std::vector<EventType>endEvents;
 
 	// プレイヤーのポインタ
 	std::shared_ptr<Player>pPlayer;
@@ -37,15 +38,31 @@ private:
 	std::shared_ptr<Stage>stage;
 
 
-	std::shared_ptr<Tutorial>tutorial;
+	Tutorial tutorial;
 
 	// ロックオン用
 	static std::vector<std::shared_ptr<MelLib::GameObject>>pEnemys;
 private:
 	void LoadResources();
+	
+	/// <summary>
+	/// シーン遷移時のフェード処理呼び出し
+	/// </summary>
 	void Fade();
 
+	/// <summary>
+	/// イベント関係の処理
+	/// </summary>
 	void Event();
+
+	/// <summary>
+	/// イベントが終了済みかどうかの確認。endEventsがすべて終了していたらtrue
+	/// </summary>
+	/// <param name="checkEvents">終了したかどうか確認するイベント</param>
+	/// <returns></returns>
+	bool CheckEndEvent(const std::vector<EventType>& checkEvents);
+
+	bool CheckEndEvent(const EventType checkEvent);
 public:
 	void Initialize()override;//初期化
 	void Update()override;

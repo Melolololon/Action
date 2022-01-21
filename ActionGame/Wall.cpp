@@ -37,7 +37,7 @@ void Wall::Update()
 
 void Wall::Draw()
 {
-	modelObjects["main"].Draw();
+	//modelObjects["main"].Draw();
 }
 
 void Wall::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)

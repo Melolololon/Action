@@ -9,7 +9,8 @@ private:
 private:
 	void AttackRot();
 
-
+	void CheckJumpStart();
+	void HitGroundUpdate();
 public:
 
 	static void LoadResources();

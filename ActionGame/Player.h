@@ -210,6 +210,8 @@ public:
 	void DownHP(const unsigned int power) { hp -= power; }
 	void LifeUp(const unsigned int upNum);
 #pragma region Get
+	static const std::unordered_map<Player::ActionType, MelLib::PadButton> GetKeyConfigData() { return keyConfigData; }
+
 	unsigned int GetCurrentAttackPower()const { return attackData[currentAttack].power; }
 
 	MelLib::Vector3 GetDirection() { return direction; }
@@ -224,7 +226,7 @@ public:
 
 #pragma region Set
 
-	static void SetActionButton(const ActionType type, const MelLib::PadButton button) { keyConfigData[type] = button; }
+	static void SetKeyConfigData(const ActionType type, const MelLib::PadButton button) { keyConfigData[type] = button; }
 
 	/// <summary>
 	/// ロックオン強制終了
