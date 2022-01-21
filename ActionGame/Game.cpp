@@ -71,7 +71,7 @@ void Game::Initialize()
 	Option::GetInstance()->Initialize();
 	
 
-	MelLib::TextWrite::CreateFontData(/*L"HGPºÞ¼¯¸E"*/L"Arial", "test");
+	MelLib::TextWrite::CreateFontData(/*L"HGPºÞ¼¯¸E"*/L"Arial", "Arial");
 
 	MelLib::Camera::Get()->SetFar(10000.0f);
 }

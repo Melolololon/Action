@@ -64,9 +64,47 @@ void JumpEnemy::AttackRot()
 
 }
 
+void JumpEnemy::CheckJumpStart()
+{
+	
+
+	// ジャンプ開始フレーム
+	static const unsigned int JUMP_START_FRAME = 0;
+
+	bool jumpStartTiming =
+		modelObjects["main"].GetCurrentAnimationName() == "Jump"
+		&& modelObjects["main"].GetAnimationFrame() == JUMP_START_FRAME
+		&& !modelObjects["main"].GetAnimationReversePlayBack();
+	
+	if(jumpStartTiming)
+	{
+		FallStart(20.0f);
+		modelObjects["main"].SetAnimationEndStopFlag(true);
+	}
+}
+
+void JumpEnemy::HitGroundUpdate()
+{
+
+	// 着地した瞬間逆再生開始
+	if(modelObjects["main"].GetAnimationEndFlag()
+		&& !modelObjects["main"].GetAnimationReversePlayBack())
+	{
+		modelObjects["main"].SetAnimationReversePlayBack(true);
+	}
+
+	// 逆再生が終了したら通常通り再生
+	if(modelObjects["main"].GetAnimationEndFlag()
+		&& modelObjects["main"].GetAnimationReversePlayBack())
+	{
+		modelObjects["main"].SetAnimationReversePlayBack(false);
+	}
+
+}
+
 void JumpEnemy::LoadResources()
 {
-	//MelLib::ModelData::Load("Resources/Model/Enemy/JumpEnemy/JumpEnemy.fbx", true, "jumpEnemy");
+	MelLib::ModelData::Load("Resources/Model/Enemy/JumpEnemy/JumpEnemy.fbx", true, "jumpEnemy");
 }
 
 JumpEnemy::JumpEnemy(const MelLib::Vector3 pos)
@@ -74,20 +112,34 @@ JumpEnemy::JumpEnemy(const MelLib::Vector3 pos)
 {
 	//modelObjects["main"]
 
-	sphereData.resize(1);
-	sphereData[0].SetPosition(pos); 
-	sphereData[0].SetRadius(5.0f);
+	//sphereData.resize(1);
+	//sphereData[0].SetPosition(pos); 
+	//sphereData[0].SetRadius(5.0f);
+
+	segment3DData.resize(1);
+	MelLib::Value2<MelLib::Vector3>segmentPos(GetPosition());
+	segmentPos.v1 += MelLib::Vector3(0, 10, 0);
+	segmentPos.v2 += MelLib::Vector3(0, -4, 0);
+	segment3DData[0].SetPosition(segmentPos);
 
 	FallStart(0.0f);
+
+	modelObjects["main"].SetAnimation("Jump");
+	modelObjects["main"].SetAnimationFrameEnd();
 }
 
 
 void JumpEnemy::Update()
 {
-
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())return;
 
 	modelObjects["main"].Update();
+
+	// ジャンプ開始するか確認
+	if (!GetIsFall())CheckJumpStart();
+
+	// ジャンプしてないときの処理
+	if (!GetIsFall())HitGroundUpdate();
 
 	// 死んでたらreturn
 	if (isDead)
@@ -136,8 +188,6 @@ void JumpEnemy::Update()
 	// 時間になったら攻撃
 	if (attackTimer.GetNowTime() == ATTACK_START_TIME)
 	{
-		
-
 		attackTimer.ResetTimeZero();
 		attackTimer.SetStopFlag(true);
 	}

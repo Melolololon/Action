@@ -458,7 +458,7 @@ void Player::JumpAnimation()
 		if (!jumpResetAnimation)
 		{
 			jumpResetAnimation = true;
-			modelObjects["main"].ResetAnimation();
+			modelObjects["main"].SetAnimationFrameStart();
 		}
 		modelObjects["main"].SetAnimation("Jump_Up");
 	}
@@ -505,7 +505,7 @@ void Player::Attack()
 			CreateAttackSlush();
 
 			//アニメーションをリセット
-			modelObjects["main"].ResetAnimation();
+			modelObjects["main"].SetAnimationFrameStart();
 		}
 	}
 

@@ -123,7 +123,7 @@ void Enemy::Hit(const GameObject* const object, const MelLib::ShapeType3D& colli
 		// d’¼ˆ—
 		isStun = true;
 		modelObjects["main"].SetAnimation("Stun");
-		modelObjects["main"].ResetAnimation();
+		modelObjects["main"].SetAnimationFrameStart();
 
 		// UŒ‚‹­§I—¹
 		isAttack = false;

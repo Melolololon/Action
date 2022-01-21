@@ -20,6 +20,7 @@
 #pragma region OBJ_TYPE_STAGE
 #include"Bamboo.h"
 #include"Rock.h"
+#include"EventFlag.h"
 #pragma endregion
 
 #pragma region OBJ_TYPE_FIERD
@@ -362,6 +363,9 @@ std::shared_ptr<MelLib::GameObject> EditMode::GetPObject()
 		return std::make_shared<Rock>(addObjectPos, addObjectAngle, addObjectScale, 3);
 		break;
 
+	case EVENT_FLAG:
+		return std::make_shared<EventFlag>(addObjectPos, addObjectScale);
+		break;
 
 	case GROUND:
 		return std::make_shared<Ground>(addObjectPos, addObjectAngle, addObjectScale.ToVector2());
