@@ -69,7 +69,7 @@ void JumpEnemy::CheckJumpStart()
 	
 
 	// ジャンプ開始フレーム
-	static const unsigned int JUMP_START_FRAME = 59;
+	static const unsigned int JUMP_START_FRAME = modelObjects["main"].GetAnimationFrameMax();
 
 	bool jumpStartTiming =
 		modelObjects["main"].GetCurrentAnimationName() == "Jump"
