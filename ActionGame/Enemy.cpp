@@ -134,6 +134,7 @@ void Enemy::Hit(const GameObject* const object, const MelLib::ShapeType3D& colli
 			isDead = true;
 
 			modelObjects["main"].SetAnimation("Dead");
+			modelObjects["main"].SetAnimationFrameStart();
 			modelObjects["main"].SetAnimationEndStopFlag(true);
 		}
 	}

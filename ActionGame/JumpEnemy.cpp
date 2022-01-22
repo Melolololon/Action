@@ -68,17 +68,15 @@ void JumpEnemy::CheckJumpStart()
 {
 	
 
-	// ジャンプ開始フレーム
+	// ジャンプ開始フレーム(最終フレーム)取得
 	static const unsigned int JUMP_START_FRAME = modelObjects["main"].GetAnimationFrameMax();
 
 	bool jumpStartTiming =
 		modelObjects["main"].GetCurrentAnimationName() == "Jump"
 		&& modelObjects["main"].GetAnimationFrame() == JUMP_START_FRAME;
 	
-	if(jumpStartTiming)
-	{
-		FallStart(3.0f);
-	}
+	// ジャンプ
+	if (jumpStartTiming)FallStart(3.0f);
 }
 
 void JumpEnemy::HitGroundUpdate()
@@ -113,13 +111,13 @@ JumpEnemy::JumpEnemy(const MelLib::Vector3 pos)
 	//modelObjects["main"]
 
 	sphereData.resize(1);
-	sphereData[0].SetPosition(pos); 
-	sphereData[0].SetRadius(5.0f);
+	sphereData[0].SetPosition(pos + MelLib::Vector3(0,20,0)); 
+	sphereData[0].SetRadius(10.0f);
 
 	segment3DData.resize(1);
 	MelLib::Value2<MelLib::Vector3>segmentPos(GetPosition());
 	segmentPos.v1 += MelLib::Vector3(0, 10, 0);
-	segmentPos.v2 += MelLib::Vector3(0, -4, 0);
+	segmentPos.v2 += MelLib::Vector3(0, 0, 0);
 	segment3DData[0].SetPosition(segmentPos);
 
 
@@ -139,6 +137,16 @@ void JumpEnemy::Update()
 
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())return;
 
+
+
+	// 死んでたらreturn
+	if (isDead)
+	{
+		Dead(); 
+		modelObjects["main"].SetAnimationPlayFlag(true);
+		modelObjects["main"].Update();
+		return;
+	}
 	
 	// ジャンプする前に再生を逆にする処理を行うようにし、
 	// 着地時にジャンプ処理の確認の前に1フレーム分戻し、すぐにジャンプしないようにするために、
@@ -166,13 +174,6 @@ void JumpEnemy::Update()
 
 
 
-	// 死んでたらreturn
-	if (isDead)
-	{
-		Dead();
-		return;
-	}
-
 	// 無敵の時間進める
 	CheckMutekiEnd();
 
@@ -181,6 +182,13 @@ void JumpEnemy::Update()
 	{
 		// 硬直関係の処理
 		Stun();
+
+		// 硬直終了で切り替え
+		if(!isStun)
+		{
+			modelObjects["main"].SetAnimation("Jump");
+		}
+
 		return;
 	}
 
@@ -192,7 +200,7 @@ void JumpEnemy::Update()
 	else if (!isAttack && GetIsFall())
 	{
 		if (!CalcPlayerRoute())modelObjects["main"].SetAnimation("No_Move");
-
+		else modelObjects["main"].SetAnimation("Jump");
 	}
 	if (isAttack)
 	{
@@ -202,6 +210,7 @@ void JumpEnemy::Update()
 		if (modelObjects["main"].GetAnimationEndFlag())
 		{
 			isAttack = false;
+			modelObjects["main"].SetAnimation("Jump");
 		}
 	}
 
