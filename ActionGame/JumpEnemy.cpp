@@ -69,34 +69,32 @@ void JumpEnemy::CheckJumpStart()
 	
 
 	// ジャンプ開始フレーム
-	static const unsigned int JUMP_START_FRAME = 60;
-
-	
+	static const unsigned int JUMP_START_FRAME = 59;
 
 	bool jumpStartTiming =
 		modelObjects["main"].GetCurrentAnimationName() == "Jump"
-		&& modelObjects["main"].GetAnimationFrame() == JUMP_START_FRAME
-		&& !modelObjects["main"].GetAnimationReversePlayBack();
+		&& modelObjects["main"].GetAnimationFrame() == JUMP_START_FRAME;
 	
 	if(jumpStartTiming)
 	{
-		FallStart(-3.0f);
-		modelObjects["main"].SetAnimationEndStopFlag(true);
+		FallStart(3.0f);
 	}
 }
 
 void JumpEnemy::HitGroundUpdate()
 {
 
+	
 	// 着地した瞬間逆再生開始
-	if(modelObjects["main"].GetAnimationEndFlag()
+	if (modelObjects["main"].GetAnimationEndFlag()
 		&& !modelObjects["main"].GetAnimationReversePlayBack())
 	{
 		modelObjects["main"].SetAnimationReversePlayBack(true);
+		modelObjects["main"].SetAnimationPlayFlag(true);
 	}
 
 	// 逆再生が終了したら通常通り再生
-	if(modelObjects["main"].GetAnimationEndFlag()
+	if (modelObjects["main"].GetAnimationEndFlag()
 		&& modelObjects["main"].GetAnimationReversePlayBack())
 	{
 		modelObjects["main"].SetAnimationReversePlayBack(false);
@@ -131,20 +129,39 @@ JumpEnemy::JumpEnemy(const MelLib::Vector3 pos)
 	modelObjects["main"].SetAnimationFrameEnd();
 	modelObjects["main"].SetAnimationPlayFlag(true);
 	modelObjects["main"].SetAnimationEndStopFlag(true);
+
+
 }
 
 
 void JumpEnemy::Update()
 {
+
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())return;
+
+	
+	// アニメーション更新前に地面にいるときの処理を行う
+	if (!GetIsFall())
+	{
+		HitGroundUpdate();
+	}
 
 	modelObjects["main"].Update();
 
-	//// ジャンプ開始するか確認
-	if (!GetIsFall())CheckJumpStart();
-
 	//// ジャンプしてないときの処理
-	if (!GetIsFall())HitGroundUpdate();
+	if (!GetIsFall())
+	{
+		// ジャンプ開始するか確認
+		CheckJumpStart();
+
+	}
+	else
+	{
+		// 通常ジャンプ中はアニメーション停止
+		if(!isAttack) modelObjects["main"].SetAnimationPlayFlag(false);
+	}
+
+
 
 	// 死んでたらreturn
 	if (isDead)

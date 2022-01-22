@@ -287,6 +287,7 @@ namespace MelLib
 		/// <returns></returns>
 		unsigned int GetAnimationFrame()const { return fbxAnimationData.currentTime.GetFrameCount(FbxTime::eFrames60); }
 		
+		unsigned int GetAnimationFrameMax()const { return fbxAnimationData.animationTimes.endTime.GetFrameCount(FbxTime::eFrames60); }
 #pragma endregion
 
 		//コンピュートシェーダーで計算したほうがいい。
