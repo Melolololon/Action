@@ -169,6 +169,7 @@
     <ClCompile Include="JumpEnemy.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NoemalEnemy.cpp" />
+    <ClCompile Include="NormalEnemyAttack.cpp" />
     <ClCompile Include="Option.cpp" />
     <ClCompile Include="Pause.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -198,6 +199,7 @@
     <ClInclude Include="HPGauge.h" />
     <ClInclude Include="JumpEnemy.h" />
     <ClInclude Include="NoemalEnemy.h" />
+    <ClInclude Include="NormalEnemyAttack.h" />
     <ClInclude Include="Option.h" />
     <ClInclude Include="Pause.h" />
     <ClInclude Include="Player.h" />

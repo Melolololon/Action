@@ -141,6 +141,9 @@
     <ClCompile Include="Stage.cpp">
       <Filter>ソース ファイル\Object\Stage</Filter>
     </ClCompile>
+    <ClCompile Include="NormalEnemyAttack.cpp">
+      <Filter>ソース ファイル\Object\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -223,6 +226,9 @@
     </ClInclude>
     <ClInclude Include="EventFlag.h">
       <Filter>ヘッダー ファイル\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="NormalEnemyAttack.h">
+      <Filter>ヘッダー ファイル\Object\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

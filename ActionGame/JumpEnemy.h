@@ -6,7 +6,11 @@ class JumpEnemy :
 private:
 	static const int ATTACK_START_TIME = 60 * 0.7;
 
+	MelLib::Vector3 prePos;
 private:
+	void Attack();
+
+
 	void AttackRot();
 
 	void CheckJumpStart();

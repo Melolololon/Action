@@ -272,6 +272,8 @@ void Enemy::AttackStart()
 
 	// 攻撃アニメーションセット
 	modelObjects["main"].SetAnimation("Attack");
+
+	modelObjects["main"].SetAnimationFrameStart();
 }
 
 void Enemy::CheckAttackEnd()

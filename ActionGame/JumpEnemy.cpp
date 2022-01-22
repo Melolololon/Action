@@ -5,15 +5,20 @@
 #include"Pause.h"
 #include"EnemyAttack.h"
 
+void JumpEnemy::Attack()
+{
+
+}
+
 void JumpEnemy::AttackRot()
 {
 	// 攻撃時の回転を開始するフレーム
-	static const unsigned int ROT_START_FRAME = 1;
+	static const unsigned int ROT_START_FRAME = 55 - 1;
 
 	// 攻撃中に回転フレームになったら回転開始
 	if (isAttack&& modelObjects["main"].GetAnimationFrame() == ROT_START_FRAME)
 	{
-		modelObjects["main"].SetAnimationPlayFlag(true);
+		modelObjects["main"].SetAnimationPlayFlag(false);
 
 		static const float ROT_ANGLE_Y = 25;
 		float setAngle = modelObjects["main"].GetAngle().y + ROT_ANGLE_Y;
@@ -23,30 +28,30 @@ void JumpEnemy::AttackRot()
 
 		if(setAngle == ROT_ANGLE_Y)
 		{
-			// 攻撃判定の出現位置
-			static const MelLib::Vector3 ATTACK_POS[3] =
-			{
-				MelLib::Vector3(),
-				MelLib::Vector3(),
-				MelLib::Vector3()
-			};
+			//// 攻撃判定の出現位置
+			//static const MelLib::Vector3 ATTACK_POS[3] =
+			//{
+			//	MelLib::Vector3(),
+			//	MelLib::Vector3(),
+			//	MelLib::Vector3()
+			//};
 
-			// 足の本数だけ攻撃判定の追加
-			for (int i = 0; i < 3; i++) 
-			{
-				MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<EnemyAttack>
-					(
-						3,
-						ATTACK_POS[i],
-						3.0f,
-						60 * 0.2,
-						modelObjects["main"],
-						MelLib::Vector3(0, 0, 0),
-						MelLib::Vector3(0, 0, 0),
-						3
-						)
-				);
-			}
+			//// 足の本数だけ攻撃判定の追加
+			//for (int i = 0; i < 3; i++) 
+			//{
+			//	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<EnemyAttack>
+			//		(
+			//			3,
+			//			ATTACK_POS[i],
+			//			3.0f,
+			//			60 * 0.2,
+			//			modelObjects["main"],
+			//			MelLib::Vector3(0, 0, 0),
+			//			MelLib::Vector3(0, 0, 0),
+			//			3
+			//			)
+			//	);
+			//}
 		}
 
 		// 360回転したらフレーム進める
@@ -55,6 +60,9 @@ void JumpEnemy::AttackRot()
 
 			// アニメーションのフレームを進め、回転のif分に入らないようにする
 			modelObjects["main"].SetAnimationFrame(ROT_START_FRAME + 1);
+
+			// 再生再開
+			modelObjects["main"].SetAnimationPlayFlag(true);
 		}
 
 	}
@@ -66,17 +74,22 @@ void JumpEnemy::AttackRot()
 
 void JumpEnemy::CheckJumpStart()
 {
-	
+
 
 	// ジャンプ開始フレーム(最終フレーム)取得
-	static const unsigned int JUMP_START_FRAME = modelObjects["main"].GetAnimationFrameMax();
+	static const unsigned int JUMP_START_FRAME = 50 - 1;
 
-	bool jumpStartTiming =
-		modelObjects["main"].GetCurrentAnimationName() == "Jump"
-		&& modelObjects["main"].GetAnimationFrame() == JUMP_START_FRAME;
-	
+	int f = modelObjects["main"].GetAnimationFrame();
+	bool jumpStartTiming = modelObjects["main"].GetAnimationFrame() == JUMP_START_FRAME;
+	jumpStartTiming = jumpStartTiming
+		&& (modelObjects["main"].GetCurrentAnimationName() == "Jump"
+			|| modelObjects["main"].GetCurrentAnimationName() == "Attack");
+
 	// ジャンプ
-	if (jumpStartTiming)FallStart(3.0f);
+	if (jumpStartTiming)
+	{
+		FallStart(3.0f);
+	}
 }
 
 void JumpEnemy::HitGroundUpdate()
@@ -137,7 +150,7 @@ void JumpEnemy::Update()
 
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())return;
 
-
+	prePos = GetPosition();
 
 	// 死んでたらreturn
 	if (isDead)
@@ -193,9 +206,10 @@ void JumpEnemy::Update()
 	}
 
 	// ここに攻撃条件を記述
-	if (CheckPlayerDistance(25.0f) && !isAttack)
+	if (CheckPlayerDistance(25.0f) && !isAttack && !GetIsFall())
 	{
-		AttackStart();
+		// 攻撃方法変更のためコメントアウト
+		//AttackStart();
 	}
 	else if (!isAttack && GetIsFall())
 	{
@@ -205,7 +219,7 @@ void JumpEnemy::Update()
 	if (isAttack)
 	{
 		//modelObjects["main"].SetAnimation("Attack");
-
+		AttackRot();
 		
 		if (modelObjects["main"].GetAnimationEndFlag())
 		{
