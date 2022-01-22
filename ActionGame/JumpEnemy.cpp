@@ -140,7 +140,10 @@ void JumpEnemy::Update()
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())return;
 
 	
-	// アニメーション更新前に地面にいるときの処理を行う
+	// ジャンプする前に再生を逆にする処理を行うようにし、
+	// 着地時にジャンプ処理の確認の前に1フレーム分戻し、すぐにジャンプしないようにするために、
+	// 一旦ModelObjectの前にHitGroundUpdateの処理書いてる
+
 	if (!GetIsFall())
 	{
 		HitGroundUpdate();
