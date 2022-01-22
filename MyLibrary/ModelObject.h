@@ -228,7 +228,7 @@ namespace MelLib
 		/// アニメーションのフレームをセットします。
 		/// </summary>
 		/// <param name="frame"></param>
-		void SetAnimationFrame(const unsigned int frame) { fbxAnimationData.animationTimes.frameTime.SetFrame(frame, FbxTime::eFrames60); }
+		void SetAnimationFrame(const unsigned int frame) { fbxAnimationData.currentTime.SetFrame(frame, FbxTime::eFrames60); }
 
 #pragma endregion
 
@@ -285,8 +285,8 @@ namespace MelLib
 		///	アニメーションの現在のフレームを取得します。
 		/// </summary>
 		/// <returns></returns>
-		unsigned int GetAnimationFrame()const { return fbxAnimationData.animationTimes.frameTime.GetFrameCount(); }
-
+		unsigned int GetAnimationFrame()const { return fbxAnimationData.currentTime.GetFrameCount(FbxTime::eFrames60); }
+		
 #pragma endregion
 
 		//コンピュートシェーダーで計算したほうがいい。

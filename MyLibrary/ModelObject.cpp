@@ -1738,6 +1738,7 @@ bool MelLib::ModelObject::GetAnimationEndFlag()const
 {
 	if (animationReverse)return fbxAnimationData.currentTime == fbxAnimationData.animationTimes.startTime;
 	return fbxAnimationData.currentTime == fbxAnimationData.animationTimes.endTime;
+
 }
 
 bool ModelObject::Create(ModelData* pModelData, ConstBufferData* userConstBufferData, const std::string& name)

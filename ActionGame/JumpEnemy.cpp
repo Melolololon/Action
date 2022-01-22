@@ -69,7 +69,9 @@ void JumpEnemy::CheckJumpStart()
 	
 
 	// ジャンプ開始フレーム
-	static const unsigned int JUMP_START_FRAME = 0;
+	static const unsigned int JUMP_START_FRAME = 60;
+
+	
 
 	bool jumpStartTiming =
 		modelObjects["main"].GetCurrentAnimationName() == "Jump"
@@ -78,7 +80,7 @@ void JumpEnemy::CheckJumpStart()
 	
 	if(jumpStartTiming)
 	{
-		FallStart(20.0f);
+		FallStart(-3.0f);
 		modelObjects["main"].SetAnimationEndStopFlag(true);
 	}
 }
@@ -112,9 +114,9 @@ JumpEnemy::JumpEnemy(const MelLib::Vector3 pos)
 {
 	//modelObjects["main"]
 
-	//sphereData.resize(1);
-	//sphereData[0].SetPosition(pos); 
-	//sphereData[0].SetRadius(5.0f);
+	sphereData.resize(1);
+	sphereData[0].SetPosition(pos); 
+	sphereData[0].SetRadius(5.0f);
 
 	segment3DData.resize(1);
 	MelLib::Value2<MelLib::Vector3>segmentPos(GetPosition());
@@ -127,6 +129,8 @@ JumpEnemy::JumpEnemy(const MelLib::Vector3 pos)
 
 	modelObjects["main"].SetAnimation("Jump");
 	modelObjects["main"].SetAnimationFrameEnd();
+	modelObjects["main"].SetAnimationPlayFlag(true);
+	modelObjects["main"].SetAnimationEndStopFlag(true);
 }
 
 
@@ -136,10 +140,10 @@ void JumpEnemy::Update()
 
 	modelObjects["main"].Update();
 
-	// ジャンプ開始するか確認
+	//// ジャンプ開始するか確認
 	if (!GetIsFall())CheckJumpStart();
 
-	// ジャンプしてないときの処理
+	//// ジャンプしてないときの処理
 	if (!GetIsFall())HitGroundUpdate();
 
 	// 死んでたらreturn
@@ -167,7 +171,7 @@ void JumpEnemy::Update()
 	}
 	else if (!isAttack && GetIsFall())
 	{
-		CalcPlayerRoute();
+		if (!CalcPlayerRoute())modelObjects["main"].SetAnimation("No_Move");
 
 	}
 	if (isAttack)

@@ -65,9 +65,10 @@ protected:
 	bool CheckPlayerDistance(float distance);
 
 	/// <summary>
-	/// プレイヤーへ向かう処理
+	/// プレイヤーへ進行できるか確認し、移動させる
 	/// </summary>
-	void CalcPlayerRoute();
+	/// <returns>進行したかどうか</returns>
+	bool CalcPlayerRoute();
 
 	
 	void CheckMutekiEnd();

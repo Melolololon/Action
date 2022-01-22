@@ -196,7 +196,7 @@ bool Enemy::CheckPlayerDistance(const float distance)
 	return MelLib::LibMath::CalcDistance3D(playerPos, GetPosition()) < distance;
 }
 
-void Enemy::CalcPlayerRoute()
+bool Enemy::CalcPlayerRoute()
 {
 
 	// 仮
@@ -205,16 +205,14 @@ void Enemy::CalcPlayerRoute()
 	static const float MOVE_DISTANCE = 400.0f;
 	if (MelLib::LibMath::CalcDistance3D(pPlayer->GetPosition(), GetPosition()) >= MOVE_DISTANCE)
 	{
-		modelObjects["main"].SetAnimation("No_Move");
-		return;
+		return false;
 	}
 
-	modelObjects["main"].SetAnimation("Move");
 
 
 	routeVectors.resize(1, (pPlayer->GetPosition() - GetPosition()).Normalize());
 	AddRouteVector();
-	return;
+	return true;
 
 	// 毎フレーム計算するとがくがくする(フレームごとに向きが変わるから)一定フレームでいいかも
 	// ノードに辿りつくごとがベスト?

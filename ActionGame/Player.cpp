@@ -131,7 +131,6 @@ Player::Player(const MelLib::Vector3& pos)
 
 void Player::Update()
 {
-
 	MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())
 	{
