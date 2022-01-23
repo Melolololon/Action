@@ -7,7 +7,22 @@
 
 void JumpEnemy::Attack()
 {
+	// 判定移動
+	MelLib::Vector3 attackPos = GetPosition();
+	attackPos.y -= 10;
+	enemyAttack->SetPosition(attackPos);
 
+	float moveVectorY = GetPosition().y - prePos.y;
+	static const float ATTACK_ADD_VECTOR_Y = -1;
+
+	// 移動量が1以上になったら攻撃判定をマネージャーに追加
+	if(moveVectorY < ATTACK_ADD_VECTOR_Y
+		&& GetIsFall()
+		&& !attackAddFrame)
+	{
+		MelLib::GameObjectManager::GetInstance()->AddObject(enemyAttack);
+		attackAddFrame = true;
+	}
 }
 
 void JumpEnemy::AttackRot()
@@ -102,6 +117,9 @@ void JumpEnemy::HitGroundUpdate()
 	{
 		modelObjects["main"].SetAnimationReversePlayBack(true);
 		modelObjects["main"].SetAnimationPlayFlag(true);
+
+		attackAddFrame = false;
+		enemyAttack->TrueEraseManager();
 	}
 
 	// 逆再生が終了したら通常通り再生
@@ -123,24 +141,29 @@ JumpEnemy::JumpEnemy(const MelLib::Vector3 pos)
 {
 	//modelObjects["main"]
 
+	// 判定セット
 	sphereData.resize(1);
 	sphereData[0].SetPosition(pos + MelLib::Vector3(0,20,0)); 
 	sphereData[0].SetRadius(10.0f);
 
+	// 地形用判定セット
 	segment3DData.resize(1);
 	MelLib::Value2<MelLib::Vector3>segmentPos(GetPosition());
 	segmentPos.v1 += MelLib::Vector3(0, 10, 0);
 	segmentPos.v2 += MelLib::Vector3(0, 0, 0);
 	segment3DData[0].SetPosition(segmentPos);
 
-
+	// 追加時浮いてても落下するようにするための呼び出し
 	FallStart(0.0f);
 
+	// アニメーションセット
 	modelObjects["main"].SetAnimation("Jump");
 	modelObjects["main"].SetAnimationFrameEnd();
 	modelObjects["main"].SetAnimationPlayFlag(true);
 	modelObjects["main"].SetAnimationEndStopFlag(true);
 
+	// 攻撃判定作成
+	enemyAttack = std::make_shared<NormalEnemyAttack>(2, sphereData[0].GetRadius());
 
 }
 
@@ -149,6 +172,7 @@ void JumpEnemy::Update()
 {
 
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())return;
+
 
 	prePos = GetPosition();
 
@@ -184,7 +208,6 @@ void JumpEnemy::Update()
 		// 通常ジャンプ中はアニメーション停止
 		if(!isAttack) modelObjects["main"].SetAnimationPlayFlag(false);
 	}
-
 
 
 	// 無敵の時間進める
@@ -242,4 +265,7 @@ void JumpEnemy::Update()
 
 	CalcMovePhysics();
 
+
+	// 攻撃処理
+	Attack();
 }

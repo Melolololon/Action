@@ -11,6 +11,7 @@
 
 #include"Enemy.h"
 #include"EnemyAttack.h"
+#include"NormalEnemyAttack.h"
 #include"StageObject.h"
 
 #include"NoemalEnemy.h"
@@ -160,6 +161,7 @@ void ActionPart::Initialize()
 
 	Enemy::SetPPlayer(pPlayer.get());
 	EnemyAttack::SetPPlayer(pPlayer.get());
+	NormalEnemyAttack::SetPPlayer(pPlayer.get());
 	StageObject::SetPPlayer(pPlayer.get());
 
 	HPGauge::SetPPlayer(pPlayer.get());

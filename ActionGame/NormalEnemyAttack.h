@@ -11,19 +11,12 @@ private:
 	static Player* pPlayer;
 
 	int power;
-	const MelLib::ModelObject& MODEL;
-	MelLib::FrameTimer deadTimer;
 public:
 	NormalEnemyAttack
 	(
 		unsigned int power,
-		const MelLib::Vector3& attackStartPos,
-		float radius,
-		int deadTime,
-		const MelLib::ModelObject& model
+		float radius
 	);
-
-	void Update()override;
 
 	void Hit
 	(
