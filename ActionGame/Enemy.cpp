@@ -47,7 +47,6 @@ Enemy::Enemy(const MelLib::Vector3& pos, const unsigned int hp, const float move
 	tags.push_back(typeid(Enemy).name());
 
 
-	attackTimer.SetStopFlag(false);
 
 	tags.push_back("Enemy");
 

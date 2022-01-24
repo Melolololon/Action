@@ -19,6 +19,7 @@
 #include"EditMode.h"
 
 #include"EnemyAttack.h"
+#include"NormalEnemyAttack.h"
 
 #include"EventFlag.h"
 
@@ -832,15 +833,7 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 		}
 	}
 
-	if(typeid(*object) == typeid(EnemyAttack))
-	{
-		isStun = true;
-		modelObjects["main"].SetAnimation("Stun");
 
-		/*MelLib::Vector3 enemyToPlayer = GetPosition() - object->GetPosition();
-		enemyToPlayer = enemyToPlayer.Normalize();
-		AddPosition(-enemyToPlayer * 0.3f);*/
-	}
 
 
 	// 線分がステージの判定に当たったら入る
@@ -953,10 +946,18 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 	if (!isMuteki)
 	{
 
-		if (typeid(*object) == typeid(EnemyAttack))
+		if (typeid(*object) == typeid(EnemyAttack)
+			|| typeid(*object) == typeid(NormalEnemyAttack))
 		{
 			isMuteki = true;
 			mutekiTimer.SetStopFlag(false);
+
+			isStun = true;
+			modelObjects["main"].SetAnimation("Stun");
+
+			/*MelLib::Vector3 enemyToPlayer = GetPosition() - object->GetPosition();
+			enemyToPlayer = enemyToPlayer.Normalize();
+			AddPosition(-enemyToPlayer * 0.3f);*/
 		}
 	}
 

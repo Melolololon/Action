@@ -93,7 +93,7 @@ void NoemalEnemy::Update()
 	RotModel();
 
 	// ŽžŠÔ‚É‚È‚Á‚½‚çUŒ‚
-	if (attackTimer.GetNowTime() == ATTACK_START_TIME)
+	if (attackTimer.GetNowTime() >= ATTACK_START_TIME)
 	{
 		// UŒ‚”»’è‚Ì’Ç‰Á
 		MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<EnemyAttack>

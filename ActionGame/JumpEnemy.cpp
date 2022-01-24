@@ -109,7 +109,8 @@ void JumpEnemy::CheckJumpStart()
 
 void JumpEnemy::HitGroundUpdate()
 {
-
+	// ‚â‚ç‚ê‚Ä‚½‚çreturn
+	if (isDead)return;
 	
 	// ’…’n‚µ‚½uŠÔ‹tÄ¶ŠJn
 	if (modelObjects["main"].GetAnimationEndFlag()
@@ -180,6 +181,8 @@ void JumpEnemy::Update()
 	if (isDead)
 	{
 		Dead(); 
+
+
 		modelObjects["main"].SetAnimationPlayFlag(true);
 		modelObjects["main"].Update();
 		return;

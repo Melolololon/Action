@@ -207,6 +207,7 @@ public:
 		const int hitObjArrayNum
 	)override;
 
+
 	void DownHP(const unsigned int power) { hp -= power; }
 	void LifeUp(const unsigned int upNum);
 #pragma region Get
@@ -220,6 +221,8 @@ public:
 	
 	unsigned int GetHP()const { return hp; }
 	unsigned int GetHPMax()const { return HP_MAX; }
+
+	bool GetIsMuteki()const { return isMuteki; }
 
 	bool GetHitEventFlag()const { return hitEventFlag; }
 #pragma endregion

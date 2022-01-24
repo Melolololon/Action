@@ -194,7 +194,15 @@ namespace MelLib
 		void SetAngle(const Vector3& angle, const std::string& name = "");
 
 
+
 #pragma endregion
+
+#pragma region 色
+		void SetAddColor(const Color& color, const std::string& name = "");
+		void SetSubColor(const Color& color, const std::string& name = "");
+		void SetMulColor(const Color& color, const std::string& name = "");
+#pragma endregion
+
 
 #pragma region アニメーション
 

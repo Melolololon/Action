@@ -18,8 +18,10 @@ NormalEnemyAttack::NormalEnemyAttack
 
 void NormalEnemyAttack::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)
 {
-	if(typeid(*object) == typeid(Player))
+	if(typeid(*object) == typeid(Player)
+		&& !pPlayer->GetIsMuteki())
 	{
 		pPlayer->DownHP(power);
+		eraseManager = true;
 	}
 }
