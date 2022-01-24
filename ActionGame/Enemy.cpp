@@ -126,6 +126,8 @@ void Enemy::Hit(const GameObject* const object, const MelLib::ShapeType3D& colli
 
 		// UŒ‚‹­§I—¹
 		isAttack = false;
+		attackTimer.ResetTimeZero();
+		attackTimer.SetStopFlag(true);
 
 		// 0‚É‚È‚Á‚½‚ç‚â‚ç‚êˆ—
 		if (hp <= 0)

@@ -195,6 +195,8 @@ void Player::Update()
 
 	CalcMovePhysics();
 
+	Muteki();
+
 	RotCamera();
 	LockOn();
 

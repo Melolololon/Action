@@ -20,7 +20,7 @@ NoemalEnemy::NoemalEnemy(const MelLib::Vector3& pos) :
 	Enemy(pos, 3, 3.0f, "NormalEnemy")
 {
 	capsuleData.resize(1);
-	capsuleData[0].SetRadius(5.0f);
+	capsuleData[0].SetRadius(4.5f);
 	capsuleData[0].GetRefSegment3DData().
 		SetPosition(MelLib::Value2<MelLib::Vector3>(pos + MelLib::Vector3(0, 25.0f, 0), pos + MelLib::Vector3(0, -10.0f, 0)));
 
@@ -67,7 +67,7 @@ void NoemalEnemy::Update()
 	}
 
 	// ‚±‚±‚ÉUŒ‚ğŒ‚ğ‹Lq
-	if (CheckPlayerDistance(15.0f) && !isAttack)
+	if (CheckPlayerDistance(13.0f) && !isAttack)
 	{
 		AttackStart();
 	}
