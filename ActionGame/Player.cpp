@@ -836,113 +836,123 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 	}
 
 
-
-
 	// 線分がステージの判定に当たったら入る
 	//if (typeid(*object) == typeid(Ground)
 	if (typeid(*object) == typeid(Stage)
 		&& collisionType == MelLib::ShapeType3D::SEGMENT)
 	{
-		// 落下距離をリセット
-		dropStartPosY = 0.0f;
-
-		// 着地処理
-		if (!hitGroundNotMove)
+		// ステージの三角形の法線取得
+		MelLib::Vector3 normal = GetHitTriangleData().GetNormal();
+		
+		// 一定以上だったら床扱い
+		if(normal.y >= 0.35f)
 		{
-			float velocityY = GetVelocity().y;
+			// 落下距離をリセット
+			dropStartPosY = 0.0f;
 
-			if (velocityY <= -3.0f)// 超落下
+			// 着地処理
+			if (!hitGroundNotMove)
 			{
-				hitGroundNotMoveTimer.SetMaxTime(60 * 0.75);
-				hitGroundNotMoveTimer.SetStopFlag(false);
-				hitGroundNotMove = true;
+				float velocityY = GetVelocity().y;
 
-				modelObjects["main"].SetAnimation("Jump_End_1");
+				if (velocityY <= -3.0f)// 超落下
+				{
+					hitGroundNotMoveTimer.SetMaxTime(60 * 0.75);
+					hitGroundNotMoveTimer.SetStopFlag(false);
+					hitGroundNotMove = true;
+
+					modelObjects["main"].SetAnimation("Jump_End_1");
+				}
+				jumpResetAnimation = false;
+
+				isDrop = false;
 			}
-			jumpResetAnimation = false;
 
-			isDrop = false;
+
+
+
+			MelLib::Vector3 addPos;
+
+			//velocity分戻すと戻しすぎちゃう
+			//カプセルの下の座標-半径(先端座標)から衝突点へのベクトルの大きさ分戻せばOK?
+
+			//重力加速度分上げる
+			//addPos.y += MelLib::GameObject::GetGravutationalAcceleration();
+
+			//投げ上げ処理終了
+			FallEnd();
+
+			//カプセルの下の先端から衝突点のベクトルを求め、その分押し出す。
+			//-0.15fは、押し出しすぎるとHitが呼ばれなくなって、非ジャンプ時の落下の処理で下がってがくがくするのを防止するためにある
+			//線分の先端がヒットしたらカプセルの先端が上に来るまで押し返すから、-0.15引かないとがくがくする
+			/*addPos.y -= (capsuleData[0].GetSegment3DData().GetPosition().v2.y - capsuleData[0].GetRadius()) -
+				capsuleData[0].GetSegment3DData().GetCalcResult().boardHitPos.y;*/
+
+
+				//カプセルじゃなくて線分で判定取ってるときの処理
+			addPos.y += segment3DData[0].GetCalcResult().triangleHitPos.y - segment3DData[0].GetPosition().v2.y;
+			//segment3DData[0] = capsuleData[0].GetSegment3DData();
+
+			AddPosition(addPos);
+			SetCameraData();
+
+			hitGround = true;
+
+
+
+			if (!setStartParam)
+			{
+				setStartParam = true;
+
+				// 攻撃判定移動用
+				// 攻撃判定をセットしたときのプレイヤーのデータを保存
+				startPos = modelObjects["main"].GetPosition();
+				startAngle = modelObjects["main"].GetAngle();
+				startScale = modelObjects["main"].GetScale();
+			}
 		}
-
-
-
-
-		MelLib::Vector3 addPos;
-
-		//velocity分戻すと戻しすぎちゃう
-		//カプセルの下の座標-半径(先端座標)から衝突点へのベクトルの大きさ分戻せばOK?
-
-		//重力加速度分上げる
-		//addPos.y += MelLib::GameObject::GetGravutationalAcceleration();
-
-		//投げ上げ処理終了
-		FallEnd();
-
-		//カプセルの下の先端から衝突点のベクトルを求め、その分押し出す。
-		//-0.15fは、押し出しすぎるとHitが呼ばれなくなって、非ジャンプ時の落下の処理で下がってがくがくするのを防止するためにある
-		//線分の先端がヒットしたらカプセルの先端が上に来るまで押し返すから、-0.15引かないとがくがくする
-		/*addPos.y -= (capsuleData[0].GetSegment3DData().GetPosition().v2.y - capsuleData[0].GetRadius()) -
-			capsuleData[0].GetSegment3DData().GetCalcResult().boardHitPos.y;*/
-
-
-			//カプセルじゃなくて線分で判定取ってるときの処理
-		addPos.y += segment3DData[0].GetCalcResult().triangleHitPos.y - segment3DData[0].GetPosition().v2.y;
-		//segment3DData[0] = capsuleData[0].GetSegment3DData();
-
-		AddPosition(addPos);
-		SetCameraData();
-
-		hitGround = true;
-
-
-
-		if (!setStartParam)
+		else // そうじゃなかったら壁扱い
 		{
-			setStartParam = true;
-
-			// 攻撃判定移動用
-			// 攻撃判定をセットしたときのプレイヤーのデータを保存
-			startPos = modelObjects["main"].GetPosition();
-			startAngle = modelObjects["main"].GetAngle();
-			startScale = modelObjects["main"].GetScale();
+			AddPosition(MelLib::Vector3(prePos.x - GetPosition().x, 0, prePos.z - GetPosition().z));
+			DashEnd();
 		}
+	
 	}
 
-	if (typeid(*object) == typeid(Wall) 
-		&& collisionType == MelLib::ShapeType3D::SEGMENT)
-	{
-		AddPosition(MelLib::Vector3(prePos.x - GetPosition().x, 0, prePos.z - GetPosition().z));
-
-
-	//	MelLib::BoardData board = GetHitBoardData();
-	//	MelLib::Vector3 boardNormal(board.GetNormal());
-	//	MelLib::Vector3 moveVector = GetPosition() - prePos;
-
-	//	// テスト
-	///*	boardNormal = MelLib::Vector3(0.5,0,-0.5).Normalize();
-	//	moveVector = MelLib::Vector3(-0.5, 0, 0.5);*/
-
-	//	//// 進行方向と一致で反転
-	//	if (std::signbit(boardNormal.x) == std::signbit(moveVector.x))boardNormal.x *= -1;
-	//	if (std::signbit(boardNormal.z) == std::signbit(moveVector.z))boardNormal.z *= -1;
-
-	//	float max = abs(boardNormal.x) + abs(boardNormal.z);
-	//	float hirituX = abs(boardNormal.x) / max;
-	//	float hirituZ = abs(boardNormal.z) / max;
-
-	//	//float length = boardNormal.Length();
-	//	float sum = abs(moveVector.x) + abs(moveVector.z);
-	//	MelLib::Vector3 addPos(sum * hirituX, 0, sum * hirituZ);
-
-	//	// 法線に応じて向きを変える
-	//	if (std::signbit(boardNormal.x))addPos.x *= -1;
-	//	if (std::signbit(boardNormal.z))addPos.z *= -1;
+	//if (typeid(*object) == typeid(Wall) 
+	//	&& collisionType == MelLib::ShapeType3D::SEGMENT)
+	//{
 	//	
 
-	//	AddPosition(addPos);
 
-		DashEnd();
-	}
+	////	MelLib::BoardData board = GetHitBoardData();
+	////	MelLib::Vector3 boardNormal(board.GetNormal());
+	////	MelLib::Vector3 moveVector = GetPosition() - prePos;
+
+	////	// テスト
+	/////*	boardNormal = MelLib::Vector3(0.5,0,-0.5).Normalize();
+	////	moveVector = MelLib::Vector3(-0.5, 0, 0.5);*/
+
+	////	//// 進行方向と一致で反転
+	////	if (std::signbit(boardNormal.x) == std::signbit(moveVector.x))boardNormal.x *= -1;
+	////	if (std::signbit(boardNormal.z) == std::signbit(moveVector.z))boardNormal.z *= -1;
+
+	////	float max = abs(boardNormal.x) + abs(boardNormal.z);
+	////	float hirituX = abs(boardNormal.x) / max;
+	////	float hirituZ = abs(boardNormal.z) / max;
+
+	////	//float length = boardNormal.Length();
+	////	float sum = abs(moveVector.x) + abs(moveVector.z);
+	////	MelLib::Vector3 addPos(sum * hirituX, 0, sum * hirituZ);
+
+	////	// 法線に応じて向きを変える
+	////	if (std::signbit(boardNormal.x))addPos.x *= -1;
+	////	if (std::signbit(boardNormal.z))addPos.z *= -1;
+	////	
+
+	////	AddPosition(addPos);
+
+	//}
 
 	// 攻撃を受けた時(体力減算はEnemyAttack側で行ってる)
 	if (!isMuteki)

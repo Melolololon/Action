@@ -1,5 +1,10 @@
 #include "Wall.h"
 
+// これも床みたいにメッシュ通りの判定作ってもいいかも
+// モデル表示せずに三角形だけもらう
+// ステージに移してもいいかも
+// 壁の下の部分だけ分離してメッシュの三角形情報取得すればいい
+
 Wall::Wall(const MelLib::Vector3& pos, const MelLib::Vector3& angle, const MelLib::Vector2& scale)
 {
 	SetPosition(pos);
