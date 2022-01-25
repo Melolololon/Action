@@ -845,7 +845,7 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 		MelLib::Vector3 normal = GetHitTriangleData().GetNormal();
 		
 		// ˆê’èˆÈã‚¾‚Á‚½‚ç°ˆµ‚¢
-		if(normal.y >= 0.35f)
+		if(normal.y >= 0.4f)
 		{
 			// —Ž‰º‹——£‚ðƒŠƒZƒbƒg
 			dropStartPosY = 0.0f;
