@@ -190,6 +190,8 @@ void JumpEnemy::Update()
 	{
 		Dead(); 
 
+		// ‹…‚Ì”»’èˆ—‚ğ–³‹‚·‚é‚æ‚¤‚É
+		collisionFlag.sphere = false;
 
 		modelObjects["main"].SetAnimationPlayFlag(true);
 		modelObjects["main"].Update();
@@ -236,6 +238,7 @@ void JumpEnemy::Update()
 		return;
 	}
 
+
 	// ‚±‚±‚ÉUŒ‚ğŒ‚ğ‹Lq
 	if (CheckPlayerDistance(25.0f) && !isAttack && !GetIsFall())
 	{
@@ -247,6 +250,19 @@ void JumpEnemy::Update()
 		if (!CalcPlayerRoute())modelObjects["main"].SetAnimation("No_Move");
 		else modelObjects["main"].SetAnimation("Jump");
 	}
+	else if(!isAttack && !GetIsFall())
+	{
+		if(CheckPlayerDistance(MOVE_DISTANCE))
+		{
+			modelObjects["main"].SetAnimation("Jump");
+		}
+		else
+		{
+			modelObjects["main"].SetAnimation("No_Move");
+		}
+	}
+
+
 	if (isAttack)
 	{
 		//modelObjects["main"].SetAnimation("Attack");

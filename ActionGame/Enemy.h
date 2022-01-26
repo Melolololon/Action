@@ -56,6 +56,7 @@ protected:
 	// 消すまでの時間
 	MelLib::FrameTimer eraseTimer;
 
+	static const float MOVE_DISTANCE;
 protected:
 	/// <summary>
 	/// プレイヤーとの距離が指定した数値未満か確認

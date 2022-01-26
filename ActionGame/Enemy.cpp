@@ -15,6 +15,8 @@
 Player* Enemy::pPlayer;
 std::vector<std::vector<std::vector<MelLib::AStarNode>>> Enemy::nodes;
 
+const float Enemy::MOVE_DISTANCE = 400.0f;
+
 Enemy::Enemy(const MelLib::Vector3& pos, const unsigned int hp, const float moveSpeed, const std::string& modelName) :
 	hp(hp)
 	, moveSpeed(moveSpeed)
@@ -206,7 +208,7 @@ bool Enemy::CalcPlayerRoute()
 	// ‰¼
 	routeVectors.clear();
 
-	static const float MOVE_DISTANCE = 400.0f;
+
 	if (MelLib::LibMath::CalcDistance3D(pPlayer->GetPosition(), GetPosition()) >= MOVE_DISTANCE)
 	{
 		return false;

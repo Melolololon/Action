@@ -51,6 +51,8 @@ void NoemalEnemy::Update()
 	// €‚ñ‚Å‚½‚çreturn
 	if (isDead)
 	{
+		// ƒJƒvƒZƒ‹‚Ì”»’èˆ—‚ğ–³‹‚·‚é‚æ‚¤‚É
+		collisionFlag.capsule = false;
 		Dead();
 		return;
 	}
