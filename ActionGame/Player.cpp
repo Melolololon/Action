@@ -155,6 +155,7 @@ void Player::Update()
 		SetCameraData();
 		RotCamera();
 		LockOn();
+		DashEnd();
 		return;
 	}
 
@@ -171,25 +172,33 @@ void Player::Update()
 		return;
 	}
 
-
 	if (hitGroundNotMove)
 	{
-		if (hitGroundNotMoveTimer.GetMaxOverFlag())
+		if (modelObjects["main"].GetAnimationEndFlag())
 		{
-			hitGroundNotMoveTimer.ResetTimeZero();
-			hitGroundNotMoveTimer.SetStopFlag(true);
 			hitGroundNotMove = false;
 		}
-		else
-		{
-			RotCamera();
-			return;
-		}
+		RotCamera();
+
+		return;
 	}
 
-	prePos = GetPosition();
+	prePosition = GetPosition();
+	if (!GetIsFall())
+	{
+		// 前フレームの座標の格納場所をずらす
+		for (int i = 0; i < _countof(notFallPrePosition) - 1; i++)
+		{
+			notFallPrePosition[i + 1] = notFallPrePosition[i];
+		}
+		notFallPrePosition[0] = prePosition;
+	}
+
 	Move();
 	Jump();
+
+	ReturnStage();
+
 	Guard();
 	Attack();
 
@@ -205,17 +214,13 @@ void Player::Update()
 	modelObjects["main"].SetAngle(MelLib::Vector3(0, angle, 0));
 
 
-
-	preHitGround = hitGround;
-	hitGround = false;
-
 	// アニメーションに合わせて再生速度やループを設定する
 	ChangeAnimationData();
 
 	// 落下中差を追加
 	if(GetIsFall())
 	{
-		dropStartPosY -= prePos.y - GetPosition().y;
+		dropStartPosY -= prePosition.y - GetPosition().y;
 	}
 
 	// この数値以上落下したら落下扱い
@@ -224,6 +229,9 @@ void Player::Update()
 	// 一定量落下したら落下扱い
 	if (dropStartPosY >= DROP_POS_Y)isDrop = true;
 
+
+	preHitGround = hitGround;
+	hitGround = false;
 }
 
 void Player::TitleUpdate()
@@ -305,7 +313,7 @@ void Player::Move()
 
 	static const float FAST_WARK_STICK_PAR = 60.0f;
 	static const float WALK_STICK_PAR = 20.0f;
-	static const float MAX_FAST_WARK_SPEED = 2.5f;
+	static const float MAX_FAST_WARK_SPEED = 3.0f;
 	static const float MAX_WALK_SPEED = 0.5f;
 	static const float FRAME_UP_FAST_WARK_SPEED = MAX_FAST_WARK_SPEED / 10;
 	static const float FRAME_UP_WARK_SPEED = MAX_WALK_SPEED / 10;
@@ -362,6 +370,19 @@ void Player::Move()
 
 }
 
+void Player::ReturnStage()
+{
+
+	// 開始位置ぴったりに戻すと、ジャンプせずに落ちた時に、
+	// 落下開始時はすでに足元に足場がなく無限に落ち続けるため、対処が必要
+	if(GetPosition().y <= -1000)
+	{
+		SetPosition(notFallPrePosition[_countof(notFallPrePosition) - 1]);
+
+		DownHP(30);
+	}
+}
+
 void Player::AttackMove()
 {
 
@@ -407,9 +428,9 @@ void Player::Dash()
 
 	if (isDash)
 	{
-		MelLib::Vector3 prePos = GetPosition();
+		MelLib::Vector3 easingPrePos = GetPosition();
 		MelLib::Vector3 pos = dashEasing.EaseInOut();
-		MelLib::Vector3 addPos = pos - prePos;
+		MelLib::Vector3 addPos = pos - easingPrePos;
 
 		// Yを0にしないとダッシュ中にYが変わったらおかしくなっちゃう
 		AddPosition(MelLib::Vector3(addPos.x, 0, addPos.z));
@@ -817,14 +838,14 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 				AddPosition(MelLib::Vector3(enemyToPlayer.x, 0, enemyToPlayer.z) * 5.0f);
 				
 			}
-			else if(prePos - GetPosition() == 0)
+			else if(prePosition - GetPosition() == 0)
 			{
 				AddPosition(MelLib::Vector3(enemyToPlayer.x, 0, enemyToPlayer.z) * 4.0f);
 			}
 			else 
 			{
 				
-				AddPosition(MelLib::Vector3(prePos.x - GetPosition().x, 0, prePos.z - GetPosition().z));
+				AddPosition(MelLib::Vector3(prePosition.x - GetPosition().x, 0, prePosition.z - GetPosition().z));
 				
 			}
 		}
@@ -845,8 +866,11 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 		MelLib::Vector3 normal = GetHitTriangleData().GetNormal();
 		
 		// 一定以上だったら床扱い
-		if(normal.y >= 0.4f)
+		if(normal.y >= 0.6f)
 		{
+			// 0番以外の判定(床用判定)意外と当たったらreturn
+			if (arrayNum != 0)return;
+
 			// 落下距離をリセット
 			dropStartPosY = 0.0f;
 
@@ -855,20 +879,21 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 			{
 				float velocityY = GetVelocity().y;
 
-				if (velocityY <= -3.0f)// 超落下
+				// 高いところから落ちたら手をつくため、動けなくする
+				if (velocityY <= -3.0f)
 				{
-					hitGroundNotMoveTimer.SetMaxTime(60 * 0.75);
-					hitGroundNotMoveTimer.SetStopFlag(false);
 					hitGroundNotMove = true;
 
 					modelObjects["main"].SetAnimation("Jump_End_1");
+					modelObjects["main"].SetAnimationSpeedMagnification(1);
+
+					// ダッシュ中に地面についたら強制終了
+					DashEnd();
 				}
 				jumpResetAnimation = false;
 
 				isDrop = false;
 			}
-
-
 
 
 			MelLib::Vector3 addPos;
@@ -913,7 +938,10 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 		}
 		else // そうじゃなかったら壁扱い
 		{
-			AddPosition(MelLib::Vector3(prePos.x - GetPosition().x, 0, prePos.z - GetPosition().z));
+			// 0番の判定(床用判定)と当たったらreturn
+			if (arrayNum == 0)return;
+
+			AddPosition(MelLib::Vector3(prePosition.x - GetPosition().x, 0, prePosition.z - GetPosition().z));
 			DashEnd();
 		}
 	

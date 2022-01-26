@@ -75,6 +75,7 @@ namespace MelLib
 		bool isAnimation = false;
 		bool animationEndStop = false;
 		bool animationReverse = false;
+		bool animationEnd = false;
 #pragma endregion
 
 		//定数バッファ
@@ -285,7 +286,7 @@ namespace MelLib
 		/// アニメーションが終了しているかどうかを取得します。
 		/// </summary>
 		/// <returns></returns>
-		bool GetAnimationEndFlag()const;
+		bool GetAnimationEndFlag()const { return animationEnd; }
 		//{ return fbxAnimationData.currentTime == fbxAnimationData.animationTimes.endTime; }
 
 

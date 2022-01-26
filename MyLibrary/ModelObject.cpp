@@ -1797,12 +1797,7 @@ Vector3 MelLib::ModelObject::GetScale(const std::string& name) const
 	return modelConstDatas.at(name).scale;
 }
 
-bool MelLib::ModelObject::GetAnimationEndFlag()const
-{
-	if (animationReverse)return fbxAnimationData.currentTime == fbxAnimationData.animationTimes.startTime;
-	return fbxAnimationData.currentTime == fbxAnimationData.animationTimes.endTime;
 
-}
 
 bool ModelObject::Create(ModelData* pModelData, ConstBufferData* userConstBufferData, const std::string& name)
 {
@@ -1852,6 +1847,7 @@ void ModelObject::FbxAnimation()
 	if(animationReverse)fbxAnimationData.currentTime += fbxAnimationData.animationTimes.frameTime * -fbxAnimationData.timeMag;
 	else fbxAnimationData.currentTime += fbxAnimationData.animationTimes.frameTime * fbxAnimationData.timeMag;
 
+	animationEnd = false;
 
 	if (fbxAnimationData.currentTime > fbxAnimationData.animationTimes.endTime) {
 
@@ -1861,6 +1857,7 @@ void ModelObject::FbxAnimation()
 		}
 
 		fbxAnimationData.currentTime = fbxAnimationData.animationTimes.startTime;
+
 	}
 	else
 		if (fbxAnimationData.currentTime < fbxAnimationData.animationTimes.startTime) {
@@ -1871,7 +1868,16 @@ void ModelObject::FbxAnimation()
 			}
 
 			fbxAnimationData.currentTime = fbxAnimationData.animationTimes.endTime;
+
 		}
+
+	if (fbxAnimationData.currentTime >= fbxAnimationData.animationTimes.endTime
+		&& !animationReverse
+		|| fbxAnimationData.currentTime <= fbxAnimationData.animationTimes.startTime
+		&& animationReverse)
+	{
+		animationEnd = true;
+	}
 }
 
 

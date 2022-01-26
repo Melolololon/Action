@@ -31,7 +31,7 @@ private:
 	static std::unordered_map<ActionType, MelLib::PadButton> keyConfigData;
 
 	//前フレームの座標を格納する変数
-	MelLib::Vector3 prePos;
+	MelLib::Vector3 prePosition;
 	//向いてる向き
 	MelLib::Vector3 direction = MelLib::Vector3(0, 0, 1);
 
@@ -40,8 +40,12 @@ private:
 	bool hitGround = false;
 	bool preHitGround = false;
 	bool jumpResetAnimation = false;
+
 #pragma region 移動
 	float moveSpeed = 0.5f;
+
+	// 落下してない時の数フレーム前の座標を格納する配列(落下時に戻すために使用)
+	MelLib::Vector3 notFallPrePosition[5];
 
 #pragma region ダッシュ
 	//シュン!って感じで動くやつ
@@ -60,6 +64,9 @@ private:
 
 	bool isDrop = false;
 	float dropStartPosY = 0.0f;
+
+	// ジャンプ開始位置
+	MelLib::Vector3 fallStartPosition;
 #pragma endregion
 
 #pragma region 攻撃
@@ -150,6 +157,12 @@ private:
 
 
 	void Move();
+
+	/// <summary>
+	/// 落下時にステージに戻す処理
+	/// </summary>
+	void ReturnStage();
+
 	/// <summary>
 	/// 攻撃時の移動
 	/// </summary>
@@ -173,9 +186,12 @@ private:
 	// 攻撃硬直
 	void Stun();
 
+	// カメラ回転処理
 	void RotCamera();
+	// カメラに値セット
 	void SetCameraData();
 
+	// ロックオン
 	void LockOn();
 
 #pragma endregion
