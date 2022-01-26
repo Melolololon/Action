@@ -93,7 +93,7 @@ void Title::Draw()
 	Fade::GetInstance()->Draw();
 
 	MelLib::TextWrite::Draw
-	(MelLib::Vector2(470, 400), MelLib::Color(255, 255, 255, 255), L"Aボタンを押してください", "test");
+	(MelLib::Vector2(470, 400), MelLib::Color(255, 255, 255, 255), L"Aボタンを押してください", "Arial");
 }
 
 void Title::Finalize()
