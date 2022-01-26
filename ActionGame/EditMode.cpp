@@ -84,7 +84,7 @@ void EditMode::Save()
 		// 保存しなくていいやつは無視
 		for (auto& p : pGameObjects)
 		{
-			if (refGameObjects[i].get() == p)
+			if (refGameObjects[i].get() == p.get())
 			{
 				addObjectFlag = true;
 				break;
@@ -101,26 +101,34 @@ void EditMode::Save()
 		file.write(reinterpret_cast<char*>(&objectNums[objectNumber]), sizeof(int));
 
 		// 座標の書き込み
-		MelLib::Vector3 writeParam = refGameObjects[i]->GetPosition();
+		MelLib::Vector3 writeParam = addObjectPositions[objectNumber];
 		file.write(reinterpret_cast<char*>(&writeParam), sizeof(writeParam));
 
-		// モデルの数書き込み
-		int modelNum = refGameObjects[i]->GetRefModelObjects().size();
-		file.write(reinterpret_cast<char*>(&modelNum), sizeof(modelNum));
+		// 角度の書き込み
+		writeParam = addObjectAngles[objectNumber];
+		file.write(reinterpret_cast<char*>(&writeParam), sizeof(writeParam));
 
-		// モデルの角度と大きさの書き込み
-		const std::unordered_map<std::string, MelLib::ModelObject>& refModels = refGameObjects[i]->GetRefModelObjects();
+		// スケールの書き込み
+		writeParam = addObjectScales[objectNumber];
+		file.write(reinterpret_cast<char*>(&writeParam), sizeof(writeParam));
 
-		for (const auto& model : refModels)
-		{
-			writeParam = model.second.GetAngle();
-			file.write(reinterpret_cast<char*>(&writeParam), sizeof(writeParam));
+		//// モデルの数書き込み
+		//int modelNum = refGameObjects[i]->GetRefModelObjects().size();
+		//file.write(reinterpret_cast<char*>(&modelNum), sizeof(modelNum));
 
-			writeParam = model.second.GetScale();
-			file.write(reinterpret_cast<char*>(&writeParam), sizeof(writeParam));
-		}
+		//// モデルの角度と大きさの書き込み
+		//const std::unordered_map<std::string, MelLib::ModelObject>& refModels = refGameObjects[i]->GetRefModelObjects();
 
-	
+		//for (const auto& model : refModels)
+		//{
+		//	writeParam = model.second.GetAngle();
+		//	file.write(reinterpret_cast<char*>(&writeParam), sizeof(writeParam));
+
+		//	writeParam = model.second.GetScale();
+		//	file.write(reinterpret_cast<char*>(&writeParam), sizeof(writeParam));
+		//}
+
+		objectNumber++;
 	}
 
 	file.close();
@@ -185,19 +193,29 @@ bool EditMode::Load(std::shared_ptr<Player>& p, std::vector<std::shared_ptr<MelL
 
 		file.read(reinterpret_cast<char*>(&addObjectPos), sizeof(addObjectPos));
 
-		file.read(reinterpret_cast<char*>(&modelNum), sizeof(modelNum));
+		file.read(reinterpret_cast<char*>(&addObjectAngle), sizeof(addObjectAngle));
+		file.read(reinterpret_cast<char*>(&addObjectScale), sizeof(addObjectScale));
+
+		/*file.read(reinterpret_cast<char*>(&modelNum), sizeof(modelNum));
 
 		for (int i = 0; i < modelNum; i++)
 		{
 			file.read(reinterpret_cast<char*>(&addObjectAngle), sizeof(addObjectAngle));
 			file.read(reinterpret_cast<char*>(&addObjectScale), sizeof(addObjectScale));
-		}
+		}*/
 
 
-		if (objectNum + objectType == GROUND)continue;
+	
 
 		// セット
-		selectObject = GetPObject();
+		selectObject = GetPObject
+		(
+			objectType,
+			objectNum,
+			addObjectPos,
+			addObjectAngle,
+			addObjectScale
+		);
 		// 読み込んだ情報を元に追加
 		AddObject();
 	}
@@ -218,7 +236,42 @@ bool EditMode::Load(std::shared_ptr<Player>& p, std::vector<std::shared_ptr<MelL
 
 void EditMode::Update()
 {
-	if (MelLib::Input::KeyTrigger(DIK_F5))isEdit = !isEdit;
+	if (MelLib::Input::KeyTrigger(DIK_F5))
+	{
+		isEdit = !isEdit;
+
+		// 死んでるやつを再配置
+		if(isEdit)
+		{
+			for (int i = 0; i < pGameObjects.size(); i++)
+			{
+				if(pGameObjects[i]->GetEraseManager())
+				{
+					// 再追加準備
+					pGameObjects[i].reset();
+					std::shared_ptr<MelLib::GameObject> getP = GetPObject
+					(
+						objectTypes[i],
+						objectNums[i],
+						addObjectPositions[i],
+						addObjectAngles[i],
+						addObjectScales[i]
+					);
+
+					// オブジェクトマネージャーに追加
+					MelLib::GameObjectManager::GetInstance()->AddObject(getP);
+					// 差し替え
+					pGameObjects[i] = getP;
+
+					// 情報セット
+					pGameObjects[i]->SetAngle(addObjectAngles[i]);
+					pGameObjects[i]->SetScale(addObjectScales[i]);
+
+				}
+			}
+		}
+
+	}
 	if (!(editPossible && isEdit)) return;
 
 	if (MelLib::Input::KeyState(DIK_LCONTROL) && MelLib::Input::KeyTrigger(DIK_S))Save();
@@ -274,7 +327,14 @@ void EditMode::Update()
 	if (changeObject)
 	{
 		selectObject.reset();
-		selectObject = GetPObject();
+		selectObject = GetPObject
+		(
+			objectType,
+			objectNum,
+			addObjectPos,
+			addObjectAngle,
+			addObjectScale
+		);
 	}
 
 	if (selectObject)
@@ -289,7 +349,14 @@ void EditMode::Update()
 	}
 	else
 	{
-		selectObject = GetPObject();
+		selectObject = GetPObject
+		(
+			objectType,
+			objectNum,
+			addObjectPos,
+			addObjectAngle,
+			addObjectScale
+		);
 	}
 
 	// 追加
@@ -313,13 +380,20 @@ void EditMode::Update()
 		objectType = objectTypes[currentAddObject - 1];
 		objectNum = objectNums[currentAddObject - 1];
 
-		MelLib::GameObject* pObj = pGameObjects[currentAddObject];
+		MelLib::GameObject* pObj = pGameObjects[currentAddObject].get();
 		addObjectPos = pObj->GetPosition();
 		addObjectAngle = pObj->GetRefModelObjects().at("main").GetAngle();
 		addObjectScale = pObj->GetRefModelObjects().at("main").GetScale();
 
 		selectObject.reset();
-		selectObject = GetPObject();
+		selectObject = GetPObject
+		(
+			objectType,
+			objectNum,
+			addObjectPos,
+			addObjectAngle,
+			addObjectScale
+		);
 	}
 
 }
@@ -334,45 +408,51 @@ void EditMode::Draw()
 	}
 }
 
-std::shared_ptr<MelLib::GameObject> EditMode::GetPObject()
+std::shared_ptr<MelLib::GameObject> EditMode::GetPObject
+(
+	int objectType,
+	int objectNum,
+	const MelLib::Vector3 pos,
+	const MelLib::Vector3 angle,
+	const MelLib::Vector3 scale)
 {
 	switch (objectType + objectNum)
 	{
 
 	case NORMAL_ENEMY:
-		return std::make_shared<NoemalEnemy>(addObjectPos);
+		return std::make_shared<NoemalEnemy>(pos);
 		break;
 
 	case JUMP_ENEMY:
-		return std::make_shared<JumpEnemy>(addObjectPos);
+		return std::make_shared<JumpEnemy>(pos);
 		break;
 
 	case BAMBOO:
-		return std::make_shared<Bamboo>(addObjectPos);
+		return std::make_shared<Bamboo>(pos);
 		break;
 
 	case ROCK:
-		return std::make_shared<Rock>(addObjectPos, addObjectAngle, addObjectScale,1);
+		return std::make_shared<Rock>(pos, angle, scale,1);
 		break;
 
 	case ROCK_2:
-		return std::make_shared<Rock>(addObjectPos, addObjectAngle, addObjectScale, 2);
+		return std::make_shared<Rock>(pos, angle, scale, 2);
 		break;
 
 	case ROCK_3:
-		return std::make_shared<Rock>(addObjectPos, addObjectAngle, addObjectScale, 3);
+		return std::make_shared<Rock>(pos, angle, scale, 3);
 		break;
 
 	case EVENT_FLAG:
-		return std::make_shared<EventFlag>(addObjectPos, addObjectScale);
+		return std::make_shared<EventFlag>(pos, scale);
 		break;
 
 	case GROUND:
-		return std::make_shared<Ground>(addObjectPos, addObjectAngle, addObjectScale.ToVector2());
+		return std::make_shared<Ground>(pos, angle, scale.ToVector2());
 		break;
 
 	case WALL:
-		return std::make_shared<Wall>(addObjectPos, addObjectAngle, addObjectScale.ToVector2());
+		return std::make_shared<Wall>(pos, angle, scale.ToVector2());
 		break;
 
 
@@ -384,7 +464,14 @@ std::shared_ptr<MelLib::GameObject> EditMode::GetPObject()
 
 void EditMode::AddObject()
 {
-	std::shared_ptr<MelLib::GameObject> getP = GetPObject();
+	std::shared_ptr<MelLib::GameObject> getP = GetPObject
+	(
+		objectType,
+		objectNum,
+		addObjectPos,
+		addObjectAngle,
+		addObjectScale
+	);
 
 	getP->SetPosition(addObjectPos);
 	getP->SetAngle(addObjectAngle);
@@ -399,7 +486,10 @@ void EditMode::AddObject()
 	// 追加に成功したら、オブジェクト番号などを格納
 	objectTypes.push_back(objectType);
 	objectNums.push_back(objectNum);
-	pGameObjects.push_back(getP.get());
+	pGameObjects.push_back(getP);
+	addObjectPositions.push_back(addObjectPos);
+	addObjectAngles.push_back(addObjectAngle);
+	addObjectScales.push_back(addObjectScale);
 
 	// 敵だったら敵リストに追加
 	if(objectType == OBJ_TYPE_ENEMY)pEnemys->push_back(getP);

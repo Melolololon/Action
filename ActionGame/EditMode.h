@@ -29,7 +29,10 @@ private:
 
 	std::vector<int>objectTypes;
 	std::vector<int>objectNums;
-	std::vector<MelLib::GameObject*>pGameObjects;
+	std::vector<std::shared_ptr<MelLib::GameObject>>pGameObjects;
+	std::vector<MelLib::Vector3>addObjectPositions;
+	std::vector<MelLib::Vector3>addObjectAngles;
+	std::vector<MelLib::Vector3>addObjectScales;
 
 	int currentAddObject = 1;
 
@@ -76,7 +79,14 @@ private:
 	/// </summary>
 	void Save();
 
-	std::shared_ptr<MelLib::GameObject> GetPObject();
+	std::shared_ptr<MelLib::GameObject> GetPObject
+	(
+		int objectType,
+		int objectNum,
+		const MelLib::Vector3 pos,
+		const MelLib::Vector3 angle,
+		const MelLib::Vector3 scale
+	);
 	void AddObject();
 
 public:
