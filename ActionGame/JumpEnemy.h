@@ -12,6 +12,10 @@ private:
 	MelLib::Vector3 prePos;
 	bool attackAddFrame = false;
 
+	// ジャンプ開始フレーム
+	static const unsigned int JUMP_START_FRAME = 48;
+	bool preIsFall = false;
+
 	std::shared_ptr<NormalEnemyAttack>enemyAttack;
 
 private:

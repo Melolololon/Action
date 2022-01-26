@@ -227,7 +227,7 @@ namespace MelLib
 		/// アニメーションを逆再生するかどうかを設定します。
 		/// </summary>
 		/// <param name="flag"></param>
-		void SetAnimationReversePlayBack(const bool flag) { animationReverse = flag; }
+		void SetAnimationReversePlayBack(const bool flag);
 
 		void SetAnimation(const std::string& name);
 

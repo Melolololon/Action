@@ -122,12 +122,16 @@ void Enemy::Hit(const GameObject* const object, const MelLib::ShapeType3D& colli
 		// d’¼ˆ—
 		isStun = true;
 		modelObjects["main"].SetAnimation("Stun");
+
 		modelObjects["main"].SetAnimationFrameStart();
+		modelObjects["main"].SetAnimationEndStopFlag(true);
+		modelObjects["main"].SetAnimationReversePlayBack(false);
 
 		// UŒ‚‹­§I—¹
 		isAttack = false;
 		attackTimer.ResetTimeZero();
 		attackTimer.SetStopFlag(true);
+
 
 		// 0‚É‚È‚Á‚½‚ç‚â‚ç‚êˆ—
 		if (hp <= 0)
@@ -135,8 +139,6 @@ void Enemy::Hit(const GameObject* const object, const MelLib::ShapeType3D& colli
 			isDead = true;
 
 			modelObjects["main"].SetAnimation("Dead");
-			modelObjects["main"].SetAnimationFrameStart();
-			modelObjects["main"].SetAnimationEndStopFlag(true);
 		}
 	}
 

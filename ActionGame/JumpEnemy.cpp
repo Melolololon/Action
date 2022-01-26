@@ -90,12 +90,12 @@ void JumpEnemy::AttackRot()
 void JumpEnemy::CheckJumpStart()
 {
 
-
-	// ジャンプ開始フレーム(最終フレーム)取得
-	static const unsigned int JUMP_START_FRAME = 50 - 1;
-
-	int f = modelObjects["main"].GetAnimationFrame();
-	bool jumpStartTiming = modelObjects["main"].GetAnimationFrame() == JUMP_START_FRAME;
+	bool jumpStartTiming = 
+		modelObjects["main"].GetAnimationFrame() >= JUMP_START_FRAME
+		&& !modelObjects["main"].GetAnimationReversePlayBack();
+	
+	// アニメーションがジャンプかアタックの場合のみジャンプ
+	// これ書かないと、やられアニメーション中などにジャンプしちゃう
 	jumpStartTiming = jumpStartTiming
 		&& (modelObjects["main"].GetCurrentAnimationName() == "Jump"
 			|| modelObjects["main"].GetCurrentAnimationName() == "Attack");
@@ -112,20 +112,24 @@ void JumpEnemy::HitGroundUpdate()
 	// やられてたらreturn
 	if (isDead)return;
 	
+
 	// 着地した瞬間逆再生開始
-	if (modelObjects["main"].GetAnimationEndFlag()
-		&& !modelObjects["main"].GetAnimationReversePlayBack())
+	if (preIsFall
+		&& !GetIsFall())
 	{
 		modelObjects["main"].SetAnimationReversePlayBack(true);
 		modelObjects["main"].SetAnimationPlayFlag(true);
+
+		// ジャンプ防止のため、アニメーションのフレームを戻す 
+		modelObjects["main"].SetAnimationFrame(JUMP_START_FRAME - 1);
 
 		attackAddFrame = false;
 		enemyAttack->TrueEraseManager();
 	}
 
 	// 逆再生が終了したら通常通り再生
-	if (modelObjects["main"].GetAnimationEndFlag()
-		&& modelObjects["main"].GetAnimationReversePlayBack())
+	if (modelObjects["main"].GetAnimationReversePlayBack()
+		&& modelObjects["main"].GetAnimationEndFlag())
 	{
 		modelObjects["main"].SetAnimationReversePlayBack(false);
 	}
@@ -140,6 +144,7 @@ void JumpEnemy::LoadResources()
 JumpEnemy::JumpEnemy(const MelLib::Vector3 pos)
 	:Enemy(pos, 2, 2.0f, "jumpEnemy")
 {
+
 	//modelObjects["main"]
 
 	// 判定セット
@@ -159,12 +164,15 @@ JumpEnemy::JumpEnemy(const MelLib::Vector3 pos)
 
 	// アニメーションセット
 	modelObjects["main"].SetAnimation("Jump");
-	modelObjects["main"].SetAnimationFrameEnd();
+	modelObjects["main"].SetAnimationFrame(JUMP_START_FRAME);
 	modelObjects["main"].SetAnimationPlayFlag(true);
 	modelObjects["main"].SetAnimationEndStopFlag(true);
 
 	// 攻撃判定作成
 	enemyAttack = std::make_shared<NormalEnemyAttack>(2, sphereData[0].GetRadius());
+
+
+
 
 }
 
@@ -187,17 +195,14 @@ void JumpEnemy::Update()
 		modelObjects["main"].Update();
 		return;
 	}
-	
-	// ジャンプする前に再生を逆にする処理を行うようにし、
-	// 着地時にジャンプ処理の確認の前に1フレーム分戻し、すぐにジャンプしないようにするために、
-	// 一旦ModelObjectの前にHitGroundUpdateの処理書いてる
+
+	modelObjects["main"].Update();
 
 	if (!GetIsFall())
 	{
 		HitGroundUpdate();
 	}
 
-	modelObjects["main"].Update();
 
 	//// ジャンプしてないときの処理
 	if (!GetIsFall())
@@ -271,4 +276,6 @@ void JumpEnemy::Update()
 
 	// 攻撃処理
 	Attack();
+
+	preIsFall = GetIsFall();
 }
