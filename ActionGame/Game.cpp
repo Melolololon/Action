@@ -65,7 +65,7 @@ void Game::Initialize()
 	SlushEffect::LoadResources();
 	HPGauge::LoadResources();
 
-	MelLib::SceneManager::GetInstance()->SetStartScene(new ActionPart());
+	MelLib::SceneManager::GetInstance()->SetStartScene(new Title());
 	Fade::GetInstance()->Initializ();
 
 	Option::GetInstance()->Initialize();

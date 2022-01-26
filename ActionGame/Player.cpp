@@ -244,10 +244,9 @@ void Player::TitleUpdate()
 	if (!GetIsFall())
 	{
 		FallStart(JUMP_POWER);
+		modelObjects["main"].SetAnimation("Jump_Up");
 	}
 	CalcMovePhysics();
-
-	JumpAnimation();
 	ChangeAnimationData();
 }
 
