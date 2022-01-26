@@ -267,6 +267,9 @@ void ActionPart::Finalize()
 {
 	// 全消しして問題ない場合は、コメントアウト解除
 	MelLib::GameObjectManager::GetInstance()->AllEraseObject();
+
+	// 例外防止(これ消すと例外出る)EditModeにポインタ渡してるからだと思われる
+	pEnemys.clear();
 }
 
 MelLib::Scene* ActionPart::GetNextScene()
