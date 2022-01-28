@@ -14,6 +14,7 @@ private:
 		static const int CAMERA = 1;
 		static const int ATTACK = 2;
 		static const int JUMP = 3;
+		static const int DASH = 4;
 		static const int END = 4;
 	};
 	int currentTutorial = TutorialType::MOVE;
@@ -22,12 +23,14 @@ private:
 	static const std::unordered_map<int, std::wstring> TUTORIAL_TEXT;
 	static const std::unordered_map<MelLib::PadButton, std::wstring> PAD_BUTTON_TEXT;
 
-	// コンフィグによって変わるチュートリアルメッセージ
-	const std::unordered_map<int, std::wstring> operationText;
 
 	MelLib::Sprite2D tutorialTextSpr;
-private:
+	MelLib::Sprite2D tutorialBackGroundSpr;
 
+	MelLib::PadButton drawPadButton = MelLib::PadButton::A;
+	bool drawConfigButton = false;
+private:
+	
 
 public:
 	static void LoadResources();

@@ -41,7 +41,7 @@ void Pause::CreateSprite()
 	pauseBackSpr.SetScale(MelLib::Vector2(1280, 720));
 
 
-	std::string texturePath = Game::GetInstance()->GetPath(Game::ResourcePathType::TEXTURE);
+	std::string texturePath = Game::GetInstance()->GetPath(Game::ResourcePath::TEXTURE);
 
 	MelLib::Texture::Load(texturePath + "UIText/Stop.png","pauseStr");
 	pauseStringSpr.Create(MelLib::Texture::Get("pauseStr"));
@@ -124,7 +124,7 @@ void Pause::Update()
 		|| MelLib::Input::PadButtonTrigger(MelLib::PadButton::START)))
 	{
 		pauseEnd = true;
-		currentPauseSelect = 0;
+
 	}
 
 	if (!isPause)return;
@@ -155,6 +155,12 @@ void Pause::Update()
 			pauseBackSubAlpha.SetPar(100.0f);
 			isPause = false;
 			pauseEnd = false;
+
+			// €–Ú‚Ì‘å‚«‚³ƒŠƒZƒbƒg
+			menuStringSprites[currentPauseSelect].SetScale(UN_SELECTED_SCALE);
+			menuStringSprites[0].SetScale(SELECT_SCALE);
+
+			currentPauseSelect = 0;
 		}
 	}
 	else

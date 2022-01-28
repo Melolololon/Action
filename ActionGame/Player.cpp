@@ -22,8 +22,8 @@
 #include"NormalEnemyAttack.h"
 
 #include"EventFlag.h"
+#include"TutorialEventFlag.h"
 
-#include<Physics.h>
 
 // テスト
 #include"SlushEffect.h"
@@ -146,6 +146,10 @@ void Player::Update()
 		}
 		return;
 	}
+
+
+	hitEventFlag = false;
+	hitTutorialEventFlag = false;
 
 	modelObjects["main"].Update();
 	
@@ -292,7 +296,6 @@ void Player::ChangeAnimationData()
 
 void Player::Move()
 {
-	hitEventFlag = false;
 
 	// 仮
 	modelObjects["main"].SetAnimationSpeedMagnification(1);
@@ -811,6 +814,12 @@ void Player::LockOn()
 	MelLib::Camera::Get()->SetAngle(MelLib::Vector3(CONST_ANGLE_X , -xzAngle + 90,0));
 }
 
+void Player::HitWall()
+{
+	AddPosition(MelLib::Vector3(prePosition.x - GetPosition().x, 0, prePosition.z - GetPosition().z));
+	DashEnd();
+}
+
 
 void Player::Draw()
 {
@@ -937,14 +946,17 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 		}
 		else // そうじゃなかったら壁扱い
 		{
-			// 0番の判定(床用判定)と当たったらreturn
-			if (arrayNum == 0)return;
-
-			AddPosition(MelLib::Vector3(prePosition.x - GetPosition().x, 0, prePosition.z - GetPosition().z));
-			DashEnd();
+			HitWall();
 		}
 	
 	}
+
+	if(typeid(*object) == typeid(Wall)
+		&& collisionType == MelLib::ShapeType3D::SEGMENT)
+	{
+		HitWall();
+	}
+
 
 	//if (typeid(*object) == typeid(Wall) 
 	//	&& collisionType == MelLib::ShapeType3D::SEGMENT)
@@ -1003,6 +1015,11 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 	if(typeid(*object) == typeid(EventFlag))
 	{
 		hitEventFlag = true;
+	}
+
+	if (typeid(*object) == typeid(TutorialEventFlag))
+	{
+		hitTutorialEventFlag = true;
 	}
 }
 

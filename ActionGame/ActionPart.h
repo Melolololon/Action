@@ -34,8 +34,6 @@ private:
 	//テスト用
 	MelLib::ModelObject obj;
 
-	//MelLib::ModelObject stage;
-	std::shared_ptr<Stage>stage;
 
 
 	Tutorial tutorial;

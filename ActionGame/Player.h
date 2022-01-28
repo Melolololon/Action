@@ -127,6 +127,8 @@ private:
 	//イベントフラグに衝突したかどうか
 	bool hitEventFlag = false;
 
+	bool hitTutorialEventFlag = false;
+
 
 	// 低いところは、着地アニメーションをジャンプの逆再生にし、硬直はなし
 	// 地面に着地した時の動けない時間
@@ -196,6 +198,12 @@ private:
 
 #pragma endregion
 
+#pragma region 衝突関係
+	// 壁に当たった時の処理
+	void HitWall();
+#pragma endregion
+
+
 public:
 	static void LoadResources();
 
@@ -241,6 +249,7 @@ public:
 	bool GetIsMuteki()const { return isMuteki; }
 
 	bool GetHitEventFlag()const { return hitEventFlag; }
+	bool GetHitTutorialEventFlag()const { return hitTutorialEventFlag; }
 #pragma endregion
 
 #pragma region Set

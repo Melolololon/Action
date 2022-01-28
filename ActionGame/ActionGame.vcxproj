@@ -181,6 +181,7 @@
     <ClCompile Include="StageObject.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="Tutorial.cpp" />
+    <ClCompile Include="TutorialEventFlag.cpp" />
     <ClCompile Include="Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -211,6 +212,7 @@
     <ClInclude Include="StageObject.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="Tutorial.h" />
+    <ClInclude Include="TutorialEventFlag.h" />
     <ClInclude Include="Wall.h" />
   </ItemGroup>
   <ItemGroup>

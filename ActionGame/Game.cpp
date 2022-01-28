@@ -12,6 +12,7 @@
 #include"Player.h"
 #include"SlushEffect.h"
 #include"HPGauge.h"
+#include"Wall.h"
 
 // ƒV[ƒ“
 #include"SceneManager.h"
@@ -20,6 +21,7 @@
 #include"Title.h"
 
 #include"Option.h"
+#include"Tutorial.h"
 
 Game* Game::GetInstance()
 {
@@ -64,6 +66,8 @@ void Game::Initialize()
 	Player::LoadResources();
 	SlushEffect::LoadResources();
 	HPGauge::LoadResources();
+	Wall::LoadResources();
+	Tutorial::LoadResources();
 
 	MelLib::SceneManager::GetInstance()->SetStartScene(new Title());
 	Fade::GetInstance()->Initializ();
@@ -71,7 +75,7 @@ void Game::Initialize()
 	Option::GetInstance()->Initialize();
 	
 
-	MelLib::TextWrite::CreateFontData(/*L"HGPºÞ¼¯¸E"*/L"Arial", "Arial");
+	MelLib::TextWrite::CreateFontData(/*L"HGPºÞ¼¯¸E"*/L"Arial",64.0f, "Arial");
 
 	MelLib::Camera::Get()->SetFar(10000.0f);
 }
@@ -91,11 +95,11 @@ void Game::Draw()
 	MelLib::SceneManager::GetInstance()->Draw();
 }
 
-std::string Game::GetPath(const ResourcePathType type)const
+std::string Game::GetPath(const ResourcePath type)const
 {
 	switch (type)
 	{
-	case ResourcePathType::TEXTURE:
+	case ResourcePath::TEXTURE:
 		return texturePath;
 		break;
 	}

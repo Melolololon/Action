@@ -136,9 +136,8 @@ void ActionPart::Initialize()
 	MelLib::DirectionalLight::Get().SetDirection(MelLib::Vector3(0, -1, 0));
 	MelLib::Camera::Get()->SetAngle(MelLib::Vector3(20, 0, 0));
 
-	// ステージ
-	stage = std::make_shared<Stage>(1);
-	MelLib::GameObjectManager::GetInstance()->AddObject(stage);
+	// ステージを追加
+	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<Stage>(1));
 	/*stage.Create(MelLib::ModelData::Get("stage"),nullptr);
 	stage.SetPosition(MelLib::Vector3(0,10,0));
 	stage.SetScale(MelLib::Vector3(8, 8, 8));
@@ -217,7 +216,9 @@ void ActionPart::Update()
 	
 	if (currentEvent == EventType::TUTORIAL)tutorial.Update();
 	
-
+	// チュートリアルを進める
+	if (pPlayer->GetHitTutorialEventFlag())tutorial.NextTutorial();
+	
 	MelLib::GameObjectManager::GetInstance()->Update();
 
 	for(int i = 0; i < pEnemys.size();i++)
@@ -242,25 +243,16 @@ void ActionPart::Update()
 
 void ActionPart::Draw()
 {
-	//if (editOn && isEdit)  EditMode::GetInstance()->Draw();
 	EditMode::GetInstance()->Draw();
 
-	//stage.Draw();
 	MelLib::GameObjectManager::GetInstance()->Draw();
 
-	if (currentEvent == EventType::TUTORIAL)tutorial.Draw();
-
-
+	if (currentEvent == EventType::TUTORIAL
+		&& !Pause::GetInstance()->GetIsPause())tutorial.Draw();
 
 	Pause::GetInstance()->Draw();
 	Fade::GetInstance()->Draw();
 
-	//obj.Draw();
-
-
-	// テスト
-	MelLib::TextWrite::Draw
-	(MelLib::Vector2(0,670),MelLib::Color(255,255,255,255),L"メニューボタン　メニューを開く","Arial");
 }
 
 void ActionPart::Finalize()

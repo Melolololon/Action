@@ -21,6 +21,7 @@
 #include"Bamboo.h"
 #include"Rock.h"
 #include"EventFlag.h"
+#include"TutorialEventFlag.h"
 #pragma endregion
 
 #pragma region OBJ_TYPE_FIERD
@@ -418,6 +419,8 @@ std::shared_ptr<MelLib::GameObject> EditMode::GetPObject
 {
 	switch (objectType + objectNum)
 	{
+#pragma region 敵
+
 
 	case NORMAL_ENEMY:
 		return std::make_shared<NoemalEnemy>(pos);
@@ -426,6 +429,10 @@ std::shared_ptr<MelLib::GameObject> EditMode::GetPObject
 	case JUMP_ENEMY:
 		return std::make_shared<JumpEnemy>(pos);
 		break;
+#pragma endregion
+
+#pragma region ステージオブジェクト
+
 
 	case BAMBOO:
 		return std::make_shared<Bamboo>(pos);
@@ -447,6 +454,14 @@ std::shared_ptr<MelLib::GameObject> EditMode::GetPObject
 		return std::make_shared<EventFlag>(pos, scale);
 		break;
 
+	case TUTORIAL_EVENT_FLAG:
+		return std::make_shared<TutorialEventFlag>(pos, scale);
+		break;
+#pragma endregion
+
+#pragma region 壁床
+
+
 	case GROUND:
 		return std::make_shared<Ground>(pos, angle, scale.ToVector2());
 		break;
@@ -455,6 +470,7 @@ std::shared_ptr<MelLib::GameObject> EditMode::GetPObject
 		return std::make_shared<Wall>(pos, angle, scale.ToVector2());
 		break;
 
+#pragma endregion
 
 	default:
 		return nullptr;

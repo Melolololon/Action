@@ -125,12 +125,19 @@ namespace MelLib
 
 #pragma region セット
 
-
+		/// <summary>
+		/// 表示範囲(UV座標)の左上をセットします。1,1で画像の一番右下を指定します。
+		/// </summary>
+		/// <param name="leftUpPos"></param>
 		void SetDrawLeftUpPosition(const Vector2& leftUpPos)
 		{
 			drawLeftUpPosition = leftUpPos;
-			//drawRightDownPosition = rightDownPos;
 		}
+
+		/// <summary>
+		/// 表示範囲(UV座標)の右下をセットします。1,1で一番右下を指定します。
+		/// </summary>
+		/// <param name="rightDownPos">右下の座標</param>
 		void SetDrawRigthDownPosition(const Vector2& rightDownPos)
 		{
 			drawRightDownPosition = rightDownPos;

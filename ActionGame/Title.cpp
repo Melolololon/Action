@@ -15,7 +15,7 @@
 
 void Title::LoadResources()
 {
-	const std::string TEXTURE_PATH = Game::GetInstance()->GetPath(Game::ResourcePathType::TEXTURE);
+	const std::string TEXTURE_PATH = Game::GetInstance()->GetPath(Game::ResourcePath::TEXTURE);
 	
 	MelLib::Texture::Load(TEXTURE_PATH + "Title/Title.png","title");
 
@@ -92,8 +92,8 @@ void Title::Draw()
 
 	Fade::GetInstance()->Draw();
 
-	MelLib::TextWrite::Draw
-	(MelLib::Vector2(470, 400), MelLib::Color(255, 255, 255, 255), L"Aボタンを押してください", "Arial");
+	/*MelLib::TextWrite::Draw
+	(MelLib::Vector2(470, 400), MelLib::Color(255, 255, 255, 255), L"Aボタンを押してください", "Arial");*/
 }
 
 void Title::Finalize()

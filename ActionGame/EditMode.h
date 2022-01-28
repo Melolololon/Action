@@ -55,6 +55,7 @@ private:
 	static ObjID ROCK_3 = OBJ_TYPE_STAGE + 3;
 
 	static ObjID EVENT_FLAG = OBJ_TYPE_STAGE + 4;
+	static ObjID TUTORIAL_EVENT_FLAG = OBJ_TYPE_STAGE + 5;
 #pragma endregion
 
 #pragma region OBJ_TYPE_FIERD

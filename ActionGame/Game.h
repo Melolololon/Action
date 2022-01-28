@@ -19,10 +19,11 @@ public:
 	void Update();
 	void Draw();
 
-	enum class ResourcePathType
+	enum class ResourcePath
 	{
 		TEXTURE,
+		MODEL,
 	};
-	std::string GetPath(const ResourcePathType type)const;
+	std::string GetPath(const ResourcePath type)const;
 };
 

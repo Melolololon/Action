@@ -6,7 +6,7 @@ const Player* HPGauge::pPlayer;
 
 void HPGauge::LoadResources()
 {
-	std::string texturePath = Game::GetInstance()->GetPath(Game::ResourcePathType::TEXTURE);
+	std::string texturePath = Game::GetInstance()->GetPath(Game::ResourcePath::TEXTURE);
 	MelLib::Texture::Load(texturePath + "Player/hpGauge.png","hpGauge");
 }
 
