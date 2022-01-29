@@ -3,11 +3,13 @@
 
 #include<Easing.h>
 #include<Sprite2D.h>
+#include<FrameTimer.h>
 
 #include"Tutorial.h"
-//テスト用
 
+//テスト用
 #include<ModelObject.h>
+
 
 #include"Enemy.h"
 
@@ -34,12 +36,13 @@ private:
 	//テスト用
 	MelLib::ModelObject obj;
 
-
-
 	Tutorial tutorial;
 
 	// ロックオン用
 	static std::vector<std::shared_ptr<MelLib::GameObject>>pEnemys;
+
+	// チュートリアル開始するまでの時間を計測するタイマー
+	MelLib::FrameTimer tutorialStartTimer;
 private:
 	void LoadResources();
 	

@@ -6,11 +6,18 @@
 
 const std::unordered_map<int, std::wstring> Tutorial::TUTORIAL_TEXT=
 {
-	{TutorialType::MOVE,L"で移動します。"},
-	{TutorialType::CAMERA,L"で視点を動かします。"},
+	{TutorialType::MOVE_AND_CAMERA,L"で移動します。\nで視点を動かします。"},
 	{TutorialType::ATTACK,L"で攻撃します。"},
-	{TutorialType::DASH,L"でダッシュします。\n攻撃を回避するときなどに使用します。"},
+	{TutorialType::DASH,L"でダッシュします。"},
 	{TutorialType::JUMP,L"でジャンプします。"},
+};
+
+const std::unordered_map<int, int> Tutorial::DRAW_TEXTURE_NUM =
+{
+	{TutorialType::MOVE_AND_CAMERA,2},
+	{TutorialType::ATTACK,1},
+	{TutorialType::DASH,1},
+	{TutorialType::JUMP,1},
 };
 
 const std::unordered_map<MelLib::PadButton, std::string> Tutorial::PAD_BUTTON_STRING =
@@ -57,9 +64,14 @@ void Tutorial::NextTutorial()
 	if (currentTutorial != TutorialType::END)
 	{
 		currentTutorial++;
+		drawWindow = true;
 
-		
+		for (int i = 0; i < _countof(tutorialButtonSpr); i++)
+		{
+			tutorialButtonSpr[i].SetPosition(MelLib::Vector2(150, 270 + 70 * i));
+		}
 
+		tutorialTextPos = MelLib::Vector2(350, 300);
 	}
 }
 
@@ -69,16 +81,32 @@ Tutorial::Tutorial()
 	//tutorialTextSpr.Create(MelLib::Color(255,255));
 	//tutorialTextSpr.SetScale(400);
 
-	tutorialBackGroundSpr.Create(MelLib::Texture::Get("backGround"));
-	tutorialBackGroundSpr.SetPosition(MelLib::Vector2(30, 30));
+	backGroundSpr.Create(MelLib::Texture::Get("backGround"));
+	backGroundSpr.SetPosition(MelLib::Vector2(70, 40));
 
-	tutorialButtonSpr.Create();
-	tutorialButtonSpr.SetPosition(MelLib::Vector2(30, 30));
+	tutorialButtonSpr[0].Create();
+	tutorialButtonSpr[1].Create();
 	
+	
+	closeWindowButtonSpr.Create(MelLib::Texture::Get("ButtonA"));
+	closeWindowButtonSpr.SetPosition(MelLib::Vector2(790,520));
+	closeWindowButtonSpr.SetScale(0.8f);
 }
 
 void Tutorial::Update()
 {
+	// ウィンドウ閉じる処理
+	if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::A) && drawWindow)
+	{
+		drawWindow = false;
+
+		for (int i = 0; i < _countof(tutorialButtonSpr); i++) 
+		{
+			tutorialButtonSpr[i].SetPosition(MelLib::Vector2(20, 570 + -70 * i));
+		}
+
+		tutorialTextPos = MelLib::Vector2(200, 600);
+	}
 
 	// チュートリアル中の変更に対応するために動的に取得
 
@@ -102,37 +130,55 @@ void Tutorial::Update()
 		break;
 	}
 
-	std::string textureName;
+	std::string textureName[2];
 	switch (currentTutorial)
 	{
-	case TutorialType::MOVE:
-		textureName = "StickL";
-
-		break;
-	case TutorialType::CAMERA:
-		textureName = "StickR";
+	case TutorialType::MOVE_AND_CAMERA:
+		textureName[1] = "StickL";
+		textureName[0] = "StickR";
 		break;
 
 	default:
-		textureName = "Button" + PAD_BUTTON_STRING.at(drawPadButton);
+		textureName[0] = "Button" + PAD_BUTTON_STRING.at(drawPadButton);
 		break;
 	}
-	tutorialButtonSpr.SetTexture(MelLib::Texture::Get(textureName));
+	tutorialButtonSpr[0].SetTexture(MelLib::Texture::Get(textureName[0]));
+	tutorialButtonSpr[1].SetTexture(MelLib::Texture::Get(textureName[1]));
 }
 
 void Tutorial::Draw()
 {
+	if (currentTutorial == TutorialType::END
+		|| currentTutorial == TutorialType::NOT_STARTED)return;
+
+
 	//tutorialTextSpr.Draw();
 
 
 	MelLib::TextWrite::Draw
 	(
-		MelLib::Vector2(300, 300),
+		tutorialTextPos,
 		MelLib::Color(230, 255),
-		TUTORIAL_TEXT.at(currentTutorial) ,
+		TUTORIAL_TEXT.at(currentTutorial),
 		"Arial"
 	);
 
-	tutorialButtonSpr.Draw();
-	tutorialBackGroundSpr.Draw();
+	for (int i = 0; i < DRAW_TEXTURE_NUM.at(currentTutorial); i++)
+	{
+		tutorialButtonSpr[i].Draw();
+	}
+
+	if (drawWindow) 
+	{
+		backGroundSpr.Draw();
+		closeWindowButtonSpr.Draw();
+
+		MelLib::TextWrite::Draw
+		(
+			MelLib::Vector2(940, 530),
+			MelLib::Color(230, 255),
+			L"で閉じる",
+			"Arial"
+		);
+	}
 }

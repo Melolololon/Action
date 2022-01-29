@@ -77,7 +77,7 @@ void ActionPart::Event()
 		{
 		case EventType::TUTORIAL:
 			
-			if(tutorial.TutorialEnd())
+			if(tutorial.GetTutorialEndFlag())
 			{
 				// チュートリアル終了
 				endEvents.push_back(currentEvent);
@@ -203,22 +203,30 @@ void ActionPart::Initialize()
 	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<HPGauge>());
 
 
-	
-
+	tutorialStartTimer.SetMaxTime(60 * 2);
+	tutorialStartTimer.SetStopFlag(false);
 }
 
 void ActionPart::Update()
 {
+	if (currentEvent == EventType::TUTORIAL)tutorial.Update();
+	if (tutorial.GetDrawWindow())return;
 
 	EditMode::GetInstance()->Update();
 	Pause::GetInstance()->Update();
+	
+	
+	// プレイヤーがフラグに触れるか時間を超えたらチュートリアル開始
+	if (tutorialStartTimer.GetMaxOverFlag()
+		|| pPlayer->GetHitTutorialEventFlag())tutorial.NextTutorial();
 
-	
-	if (currentEvent == EventType::TUTORIAL)tutorial.Update();
-	
-	// チュートリアルを進める
-	if (pPlayer->GetHitTutorialEventFlag())tutorial.NextTutorial();
-	
+	// タイマーを止める
+	if (tutorialStartTimer.GetMaxOverFlag())
+	{
+		tutorialStartTimer.SetStopFlag(true);
+		tutorialStartTimer.ResetTimeZero();
+	}
+
 	MelLib::GameObjectManager::GetInstance()->Update();
 
 	for(int i = 0; i < pEnemys.size();i++)
