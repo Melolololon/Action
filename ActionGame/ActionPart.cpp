@@ -215,10 +215,10 @@ void ActionPart::Update()
 	EditMode::GetInstance()->Update();
 	Pause::GetInstance()->Update();
 	
-	
 	// プレイヤーがフラグに触れるか時間を超えたらチュートリアル開始
-	if (tutorialStartTimer.GetMaxOverFlag()
-		|| pPlayer->GetHitTutorialEventFlag())tutorial.NextTutorial();
+	bool nextTutorial = tutorialStartTimer.GetMaxOverFlag()
+		|| pPlayer->GetHitTutorialEventFlag();
+	if (nextTutorial)tutorial.NextTutorial();
 
 	// タイマーを止める
 	if (tutorialStartTimer.GetMaxOverFlag())

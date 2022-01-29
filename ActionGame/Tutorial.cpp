@@ -8,7 +8,7 @@ const std::unordered_map<int, std::wstring> Tutorial::TUTORIAL_TEXT=
 {
 	{TutorialType::NOT_STARTED,L""},
 	{TutorialType::MOVE,L"で移動します。"},
-	{TutorialType::CAMERA,L"で移動します。"},
+	{TutorialType::CAMERA,L"で視点を動かします。"},
 	{TutorialType::ATTACK,L"で攻撃します。"},
 	{TutorialType::DASH,L"でダッシュします。"},
 	{TutorialType::JUMP,L"でジャンプします。"},

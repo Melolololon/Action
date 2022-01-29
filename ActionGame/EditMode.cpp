@@ -315,7 +315,7 @@ void EditMode::Update()
 
 	if (pGameObjects.size() >= 1)
 	{
-		imguiManager->DrawSliderInt("CurrentAddObject", currentAddObject, 1, pGameObjects.size() - 1);
+		imguiManager->DrawSliderInt("CurrentAddObject", selectAddObjectNum, 1, pGameObjects.size() - 1);
 
 		imguiManager->DrawCheckBox("DeleteCurrentAddObject", deleteCurrentAddObject);
 
@@ -367,21 +367,37 @@ void EditMode::Update()
 	if (deleteCurrentAddObject)
 	{
 
-		pGameObjects[currentAddObject]->TrueEraseManager();
+		pGameObjects[selectAddObjectNum]->TrueEraseManager();
 
-		pGameObjects.erase(pGameObjects.begin() + currentAddObject - 1);
-		objectTypes.erase(objectTypes.begin() + currentAddObject - 1);
-		objectNums.erase(objectNums.begin() + currentAddObject - 1);
+		int count = 0;
+		for (auto& enemy : *pEnemys)
+		{
+			if (enemy == pGameObjects[selectAddObjectNum])
+			{
+				pEnemys->erase(pEnemys->begin() + count);
+				break;
+			}
+			count++;
+		}
 
-		if (currentAddObject > 1) currentAddObject--;
+		pGameObjects.erase(pGameObjects.begin() + selectAddObjectNum);
+		objectTypes.erase(objectTypes.begin() + selectAddObjectNum );
+		objectNums.erase(objectNums.begin() + selectAddObjectNum);
+		addObjectPositions.erase(addObjectPositions.begin() + selectAddObjectNum );
+		addObjectAngles.erase(addObjectAngles.begin() + selectAddObjectNum );
+		addObjectScales.erase(addObjectScales.begin() + selectAddObjectNum );
+		
+		
+
+		if (selectAddObjectNum > 1) selectAddObjectNum--;
 	}
 
 	if(getParam)
 	{
-		objectType = objectTypes[currentAddObject - 1];
-		objectNum = objectNums[currentAddObject - 1];
+		objectType = objectTypes[selectAddObjectNum - 1];
+		objectNum = objectNums[selectAddObjectNum - 1];
 
-		MelLib::GameObject* pObj = pGameObjects[currentAddObject].get();
+		MelLib::GameObject* pObj = pGameObjects[selectAddObjectNum].get();
 		addObjectPos = pObj->GetPosition();
 		addObjectAngle = pObj->GetRefModelObjects().at("main").GetAngle();
 		addObjectScale = pObj->GetRefModelObjects().at("main").GetScale();

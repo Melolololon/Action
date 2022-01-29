@@ -34,7 +34,7 @@ private:
 	std::vector<MelLib::Vector3>addObjectAngles;
 	std::vector<MelLib::Vector3>addObjectScales;
 
-	int currentAddObject = 1;
+	int selectAddObjectNum = 1;
 
 	using ObjID = const int;
 
