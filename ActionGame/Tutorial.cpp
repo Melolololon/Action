@@ -6,14 +6,24 @@
 
 const std::unordered_map<int, std::wstring> Tutorial::TUTORIAL_TEXT=
 {
-	{TutorialType::MOVE,L"左スティックで移動します。"},
-	{TutorialType::CAMERA,L"右スティックで視点を動かします。"},
-	{TutorialType::ATTACK,L"ボタンで攻撃します。"},
-	{TutorialType::DASH,L"ボタンでダッシュします。\n攻撃を回避するときなどに使用します。"},
-	{TutorialType::JUMP,L"ボタンでジャンプします。"},
+	{TutorialType::MOVE,L"で移動します。"},
+	{TutorialType::CAMERA,L"で視点を動かします。"},
+	{TutorialType::ATTACK,L"で攻撃します。"},
+	{TutorialType::DASH,L"でダッシュします。\n攻撃を回避するときなどに使用します。"},
+	{TutorialType::JUMP,L"でジャンプします。"},
 };
 
-const std::unordered_map<MelLib::PadButton, std::wstring> Tutorial::PAD_BUTTON_TEXT = 
+const std::unordered_map<MelLib::PadButton, std::string> Tutorial::PAD_BUTTON_STRING =
+{
+	{MelLib::PadButton::A,"A"},
+	{MelLib::PadButton::B,"B"},
+	{MelLib::PadButton::X,"X"},
+	{MelLib::PadButton::Y,"Y"},
+	{MelLib::PadButton::LB,"LB"},
+	{MelLib::PadButton::RB,"RB"},
+};
+
+const std::unordered_map<MelLib::PadButton, std::wstring> Tutorial::PAD_BUTTON_WSTRING = 
 {
 	{MelLib::PadButton::A,L"A"},
 	{MelLib::PadButton::B,L"B"},
@@ -28,6 +38,18 @@ void Tutorial::LoadResources()
 	const std::string TEXTURE_PATH = Game::GetInstance()->GetPath(Game::ResourcePath::TEXTURE);
 	
 	MelLib::Texture::Load(TEXTURE_PATH + "tutorialFrame.png","backGround");
+
+	const std::string BUTTON_PATH = "Input/Button/";
+	const std::string STICK_PATH = "Input/Stick/";
+
+	MelLib::Texture::Load(TEXTURE_PATH + BUTTON_PATH + "ButtonA.png", "ButtonA");
+	MelLib::Texture::Load(TEXTURE_PATH + BUTTON_PATH + "ButtonB.png", "ButtonB");
+	MelLib::Texture::Load(TEXTURE_PATH + BUTTON_PATH + "ButtonX.png", "ButtonX");
+	MelLib::Texture::Load(TEXTURE_PATH + BUTTON_PATH + "ButtonY.png", "ButtonY");
+	MelLib::Texture::Load(TEXTURE_PATH + BUTTON_PATH + "ButtonLB.png", "ButtonLB");
+	MelLib::Texture::Load(TEXTURE_PATH + BUTTON_PATH + "ButtonRB.png", "ButtonRB");
+	MelLib::Texture::Load(TEXTURE_PATH + STICK_PATH + "StickL.png", "StickL");
+	MelLib::Texture::Load(TEXTURE_PATH + STICK_PATH + "StickR.png", "StickR");
 }
 
 void Tutorial::NextTutorial()
@@ -35,6 +57,9 @@ void Tutorial::NextTutorial()
 	if (currentTutorial != TutorialType::END)
 	{
 		currentTutorial++;
+
+		
+
 	}
 }
 
@@ -45,8 +70,11 @@ Tutorial::Tutorial()
 	//tutorialTextSpr.SetScale(400);
 
 	tutorialBackGroundSpr.Create(MelLib::Texture::Get("backGround"));
-
 	tutorialBackGroundSpr.SetPosition(MelLib::Vector2(30, 30));
+
+	tutorialButtonSpr.Create();
+	tutorialButtonSpr.SetPosition(MelLib::Vector2(30, 30));
+	
 }
 
 void Tutorial::Update()
@@ -56,13 +84,12 @@ void Tutorial::Update()
 
 	// キーの設定を取得
 	const std::unordered_map<Player::ActionType, MelLib::PadButton> configData = Player::GetKeyConfigData();
-	drawConfigButton = true;
 	switch (currentTutorial)
 	{
 	case TutorialType::ATTACK:
 		drawPadButton = configData.at(Player::ActionType::ATTACK);
 
-
+		break;
 	case TutorialType::JUMP:
 		drawPadButton = configData.at(Player::ActionType::JUMP);
 		break;
@@ -72,11 +99,25 @@ void Tutorial::Update()
 		break;
 
 	default:
-		drawConfigButton = false;
 		break;
 	}
 
+	std::string textureName;
+	switch (currentTutorial)
+	{
+	case TutorialType::MOVE:
+		textureName = "StickL";
 
+		break;
+	case TutorialType::CAMERA:
+		textureName = "StickR";
+		break;
+
+	default:
+		textureName = "Button" + PAD_BUTTON_STRING.at(drawPadButton);
+		break;
+	}
+	tutorialButtonSpr.SetTexture(MelLib::Texture::Get(textureName));
 }
 
 void Tutorial::Draw()
@@ -84,30 +125,14 @@ void Tutorial::Draw()
 	//tutorialTextSpr.Draw();
 
 
-	//switch (currentTutorial)
-	//{
-	// case :
-	//	break;
-	//}
-
-	std::wstring drawText;
-	if (drawConfigButton)
-	{
-		drawText = PAD_BUTTON_TEXT.at(drawPadButton) + TUTORIAL_TEXT.at(currentTutorial);
-	}
-	else
-	{
-		drawText = TUTORIAL_TEXT.at(currentTutorial);
-	}
-
-
 	MelLib::TextWrite::Draw
 	(
 		MelLib::Vector2(300, 300),
 		MelLib::Color(230, 255),
-		drawText,
+		TUTORIAL_TEXT.at(currentTutorial) ,
 		"Arial"
 	);
 
+	tutorialButtonSpr.Draw();
 	tutorialBackGroundSpr.Draw();
 }

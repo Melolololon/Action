@@ -9,7 +9,7 @@ private:
 
 public:
 
-	TutorialEventFlag();
+	TutorialEventFlag(const MelLib::Vector3& pos, const MelLib::Vector3& scale);
 
 	void Draw()override;
 	/// <summary>

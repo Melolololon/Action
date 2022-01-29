@@ -34,20 +34,22 @@ namespace MelLib
 {
 	class Sprite
 	{
+	public:
+		enum class SpriteDrawMode
+		{
+			DRAW_TEXTURE,//テクスチャ描画
+			DRAW_COLOR,//色描画
+		};
 	private:
 
-#pragma region 変数
+	
+
 		static const UINT MAX_TEXTURE_LOAD_NUM = 256 * 20;
 
 
-#pragma endregion
-
-#pragma region 関数
-
-
-#pragma endregion
 
 	protected:
+		SpriteDrawMode drawMode = SpriteDrawMode::DRAW_COLOR;
 
 		static ID3D12GraphicsCommandList* cmdList;
 		static ID3D12Device* device;
@@ -87,7 +89,7 @@ namespace MelLib
 
 #pragma region 関数
 		void ConstDataMat();
-		void SetCmdList(Texture* texture);
+		void SetCmdList();
 
 #pragma region マップ
 		void MapVertexBuffer(void** data);
@@ -143,6 +145,9 @@ namespace MelLib
 			drawRightDownPosition = rightDownPos;
 		}
 
+
+		void SetDrawMode(const SpriteDrawMode mode);
+		
 
 #pragma endregion
 
