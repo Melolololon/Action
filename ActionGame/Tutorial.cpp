@@ -6,6 +6,7 @@
 
 const std::unordered_map<int, std::wstring> Tutorial::TUTORIAL_TEXT=
 {
+	{TutorialType::NOT_STARTED,L""},
 	{TutorialType::MOVE_AND_CAMERA,L"で移動します。\nで視点を動かします。"},
 	{TutorialType::ATTACK,L"で攻撃します。"},
 	{TutorialType::DASH,L"でダッシュします。"},
@@ -14,6 +15,7 @@ const std::unordered_map<int, std::wstring> Tutorial::TUTORIAL_TEXT=
 
 const std::unordered_map<int, int> Tutorial::DRAW_TEXTURE_NUM =
 {
+	{TutorialType::NOT_STARTED,0},
 	{TutorialType::MOVE_AND_CAMERA,2},
 	{TutorialType::ATTACK,1},
 	{TutorialType::DASH,1},
@@ -142,8 +144,10 @@ void Tutorial::Update()
 		textureName[0] = "Button" + PAD_BUTTON_STRING.at(drawPadButton);
 		break;
 	}
-	tutorialButtonSpr[0].SetTexture(MelLib::Texture::Get(textureName[0]));
-	tutorialButtonSpr[1].SetTexture(MelLib::Texture::Get(textureName[1]));
+	for(int i = 0; i < DRAW_TEXTURE_NUM.at(currentTutorial); i++)
+	{
+		tutorialButtonSpr[i].SetTexture(MelLib::Texture::Get(textureName[i]));
+	}
 }
 
 void Tutorial::Draw()
