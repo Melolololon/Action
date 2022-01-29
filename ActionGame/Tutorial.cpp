@@ -7,19 +7,11 @@
 const std::unordered_map<int, std::wstring> Tutorial::TUTORIAL_TEXT=
 {
 	{TutorialType::NOT_STARTED,L""},
-	{TutorialType::MOVE_AND_CAMERA,L"で移動します。\nで視点を動かします。"},
+	{TutorialType::MOVE,L"で移動します。"},
+	{TutorialType::CAMERA,L"で移動します。"},
 	{TutorialType::ATTACK,L"で攻撃します。"},
 	{TutorialType::DASH,L"でダッシュします。"},
 	{TutorialType::JUMP,L"でジャンプします。"},
-};
-
-const std::unordered_map<int, int> Tutorial::DRAW_TEXTURE_NUM =
-{
-	{TutorialType::NOT_STARTED,0},
-	{TutorialType::MOVE_AND_CAMERA,2},
-	{TutorialType::ATTACK,1},
-	{TutorialType::DASH,1},
-	{TutorialType::JUMP,1},
 };
 
 const std::unordered_map<MelLib::PadButton, std::string> Tutorial::PAD_BUTTON_STRING =
@@ -68,10 +60,7 @@ void Tutorial::NextTutorial()
 		currentTutorial++;
 		drawWindow = true;
 
-		for (int i = 0; i < _countof(tutorialButtonSpr); i++)
-		{
-			tutorialButtonSpr[i].SetPosition(MelLib::Vector2(150, 270 + 70 * i));
-		}
+		tutorialButtonSpr.SetPosition(MelLib::Vector2(150, 270));
 
 		tutorialTextPos = MelLib::Vector2(350, 300);
 	}
@@ -86,8 +75,7 @@ Tutorial::Tutorial()
 	backGroundSpr.Create(MelLib::Texture::Get("backGround"));
 	backGroundSpr.SetPosition(MelLib::Vector2(70, 40));
 
-	tutorialButtonSpr[0].Create();
-	tutorialButtonSpr[1].Create();
+	tutorialButtonSpr.Create();
 	
 	
 	closeWindowButtonSpr.Create(MelLib::Texture::Get("ButtonA"));
@@ -102,10 +90,7 @@ void Tutorial::Update()
 	{
 		drawWindow = false;
 
-		for (int i = 0; i < _countof(tutorialButtonSpr); i++) 
-		{
-			tutorialButtonSpr[i].SetPosition(MelLib::Vector2(20, 570 + -70 * i));
-		}
+		tutorialButtonSpr.SetPosition(MelLib::Vector2(20, 570));
 
 		tutorialTextPos = MelLib::Vector2(200, 600);
 	}
@@ -132,22 +117,22 @@ void Tutorial::Update()
 		break;
 	}
 
-	std::string textureName[2];
+	std::string textureName;
 	switch (currentTutorial)
 	{
-	case TutorialType::MOVE_AND_CAMERA:
-		textureName[1] = "StickL";
-		textureName[0] = "StickR";
+	case TutorialType::MOVE:
+		textureName = "StickL";
+		break;
+
+	case TutorialType::CAMERA:
+		textureName = "StickR";
 		break;
 
 	default:
-		textureName[0] = "Button" + PAD_BUTTON_STRING.at(drawPadButton);
+		textureName = "Button" + PAD_BUTTON_STRING.at(drawPadButton);
 		break;
 	}
-	for(int i = 0; i < DRAW_TEXTURE_NUM.at(currentTutorial); i++)
-	{
-		tutorialButtonSpr[i].SetTexture(MelLib::Texture::Get(textureName[i]));
-	}
+	tutorialButtonSpr.SetTexture(MelLib::Texture::Get(textureName));
 }
 
 void Tutorial::Draw()
@@ -167,10 +152,7 @@ void Tutorial::Draw()
 		"Arial"
 	);
 
-	for (int i = 0; i < DRAW_TEXTURE_NUM.at(currentTutorial); i++)
-	{
-		tutorialButtonSpr[i].Draw();
-	}
+	tutorialButtonSpr.Draw();
 
 	if (drawWindow) 
 	{

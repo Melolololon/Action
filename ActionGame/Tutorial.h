@@ -11,10 +11,11 @@ private:
 	struct TutorialType
 	{
 		static const int NOT_STARTED = 0;
-		static const int MOVE_AND_CAMERA = 1;
-		static const int ATTACK = 2;
-		static const int DASH = 3;
-		static const int JUMP = 4;
+		static const int MOVE = 1;
+		static const int CAMERA = 2;
+		static const int ATTACK = 3;
+		static const int DASH = 4;
+		static const int JUMP = 5;
 		static const int END = JUMP;
 	};
 	int currentTutorial = TutorialType::NOT_STARTED;
@@ -23,11 +24,11 @@ private:
 	static const std::unordered_map<int, std::wstring> TUTORIAL_TEXT;
 	static const std::unordered_map<MelLib::PadButton, std::string> PAD_BUTTON_STRING;
 	static const std::unordered_map<MelLib::PadButton, std::wstring> PAD_BUTTON_WSTRING;
-	static const std::unordered_map<int, int> DRAW_TEXTURE_NUM;
+	
 
 
 	MelLib::Sprite2D backGroundSpr;
-	MelLib::Sprite2D tutorialButtonSpr[2];
+	MelLib::Sprite2D tutorialButtonSpr;
 
 	// 解説のウィンドウを描画するかどうか
 	bool drawWindow = false;
