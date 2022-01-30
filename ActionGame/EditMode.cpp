@@ -32,10 +32,10 @@
 
 std::string EditMode::GetFileName()
 {
-	std::string path;
+	std::string path = "Resources/Edit/";
 
 	MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
-	path = typeid(*currentScene).name();
+	path += typeid(*currentScene).name();
 
 	// 先頭6文字("class ")を削除
 	path.erase(path.begin(), path.begin() + 6);
@@ -113,21 +113,18 @@ void EditMode::Save()
 		writeParam = addObjectScales[objectNumber];
 		file.write(reinterpret_cast<char*>(&writeParam), sizeof(writeParam));
 
-		//// モデルの数書き込み
-		//int modelNum = refGameObjects[i]->GetRefModelObjects().size();
-		//file.write(reinterpret_cast<char*>(&modelNum), sizeof(modelNum));
-
-		//// モデルの角度と大きさの書き込み
-		//const std::unordered_map<std::string, MelLib::ModelObject>& refModels = refGameObjects[i]->GetRefModelObjects();
-
-		//for (const auto& model : refModels)
-		//{
-		//	writeParam = model.second.GetAngle();
-		//	file.write(reinterpret_cast<char*>(&writeParam), sizeof(writeParam));
-
-		//	writeParam = model.second.GetScale();
-		//	file.write(reinterpret_cast<char*>(&writeParam), sizeof(writeParam));
-		//}
+		// 敵の場合壁との紐付け番号書き込み
+		if(objectTypes[objectNumber] == OBJ_TYPE_ENEMY)
+		{
+			for (const auto& enemy : *pEnemys)
+			{
+				if(pGameObjects[objectNumber] == enemy)
+				{
+					int num = enemy->GetWallNum();
+					file.write(reinterpret_cast<char*>(&num), sizeof(num));
+				}
+			}
+		}
 
 		objectNumber++;
 	}
@@ -211,7 +208,10 @@ bool EditMode::Load
 			file.read(reinterpret_cast<char*>(&addObjectScale), sizeof(addObjectScale));
 		}*/
 
-
+		if(objectType == OBJ_TYPE_ENEMY)
+		{
+			file.read(reinterpret_cast<char*>(&wallNum), sizeof(wallNum));
+		}
 	
 
 		// セット
@@ -561,7 +561,7 @@ void EditMode::AddObject()
 
 	
 	// 壁だったら追加
-	if(objectType == OBJ_TYPE_STAGE && objectNum == WALL)
+	if(objectType + objectNum == WALL)
 	{
 		pWalls->push_back(getP);
 	}

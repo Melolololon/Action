@@ -125,6 +125,8 @@ void Sprite3D::Create(Texture* pTexture)
 	CreateBuffer();
 	InitializeVertices();
 	pipeline = defaultPipeline.GetPipelineState();
+
+	if (pTexture)drawMode = SpriteDrawMode::DRAW_TEXTURE;
 }
 
 void Sprite3D::Draw(const std::string& rtName)

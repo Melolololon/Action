@@ -222,6 +222,7 @@ void ActionPart::Update()
 
 	// <壁番号,カウント>
 	std::unordered_map<int, int>enemyWallNum;
+	for (int i = 0; i < pWalls.size(); i++)enemyWallNum[i] = 0;
 
 	// 敵のやられ確認&壁を消すための番号取得
 	for(int i = 0; i < pEnemys.size();i++)

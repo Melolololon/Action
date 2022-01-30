@@ -37,8 +37,8 @@ void Wall::Update()
 {
 	// âÊëúÇÃÉXÉNÉçÅ[Éã
 	static const float AREA_SCROLL_SPEED = 0.01f;
-	drawAreaLeftUp.y += AREA_SCROLL_SPEED;
-	drawAreaRightDown.y += AREA_SCROLL_SPEED;
+	drawAreaLeftUp.y -= AREA_SCROLL_SPEED;
+	drawAreaRightDown.y -= AREA_SCROLL_SPEED;
 	wallSpr.SetDrawLeftUpPosition(drawAreaLeftUp);
 	wallSpr.SetDrawRigthDownPosition(drawAreaRightDown);
 
