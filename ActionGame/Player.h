@@ -49,7 +49,7 @@ private:
 
 #pragma region ダッシュ
 	//シュン!って感じで動くやつ
-	//ヤーナムステップ、閃乱カグラのあれ
+	//閃乱カグラのあれ
 	bool isDash = false;
 
 	MelLib::Easing<MelLib::Vector3> dashEasing;
@@ -62,6 +62,7 @@ private:
 #pragma region ジャンプ
 	static const float JUMP_POWER;
 
+	// 落下中かどうか
 	bool isDrop = false;
 	float dropStartPosY = 0.0f;
 
@@ -265,7 +266,7 @@ public:
 	bool DeadAnimationEnd()const 
 	{
 		return modelObjects.at("main").GetAnimationEndFlag()
-			&& isDead;
+			&& modelObjects.at("main").GetCurrentAnimationName() == "Dead";
 	}
 #pragma endregion
 

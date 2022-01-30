@@ -25,6 +25,7 @@ void JumpEnemy::Attack()
 	}
 }
 
+// 未使用
 void JumpEnemy::AttackRot()
 {
 	// 攻撃時の回転を開始するフレーム
@@ -169,7 +170,7 @@ JumpEnemy::JumpEnemy(const MelLib::Vector3 pos, int wallNum)
 	modelObjects["main"].SetAnimationEndStopFlag(true);
 
 	// 攻撃判定作成
-	enemyAttack = std::make_shared<NormalEnemyAttack>(2, sphereData[0].GetRadius());
+	enemyAttack = std::make_shared<NormalEnemyAttack>(30, sphereData[0].GetRadius());
 
 
 

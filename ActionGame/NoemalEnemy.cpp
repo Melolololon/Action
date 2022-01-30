@@ -100,7 +100,7 @@ void NoemalEnemy::Update()
 		// UŒ‚”»’è‚Ì’Ç‰Á
 		MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<EnemyAttack>
 			(
-				3,
+				40,
 				MelLib::Vector3(-12, 17, 0),
 				3.0f,
 				60 * 0.2,

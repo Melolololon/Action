@@ -20,6 +20,7 @@
 
 #include"EnemyAttack.h"
 #include"NormalEnemyAttack.h"
+#include"JumpEnemy.h"
 
 #include"EventFlag.h"
 #include"TutorialEventFlag.h"
@@ -158,7 +159,6 @@ void Player::Update()
 	if(isDead)
 	{
 		Dead();
-		ChangeAnimationData();
 		return;
 	}
 
@@ -427,6 +427,8 @@ void Player::AttackMove()
 
 void Player::Dash()
 {
+
+
 	static const float MAX_DASH_SPEED = 1.5f;
 	static const float START_DASH_SPEED = 1.0f;
 
@@ -507,6 +509,9 @@ void Player::JumpAnimation()
 
 void Player::Attack()
 {
+	// ãÛíÜçUåÇÇ∆É_ÉbÉVÉÖçUåÇÇÕÇ¢Ç¡ÇΩÇÒÇ»Çµ
+	if (isDrop && isDash)return;
+
 	if (attackTimer.GetMaxOverFlag())
 	{
 		currentAttack = PlayerSlush::AttackType::NONE;
@@ -683,6 +688,7 @@ void Player::Stun()
 
 void Player::Dead()
 {
+	modelObjects["main"].SetAnimation("Dead");
 	ChangeAnimationData();
 }
 
@@ -867,9 +873,16 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 				AddPosition(MelLib::Vector3(enemyToPlayer.x, 0, enemyToPlayer.z) * 5.0f);
 				
 			}
-			else if(prePosition - GetPosition() == 0)
+			else if (prePosition - GetPosition() == 0)
 			{
-				AddPosition(MelLib::Vector3(enemyToPlayer.x, 0, enemyToPlayer.z) * 4.0f);
+				if (typeid(*object) == typeid(JumpEnemy))
+				{
+					AddPosition(MelLib::Vector3(direction.x, 0, direction.z) * 20.0f);
+				}
+				else 
+				{
+					AddPosition(MelLib::Vector3(enemyToPlayer.x, 0, enemyToPlayer.z) * 4.0f);
+				}
 			}
 			else 
 			{
@@ -1051,7 +1064,9 @@ void Player::DownHP(const int power)
 	{
 		hp = 0;
 		isDead = true;
-		modelObjects["main"].SetAnimation("Dead");
+
+		modelObjects["main"].SetAnimationFrameStart();
+
 	}
 }
 
