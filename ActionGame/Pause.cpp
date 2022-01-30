@@ -102,7 +102,11 @@ void Pause::Initialize()
 		sprite.second.SetScalingPoint(sprite.second.GetTexture()->GetTextureSize() / 2);
 		
 		// 項目の文字の大きさをセット
-		if(sprite.first == 0)sprite.second.SetScale(SELECT_SCALE);
+		if (sprite.first == 0)
+		{
+			sprite.second.SetScale(SELECT_SCALE);
+			sprite.second.SetAddColor(MelLib::Color(255, 255, 255, 0));
+		}
 		else sprite.second.SetScale(UN_SELECTED_SCALE);
 
 		// 位置をずらしながらセット
@@ -158,7 +162,9 @@ void Pause::Update()
 
 			// 項目の大きさリセット
 			menuStringSprites[currentPauseSelect].SetScale(UN_SELECTED_SCALE);
+			menuStringSprites[currentPauseSelect].SetAddColor(MelLib::Color(0,0,0, 0));
 			menuStringSprites[0].SetScale(SELECT_SCALE);
+			menuStringSprites[0].SetAddColor(MelLib::Color(255,255,255, 0));
 
 			currentPauseSelect = 0;
 		}
@@ -195,21 +201,25 @@ void Pause::Update()
 		|| MelLib::Input::LeftStickUpTrigger(80.0f))
 	{
 		menuStringSprites[currentPauseSelect].SetScale(UN_SELECTED_SCALE);
+		menuStringSprites[currentPauseSelect].SetAddColor(MelLib::Color(0,0,0,0));
 
 		currentPauseSelect--;
 		if (currentPauseSelect < 0)currentPauseSelect = PauseMenu::NUM_MAX;
 
 		menuStringSprites[currentPauseSelect].SetScale(SELECT_SCALE);
+		menuStringSprites[currentPauseSelect].SetAddColor(MelLib::Color(255, 255, 255, 0));
 	}
 	else if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::DOWN)
 		|| MelLib::Input::LeftStickDownTrigger(80.0f))
 	{
 		menuStringSprites[currentPauseSelect].SetScale(UN_SELECTED_SCALE);
+		menuStringSprites[currentPauseSelect].SetAddColor(MelLib::Color(0, 0, 0, 0));
 
 		currentPauseSelect++;
 		if (currentPauseSelect > PauseMenu::NUM_MAX)currentPauseSelect = 0;
 
 		menuStringSprites[currentPauseSelect].SetScale(SELECT_SCALE);
+		menuStringSprites[currentPauseSelect].SetAddColor(MelLib::Color(255, 255, 255, 0));
 	}
 
 

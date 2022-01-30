@@ -132,10 +132,6 @@ Player::Player(const MelLib::Vector3& pos)
 
 void Player::Update()
 {
-#ifdef _DEBUG
-	if(MelLib::Input::KeyTrigger(DIK_SPACE))DownHP(438050);
-#endif // _DEBUG
-
 
 
 	MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
@@ -161,17 +157,11 @@ void Player::Update()
 	
 	if(isDead)
 	{
+		Dead();
 		ChangeAnimationData();
 		return;
 	}
 
-	if(isDash)
-	{
-		Dead();
-		SetCameraData();
-		RotCamera();
-		return;
-	}
 
 	if (isStun)
 	{
@@ -208,7 +198,7 @@ void Player::Update()
 	}
 
 	prePosition = GetPosition();
-	if (!GetIsFall())
+	if (!GetIsFall() && !isDash)
 	{
 		// 前フレームの座標の格納場所をずらす
 		for (int i = 0; i < _countof(notFallPrePosition) - 1; i++)

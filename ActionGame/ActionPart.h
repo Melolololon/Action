@@ -57,6 +57,11 @@ private:
 	// チュートリアル開始するまでの時間を計測するタイマー
 	MelLib::FrameTimer tutorialStartTimer;
 
+	// ゲームクリア判定になってからどのくらいで終了するかの時間を計測するタイマー
+	MelLib::FrameTimer gameClearTimer;
+	// クリアのアニメーションの開始時間
+	const int CLEAR_ANIMATION_START_TIME = 60 * 1;
+
 	MelLib::Sprite2D gameoverBackSpr;
 	MelLib::Sprite2D gameoverTextSpr;
 	MelLib::Easing<float> gameoverBackAlpha = MelLib::Easing<float>(0, 100, 1, 0);
@@ -64,6 +69,10 @@ private:
 
 	MelLib::Sprite2D gameoverRetrySpr;
 	MelLib::Sprite2D gameoverReturnTitleSpr;
+
+
+	MelLib::Sprite2D gameClearTextSpr;
+	MelLib::Easing<float>gameClearTextScale = MelLib::Easing<float>(20, 1, 3, 20);
 
 	bool returnTitleFlag = false;
 
@@ -90,6 +99,7 @@ private:
 
 	bool CheckEndEvent(const EventType checkEvent);
 
+	void GameClear();
 	void GameOver();
 public:
 	void Initialize()override;//初期化

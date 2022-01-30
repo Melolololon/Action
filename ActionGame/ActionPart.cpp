@@ -55,6 +55,7 @@ void ActionPart::LoadResources()
 		MelLib::Texture::Load(TEXTURE_PATH + "ActionPart/GameOver.png","gameover");
 		MelLib::Texture::Load(TEXTURE_PATH + "ActionPart/retry.png", "retry");
 		MelLib::Texture::Load(TEXTURE_PATH + "ActionPart/returnTitle.png", "retTitle");
+		MelLib::Texture::Load(TEXTURE_PATH + "ActionPart/Clear.png", "clear");
 		loadTexture = true;
 	}
 }
@@ -140,6 +141,13 @@ bool ActionPart::CheckEndEvent(const EventType checkEvent)
 	return false;
 }
 
+void ActionPart::GameClear()
+{
+	float scale = gameClearTextScale.EaseIn();
+	if (scale < 1)scale = 1;
+	gameClearTextSpr.SetScale(scale);
+}
+
 void ActionPart::GameOver()
 {
 	float alpha = gameoverBackAlpha.Lerp();
@@ -153,11 +161,11 @@ void ActionPart::GameOver()
 
 	if (alpha >= 100)
 	{
-		if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::LEFT)
-			|| MelLib::Input::LeftStickLeft(50.0f))returnTitleFlag = false;
+		if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::UP)
+			|| MelLib::Input::LeftStickUp(50.0f))returnTitleFlag = false;
 
-		if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::RIGHT)
-			|| MelLib::Input::LeftStickRight(50.0f))returnTitleFlag = true;
+		if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::DOWN)
+			|| MelLib::Input::LeftStickDown(50.0f))returnTitleFlag = true;
 
 		if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::A))Fade::GetInstance()->Start();
 
@@ -165,12 +173,16 @@ void ActionPart::GameOver()
 		if (!returnTitleFlag)
 		{
 			gameoverRetrySpr.SetScale(SELECT_SCALE);
+			gameoverRetrySpr.SetAddColor(MelLib::Color(80, 80, 80, 0));
 			gameoverReturnTitleSpr.SetScale(1);
+			gameoverReturnTitleSpr.SetAddColor(MelLib::Color(0,0));
 		}
 		else
 		{
 			gameoverRetrySpr.SetScale(1);
+			gameoverRetrySpr.SetAddColor(MelLib::Color(0, 0));
 			gameoverReturnTitleSpr.SetScale(SELECT_SCALE);
+			gameoverReturnTitleSpr.SetAddColor(MelLib::Color(80, 80, 80, 0));
 		}
 	}
 
@@ -240,30 +252,35 @@ void ActionPart::Initialize()
 	// UI追加
 	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<HPGauge>());
 
-
+	// チュートリアルが開始するまでの時間
 	tutorialStartTimer.SetMaxTime(60 * 2);
 	tutorialStartTimer.SetStopFlag(false);
 
+	gameClearTimer.SetMaxTime(60 * 3);
+
+	// 各スプライト準備
 	gameoverBackSpr.Create(MelLib::Color(0, 0));
 	gameoverBackSpr.SetScale(MelLib::Vector2(MelLib::Library::GetWindowWidth(), MelLib::Library::GetWindowHeight()));
 	gameoverTextSpr.Create(MelLib::Texture::Get("gameover"));
-	gameoverTextSpr.SetPosition(MelLib::Vector2(310,150));
+	gameoverTextSpr.SetPosition(MelLib::Vector2(310,100));
 	gameoverTextSpr.SetSubColor(MelLib::Color(0, 0, 0, 255));
 
 	gameoverRetrySpr.Create(MelLib::Texture::Get("retry"));
-	gameoverRetrySpr.SetPosition(MelLib::Vector2(150,400));
+	gameoverRetrySpr.SetPosition(MelLib::Vector2(450,420));
 	gameoverRetrySpr.SetScalingPoint(MelLib::Texture::Get("retry")->GetTextureSize() /2);
 
 	gameoverReturnTitleSpr.Create(MelLib::Texture::Get("retTitle"));
-	gameoverReturnTitleSpr.SetPosition(MelLib::Vector2(600, 400)); 
+	gameoverReturnTitleSpr.SetPosition(MelLib::Vector2(400, 550));
 	gameoverReturnTitleSpr.SetScalingPoint(MelLib::Texture::Get("retTitle")->GetTextureSize() / 2);
 
+	gameClearTextSpr.Create(MelLib::Texture::Get("clear"));
+	gameClearTextSpr.SetScalingPoint(MelLib::Texture::Get("clear")->GetTextureSize()/ 2);
+	gameClearTextSpr.SetScale(5);
+	gameClearTextSpr.SetPosition(MelLib::Vector2(350,200));
 }
 
 void ActionPart::Update()
 {
-
-
 	// フェードが関わる処理
 	Fade();
 
@@ -271,6 +288,27 @@ void ActionPart::Update()
 	if(currentState == GameState::GAMEOVER)
 	{
 		GameOver();
+		return;
+	}
+	
+#ifdef _DEBUG
+	if (MelLib::Input::KeyTrigger(DIK_Z))currentState = GameState::CLEAR;
+#endif // _DEBUG
+
+
+	// クリア処理
+	if(currentState == GameState::CLEAR)
+	{
+		if (gameClearTimer.GetNowTime() >= CLEAR_ANIMATION_START_TIME)
+		{
+			GameClear();
+		}
+
+		if (gameClearTimer.GetMaxOverFlag())
+		{
+			returnTitleFlag = true;
+			Fade::GetInstance()->Start();
+		}
 		return;
 	}
 
@@ -309,6 +347,19 @@ void ActionPart::Update()
 		// 倒した敵は敵リストから消す
 		if(pEnemys[i]->GetEraseManager())
 		{
+			bool continueLoop = false;
+			// すでに死んでる敵の処理は飛ばす
+			for (const auto& deadEnemy : pDeadEnemys)
+			{
+				if (deadEnemy == pEnemys[i])
+				{
+					continueLoop = true;
+					continue;
+				}
+			}
+			if (continueLoop)continue;
+
+
 			// ロックしてる敵を倒したら、ロック解除
 			if(pPlayer->GetPLockOnEnemy() == pEnemys[i].get())
 			{
@@ -347,6 +398,13 @@ void ActionPart::Update()
 		currentState = GameState::GAMEOVER;
 	}
 
+	// クリア判定
+	if(pDeadEnemys.size() == pEnemys.size())
+	{
+		currentState = GameState::CLEAR;
+		gameClearTimer.SetStopFlag(false);
+	}
+
 }
 
 void ActionPart::Draw()
@@ -371,6 +429,11 @@ void ActionPart::Draw()
 		}
 	}
 
+	if(gameClearTimer.GetNowTime() >= CLEAR_ANIMATION_START_TIME)
+	{
+		gameClearTextSpr.Draw();
+	}
+
 
 
 	Pause::GetInstance()->Draw();
@@ -384,6 +447,7 @@ void ActionPart::Finalize()
 
 	// 例外防止(これ消すと例外出る)EditModeにポインタ渡してるからだと思われる
 	pEnemys.clear();
+	pWalls.clear();
 }
 
 MelLib::Scene* ActionPart::GetNextScene()
