@@ -751,6 +751,8 @@ void Player::LockOn()
 			// ‹ß‚¢“G‚ðŽæ“¾
 			for (const auto& enemy : ActionPart::GetEnemys())
 			{
+				if (enemy->GetEraseManager())continue;
+
 				float distance = MelLib::LibMath::CalcDistance3D(GetPosition(), enemy->GetPosition());
 				if (distance <= lockOnEnemyDistance)
 				{

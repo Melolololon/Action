@@ -237,8 +237,8 @@ void ActionPart::Update()
 			}
 
 			pDeadEnemys.push_back(pEnemys[i]);
-			pEnemys.erase(pEnemys.begin() + i);
-			i--;
+			//pEnemys.erase(pEnemys.begin() + i);
+			//i--;
 
 		}
 		else
