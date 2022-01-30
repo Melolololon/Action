@@ -53,7 +53,7 @@ std::unordered_map<PlayerSlush::AttackType, const Player::AttackData> Player::at
 void Player::LoadResources()
 {
 	// タイトルでも使うから自動削除削除
-	MelLib::ModelData::Load("Resources/Model/Player/Player_Test.fbx", false, "Player");
+	MelLib::ModelData::Load("Resources/Model/Player/Player.fbx", false, "Player");
 	//MelLib::ModelData::Load("Resources/Model/Enemy/Mokuzin/Mokuzin.fbx", false, "Player");
 
 	// メッシュ2つ以上の時にマテリアル読むとエラーでる
@@ -132,6 +132,12 @@ Player::Player(const MelLib::Vector3& pos)
 
 void Player::Update()
 {
+#ifdef _DEBUG
+	if(MelLib::Input::KeyTrigger(DIK_SPACE))DownHP(438050);
+#endif // _DEBUG
+
+
+
 	MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())
 	{
@@ -153,6 +159,20 @@ void Player::Update()
 
 	modelObjects["main"].Update();
 	
+	if(isDead)
+	{
+		ChangeAnimationData();
+		return;
+	}
+
+	if(isDash)
+	{
+		Dead();
+		SetCameraData();
+		RotCamera();
+		return;
+	}
+
 	if (isStun)
 	{
 		Stun();
@@ -274,6 +294,10 @@ void Player::ChangeAnimationData()
 		modelObjects["main"].SetAnimationEndStopFlag(true);
 	}
 	else if (animationName.find("Jump_Up") != std::string::npos)
+	{
+		modelObjects["main"].SetAnimationEndStopFlag(true);
+	}
+	else if (animationName.find("Dead") != std::string::npos)
 	{
 		modelObjects["main"].SetAnimationEndStopFlag(true);
 	}
@@ -667,6 +691,11 @@ void Player::Stun()
 	}
 }
 
+void Player::Dead()
+{
+	ChangeAnimationData();
+}
+
 void Player::RotCamera()
 {
 
@@ -1025,7 +1054,18 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 	}
 }
 
-void Player::LifeUp(const unsigned int upNum)
+void Player::DownHP(const int power)
+{
+	hp -= power;
+	if (hp <= 0)
+	{
+		hp = 0;
+		isDead = true;
+		modelObjects["main"].SetAnimation("Dead");
+	}
+}
+
+void Player::LifeUp(const int upNum)
 {
 	hp += upNum;
 	if (hp > HP_MAX)

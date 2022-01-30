@@ -28,10 +28,14 @@
 
 #include"Title.h"
 
+#include"Game.h"
+
 // テスト用
 #include"SlushEffect.h"
 
 std::vector<std::shared_ptr<Enemy>>ActionPart::pEnemys;
+
+bool ActionPart::loadTexture = false;
 
 void ActionPart::LoadResources()
 {
@@ -43,8 +47,16 @@ void ActionPart::LoadResources()
 	Rock::LoadResources();
 	Stage::LoadResources(1);
 
-	MelLib::ModelData::Load("Resources/Model/Stage/Stage.obj",true,"stage");
+	//MelLib::ModelData::Load("Resources/Model/Stage/Stage.obj",true,"stage");
 
+	if(!loadTexture)
+	{
+		const std::string TEXTURE_PATH = Game::GetInstance()->GetPath(Game::ResourcePath::TEXTURE);
+		MelLib::Texture::Load(TEXTURE_PATH + "ActionPart/GameOver.png","gameover");
+		MelLib::Texture::Load(TEXTURE_PATH + "ActionPart/retry.png", "retry");
+		MelLib::Texture::Load(TEXTURE_PATH + "ActionPart/returnTitle.png", "retTitle");
+		loadTexture = true;
+	}
 }
 
 void ActionPart::Fade()
@@ -128,6 +140,42 @@ bool ActionPart::CheckEndEvent(const EventType checkEvent)
 	return false;
 }
 
+void ActionPart::GameOver()
+{
+	float alpha = gameoverBackAlpha.Lerp();
+	if (alpha > 100)alpha = 100;
+	gameoverBackSpr.SetAddColor(MelLib::Color(0,0,0,MelLib::Color::ParToUChar(alpha)));
+
+	gameoverTextAlpha--;
+	if (gameoverTextAlpha < 0)gameoverTextAlpha = 0;
+	gameoverTextSpr.SetSubColor(MelLib::Color(0, 0, 0, MelLib::Color::ParToUChar(gameoverTextAlpha)));
+
+
+	if (alpha >= 100)
+	{
+		if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::LEFT)
+			|| MelLib::Input::LeftStickLeft(50.0f))returnTitleFlag = false;
+
+		if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::RIGHT)
+			|| MelLib::Input::LeftStickRight(50.0f))returnTitleFlag = true;
+
+		if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::A))Fade::GetInstance()->Start();
+
+		const MelLib::Vector2 SELECT_SCALE(1.7f);
+		if (!returnTitleFlag)
+		{
+			gameoverRetrySpr.SetScale(SELECT_SCALE);
+			gameoverReturnTitleSpr.SetScale(1);
+		}
+		else
+		{
+			gameoverRetrySpr.SetScale(1);
+			gameoverReturnTitleSpr.SetScale(SELECT_SCALE);
+		}
+	}
+
+}
+
 
 void ActionPart::Initialize()
 {
@@ -195,15 +243,45 @@ void ActionPart::Initialize()
 
 	tutorialStartTimer.SetMaxTime(60 * 2);
 	tutorialStartTimer.SetStopFlag(false);
+
+	gameoverBackSpr.Create(MelLib::Color(0, 0));
+	gameoverBackSpr.SetScale(MelLib::Vector2(MelLib::Library::GetWindowWidth(), MelLib::Library::GetWindowHeight()));
+	gameoverTextSpr.Create(MelLib::Texture::Get("gameover"));
+	gameoverTextSpr.SetPosition(MelLib::Vector2(310,150));
+	gameoverTextSpr.SetSubColor(MelLib::Color(0, 0, 0, 255));
+
+	gameoverRetrySpr.Create(MelLib::Texture::Get("retry"));
+	gameoverRetrySpr.SetPosition(MelLib::Vector2(150,400));
+	gameoverRetrySpr.SetScalingPoint(MelLib::Texture::Get("retry")->GetTextureSize() /2);
+
+	gameoverReturnTitleSpr.Create(MelLib::Texture::Get("retTitle"));
+	gameoverReturnTitleSpr.SetPosition(MelLib::Vector2(600, 400)); 
+	gameoverReturnTitleSpr.SetScalingPoint(MelLib::Texture::Get("retTitle")->GetTextureSize() / 2);
+
 }
 
 void ActionPart::Update()
 {
+
+
+	// フェードが関わる処理
+	Fade();
+
+	// ゲームオーバー処理
+	if(currentState == GameState::GAMEOVER)
+	{
+		GameOver();
+		return;
+	}
+
 	if (currentEvent == EventType::TUTORIAL)tutorial.Update();
 	if (tutorial.GetDrawWindow())return;
 
-	EditMode::GetInstance()->Update();
-	Pause::GetInstance()->Update();
+	if (currentState != GameState::NOT_PLAYED) 
+	{
+		EditMode::GetInstance()->Update();
+		Pause::GetInstance()->Update();
+	}
 	
 	// プレイヤーがフラグに触れるか時間を超えたらチュートリアル開始
 	bool nextTutorial = tutorialStartTimer.GetMaxOverFlag()
@@ -215,6 +293,7 @@ void ActionPart::Update()
 	{
 		tutorialStartTimer.SetStopFlag(true);
 		tutorialStartTimer.ResetTimeZero();
+		currentState = GameState::PLAY;
 	}
 
 	MelLib::GameObjectManager::GetInstance()->Update();
@@ -261,8 +340,13 @@ void ActionPart::Update()
 		}
 	}
 
-	// フェードが関わる処理
-	Fade();
+
+	// ゲームオーバー判定
+	if(pPlayer->DeadAnimationEnd())
+	{
+		currentState = GameState::GAMEOVER;
+	}
+
 }
 
 void ActionPart::Draw()
@@ -272,11 +356,25 @@ void ActionPart::Draw()
 	MelLib::GameObjectManager::GetInstance()->Draw();
 
 	if (currentEvent == EventType::TUTORIAL
-		&& !Pause::GetInstance()->GetIsPause())tutorial.Draw();
+		&& !Pause::GetInstance()->GetIsPause()
+		&& currentState == GameState::PLAY)tutorial.Draw();
+
+
+	if (currentState == GameState::GAMEOVER) 
+	{
+		gameoverBackSpr.Draw();
+		gameoverTextSpr.Draw();
+		if(gameoverBackAlpha.GetValue() >= 100)
+		{
+			gameoverRetrySpr.Draw();
+			gameoverReturnTitleSpr.Draw();
+		}
+	}
+
+
 
 	Pause::GetInstance()->Draw();
 	Fade::GetInstance()->Draw();
-
 }
 
 void ActionPart::Finalize()
@@ -290,6 +388,9 @@ void ActionPart::Finalize()
 
 MelLib::Scene* ActionPart::GetNextScene()
 {
-	if(Pause::GetInstance()->GetIsEnd()) return new Title();
-	else if (Pause::GetInstance()->GetIsReStart()) return new ActionPart();
+	if(Pause::GetInstance()->GetIsEnd()
+		|| returnTitleFlag) return new Title();
+
+	return new ActionPart();
+
 }

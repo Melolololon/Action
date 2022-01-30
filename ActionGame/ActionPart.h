@@ -21,6 +21,15 @@ class ActionPart :public MelLib::Scene
 private:
 
 private:
+	enum class GameState 
+	{
+		NOT_PLAYED,
+		PLAY,
+		CLEAR,
+		GAMEOVER,
+	};
+	GameState currentState = GameState::NOT_PLAYED;
+	
 	enum class EventType
 	{
 		NONE,
@@ -47,6 +56,18 @@ private:
 
 	// チュートリアル開始するまでの時間を計測するタイマー
 	MelLib::FrameTimer tutorialStartTimer;
+
+	MelLib::Sprite2D gameoverBackSpr;
+	MelLib::Sprite2D gameoverTextSpr;
+	MelLib::Easing<float> gameoverBackAlpha = MelLib::Easing<float>(0, 100, 1, 0);
+	float gameoverTextAlpha = 100;
+
+	MelLib::Sprite2D gameoverRetrySpr;
+	MelLib::Sprite2D gameoverReturnTitleSpr;
+
+	bool returnTitleFlag = false;
+
+	static bool loadTexture;
 private:
 	void LoadResources();
 	
@@ -68,6 +89,8 @@ private:
 	bool CheckEndEvent(const std::vector<EventType>& checkEvents);
 
 	bool CheckEndEvent(const EventType checkEvent);
+
+	void GameOver();
 public:
 	void Initialize()override;//初期化
 	void Update()override;

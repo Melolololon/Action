@@ -19,6 +19,7 @@ HPGauge::HPGauge()
 
 void HPGauge::Update()
 {
+
 	float textureSizeY = sprites["gauge"].GetTexture()->GetTextureSize().y;
 	sprites["gauge"].SetDrawRigthDownPosition(MelLib::Vector2(pPlayer->GetHP() * 3, textureSizeY));
 }

@@ -48,7 +48,7 @@ private:
 	MelLib::Sprite2D operationSpr;
 
 	// ゲーム終了フラグがtrueになったかどうか
-	bool returnTitle = false;
+	bool returnTitleFlag = false;
 	// リスタートするかどうか
 	bool isReStart = false;
 	// 操作説明を表示するかどうか
@@ -72,7 +72,7 @@ public:
 	void Draw();
 
 	bool GetIsPause() { return isPause; }
-	bool GetIsEnd() { return returnTitle; }
+	bool GetIsEnd() { return returnTitleFlag; }
 	bool GetIsReStart() { return isReStart; }
 };
 

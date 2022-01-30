@@ -48,6 +48,7 @@ public:
 	static void LoadResources();
 
 	void NextTutorial();
+	bool GetTutorialNotStartedFlag()const{return currentTutorial == TutorialType::NOT_STARTED;}
 	bool GetTutorialEndFlag()const { return currentTutorial == TutorialType::END; }
 	bool GetDrawWindow()const { return drawWindow; }
 

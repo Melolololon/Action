@@ -36,7 +36,7 @@ private:
 	MelLib::Vector3 direction = MelLib::Vector3(0, 0, 1);
 
 	static const unsigned int HP_MAX = 150;
-	unsigned int hp = HP_MAX;
+	int hp = HP_MAX;
 	bool hitGround = false;
 	bool preHitGround = false;
 	bool jumpResetAnimation = false;
@@ -121,12 +121,18 @@ private:
 	MelLib::FrameTimer mutekiTimer;
 #pragma endregion
 
+#pragma region 死亡
+	bool isDead = false;
+#pragma endregion
+
+
 	// 攻撃を受けて硬直しているじゃどうか
 	bool isStun = false;
 
 	//イベントフラグに衝突したかどうか
 	bool hitEventFlag = false;
 
+	// チュートリアル用のイベントフラグに衝突したかどうか
 	bool hitTutorialEventFlag = false;
 
 
@@ -181,12 +187,17 @@ private:
 	void SetAttackType();
 	void CreateAttackSlush();
 
+
 	void Guard();
 
+	// 無敵処理
 	void Muteki();
 
 	// 攻撃硬直
 	void Stun();
+
+	// 死亡処理
+	void Dead();
 
 	// カメラ回転処理
 	void RotCamera();
@@ -232,8 +243,8 @@ public:
 	)override;
 
 
-	void DownHP(const unsigned int power) { hp -= power; }
-	void LifeUp(const unsigned int upNum);
+	void DownHP(const int power);
+	void LifeUp(const int upNum);
 #pragma region Get
 	static const std::unordered_map<Player::ActionType, MelLib::PadButton> GetKeyConfigData() { return keyConfigData; }
 
@@ -243,13 +254,19 @@ public:
 
 	const MelLib::GameObject* GetPLockOnEnemy()const { return lockOnEnemy; }
 	
-	unsigned int GetHP()const { return hp; }
-	unsigned int GetHPMax()const { return HP_MAX; }
+	int GetHP()const { return hp; }
+	int GetHPMax()const { return HP_MAX; }
 
 	bool GetIsMuteki()const { return isMuteki; }
 
 	bool GetHitEventFlag()const { return hitEventFlag; }
 	bool GetHitTutorialEventFlag()const { return hitTutorialEventFlag; }
+
+	bool DeadAnimationEnd()const 
+	{
+		return modelObjects.at("main").GetAnimationEndFlag()
+			&& isDead;
+	}
 #pragma endregion
 
 #pragma region Set

@@ -74,7 +74,7 @@ Pause* Pause::GetInstance()
 
 void Pause::Initialize()
 {
-	returnTitle = false;
+	returnTitleFlag = false;
 	isPause = false;
 	isReStart = false;
 	drawOperation = false;
@@ -235,7 +235,7 @@ void Pause::Update()
 			break;
 
 		case PauseMenu::RETURN_TITLE:
-			returnTitle = true;
+			returnTitleFlag = true;
 			break;
 		}
 	}
