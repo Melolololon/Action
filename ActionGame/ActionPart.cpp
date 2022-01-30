@@ -247,7 +247,7 @@ void ActionPart::Update()
 		}
 	}
 
-	// 壁の削除確認
+	// 壁の確認
 	for(const auto& enemyWallNum : enemyWallNum)
 	{
 		// 壁に対応してる敵がいなかったら壁を消す
