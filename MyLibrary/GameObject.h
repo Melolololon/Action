@@ -291,6 +291,10 @@ namespace MelLib
 		/// <param name="mass"></param>
 		void SetMass(const float mass) { this->mass = mass; }
 
+		void SetAddColor(const Color& color);
+		void SetSubColor(const Color& color);
+		void SetMulColor(const Color& color);
+
 		void TrueEraseManager() { eraseManager = true; }
 #pragma endregion
 

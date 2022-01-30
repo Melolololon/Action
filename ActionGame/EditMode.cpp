@@ -310,11 +310,13 @@ void EditMode::Update()
 
 	// 削除するかどうかのフラグ
 	bool deleteCurrentAddObject = false;
-
+	// パラメータを取得するかどうかのフラグ
 	bool getParam = false;
 
 	if (pGameObjects.size() >= 1)
 	{
+
+		preSelectAddObjectNum = selectAddObjectNum;
 		imguiManager->DrawSliderInt("CurrentAddObject", selectAddObjectNum, 1, pGameObjects.size() - 1);
 
 		imguiManager->DrawCheckBox("DeleteCurrentAddObject", deleteCurrentAddObject);
@@ -338,6 +340,7 @@ void EditMode::Update()
 		);
 	}
 
+	// 情報のセット
 	if (selectObject)
 	{
 		selectObject->SetPosition(addObjectPos);
@@ -392,6 +395,7 @@ void EditMode::Update()
 		if (selectAddObjectNum > 1) selectAddObjectNum--;
 	}
 
+	// 値コピー
 	if(getParam)
 	{
 		objectType = objectTypes[selectAddObjectNum - 1];
@@ -413,6 +417,12 @@ void EditMode::Update()
 		);
 	}
 
+	// 選択したやつの色変更
+	if(preSelectAddObjectNum != selectAddObjectNum)
+	{
+		pGameObjects[preSelectAddObjectNum]->SetSubColor(MelLib::Color(0,0));
+		pGameObjects[selectAddObjectNum]->SetSubColor(MelLib::Color(150,0));
+	}
 }
 
 void EditMode::Draw()

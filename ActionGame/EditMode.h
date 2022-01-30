@@ -24,8 +24,6 @@ private:
 	MelLib::Vector3 addObjectAngle;
 	MelLib::Vector3 addObjectScale;
 
-#pragma region エディットモードで配置するときの識別番号
-
 
 	std::vector<int>objectTypes;
 	std::vector<int>objectNums;
@@ -34,7 +32,12 @@ private:
 	std::vector<MelLib::Vector3>addObjectAngles;
 	std::vector<MelLib::Vector3>addObjectScales;
 
+	// 現在選択されているシーンに配置されたオブジェクトの番号
 	int selectAddObjectNum = 1;
+	int preSelectAddObjectNum = 1;
+
+#pragma region エディットモードで配置するときの識別番号
+
 
 	using ObjID = const int;
 
