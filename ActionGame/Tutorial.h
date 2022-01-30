@@ -16,7 +16,7 @@ private:
 		static const int ATTACK = 3;
 		static const int DASH = 4;
 		static const int JUMP = 5;
-		static const int END = JUMP;
+		static const int END = 6;
 	};
 	int currentTutorial = TutorialType::NOT_STARTED;
 

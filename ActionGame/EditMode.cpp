@@ -35,11 +35,11 @@ std::string EditMode::GetFileName()
 	std::string path = "Resources/Edit/";
 
 	MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
-	path += typeid(*currentScene).name();
+	std::string sceneName = typeid(*currentScene).name();
 
 	// 先頭6文字("class ")を削除
-	path.erase(path.begin(), path.begin() + 6);
-
+	sceneName.erase(sceneName.begin(), sceneName.begin() + 6);
+	path += sceneName;
 	path += "_EditData.edit";
 
 	return path;
@@ -332,7 +332,7 @@ void EditMode::Update()
 	{
 
 		preSelectAddObjectNum = selectAddObjectNum;
-		imguiManager->DrawSliderInt("CurrentAddObject", selectAddObjectNum, 1, pGameObjects.size() - 1);
+		imguiManager->DrawSliderInt("CurrentAddObject", selectAddObjectNum, 0, pGameObjects.size() - 1);
 
 		imguiManager->DrawCheckBox("DeleteCurrentAddObject", deleteCurrentAddObject);
 
@@ -380,6 +380,13 @@ void EditMode::Update()
 		);
 	}
 
+	// 選択したやつの色変更
+	if (preSelectAddObjectNum != selectAddObjectNum)
+	{
+		pGameObjects[preSelectAddObjectNum]->SetSubColor(MelLib::Color(0, 0));
+		pGameObjects[selectAddObjectNum]->SetSubColor(MelLib::Color(150, 0));
+	}
+
 	// 追加
 	if (MelLib::Input::KeyTrigger(DIK_SPACE))AddObject();
 
@@ -400,6 +407,17 @@ void EditMode::Update()
 			count++;
 		}
 
+		count = 0;
+		for(auto& wall:*pWalls)
+		{
+			if (wall == pGameObjects[selectAddObjectNum])
+			{
+				pWalls->erase(pWalls->begin() + count);
+				break;
+			}
+			count++;
+		}
+
 		pGameObjects.erase(pGameObjects.begin() + selectAddObjectNum);
 		objectTypes.erase(objectTypes.begin() + selectAddObjectNum );
 		objectNums.erase(objectNums.begin() + selectAddObjectNum);
@@ -409,7 +427,6 @@ void EditMode::Update()
 		
 		
 
-		if (selectAddObjectNum > 1) selectAddObjectNum--;
 	}
 
 	// 値コピー
@@ -435,12 +452,7 @@ void EditMode::Update()
 		);
 	}
 
-	// 選択したやつの色変更
-	if(preSelectAddObjectNum != selectAddObjectNum)
-	{
-		pGameObjects[preSelectAddObjectNum]->SetSubColor(MelLib::Color(0,0));
-		pGameObjects[selectAddObjectNum]->SetSubColor(MelLib::Color(150,0));
-	}
+	
 }
 
 void EditMode::Draw()
