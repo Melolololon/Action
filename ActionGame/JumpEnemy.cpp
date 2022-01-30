@@ -141,8 +141,8 @@ void JumpEnemy::LoadResources()
 	MelLib::ModelData::Load("Resources/Model/Enemy/JumpEnemy/JumpEnemy.fbx", true, "jumpEnemy");
 }
 
-JumpEnemy::JumpEnemy(const MelLib::Vector3 pos)
-	:Enemy(pos, 2, 2.0f, "jumpEnemy")
+JumpEnemy::JumpEnemy(const MelLib::Vector3 pos, int wallNum)
+	:Enemy(pos, 2, 2.0f, wallNum, "jumpEnemy")
 {
 
 	//modelObjects["main"]

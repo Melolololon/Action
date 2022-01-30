@@ -11,7 +11,7 @@ public:
 
 	static void LoadResource();
 
-	NoemalEnemy(const MelLib::Vector3& pos);
+	NoemalEnemy(const MelLib::Vector3& pos ,int wallNum);
 	~NoemalEnemy() {}
 
 	void Update()override;

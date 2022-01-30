@@ -137,9 +137,15 @@ void EditMode::Save()
 
 
 
-bool EditMode::Load(std::shared_ptr<Player>& p, std::vector<std::shared_ptr<MelLib::GameObject>>* pEnemys)
+bool EditMode::Load
+(
+	std::shared_ptr<Player>& p,
+	std::vector<std::shared_ptr<Enemy>>* pEnemys,
+	std::vector<std::shared_ptr<MelLib::GameObject>>* pWalls
+)
 {
 	this->pEnemys = pEnemys;
+	this->pWalls = pWalls;
 
 	std::string filePath = GetFileName();
 
@@ -215,7 +221,8 @@ bool EditMode::Load(std::shared_ptr<Player>& p, std::vector<std::shared_ptr<MelL
 			objectNum,
 			addObjectPos,
 			addObjectAngle,
-			addObjectScale
+			addObjectScale,
+			false
 		);
 		// 読み込んだ情報を元に追加
 		AddObject();
@@ -256,7 +263,8 @@ void EditMode::Update()
 						objectNums[i],
 						addObjectPositions[i],
 						addObjectAngles[i],
-						addObjectScales[i]
+						addObjectScales[i],
+						false
 					);
 
 					// オブジェクトマネージャーに追加
@@ -292,7 +300,7 @@ void EditMode::Update()
 	bool changeObject = false;
 
 	MelLib::Vector3 playerPos = pPlayer->GetPosition();
-	imguiManager->DrawSliderVector3("PlayerPosition", playerPos, -1000.0f, 1000.0f);
+	imguiManager->DrawSliderVector3("PlayerPosition", playerPos, -10000.0f, 10000.0f);
 	pPlayer->SetPosition(playerPos);
 
 
@@ -302,9 +310,16 @@ void EditMode::Update()
 
 	changeObject = changeObject || imguiManager->DrawSliderInt("ObjectNum", objectNum, 0, 10);
 
-	imguiManager->DrawSliderFloat("PositionX", addObjectPos.x, playerPos.x - 300.0f, playerPos.x + 300.0f);
-	imguiManager->DrawSliderFloat("PositionY", addObjectPos.y, playerPos.y - 300.0f, playerPos.y + 300.0f);
-	imguiManager->DrawSliderFloat("PositionZ", addObjectPos.z, playerPos.z - 300.0f, playerPos.z + 300.0f);
+
+	if (objectType == OBJ_TYPE_ENEMY)
+	{
+		imguiManager->DrawSliderInt("WallNum", wallNum, 0, 10);
+	}
+
+
+	imguiManager->DrawSliderFloat("PositionX", addObjectPos.x, playerPos.x - 800.0f, playerPos.x + 800.0f);
+	imguiManager->DrawSliderFloat("PositionY", addObjectPos.y, playerPos.y - 800.0f, playerPos.y + 800.0f);
+	imguiManager->DrawSliderFloat("PositionZ", addObjectPos.z, playerPos.z - 800.0f, playerPos.z + 800.0f);
 	imguiManager->DrawSliderVector3("Angle", addObjectAngle, 0.0f, 359.9999f);
 	imguiManager->DrawSliderVector3("Scale", addObjectScale, 0.0001f, 1000.0f);
 
@@ -336,7 +351,8 @@ void EditMode::Update()
 			objectNum,
 			addObjectPos,
 			addObjectAngle,
-			addObjectScale
+			addObjectScale,
+			false
 		);
 	}
 
@@ -359,7 +375,8 @@ void EditMode::Update()
 			objectNum,
 			addObjectPos,
 			addObjectAngle,
-			addObjectScale
+			addObjectScale,
+			false
 		);
 	}
 
@@ -413,7 +430,8 @@ void EditMode::Update()
 			objectNum,
 			addObjectPos,
 			addObjectAngle,
-			addObjectScale
+			addObjectScale,
+			false
 		);
 	}
 
@@ -441,21 +459,28 @@ std::shared_ptr<MelLib::GameObject> EditMode::GetPObject
 	int objectNum,
 	const MelLib::Vector3 pos,
 	const MelLib::Vector3 angle,
-	const MelLib::Vector3 scale)
+	const MelLib::Vector3 scale,
+	bool addObjectArray)
 {
-	switch (objectType + objectNum)
-	{
+	int num = objectType + objectNum;
+
 #pragma region 敵
-
-
-	case NORMAL_ENEMY:
-		return std::make_shared<NoemalEnemy>(pos);
-		break;
-
-	case JUMP_ENEMY:
-		return std::make_shared<JumpEnemy>(pos);
-		break;
+	if (num == NORMAL_ENEMY)
+	{
+		std::shared_ptr<NoemalEnemy>p = std::make_shared<NoemalEnemy>(pos,wallNum);
+		if (addObjectArray)pEnemys->push_back(p);
+		return p;
+	}
+	else if (num == JUMP_ENEMY)
+	{
+		std::shared_ptr<JumpEnemy>p = std::make_shared<JumpEnemy>(pos, wallNum);
+		if (addObjectArray)pEnemys->push_back(p);
+		return p;
+	}
 #pragma endregion
+
+	switch (num)
+	{
 
 #pragma region ステージオブジェクト
 
@@ -512,7 +537,8 @@ void EditMode::AddObject()
 		objectNum,
 		addObjectPos,
 		addObjectAngle,
-		addObjectScale
+		addObjectScale,
+		true
 	);
 
 	getP->SetPosition(addObjectPos);
@@ -533,9 +559,12 @@ void EditMode::AddObject()
 	addObjectAngles.push_back(addObjectAngle);
 	addObjectScales.push_back(addObjectScale);
 
-	// 敵だったら敵リストに追加
-	if(objectType == OBJ_TYPE_ENEMY)pEnemys->push_back(getP);
-
+	
+	// 壁だったら追加
+	if(objectType == OBJ_TYPE_STAGE && objectNum == WALL)
+	{
+		pWalls->push_back(getP);
+	}
 }
 
 

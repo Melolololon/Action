@@ -32,6 +32,9 @@ private:
 	std::vector<MelLib::Vector3>addObjectAngles;
 	std::vector<MelLib::Vector3>addObjectScales;
 
+	// 敵と壁を紐付けるための番号(例えば1が割り当てられた敵が全滅すると、1に壁が消える)
+	int wallNum = 0;
+
 	// 現在選択されているシーンに配置されたオブジェクトの番号
 	int selectAddObjectNum = 1;
 	int preSelectAddObjectNum = 1;
@@ -71,7 +74,8 @@ private:
 #pragma endregion
 
 
-	std::vector<std::shared_ptr<MelLib::GameObject>>* pEnemys = nullptr;
+	std::vector<std::shared_ptr<Enemy>>* pEnemys = nullptr;
+	std::vector<std::shared_ptr<MelLib::GameObject>>* pWalls = nullptr;
 private:
 	EditMode(){}
 	~EditMode(){}
@@ -89,7 +93,8 @@ private:
 		int objectNum,
 		const MelLib::Vector3 pos,
 		const MelLib::Vector3 angle,
-		const MelLib::Vector3 scale
+		const MelLib::Vector3 scale,
+		bool addObjectArray
 	);
 	void AddObject();
 
@@ -104,7 +109,11 @@ public:
 	/// </summary>
 	/// <param name="p">プレイヤーのポインタ</param>
 	/// <returns>読み込みが成功したかどうか</returns>
-	bool Load(std::shared_ptr<Player>& p, std::vector<std::shared_ptr<MelLib::GameObject>>* pEnemys);
+	bool Load
+	(
+		std::shared_ptr<Player>& p, 
+		std::vector<std::shared_ptr<Enemy>>* pEnemys,
+		std::vector<std::shared_ptr<MelLib::GameObject>>* pWalls);
 
 	void Update();
 	void Draw();

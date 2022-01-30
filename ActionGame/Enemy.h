@@ -31,6 +31,9 @@ private:
 	MelLib::FrameTimer mutekiTimer;
 
 	bool slowMove = false;
+
+	// •Ç‚Æ•R•t‚¯‚é”Ô†
+	int wallNum = 0;
 private:
 	/// <summary>
 	/// Œo˜H’Tõ‚ÌŒ‹‰Ê‚Ì‰ÁZŠÖ”
@@ -84,7 +87,7 @@ protected:
 	void Dead();
 public:
 
-	Enemy(const MelLib::Vector3& pos, unsigned int hp, float moveSpeed, const std::string& modelName = "");
+	Enemy(const MelLib::Vector3& pos, unsigned int hp, float moveSpeed, int wallNum, const std::string& modelName = "");
 	virtual ~Enemy() {}
 	void Update()override;
 	void Draw()override;
@@ -105,6 +108,7 @@ public:
 		const int hitObjArrayNum
 	)override;
 
+	int GetWallNum()const { return wallNum; }
 
 	static void SetPPlayer(Player* p) { pPlayer = p; }
 

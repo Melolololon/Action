@@ -211,7 +211,7 @@ void Player::Update()
 	Muteki();
 
 	RotCamera();
-	LockOn();
+	//LockOn();
 
 	float angle = MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(direction.x, direction.z), false) - 270;
 	// ‰ñ“]ˆ—(‰¼)

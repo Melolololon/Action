@@ -31,7 +31,7 @@
 // テスト用
 #include"SlushEffect.h"
 
-std::vector<std::shared_ptr<MelLib::GameObject>>ActionPart::pEnemys;
+std::vector<std::shared_ptr<Enemy>>ActionPart::pEnemys;
 
 void ActionPart::LoadResources()
 {
@@ -144,20 +144,10 @@ void ActionPart::Initialize()
 	stage.SetAngle(MelLib::Vector3(0, 180, 0));*/
 
 	
+	// エディットデータ読み込み
+	EditMode::GetInstance()->Load(pPlayer, &pEnemys, &pWalls);
 
-	// ファイルがなかったら必要最低限のものだけ用意
-	// プレイヤーを必ず最初に追加するために、elseで追加処理を分ける
-	if (!EditMode::GetInstance()->Load(pPlayer,&pEnemys))
-	{
-
-	/*	MelLib::GameObjectManager::GetInstance()->AddObject
-		(std::make_shared<Ground>(0, MelLib::Vector3(90, 0, 0), 10));*/
-	}
-	else
-	{
-	}
 	EditMode::GetInstance()->SetPPlayer(pPlayer.get());
-
 	Enemy::SetPPlayer(pPlayer.get());
 	EnemyAttack::SetPPlayer(pPlayer.get());
 	NormalEnemyAttack::SetPPlayer(pPlayer.get());
@@ -229,6 +219,11 @@ void ActionPart::Update()
 
 	MelLib::GameObjectManager::GetInstance()->Update();
 
+
+	// <壁番号,カウント>
+	std::unordered_map<int, int>enemyWallNum;
+
+	// 敵のやられ確認&壁を消すための番号取得
 	for(int i = 0; i < pEnemys.size();i++)
 	{
 		// 倒した敵は敵リストから消す
@@ -240,8 +235,28 @@ void ActionPart::Update()
 				pPlayer->LockOnEnd();
 			}
 
+			pDeadEnemys.push_back(pEnemys[i]);
 			pEnemys.erase(pEnemys.begin() + i);
 			i--;
+
+		}
+		else
+		{
+			enemyWallNum[pEnemys[i]->GetWallNum()]++;
+		}
+	}
+
+	// 壁の削除確認
+	for(const auto& enemyWallNum : enemyWallNum)
+	{
+		// 壁に対応してる敵がいなかったら壁を消す
+		if(enemyWallNum.second == 0)
+		{
+			// もしオーバーしてたら飛ばす
+			if (enemyWallNum.first >= pWalls.size())continue;
+
+			// 管理クラスから消す
+			pWalls[enemyWallNum.first]->TrueEraseManager();
 		}
 	}
 

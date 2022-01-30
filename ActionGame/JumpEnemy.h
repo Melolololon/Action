@@ -30,7 +30,7 @@ public:
 
 	static void LoadResources();
 
-	JumpEnemy(const MelLib::Vector3 pos);
+	JumpEnemy(const MelLib::Vector3 pos, int wallNum);
 
 	void Update()override;
 	

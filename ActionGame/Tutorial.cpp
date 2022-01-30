@@ -58,9 +58,12 @@ void Tutorial::NextTutorial()
 	if (currentTutorial != TutorialType::END)
 	{
 		currentTutorial++;
+
+		if (currentTutorial == TutorialType::END)return;
+
 		drawWindow = true;
 
-		tutorialButtonSpr.SetPosition(MelLib::Vector2(150, 270));
+		tutorialButtonSpr.SetPosition(MelLib::Vector2(160, 270));
 
 		tutorialTextPos = MelLib::Vector2(350, 300);
 	}
@@ -68,15 +71,10 @@ void Tutorial::NextTutorial()
 
 Tutorial::Tutorial()
 {
-	//tutorialTextSpr.Create(MelLib::Texture::Get("tutorialText0"));
-	//tutorialTextSpr.Create(MelLib::Color(255,255));
-	//tutorialTextSpr.SetScale(400);
-
 	backGroundSpr.Create(MelLib::Texture::Get("backGround"));
 	backGroundSpr.SetPosition(MelLib::Vector2(70, 40));
 
 	tutorialButtonSpr.Create();
-	
 	
 	closeWindowButtonSpr.Create(MelLib::Texture::Get("ButtonA"));
 	closeWindowButtonSpr.SetPosition(MelLib::Vector2(790,520));
@@ -120,6 +118,7 @@ void Tutorial::Update()
 	std::string textureName;
 	switch (currentTutorial)
 	{
+	case TutorialType::NOT_STARTED:
 	case TutorialType::MOVE:
 		textureName = "StickL";
 		break;
@@ -147,12 +146,11 @@ void Tutorial::Draw()
 	MelLib::TextWrite::Draw
 	(
 		tutorialTextPos,
-		MelLib::Color(230, 255),
+		MelLib::Color(245, 255),
 		TUTORIAL_TEXT.at(currentTutorial),
 		"Arial"
 	);
 
-	tutorialButtonSpr.Draw();
 
 	if (drawWindow) 
 	{
@@ -162,9 +160,11 @@ void Tutorial::Draw()
 		MelLib::TextWrite::Draw
 		(
 			MelLib::Vector2(940, 530),
-			MelLib::Color(230, 255),
+			MelLib::Color(245, 255),
 			L"‚Å•Â‚¶‚é",
 			"Arial"
 		);
 	}
+
+	tutorialButtonSpr.Draw();
 }

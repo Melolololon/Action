@@ -38,8 +38,12 @@ private:
 
 	Tutorial tutorial;
 
-	// ロックオン用
-	static std::vector<std::shared_ptr<MelLib::GameObject>>pEnemys;
+	// 敵の配列(ロックオンなどに利用)
+	static std::vector<std::shared_ptr<Enemy>>pEnemys;
+	std::vector<std::shared_ptr<Enemy>>pDeadEnemys;
+
+	// 敵を倒さないと消えない壁
+	std::vector<std::shared_ptr<MelLib::GameObject>>pWalls;
 
 	// チュートリアル開始するまでの時間を計測するタイマー
 	MelLib::FrameTimer tutorialStartTimer;
@@ -71,5 +75,5 @@ public:
 	void Finalize()override;//終了処理
 	Scene* GetNextScene()override;//次のシーン
 
-	static const std::vector<std::shared_ptr<MelLib::GameObject>>& GetEnemys() { return pEnemys; }
+	static const std::vector<std::shared_ptr<Enemy>>& GetEnemys() { return pEnemys; }
 };

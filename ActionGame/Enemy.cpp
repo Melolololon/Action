@@ -17,9 +17,10 @@ std::vector<std::vector<std::vector<MelLib::AStarNode>>> Enemy::nodes;
 
 const float Enemy::MOVE_DISTANCE = 400.0f;
 
-Enemy::Enemy(const MelLib::Vector3& pos, const unsigned int hp, const float moveSpeed, const std::string& modelName) :
+Enemy::Enemy(const MelLib::Vector3& pos, const unsigned int hp, const float moveSpeed, int wallNum, const std::string& modelName) :
 	hp(hp)
 	, moveSpeed(moveSpeed)
+	,wallNum(wallNum)
 {
 	SetPosition(pos);
 

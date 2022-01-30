@@ -16,8 +16,8 @@ void NoemalEnemy::LoadResource()
 	MelLib::ModelData::Load("Resources/Model/Enemy/Mokuzin/Mokuzin_03.fbx", true, "NormalEnemy");
 }
 
-NoemalEnemy::NoemalEnemy(const MelLib::Vector3& pos) :
-	Enemy(pos, 3, 3.0f, "NormalEnemy")
+NoemalEnemy::NoemalEnemy(const MelLib::Vector3& pos, int wallNum) :
+	Enemy(pos, 3, 3.0f,wallNum, "NormalEnemy")
 {
 	capsuleData.resize(1);
 	capsuleData[0].SetRadius(4.5f);
