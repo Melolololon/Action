@@ -34,6 +34,7 @@ void FbxLoader::Initialize(ID3D12Device* device)
 
 	fbxImporter = FbxImporter::Create(fbxManager, "");
 	
+	initializeFlag = true;
 }
 
 void FbxLoader::Finalize()
@@ -41,6 +42,8 @@ void FbxLoader::Finalize()
 	//Importer‚ðŠJ•ú‚µ‚Ä‚©‚çManager‚ðŠJ•ú‚·‚é
 	fbxImporter->Destroy();
 	fbxManager->Destroy();
+
+	initializeFlag = false;
 }
 
 bool FbxLoader::LoadFbxModel(const std::string& modelPath, ModelData* fbxModel)

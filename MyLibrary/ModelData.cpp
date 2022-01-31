@@ -1114,6 +1114,8 @@ ModelData& MelLib::ModelData::operator=(ModelData& data)
 
 MelLib::ModelData::~ModelData()
 {
-	if(fbxData.fbxScene)fbxData.fbxScene->Destroy();
+
+	if(fbxData.fbxScene 
+		&& FbxLoader::GetInstance()->GetInitializeFlag())fbxData.fbxScene->Destroy();
 }
 
