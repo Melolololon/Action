@@ -16,6 +16,7 @@ Player* Enemy::pPlayer;
 std::vector<std::vector<std::vector<MelLib::AStarNode>>> Enemy::nodes;
 
 const float Enemy::MOVE_DISTANCE = 400.0f;
+const float Enemy::DEAD_DOWN_SCALE = 0.05f;
 
 Enemy::Enemy(const MelLib::Vector3& pos, const unsigned int hp, const float moveSpeed, int wallNum, const std::string& modelName) :
 	hp(hp)
@@ -98,7 +99,9 @@ void Enemy::Dead()
 
 	if(eraseTimer.GetMaxOverFlag())
 	{
-		eraseManager = true;
+		modelObjects["main"].SetScale(modelObjects["main"].GetScale() - DEAD_DOWN_SCALE);
+
+		if (modelObjects["main"].GetScale().x <= 0)eraseManager = true;
 
 		// ここにエフェクトなどを追加する処理を記述
 

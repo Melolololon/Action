@@ -471,6 +471,7 @@ void MelLib::ModelData::BatchDeletion()
 
 	for(const auto& name : deleteName)
 	{
+		delete pModelDatas[name].release();
 		pModelDatas.erase(name);
 	}
 }
@@ -1109,5 +1110,10 @@ ModelData& MelLib::ModelData::operator=(ModelData& data)
 	}
 
 	return *this;
+}
+
+MelLib::ModelData::~ModelData()
+{
+	if(fbxData.fbxScene)fbxData.fbxScene->Destroy();
 }
 

@@ -39,12 +39,12 @@ bool ActionPart::loadTexture = false;
 
 void ActionPart::LoadResources()
 {
-	Ground::LoadResource();
+	//Ground::LoadResource();
 
 	NoemalEnemy::LoadResource();
 	JumpEnemy::LoadResources();
 
-	Rock::LoadResources();
+	//Rock::LoadResources();
 	Stage::LoadResources(1);
 
 	//MelLib::ModelData::Load("Resources/Model/Stage/Stage.obj",true,"stage");

@@ -23,8 +23,8 @@ void Pause::ActionPartPauseDraw()
 
 		break;
 
-	case PauseMenu::OPTION:
-		break;
+	//case PauseMenu::OPTION:
+	//	break;
 
 	case PauseMenu::RETURN_TITLE:
 		break;
@@ -52,11 +52,11 @@ void Pause::CreateSprite()
 	MelLib::Texture::Load(texturePath + "UIText/ReStart.png", "reStart");
 	menuStringSprites[PauseMenu::RESTART].Create(MelLib::Texture::Get("reStart"));
 
-	MelLib::Texture::Load(texturePath + "UIText/Option.png", "option");
-	menuStringSprites[PauseMenu::OPTION].Create(MelLib::Texture::Get("option"));
+	//MelLib::Texture::Load(texturePath + "UIText/Option.png", "option");
+	//menuStringSprites[PauseMenu::OPTION].Create(MelLib::Texture::Get("option"));
 
-	MelLib::Texture::Load(texturePath + "UIText/CheckOperation.png", "checkOperation");
-	menuStringSprites[PauseMenu::CHECK_OPERATION].Create(MelLib::Texture::Get("checkOperation"));
+	//MelLib::Texture::Load(texturePath + "UIText/CheckOperation.png", "checkOperation");
+	//menuStringSprites[PauseMenu::CHECK_OPERATION].Create(MelLib::Texture::Get("checkOperation"));
 
 	MelLib::Texture::Load(texturePath + "UIText/ReturnTitle.png", "returnTitle");
 	menuStringSprites[PauseMenu::RETURN_TITLE].Create(MelLib::Texture::Get("returnTitle"));
@@ -94,7 +94,7 @@ void Pause::Initialize()
 	
 	// メニューの初期化
 	static const MelLib::Vector2 TOP_MENU_POSITION = MelLib::Vector2(400,300);
-	static const MelLib::Vector2 MOVE_POSITION = MelLib::Vector2(0, 80);
+	static const MelLib::Vector2 MOVE_POSITION = MelLib::Vector2(0, 150);
 	int loopCount = 0;
 	for(auto& sprite : menuStringSprites)
 	{
@@ -107,8 +107,11 @@ void Pause::Initialize()
 			sprite.second.SetScale(SELECT_SCALE);
 			sprite.second.SetAddColor(MelLib::Color(255, 255, 255, 0));
 		}
-		else sprite.second.SetScale(UN_SELECTED_SCALE);
-
+		else
+		{
+			sprite.second.SetScale(UN_SELECTED_SCALE);
+			sprite.second.SetAddColor(MelLib::Color(0, 0));
+		}
 		// 位置をずらしながらセット
 		sprite.second.SetPosition(TOP_MENU_POSITION + MOVE_POSITION * loopCount);
 		loopCount++;
@@ -238,11 +241,11 @@ void Pause::Update()
 			isReStart = true;
 			break;
 
-		case PauseMenu::OPTION:
+	/*	case PauseMenu::OPTION:
 			break;
 		case PauseMenu::CHECK_OPERATION:
 			drawOperation = true;
-			break;
+			break;*/
 
 		case PauseMenu::RETURN_TITLE:
 			returnTitleFlag = true;

@@ -34,6 +34,8 @@ private:
 
 	// •Ç‚Æ•R•t‚¯‚é”Ô†
 	int wallNum = 0;
+
+	static const float DEAD_DOWN_SCALE;
 private:
 	/// <summary>
 	/// Œo˜H’Tõ‚ÌŒ‹‰Ê‚Ì‰ÁZŠÖ”
@@ -85,6 +87,8 @@ protected:
 	void Stun();
 
 	void Dead();
+
+	
 public:
 
 	Enemy(const MelLib::Vector3& pos, unsigned int hp, float moveSpeed, int wallNum, const std::string& modelName = "");
