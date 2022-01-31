@@ -199,6 +199,11 @@ void Enemy::AddRouteVector()
 	}
 }
 
+MelLib::Vector3 Enemy::GetToPlayerVector()
+{
+	return (pPlayer->GetPosition() - GetPosition()).Normalize();
+}
+
 bool Enemy::CheckPlayerDistance(const float distance)
 {
 	MelLib::Vector3 playerPos = pPlayer->GetPosition();
@@ -221,6 +226,7 @@ bool Enemy::CalcPlayerRoute()
 
 
 	routeVectors.resize(1, (pPlayer->GetPosition() - GetPosition()).Normalize());
+	routeVectors[0].y = 0;
 	AddRouteVector();
 	return true;
 
@@ -271,6 +277,7 @@ void Enemy::CheckMutekiEnd()
 		mutekiTimer.SetStopFlag(true);
 
 		isMuteki = false;
+
 	}
 }
 
@@ -301,7 +308,8 @@ void Enemy::CheckAttackEnd()
 void Enemy::RotModel()
 {
 	// UŒ‚’†‚Í‰ñ“]‚µ‚È‚¢
-	if (isAttack || routeVectors.size() == 0)return;
+	// ‹——£‚ª‚ ‚Á‚½‚ç‰ñ“]‚µ‚È‚¢
+	if (isAttack || MelLib::LibMath::CalcDistance3D(pPlayer->GetPosition(),GetPosition()) > MOVE_DISTANCE)return;
 
 	//direction = (pPlayer->GetPosition() - GetPosition()).Normalize();
 
@@ -323,18 +331,19 @@ void Enemy::RotModel()
 	// ƒvƒŒƒCƒ„[‚ÌŒü‚«‚ÌŠp“x‚Æ¡‚ÌŠp“x‚ª5“xˆÈ“à‚¾‚Á‚½‚çreturn
 	if (MelLib::LibMath::AngleDifference(directionAngle, preAngle, 5))return;
 
-	float setAngle = 0.0f;
-	
-	// 1ƒtƒŒ[ƒ€‚Ì‰ñ“]—Ê
-	static const float ROT_ANGLE = 3.0f;
+	//float setAngle = 0.0f;
+	//
+	//// 1ƒtƒŒ[ƒ€‚Ì‰ñ“]—Ê
+	//static const float ROT_ANGLE = 3.0f;
 
-	// ·‚ª180ˆÈã‚Å“ü‚é
-	if (abs(directionAngle - preAngle) > 180) preAngle += 360;
+	//// ·‚ª180ˆÈã‚Å“ü‚é
+	//if (abs(directionAngle - preAngle) > 180) preAngle += 360;
 
-	if (directionAngle > preAngle)setAngle = preAngle + ROT_ANGLE;
-	else setAngle = preAngle - ROT_ANGLE;
+	//if (directionAngle > preAngle)setAngle = preAngle + ROT_ANGLE;
+	//else setAngle = preAngle - ROT_ANGLE;
 
-	if (setAngle >= 360)setAngle -= 360;
+	//if (setAngle >= 360)setAngle -= 360;
 
-	modelObjects["main"].SetAngle(MelLib::Vector3(0, setAngle, 0));
+	//modelObjects["main"].SetAngle(MelLib::Vector3(0, setAngle, 0));
+	modelObjects["main"].SetAngle(MelLib::Vector3(0, directionAngle, 0));
 }

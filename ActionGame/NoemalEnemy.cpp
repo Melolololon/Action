@@ -68,8 +68,18 @@ void NoemalEnemy::Update()
 		return;
 	}
 
+	//MelLib::Vector2 v1 = MelLib::Vector2(GetToPlayerVector().x, GetToPlayerVector().z);
+	//MelLib::Vector2 v2 = MelLib::Vector2(GetDirection().x, GetDirection().z);
+
+	//// プレイヤーへのベクトルと自分の向きのベクトルのなす角を求める
+	//float angle = MelLib::LibMath::TwoVector2Angle
+	//(
+	//	MelLib::Vector2(GetToPlayerVector().x, GetToPlayerVector().z),
+	//	MelLib::Vector2(GetDirection().x, GetDirection().z)
+	//);
+
 	// ここに攻撃条件を記述
-	if (CheckPlayerDistance(13.0f) && !isAttack)
+	if (CheckPlayerDistance(13.0f) && !isAttack /*&& angle <= 10*/)
 	{
 		AttackStart();
 	}
@@ -77,7 +87,8 @@ void NoemalEnemy::Update()
 	{
 		if(CalcPlayerRoute())modelObjects["main"].SetAnimation("Move");
 		else modelObjects["main"].SetAnimation("No_Move");
-		
+
+		modelObjects["main"].SetAnimationEndStopFlag(false);
 	}
 	if(isAttack)
 	{

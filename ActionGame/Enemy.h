@@ -63,6 +63,12 @@ protected:
 
 	static const float MOVE_DISTANCE;
 protected:
+	//
+
+	MelLib::Vector3 GetToPlayerVector();
+
+	MelLib::Vector3 GetDirection()const { return direction; }
+
 	/// <summary>
 	/// プレイヤーとの距離が指定した数値未満か確認
 	/// </summary>
