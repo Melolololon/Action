@@ -323,18 +323,19 @@ void Enemy::RotModel()
 	// プレイヤーの向きの角度と今の角度が5度以内だったらreturn
 	if (MelLib::LibMath::AngleDifference(directionAngle, preAngle, 5))return;
 
-	float setAngle = 0.0f;
-	
-	// 1フレームの回転量
-	static const float ROT_ANGLE = 3.0f;
+	//float setAngle = 0.0f;
+	//
+	//// 1フレームの回転量
+	//static const float ROT_ANGLE = 3.0f;
 
-	// 差が180以上で入る
-	if (abs(directionAngle - preAngle) > 180) preAngle += 360;
+	//// 差が180以上で入る
+	//if (abs(directionAngle - preAngle) > 180) preAngle += 360;
 
-	if (directionAngle > preAngle)setAngle = preAngle + ROT_ANGLE;
-	else setAngle = preAngle - ROT_ANGLE;
+	//if (directionAngle > preAngle)setAngle = preAngle + ROT_ANGLE;
+	//else setAngle = preAngle - ROT_ANGLE;
 
-	if (setAngle >= 360)setAngle -= 360;
+	//if (setAngle >= 360)setAngle -= 360;
 
-	modelObjects["main"].SetAngle(MelLib::Vector3(0, setAngle, 0));
+	//modelObjects["main"].SetAngle(MelLib::Vector3(0, setAngle, 0));
+	modelObjects["main"].SetAngle(MelLib::Vector3(0, directionAngle, 0));
 }
