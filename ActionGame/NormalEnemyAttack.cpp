@@ -9,8 +9,8 @@ NormalEnemyAttack::NormalEnemyAttack
 )
 	:power(power)
 {
-	sphereData.resize(1);
-	sphereData[0].SetRadius(radius);
+	sphereDatas.resize(1);
+	sphereDatas[0].SetRadius(radius);
 
 
 }

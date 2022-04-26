@@ -25,8 +25,8 @@ EnemyAttack::EnemyAttack
 {
 	// アニメーションに合わせてsphereを動かす
 
-	sphereData.resize(1);
-	sphereData[0].SetRadius(radius);
+	sphereDatas.resize(1);
+	sphereDatas[0].SetRadius(radius);
 
 
 	deadTimer.SetMaxTime(deadTime);
@@ -38,7 +38,7 @@ void EnemyAttack::Update()
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())return;
 
 	// 座標計算してセット
-  	sphereData[0].SetPosition(MODEL.CalcAnimationPosition
+  	sphereDatas[0].SetPosition(MODEL.CalcAnimationPosition
 	(
 		SPHERE_START_POSITION,
 		1.0f,

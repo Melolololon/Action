@@ -32,10 +32,10 @@ Ground::Ground(const MelLib::Vector3& pos, const MelLib::Vector3& angle, const M
 	//boardData[0].SetSize(GROUND_SIZE);
 	//boardData[0].SetPosition(0);
 
-	boardData.resize(1);
-	boardData[0].SetAngle(angle);
-	boardData[0].SetSize(scale);
-	boardData[0].SetPosition(pos);
+	boardDatas.resize(1);
+	boardDatas[0].SetAngle(angle);
+	boardDatas[0].SetSize(scale);
+	boardDatas[0].SetPosition(pos);
 
 }
 

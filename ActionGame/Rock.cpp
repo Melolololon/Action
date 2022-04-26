@@ -10,10 +10,10 @@ void Rock::LoadResources()
 Rock::Rock(const MelLib::Vector3& pos, const MelLib::Vector3& angle, const MelLib::Vector3& scale,const int rockType)
 	: StageObject(pos, "rock" + std::to_string(rockType))
 {
-	sphereData.resize(1);
+	sphereDatas.resize(1);
 
-	sphereData[0].SetPosition(pos);
-	sphereData[0].SetRadius(scale.x / 2.1);
+	sphereDatas[0].SetPosition(pos);
+	sphereDatas[0].SetRadius(scale.x / 2.1);
 
 }
 

@@ -10,7 +10,7 @@ Boss::Boss(const MelLib::Vector3 pos)
 	modelObjects["main"].Create(MelLib::ModelData::Get("boss"), nullptr);
 
 	modelObjects["main"].SetPosition(pos);
-	sphereData.resize(3);
+	sphereDatas.resize(3);
 
 }
 

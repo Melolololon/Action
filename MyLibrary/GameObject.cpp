@@ -27,23 +27,23 @@ void MelLib::GameObject::SetModelPosition(const Vector3& vec)
 
 void MelLib::GameObject::SetDataPosition(const Vector3& vec)
 {
-	for(auto& d : sphereData)
+	for(auto& d : sphereDatas)
 	{
 		d.SetPosition(d.GetPosition() + vec);
 	}
-	for(auto& d : boxData)
+	for(auto& d : boxDatas)
 	{
 		d.SetPosition(d.GetPosition() + vec);
 	}
-	for (auto& d : boardData)
+	for (auto& d : boardDatas)
 	{
 		d.SetPosition(d.GetPosition() + vec);
 	}
-	for (auto& d : segment3DData)
+	for (auto& d : segment3DDatas)
 	{
 		d.SetPosition(d.GetPosition() + vec);
 	}
-	for (auto& d : capsuleData)
+	for (auto& d : capsuleDatas)
 	{
 		d.GetRefSegment3DData().SetPosition(d.GetSegment3DData().GetPosition() + vec);
 	}
@@ -61,15 +61,15 @@ void MelLib::GameObject::SetModelAngle(const Vector3& angle)
 void MelLib::GameObject::SetDataAngle(const Vector3& angle)
 {
 
-	for (auto& d : boardData)
+	for (auto& d : boardDatas)
 	{
 		d.SetAngle(angle);
 	}
-	for (auto& d : segment3DData)
+	for (auto& d : segment3DDatas)
 	{
 		d.SetAngle(angle);
 	}
-	for (auto& d : capsuleData)
+	for (auto& d : capsuleDatas)
 	{
 		d.GetRefSegment3DData().SetAngle(angle);
 	}
@@ -85,7 +85,7 @@ void MelLib::GameObject::SetModelScale(const Vector3& scale)
 
 void MelLib::GameObject::SetDataScale(const Vector3& scale)
 {
-	for (auto& d : sphereData)
+	for (auto& d : sphereDatas)
 	{
 		float setRadius = scale.x;
 		if (setRadius < scale.y)setRadius = scale.y;
@@ -93,19 +93,19 @@ void MelLib::GameObject::SetDataScale(const Vector3& scale)
 
 		d.SetRadius(setRadius / 2);
 	}
-	for (auto& d : boxData)
+	for (auto& d : boxDatas)
 	{
 		d.SetSize(scale);
 	}
-	for (auto& d : boardData)
+	for (auto& d : boardDatas)
 	{
 		d.SetSize(scale.ToVector2());
 	}
-	for (auto& d : segment3DData)
+	for (auto& d : segment3DDatas)
 	{
 		d.SetPosition(d.GetPosition() * scale);
 	}
-	for (auto& d : capsuleData)
+	for (auto& d : capsuleDatas)
 	{
 		d.GetRefSegment3DData().SetPosition(d.GetSegment3DData().GetPosition() * scale);
 	}

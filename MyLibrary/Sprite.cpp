@@ -15,6 +15,18 @@ Sprite::Sprite(){}
 
 Sprite::~Sprite(){}
 
+MelLib::Sprite::Sprite(const Sprite& sprite)
+{
+	drawMode = sprite.drawMode;
+	pipeline = sprite.pipeline;
+	vertices = sprite.vertices;
+	drawLeftUpPosition = sprite.drawLeftUpPosition;
+	drawRightDownPosition = sprite.drawRightDownPosition;
+	constData = sprite.constData;
+	color = sprite.color;
+	pTexture = sprite.pTexture;
+}
+
 void Sprite::Draw(const std::string& rtName)
 {
 }

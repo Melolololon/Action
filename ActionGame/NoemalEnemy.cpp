@@ -19,13 +19,13 @@ void NoemalEnemy::LoadResource()
 NoemalEnemy::NoemalEnemy(const MelLib::Vector3& pos, int wallNum) :
 	Enemy(pos, 3, 3.0f,wallNum, "NormalEnemy")
 {
-	capsuleData.resize(1);
-	capsuleData[0].SetRadius(4.5f);
-	capsuleData[0].GetRefSegment3DData().
+	capsuleDatas.resize(1);
+	capsuleDatas[0].SetRadius(4.5f);
+	capsuleDatas[0].GetRefSegment3DData().
 		SetPosition(MelLib::Value2<MelLib::Vector3>(pos + MelLib::Vector3(0, 25.0f, 0), pos + MelLib::Vector3(0, -10.0f, 0)));
 
-	segment3DData.resize(1);
-	segment3DData[0].SetPosition(capsuleData[0].GetSegment3DData().GetPosition());
+	segment3DDatas.resize(1);
+	segment3DDatas[0].SetPosition(capsuleDatas[0].GetSegment3DData().GetPosition());
 
 
 	modelObjects["main"].SetScale(3);

@@ -16,9 +16,9 @@ void GameItem::Erase()
 
 GameItem::GameItem(const MelLib::Vector3& pos)
 {
-	sphereData.resize(1);
-	sphereData[0].SetPosition(pos);
-	sphereData[0].SetRadius(5);
+	sphereDatas.resize(1);
+	sphereDatas[0].SetPosition(pos);
+	sphereDatas[0].SetRadius(5);
 
 	modelObjects["main"].SetPosition(pos);
 

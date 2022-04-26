@@ -68,23 +68,23 @@ Player::Player(const MelLib::Vector3& pos)
 
 
 	collisionFlag.capsule = true;
-	capsuleData.resize(1);
-	capsuleData[0].SetRadius(3.0f);
-	capsuleData[0].GetRefSegment3DData().
+	capsuleDatas.resize(1);
+	capsuleDatas[0].SetRadius(3.0f);
+	capsuleDatas[0].GetRefSegment3DData().
 		SetPosition(MelLib::Value2<MelLib::Vector3>
 			(GetPosition() + MelLib::Vector3(0, 15, 0), GetPosition() + MelLib::Vector3(0, -18, 0)));
 
-	segment3DData.resize(3);
-	segment3DData[0] = capsuleData[0].GetSegment3DData();
+	segment3DDatas.resize(3);
+	segment3DDatas[0] = capsuleDatas[0].GetSegment3DData();
 
 	// 壁との判定用
-	segment3DData[1].SetPosition
+	segment3DDatas[1].SetPosition
 	(
 		MelLib::Value2<MelLib::Vector3>
 		(GetPosition() + MelLib::Vector3(0, 0, 10), GetPosition() + MelLib::Vector3(0, 0, -10))
 	);
 
-	segment3DData[2].SetPosition
+	segment3DDatas[2].SetPosition
 	(
 		MelLib::Value2<MelLib::Vector3>
 		(GetPosition() + MelLib::Vector3(10, 0, 0), GetPosition() + MelLib::Vector3(-10, 0, 0))
@@ -877,7 +877,7 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 			{
 				if (typeid(*object) == typeid(JumpEnemy))
 				{
-					AddPosition(MelLib::Vector3(direction.x, 0, direction.z) * 20.0f);
+					AddPosition(MelLib::Vector3(1,0,0) * 1.0f);
 				}
 				else 
 				{
@@ -957,7 +957,7 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 
 
 				//カプセルじゃなくて線分で判定取ってるときの処理
-			addPos.y += segment3DData[0].GetCalcResult().triangleHitPos.y - segment3DData[0].GetPosition().v2.y;
+			addPos.y += segment3DDatas[0].GetCalcResult().triangleHitPos.y - segment3DDatas[0].GetPosition().v2.y;
 			//segment3DData[0] = capsuleData[0].GetSegment3DData();
 
 			AddPosition(addPos);

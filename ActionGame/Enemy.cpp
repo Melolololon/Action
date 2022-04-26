@@ -157,7 +157,7 @@ void Enemy::Hit(const GameObject* const object, const MelLib::ShapeType3D& colli
 		//“Š‚°ã‚°ˆ—I—¹
 		FallEnd();
 
-		addPos.y += segment3DData[0].GetCalcResult().triangleHitPos.y - segment3DData[0].GetPosition().v2.y;
+		addPos.y += segment3DDatas[0].GetCalcResult().triangleHitPos.y - segment3DDatas[0].GetPosition().v2.y;
 	
 		AddPosition(addPos);
 	}

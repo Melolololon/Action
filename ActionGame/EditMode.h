@@ -13,7 +13,7 @@ class EditMode final
 private:
 	Player* pPlayer = nullptr;
 	
-	bool editPossible = true;
+	bool editPossible = false;
 	bool isEdit = false;
 
 	

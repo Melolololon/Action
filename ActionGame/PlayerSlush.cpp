@@ -108,7 +108,7 @@ void PlayerSlush::Attack()
 			PLAYER_MODEL.CalcAnimationPosition
 			(CAPSULE_START_POS_LEFT.v2, 1.0f, "Bone_L.003", "Body", PLAYER_START_POS, PLAYER_START_ANGLE, PLAYER_START_SCALE));
 
-		capsuleData[0].GetRefSegment3DData().SetPosition(CALC_POS);
+		capsuleDatas[0].GetRefSegment3DData().SetPosition(CALC_POS);
 	}else
 	{
 		const MelLib::Value2 < MelLib::Vector3> CALC_POS
@@ -117,7 +117,7 @@ void PlayerSlush::Attack()
 			PLAYER_MODEL.CalcAnimationPosition
 			(CAPSULE_START_POS_RIGTH.v2, 1.0f, "Bone_R.003", "Body", PLAYER_START_POS, PLAYER_START_ANGLE, PLAYER_START_SCALE));
 
-		capsuleData[0].GetRefSegment3DData().SetPosition(CALC_POS);
+		capsuleDatas[0].GetRefSegment3DData().SetPosition(CALC_POS);
 	}
 
 
@@ -181,8 +181,8 @@ PlayerSlush::PlayerSlush
 
 
 
-	capsuleData.resize(1);
-	capsuleData[0].SetRadius(1);	
+	capsuleDatas.resize(1);
+	capsuleDatas[0].SetRadius(1);	
 	SetPosition(pos);
 
 
@@ -205,12 +205,12 @@ void PlayerSlush::Update()
 
 	eraseTimer.SetStopFlag(false);
 
-	preSegmentPosition = capsuleData[0].GetSegment3DData().GetRotatePosition();
+	preSegmentPosition = capsuleDatas[0].GetSegment3DData().GetRotatePosition();
 
 	if (eraseTimer.GetSameAsMaxFlag())eraseManager = true;
 	Attack();
 
-	MelLib::Value2<MelLib::Vector3>segmentVector = capsuleData[0].GetSegment3DData().GetPosition();
+	MelLib::Value2<MelLib::Vector3>segmentVector = capsuleDatas[0].GetSegment3DData().GetPosition();
 	MelLib::Vector3 slushVector =
 		segmentVector.v2 - segmentVector.v1;
 	slushVector = slushVector.Normalize();
@@ -218,7 +218,7 @@ void PlayerSlush::Update()
 	/*MelLib::GameObjectManager::GetInstance()->AddObject
 	(std::make_shared<SlushEffect>(segmentVector.v1 + slushVector / 2, slushVector, eraseTimer.GetNowTime()));*/
 
-	MelLib::Vector3 moveVector = capsuleData[0].GetSegment3DData().GetRotatePosition().v2 - preSegmentPosition.v2;
+	MelLib::Vector3 moveVector = capsuleDatas[0].GetSegment3DData().GetRotatePosition().v2 - preSegmentPosition.v2;
 	moveVector = moveVector.Normalize();
 	moveVector = 0;
 	

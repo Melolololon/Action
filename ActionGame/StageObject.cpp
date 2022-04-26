@@ -43,7 +43,7 @@ MelLib::PlaneData StageObject::SegmentToPlane()
 	MelLib::PlaneData playerSlushPlane;
 
 	// Õ“Ë“_‚ğ‘ã“ü
-	playerSlushPlane.SetPosition(capsuleData[0].GetRefSegment3DData().GetCalcResult().lineSegment3DHitPos);
+	playerSlushPlane.SetPosition(capsuleDatas[0].GetRefSegment3DData().GetCalcResult().lineSegment3DHitPos);
 
 	playerSlushPlane.SetNormal(normal);
 

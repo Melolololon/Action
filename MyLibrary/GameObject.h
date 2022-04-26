@@ -98,13 +98,13 @@ namespace MelLib
 #pragma region 判定データ
 		CollisionDetectionFlag collisionFlag;
 
-		std::vector<SphereData> sphereData;
-		std::vector<BoxData> boxData;
-		std::vector<Segment3DData> segment3DData;
-		std::vector<RayData> layData;
-		std::vector<PlaneData>planeData;
-		std::vector<BoardData>boardData;
-		std::vector<CapsuleData>capsuleData;
+		std::vector<SphereData> sphereDatas;
+		std::vector<BoxData> boxDatas;
+		std::vector<Segment3DData> segment3DDatas;
+		std::vector<RayData> rayDatas;
+		std::vector<PlaneData>planeDatas;
+		std::vector<BoardData>boardDatas;
+		std::vector<CapsuleData>capsuleDatas;
 		std::vector<TriangleData>triangleData;
 
 
@@ -371,22 +371,22 @@ namespace MelLib
 
 		// 判定用関数
 		CollisionDetectionFlag GetCollisionFlag() const { return collisionFlag; }
-		std::vector<SphereData> GetSphereData() const { return sphereData; }
-		std::vector<BoxData> GetBoxData() const { return boxData; }
-		std::vector<Segment3DData> GetSegmentData() const { return segment3DData; }
-		std::vector<PlaneData> GetPlaneData() const { return planeData; }
-		std::vector<BoardData> GetBoardData()const { return boardData; }
-		std::vector<CapsuleData>GetCapsuleData() const { return capsuleData; }
+		std::vector<SphereData> GetSphereData() const { return sphereDatas; }
+		std::vector<BoxData> GetBoxData() const { return boxDatas; }
+		std::vector<Segment3DData> GetSegmentData() const { return segment3DDatas; }
+		std::vector<PlaneData> GetPlaneData() const { return planeDatas; }
+		std::vector<BoardData> GetBoardData()const { return boardDatas; }
+		std::vector<CapsuleData>GetCapsuleData() const { return capsuleDatas; }
 		std::vector<TriangleData>GetTriangleData() const { return triangleData; }
 
 		// ここ参照取得じゃなくてSetにする?
 		// そもそも持たせない。Hit関数で渡す
-		void SetSphereCalcResult(const SphereCalcResult& result, const UINT index) { sphereData[index].SetCalcResult(result); }
-		void SetBoxCalcResult(const BoxCalcResult& result, const UINT index) { boxData[index].SetCalcResult(result); }
-		void SetSegmentCalcResult(const Segment3DCalcResult& result, const UINT index) { segment3DData[index].SetCalcResult(result); }
-		void SetBoardCalcResult(const BoardCalcResult& result, const UINT index) { boardData[index].SetCalcResult(result); }
+		void SetSphereCalcResult(const SphereCalcResult& result, const UINT index) { sphereDatas[index].SetCalcResult(result); }
+		void SetBoxCalcResult(const BoxCalcResult& result, const UINT index) { boxDatas[index].SetCalcResult(result); }
+		void SetSegmentCalcResult(const Segment3DCalcResult& result, const UINT index) { segment3DDatas[index].SetCalcResult(result); }
+		void SetBoardCalcResult(const BoardCalcResult& result, const UINT index) { boardDatas[index].SetCalcResult(result); }
 		void SetCapsuleCalcResult(const Segment3DCalcResult& result, const UINT index)
-		{ capsuleData[index].GetRefSegment3DData().SetCalcResult(result); }
+		{ capsuleDatas[index].GetRefSegment3DData().SetCalcResult(result); }
 		void SetTriangleCalcResult(const TriangleCalcResult& result, const UINT index)
 		{
 			triangleData[index].SetCalcResult(result);

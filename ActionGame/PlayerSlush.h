@@ -91,7 +91,7 @@ public:
 
 #pragma region ƒQƒbƒg
 
-	MelLib::Value2<MelLib::Vector3>GetSegmentPosition()const { return capsuleData[0].GetSegment3DData().GetPosition(); }
+	MelLib::Value2<MelLib::Vector3>GetSegmentPosition()const { return capsuleDatas[0].GetSegment3DData().GetPosition(); }
 	MelLib::Value2<MelLib::Vector3>GetSegmentPrePosition()const { return preSegmentPosition; }
 
 #pragma endregion

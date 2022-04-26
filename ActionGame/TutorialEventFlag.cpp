@@ -6,8 +6,8 @@
 
 TutorialEventFlag::TutorialEventFlag(const MelLib::Vector3& pos, const MelLib::Vector3& scale)
 {
-	sphereData.resize(1);
-	sphereData[0].SetRadius(scale.x / 2);
+	sphereDatas.resize(1);
+	sphereDatas[0].SetRadius(scale.x / 2);
 
 	//modelObjects["main"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX));
 	//modelObjects["main"].SetScale(sphereData[0].GetRadius() / 2);

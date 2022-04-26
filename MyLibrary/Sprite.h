@@ -47,7 +47,6 @@ namespace MelLib
 		static const UINT MAX_TEXTURE_LOAD_NUM = 256 * 20;
 
 
-
 	protected:
 		SpriteDrawMode drawMode = SpriteDrawMode::DRAW_COLOR;
 
@@ -78,30 +77,29 @@ namespace MelLib
 		SpriteConstData constData;
 
 
+		//ColorをAddColorとか分けずにまとめるためにMap関数でMapするので、変数用意した
+		Color color;
+		Texture* pTexture = nullptr;
+
+	protected:
+
+
 		void CreateBuffer();
 
 		//単色スプライト生成時に色をセットする関数
 		void SetOneColorSpriteColor(const Color& color);
 
-		//ColorをAddColorとか分けずにまとめるためにMap関数でMapするので、変数用意した
-		Color color;
-		Texture* pTexture = nullptr;
-
-#pragma region 関数
 		void ConstDataMat();
 		void SetCmdList();
 
-#pragma region マップ
 		void MapVertexBuffer(void** data);
 		void UnmapVertexBuffer();
-#pragma endregion
 
 
 		void InitializeVertices();
 
 
 
-#pragma endregion
 		virtual void Create(){}
 
 		/// <summary>
@@ -119,6 +117,8 @@ namespace MelLib
 	public:
 		Sprite();
 		~Sprite();
+
+		Sprite(const Sprite& sprite);
 
 		//こいつここに定義しなくていい
 		//レンダーターゲットで使わない

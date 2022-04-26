@@ -43,13 +43,12 @@ Sprite3D::Sprite3D(Texture* pTexture)
 }
 
 MelLib::Sprite3D::Sprite3D(const Sprite3D& sprite)
+	: Sprite(sprite)
 {
 	billboardX = sprite.billboardX;
 	billboardY = sprite.billboardY;
 	billboardZ = sprite.billboardZ;
 
-	color = sprite.color;
-	pTexture = sprite.pTexture;
 
 	if (sprite.vertexBufferSet.vertexBuffer)
 	{

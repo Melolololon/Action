@@ -45,10 +45,6 @@ Stage::Stage(const unsigned int stageNum)
 	// 壁の三角形の判定を取得
 	std::vector<MelLib::TriangleData>wallCollision = modelObjects["wallCollision"].GetModelTriangleData()[0];
 
-
-	// 判定を分けないとプレイヤー側で壁と床の処理の変更できない
-	// それか、法線の向きで分ける
-
 	// リサイズして判定を追加
 	triangleData.resize(groundCollision.size() + wallCollision.size());
 	for (int i = 0; i < groundCollision.size(); i++)
