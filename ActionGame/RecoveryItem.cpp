@@ -5,9 +5,9 @@ RecoveryItem::RecoveryItem(const MelLib::Vector3& pos):
 {
 }
 
-void RecoveryItem::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)
+void RecoveryItem::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)
 {
-	if(CheckHitPlayer(*object))
+	if(CheckHitPlayer(object))
 	{
 		// ‰ñ•œ
 		pPlayer->LifeUp(RECOVERY_HP);

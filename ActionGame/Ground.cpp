@@ -32,10 +32,10 @@ Ground::Ground(const MelLib::Vector3& pos, const MelLib::Vector3& angle, const M
 	//boardData[0].SetSize(GROUND_SIZE);
 	//boardData[0].SetPosition(0);
 
-	boardDatas.resize(1);
-	boardDatas[0].SetAngle(angle);
-	boardDatas[0].SetSize(scale);
-	boardDatas[0].SetPosition(pos);
+	boardDatas["main"].resize(1);
+	boardDatas["main"][0].SetAngle(angle);
+	boardDatas["main"][0].SetSize(scale);
+	boardDatas["main"][0].SetPosition(pos);
 
 }
 
@@ -48,7 +48,7 @@ void Ground::Draw()
 	modelObjects["main"].Draw();
 }
 
-void Ground::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)
+void Ground::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)
 {
 }
 

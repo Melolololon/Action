@@ -82,16 +82,16 @@ public:
 	/// <param name="hitObjArrayNum">‘ŠŽè‚Ì‰½ŒÂ–Ú‚Ì”»’è‚É“–‚½‚Á‚½‚©</param>
 	void Hit
 	(
-		const GameObject* const  object,
-		const MelLib::ShapeType3D& collisionType,
-		const int arrayNum,
-		const MelLib::ShapeType3D& hitObjColType,
-		const int hitObjArrayNum
+		const GameObject&  object,
+		const MelLib::ShapeType3D collisionType,
+		const std::string& shapeName,
+		const MelLib::ShapeType3D hitObjColType,
+		const std::string& hitShapeName
 	)override;
 
 #pragma region ƒQƒbƒg
-
-	MelLib::Value2<MelLib::Vector3>GetSegmentPosition()const { return capsuleDatas[0].GetSegment3DData().GetPosition(); }
+	//return capsuleDatas["main"][0].GetSegment3DData().GetPosition(); 
+	MelLib::Value2<MelLib::Vector3>GetSegmentPosition()const { return capsuleDatas.at("main")[0].GetSegment3DData().GetPosition(); }
 	MelLib::Value2<MelLib::Vector3>GetSegmentPrePosition()const { return preSegmentPosition; }
 
 #pragma endregion

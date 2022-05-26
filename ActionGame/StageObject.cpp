@@ -43,7 +43,7 @@ MelLib::PlaneData StageObject::SegmentToPlane()
 	MelLib::PlaneData playerSlushPlane;
 
 	// 衝突点を代入
-	playerSlushPlane.SetPosition(capsuleDatas[0].GetRefSegment3DData().GetCalcResult().lineSegment3DHitPos);
+	playerSlushPlane.SetPosition(capsuleDatas["main"][0].GetRefSegment3DData().GetCalcResult().lineSegment3DHitPos);
 
 	playerSlushPlane.SetNormal(normal);
 
@@ -97,7 +97,7 @@ MelLib::PlaneData StageObject::SegmentToPlane()
 void StageObject::MeshCat(const MelLib::GameObject* const object, MelLib::ModelData*& pFront, MelLib::ModelData*& pBack)
 {
 	// プレイヤーの武器と接触したら、MeshCat関数を呼び出す
-	if (typeid(*object) == typeid(PlayerSlush))
+	if (typeid(object) == typeid(PlayerSlush))
 	{
 		modelObjects["main"].MeshCat(SegmentToPlane(), pFront, pBack, true);
 
@@ -152,7 +152,7 @@ void StageObject::Draw()
 	modelObjects["main"].Draw();
 }
 
-void StageObject::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)
+void StageObject::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)
 {	
 	
 }

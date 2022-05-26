@@ -10,7 +10,7 @@ Boss::Boss(const MelLib::Vector3 pos)
 	modelObjects["main"].Create(MelLib::ModelData::Get("boss"), nullptr);
 
 	modelObjects["main"].SetPosition(pos);
-	sphereDatas.resize(3);
+	sphereDatas["main"].resize(3);
 
 }
 
@@ -22,6 +22,6 @@ void Boss::Draw()
 {
 }
 
-void Boss::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)
+void Boss::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)
 {
 }

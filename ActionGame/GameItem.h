@@ -34,11 +34,11 @@ public:
 	/// <param name="hitObjArrayNum">‘ŠŽè‚Ì‰½ŒÂ–Ú‚Ì”»’è‚É“–‚½‚Á‚½‚©</param>
 	void Hit
 	(
-		const GameObject* const  object,
-		const MelLib::ShapeType3D& collisionType,
-		const int arrayNum,
-		const MelLib::ShapeType3D& hitObjColType,
-		const int hitObjArrayNum
+		const GameObject&  object,
+		const MelLib::ShapeType3D collisionType,
+		const std::string& shapeName,
+		const MelLib::ShapeType3D hitObjColType,
+		const std::string& hitShapeName
 	)override;
 
 };

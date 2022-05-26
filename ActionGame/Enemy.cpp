@@ -108,14 +108,14 @@ void Enemy::Dead()
 	}
 }
 
-void Enemy::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)
+void Enemy::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)
 {
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())return;
 
 	if (isDead)return;
 
-	std::string n = typeid(*object).name();
-	if (typeid(*object) == typeid(PlayerSlush) && !isMuteki)
+	std::string n = typeid(object).name();
+	if (typeid(object) == typeid(PlayerSlush) && !isMuteki)
 	{
 
 		// プレイヤーから現在の攻撃の攻撃力を取得し、体力を減らす
@@ -148,7 +148,7 @@ void Enemy::Hit(const GameObject* const object, const MelLib::ShapeType3D& colli
 		}
 	}
 
-	if (typeid(*object) == typeid(Stage)
+	if (typeid(object) == typeid(Stage)
 		&& collisionType == MelLib::ShapeType3D::SEGMENT)
 	{
 
@@ -157,7 +157,7 @@ void Enemy::Hit(const GameObject* const object, const MelLib::ShapeType3D& colli
 		//投げ上げ処理終了
 		FallEnd();
 
-		addPos.y += segment3DDatas[0].GetCalcResult().triangleHitPos.y - segment3DDatas[0].GetPosition().v2.y;
+		addPos.y += segment3DDatas["main"][0].GetCalcResult().triangleHitPos.y - segment3DDatas["main"][0].GetPosition().v2.y;
 	
 		AddPosition(addPos);
 	}

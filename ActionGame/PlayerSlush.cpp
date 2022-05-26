@@ -108,7 +108,7 @@ void PlayerSlush::Attack()
 			PLAYER_MODEL.CalcAnimationPosition
 			(CAPSULE_START_POS_LEFT.v2, 1.0f, "Bone_L.003", "Body", PLAYER_START_POS, PLAYER_START_ANGLE, PLAYER_START_SCALE));
 
-		capsuleDatas[0].GetRefSegment3DData().SetPosition(CALC_POS);
+		capsuleDatas["main"][0].GetRefSegment3DData().SetPosition(CALC_POS);
 	}else
 	{
 		const MelLib::Value2 < MelLib::Vector3> CALC_POS
@@ -117,7 +117,7 @@ void PlayerSlush::Attack()
 			PLAYER_MODEL.CalcAnimationPosition
 			(CAPSULE_START_POS_RIGTH.v2, 1.0f, "Bone_R.003", "Body", PLAYER_START_POS, PLAYER_START_ANGLE, PLAYER_START_SCALE));
 
-		capsuleDatas[0].GetRefSegment3DData().SetPosition(CALC_POS);
+		capsuleDatas["main"][0].GetRefSegment3DData().SetPosition(CALC_POS);
 	}
 
 
@@ -180,11 +180,9 @@ PlayerSlush::PlayerSlush
 	playerAngle -= 90.0f;
 
 
-
-	capsuleDatas.resize(1);
-	capsuleDatas[0].SetRadius(1);	
+	capsuleDatas["main"].resize(1);
+	capsuleDatas["main"][0].SetRadius(1);	
 	SetPosition(pos);
-
 
 
 	eraseTimer.SetStopFlag(false);
@@ -205,12 +203,12 @@ void PlayerSlush::Update()
 
 	eraseTimer.SetStopFlag(false);
 
-	preSegmentPosition = capsuleDatas[0].GetSegment3DData().GetRotatePosition();
+	preSegmentPosition = capsuleDatas["main"][0].GetSegment3DData().GetRotatePosition();
 
 	if (eraseTimer.GetSameAsMaxFlag())eraseManager = true;
 	Attack();
 
-	MelLib::Value2<MelLib::Vector3>segmentVector = capsuleDatas[0].GetSegment3DData().GetPosition();
+	MelLib::Value2<MelLib::Vector3>segmentVector = capsuleDatas["main"][0].GetSegment3DData().GetPosition();
 	MelLib::Vector3 slushVector =
 		segmentVector.v2 - segmentVector.v1;
 	slushVector = slushVector.Normalize();
@@ -218,7 +216,7 @@ void PlayerSlush::Update()
 	/*MelLib::GameObjectManager::GetInstance()->AddObject
 	(std::make_shared<SlushEffect>(segmentVector.v1 + slushVector / 2, slushVector, eraseTimer.GetNowTime()));*/
 
-	MelLib::Vector3 moveVector = capsuleDatas[0].GetSegment3DData().GetRotatePosition().v2 - preSegmentPosition.v2;
+	MelLib::Vector3 moveVector = capsuleDatas["main"][0].GetSegment3DData().GetRotatePosition().v2 - preSegmentPosition.v2;
 	moveVector = moveVector.Normalize();
 	moveVector = 0;
 	
@@ -236,7 +234,7 @@ void PlayerSlush::Draw()
 {
 }
 
-void PlayerSlush::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)
+void PlayerSlush::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)
 {
 
 }

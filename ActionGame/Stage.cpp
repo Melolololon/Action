@@ -46,14 +46,14 @@ Stage::Stage(const unsigned int stageNum)
 	std::vector<MelLib::TriangleData>wallCollision = modelObjects["wallCollision"].GetModelTriangleData()[0];
 
 	// ƒŠƒTƒCƒY‚µ‚Ä”»’è‚ð’Ç‰Á
-	triangleData.resize(groundCollision.size() + wallCollision.size());
+	triangleDatas["main"].resize(groundCollision.size() + wallCollision.size());
 	for (int i = 0; i < groundCollision.size(); i++)
 	{
-		triangleData[i] = groundCollision[i];
+		triangleDatas["main"][i] = groundCollision[i];
 	}
-	for (int i = groundCollision.size(); i < triangleData.size(); i++)
+	for (int i = groundCollision.size(); i < triangleDatas.size(); i++)
 	{
-		triangleData[i] = wallCollision[i - groundCollision.size()];
+		triangleDatas["main"][i] = wallCollision[i - groundCollision.size()];
 	}
 }
 

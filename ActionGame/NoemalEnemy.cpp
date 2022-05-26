@@ -19,13 +19,13 @@ void NoemalEnemy::LoadResource()
 NoemalEnemy::NoemalEnemy(const MelLib::Vector3& pos, int wallNum) :
 	Enemy(pos, 3, 3.0f,wallNum, "NormalEnemy")
 {
-	capsuleDatas.resize(1);
-	capsuleDatas[0].SetRadius(4.5f);
-	capsuleDatas[0].GetRefSegment3DData().
+	capsuleDatas["main"].resize(1);
+	capsuleDatas["main"][0].SetRadius(4.5f);
+	capsuleDatas["main"][0].GetRefSegment3DData().
 		SetPosition(MelLib::Value2<MelLib::Vector3>(pos + MelLib::Vector3(0, 25.0f, 0), pos + MelLib::Vector3(0, -10.0f, 0)));
 
-	segment3DDatas.resize(1);
-	segment3DDatas[0].SetPosition(capsuleDatas[0].GetSegment3DData().GetPosition());
+	segment3DDatas["main"].resize(1);
+	segment3DDatas["main"][0].SetPosition(capsuleDatas["main"][0].GetSegment3DData().GetPosition());
 
 
 	modelObjects["main"].SetScale(3);
@@ -130,6 +130,6 @@ void NoemalEnemy::Update()
 	//modelObjects["main"].SetAnimation("_T");
 }
 
-//void NoemalEnemy::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)
+//void NoemalEnemy::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)
 //{
 //}

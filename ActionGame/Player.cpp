@@ -68,23 +68,23 @@ Player::Player(const MelLib::Vector3& pos)
 
 
 	collisionFlag.capsule = true;
-	capsuleDatas.resize(1);
-	capsuleDatas[0].SetRadius(3.0f);
-	capsuleDatas[0].GetRefSegment3DData().
+	capsuleDatas["main"].resize(1);
+	capsuleDatas["main"][0].SetRadius(3.0f);
+	capsuleDatas["main"][0].GetRefSegment3DData().
 		SetPosition(MelLib::Value2<MelLib::Vector3>
 			(GetPosition() + MelLib::Vector3(0, 15, 0), GetPosition() + MelLib::Vector3(0, -18, 0)));
 
-	segment3DDatas.resize(3);
-	segment3DDatas[0] = capsuleDatas[0].GetSegment3DData();
+	segment3DDatas["main"].resize(3);
+	segment3DDatas["main"][0] = capsuleDatas["main"][0].GetSegment3DData();
 
 	// 壁との判定用
-	segment3DDatas[1].SetPosition
+	segment3DDatas["main"][1].SetPosition
 	(
 		MelLib::Value2<MelLib::Vector3>
 		(GetPosition() + MelLib::Vector3(0, 0, 10), GetPosition() + MelLib::Vector3(0, 0, -10))
 	);
 
-	segment3DDatas[2].SetPosition
+	segment3DDatas["main"][2].SetPosition
 	(
 		MelLib::Value2<MelLib::Vector3>
 		(GetPosition() + MelLib::Vector3(10, 0, 0), GetPosition() + MelLib::Vector3(-10, 0, 0))
@@ -339,7 +339,7 @@ void Player::Move()
 		|| MelLib::Input::LeftStickRight(WALK_STICK_PAR)
 		|| MelLib::Input::LeftStickLeft(WALK_STICK_PAR))
 	{
-		direction = MelLib::Input::LeftStickVector3(MelLib::Camera::Get(), false, true);
+		direction = MelLib::Input::LeftStickVector3(20.0f,MelLib::Camera::Get(), false, true);
 
 		MelLib::Vector3 addPos = direction;
 
@@ -853,19 +853,19 @@ void Player::Draw()
 	modelObjects["main"].Draw();
 }
 
-void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)
+void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)
 {
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())return;
 
 	// 敵と当たった時の処理
-	for (const auto& tag : object->GetTags()) 
+	for (const auto& tag : object.GetTags()) 
 	{
 		if(tag == "Enemy" || tag == "StageObject")
 		{
 			// 真上から移動せずに乗っかっても押し出すようにする
 			// 敵から自分へのベクトルを求め、その方向に押し出す。
 			// 真上の場合は、適当に押し出す
-			MelLib::Vector3 enemyToPlayer = GetPosition() - object->GetPosition();
+			MelLib::Vector3 enemyToPlayer = GetPosition() - object.GetPosition();
 			enemyToPlayer = enemyToPlayer.Normalize();
 
 			if(GetIsFall())
@@ -875,7 +875,7 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 			}
 			else if (prePosition - GetPosition() == 0)
 			{
-				if (typeid(*object) == typeid(JumpEnemy))
+				if (typeid(object) == typeid(JumpEnemy))
 				{
 					AddPosition(MelLib::Vector3(1,0,0) * 1.0f);
 				}
@@ -900,8 +900,8 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 
 
 	// 線分がステージの判定に当たったら入る
-	//if (typeid(*object) == typeid(Ground)
-	if (typeid(*object) == typeid(Stage)
+	//if (typeid(object) == typeid(Ground)
+	if (typeid(object) == typeid(Stage)
 		&& collisionType == MelLib::ShapeType3D::SEGMENT)
 	{
 		// ステージの三角形の法線取得
@@ -911,7 +911,7 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 		if(normal.y >= 0.6f)
 		{
 			// 0番以外の判定(床用判定)意外と当たったらreturn
-			if (arrayNum != 0)return;
+			//if (arrayNum != 0)return;
 
 			// 落下距離をリセット
 			dropStartPosY = 0.0f;
@@ -957,7 +957,7 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 
 
 				//カプセルじゃなくて線分で判定取ってるときの処理
-			addPos.y += segment3DDatas[0].GetCalcResult().triangleHitPos.y - segment3DDatas[0].GetPosition().v2.y;
+			addPos.y += segment3DDatas["main"][0].GetCalcResult().triangleHitPos.y - segment3DDatas["main"][0].GetPosition().v2.y;
 			//segment3DData[0] = capsuleData[0].GetSegment3DData();
 
 			AddPosition(addPos);
@@ -985,14 +985,14 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 	
 	}
 
-	if(typeid(*object) == typeid(Wall)
+	if(typeid(object) == typeid(Wall)
 		&& collisionType == MelLib::ShapeType3D::SEGMENT)
 	{
 		HitWall();
 	}
 
 
-	//if (typeid(*object) == typeid(Wall) 
+	//if (typeid(object) == typeid(Wall) 
 	//	&& collisionType == MelLib::ShapeType3D::SEGMENT)
 	//{
 	//	
@@ -1031,8 +1031,8 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 	if (!isMuteki)
 	{
 
-		if (typeid(*object) == typeid(EnemyAttack)
-			|| typeid(*object) == typeid(NormalEnemyAttack))
+		if (typeid(object) == typeid(EnemyAttack)
+			|| typeid(object) == typeid(NormalEnemyAttack))
 		{
 			isMuteki = true;
 			mutekiTimer.SetStopFlag(false);
@@ -1040,18 +1040,18 @@ void Player::Hit(const GameObject* const object, const MelLib::ShapeType3D& coll
 			isStun = true;
 			modelObjects["main"].SetAnimation("Stun");
 
-			/*MelLib::Vector3 enemyToPlayer = GetPosition() - object->GetPosition();
+			/*MelLib::Vector3 enemyToPlayer = GetPosition() - object.GetPosition();
 			enemyToPlayer = enemyToPlayer.Normalize();
 			AddPosition(-enemyToPlayer * 0.3f);*/
 		}
 	}
 
-	if(typeid(*object) == typeid(EventFlag))
+	if(typeid(object) == typeid(EventFlag))
 	{
 		hitEventFlag = true;
 	}
 
-	if (typeid(*object) == typeid(TutorialEventFlag))
+	if (typeid(object) == typeid(TutorialEventFlag))
 	{
 		hitTutorialEventFlag = true;
 	}

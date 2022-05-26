@@ -17,7 +17,7 @@
 #include"Camera.h"
 #include"RenderTarget.h"
 #include"BufferData.h"
-#include"CollisionType.h"
+#include"CollisionDetectionData.h"
 #include"Material.h"
 //AddColorとかまとめよう!
 
@@ -28,6 +28,7 @@ namespace MelLib
 	class ModelObject
 	{
 	private:
+
 
 	private:
 
@@ -199,6 +200,11 @@ namespace MelLib
 #pragma endregion
 
 #pragma region 色
+		/// <summary>
+		/// 色を加算します。
+		/// </summary>
+		/// <param name="color">色</param>
+		/// <param name="name">モデル内のオブジェクト名(指定しない場合、1番目のオブジェクトを指定)</param>
 		void SetAddColor(const Color& color, const std::string& name = "");
 		void SetSubColor(const Color& color, const std::string& name = "");
 		void SetMulColor(const Color& color, const std::string& name = "");
@@ -294,9 +300,9 @@ namespace MelLib
 		///	アニメーションの現在のフレームを取得します。
 		/// </summary>
 		/// <returns></returns>
-		unsigned int GetAnimationFrame()const { return fbxAnimationData.currentTime.GetFrameCount(FbxTime::eFrames60); }
+		unsigned int GetAnimationFrame()const { return static_cast<unsigned int>(fbxAnimationData.currentTime.GetFrameCount(FbxTime::eFrames60)); }
 		
-		unsigned int GetAnimationFrameMax()const { return fbxAnimationData.animationTimes.endTime.GetFrameCount(FbxTime::eFrames60); }
+		unsigned int GetAnimationFrameMax()const { return static_cast<unsigned int>(fbxAnimationData.animationTimes.endTime.GetFrameCount(FbxTime::eFrames60)); }
 #pragma endregion
 
 		//コンピュートシェーダーで計算したほうがいい。

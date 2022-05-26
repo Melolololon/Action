@@ -3,12 +3,14 @@
 #include"FbxLoader.h"
 #include"DirectionalLight.h"
 #include"Matrix.h"
-#include"CollisionType.h"
+#include"CollisionDetectionData.h"
 #include"LibMath.h"
 #include"Values.h"
 #include"Collision.h"
+#include"DrawManager.h"
 
 using namespace MelLib;
+
 
 std::unordered_map<std::string, std::unique_ptr<ModelObject>>ModelObject::pModelObjects;
 
@@ -126,7 +128,7 @@ void ModelObject::CreateConstBuffer()
 
 #pragma region 初期化
 
-		ModelConstBufferData* constBufferData;
+		ModelConstBufferData* constBufferData = nullptr;
 		constBuffer[i]->Map(0, nullptr, (void**)&constBufferData);
 
 		//ライト
@@ -148,7 +150,7 @@ void ModelObject::DrawCommonProcessing(const std::string& rtName)
 	if (!pModelData)return;
 	MapConstData(RenderTarget::Get(rtName)->GetCamera());
 
-	ModelConstBufferData* constBufferData;
+	ModelConstBufferData* constBufferData = nullptr;
 	constBuffer[0]->Map(0, nullptr, (void**)&constBufferData);
 	int z = 0;
 
@@ -162,7 +164,7 @@ void ModelObject::MapConstData(const Camera* camera)
 
 	std::vector<DirectX::XMMATRIX>meshGlobalTransforms = pModelData->GetMeshGlobalTransforms();
 
-	ModelConstBufferData* constBufferData;
+	ModelConstBufferData* constBufferData = nullptr;
 	for (int i = 0; i < objectNames.size(); i++)
 	{
 		std::string objectName = objectNames[i];
@@ -268,7 +270,7 @@ void ModelObject::MapConstData(const Camera* camera)
 
 
 		// モデルのオブジェクトごとに生成するようにする
-		SkinConstBufferData* skinConstData;
+		SkinConstBufferData* skinConstData = nullptr;
 
 		modelConstBuffer[i]->Map(0, nullptr, (void**)&skinConstData);
 
@@ -504,22 +506,36 @@ void ModelObject::MapConstData(const Camera* camera)
 
 void ModelObject::SetCmdList()
 {
-
-	cmdLists[0]->SetGraphicsRootSignature(rootSignature.Get());
-	//cmdLists[0]->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
-	cmdLists[0]->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	DrawManager* drawManager = DrawManager::GetInstance();
+	//cmdLists[0]->SetGraphicsRootSignature(rootSignature.Get());
 
 
+	////cmdLists[0]->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+	//cmdLists[0]->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	//モデル特有バッファセット
-	if (modelConstBufferData.bufferType == ConstBufferData::BufferType::BUFFER_TYPE_EACH_MODEL)
-		cmdLists[0]->SetGraphicsRootConstantBufferView(MODEL_BUFFER_REGISTER, modelConstBuffer[0]->GetGPUVirtualAddress());
+//	if (drawManager->GetPreDrawType() != DrawType::MODEL)
+	{
+		cmdLists[0]->SetGraphicsRootSignature(rootSignature.Get());
+		cmdLists[0]->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	}
+//	if (drawManager->GetPreModelData() != pModelData) 
+	{
+		//モデル特有バッファセット
+		if (modelConstBufferData.bufferType == ConstBufferData::BufferType::BUFFER_TYPE_EACH_MODEL)
+			cmdLists[0]->SetGraphicsRootConstantBufferView(MODEL_BUFFER_REGISTER, modelConstBuffer[0]->GetGPUVirtualAddress());
 
-	//ユーザーモデルバッファセット
-	if (userConstBufferData.bufferType == ConstBufferData::BufferType::BUFFER_TYPE_EACH_MODEL)
-		cmdLists[0]->SetGraphicsRootConstantBufferView(MODEL_BUFFER_REGISTER, userConstBuffer[0]->GetGPUVirtualAddress());
+		//ユーザーモデルバッファセット
+		if (userConstBufferData.bufferType == ConstBufferData::BufferType::BUFFER_TYPE_EACH_MODEL)
+			cmdLists[0]->SetGraphicsRootConstantBufferView(MODEL_BUFFER_REGISTER, userConstBuffer[0]->GetGPUVirtualAddress());
+	}
+	
+	////モデル特有バッファセット
+	//if (modelConstBufferData.bufferType == ConstBufferData::BufferType::BUFFER_TYPE_EACH_MODEL)
+	//	cmdLists[0]->SetGraphicsRootConstantBufferView(MODEL_BUFFER_REGISTER, modelConstBuffer[0]->GetGPUVirtualAddress());
 
-
+	////ユーザーモデルバッファセット
+	//if (userConstBufferData.bufferType == ConstBufferData::BufferType::BUFFER_TYPE_EACH_MODEL)
+	//	cmdLists[0]->SetGraphicsRootConstantBufferView(MODEL_BUFFER_REGISTER, userConstBuffer[0]->GetGPUVirtualAddress());
 
 	const std::vector<VertexBufferSet>& vertexBufferSets = pModelData->GetVertexBufferSet();
 	const std::vector<IndexBufferSet>& indexBufferSets = pModelData->GetIndexBufferSet();
@@ -536,28 +552,38 @@ void ModelObject::SetCmdList()
 
 		std::string objectName = objectNames[i];
 
-		//cmdLists[0]->SetPipelineState(pPipeline[i]->GetPipelineState().Get());
-		cmdLists[0]->SetPipelineState(materials[objectName]->GetPPipelineState()->GetPipelineState().Get());
 
-
+	//	if(drawManager->GetPreVertexBuffer() != vertexBufferSets[i].vertexBuffer.Get())
 		cmdLists[0]->IASetVertexBuffers(0, 1, &vertexBufferSets[i].vertexBufferView);
+
+		//if (drawManager->GetPreIndexBuffer() != indexBufferSets[i].indexBuffer.Get())
 		cmdLists[0]->IASetIndexBuffer(&indexBufferSets[i].indexBufferView);
+		
+		//cmdLists[0]->SetPipelineState(materials[objectName]->GetPPipelineState()->GetPipelineState().Get());
+	//	if (drawManager->GetMaterial() != materials[objectName]) 
+		{
+			cmdLists[0]->SetPipelineState(materials[objectName]->GetPPipelineState()->GetPipelineState().Get());
+		}
+		
+
 
 #pragma region テクスチャ
+	//	if (drawManager->GetMaterial() != materials[objectName]) 
+		{
+			ID3D12DescriptorHeap* textureDescHeap = materials[objectName]->GetPTextureHeap();
+			std::vector<ID3D12DescriptorHeap*> ppHeaps;
+			ppHeaps.push_back(textureDescHeap);
+			cmdLists[0]->SetDescriptorHeaps(1, &ppHeaps[0]);
 
-		ID3D12DescriptorHeap* textureDescHeap = materials[objectName]->GetPTextureHeap();
-		std::vector<ID3D12DescriptorHeap*> ppHeaps;
-		ppHeaps.push_back(textureDescHeap);
-		cmdLists[0]->SetDescriptorHeaps(1, &ppHeaps[0]);
 
-
-		D3D12_GPU_DESCRIPTOR_HANDLE gpuDescHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE
-		(
-			materials[objectName]->GetPTextureHeap()->GetGPUDescriptorHandleForHeapStart(),
-			0,
-			device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)
-		);
-		cmdLists[0]->SetGraphicsRootDescriptorTable(TEXURE_ROOTPARAM_NUM, gpuDescHandle);
+			D3D12_GPU_DESCRIPTOR_HANDLE gpuDescHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE
+			(
+				materials[objectName]->GetPTextureHeap()->GetGPUDescriptorHandleForHeapStart(),
+				0,
+				device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)
+			);
+			cmdLists[0]->SetGraphicsRootDescriptorTable(TEXURE_ROOTPARAM_NUM, gpuDescHandle);
+		}
 #pragma endregion
 
 #pragma region 定数
@@ -571,15 +597,16 @@ void ModelObject::SetCmdList()
 
 		/*ModelConstBufferData* constBufferData;
 		constBuffer[0]->Map(0, nullptr, (void**)&constBufferData);*/
+		//if (drawManager->GetMaterial() != materials[objectName])
+		{
+			//マテリアルバッファ
+			cmdLists[0]->SetGraphicsRootConstantBufferView
+			(MATERIAL_BUFFER_REGISTER, materials[objectName]->GetPConstBuffer(Material::MaterialConstBufferType::MATERIAL_DATA)->GetGPUVirtualAddress());
 
-		//マテリアルバッファ
-		cmdLists[0]->SetGraphicsRootConstantBufferView
-		(MATERIAL_BUFFER_REGISTER, materials[objectName]->GetPConstBuffer(Material::MaterialConstBufferType::MATERIAL_DATA)->GetGPUVirtualAddress());
-
-		//Colorマテリアル
-		cmdLists[0]->SetGraphicsRootConstantBufferView
-		(COLOR_MATERIAL_BUFFER_REGISTER, materials[objectName]->GetPConstBuffer(Material::MaterialConstBufferType::COLOR)->GetGPUVirtualAddress());
-
+			//Colorマテリアル
+			cmdLists[0]->SetGraphicsRootConstantBufferView
+			(COLOR_MATERIAL_BUFFER_REGISTER, materials[objectName]->GetPConstBuffer(Material::MaterialConstBufferType::COLOR)->GetGPUVirtualAddress());
+		}
 		//モデルバッファ
 		if (modelConstBufferData.bufferType == ConstBufferData::BufferType::BUFFER_TYPE_EACH_MODEL_OBJECT)
 			cmdLists[0]->SetGraphicsRootConstantBufferView(MODEL_BUFFER_REGISTER, modelConstBuffer[i]->GetGPUVirtualAddress());
@@ -596,7 +623,7 @@ void ModelObject::SetCmdList()
 		cmdLists[0]->DrawIndexedInstanced(static_cast<UINT>(pModelData->GetIndices()[i].size()), 1, 0, 0, 0);
 
 	}
-
+	drawManager->SetDrawData(*this);
 }
 
 void MelLib::ModelObject::Update()
@@ -696,6 +723,11 @@ bool MelLib::ModelObject::MeshCat(const PlaneData& plane, ModelData*& pFront, Mo
 	//それでも無理だから、辺ごとに衝突点格納して、
 	//三角形の座標どっちか、その座標が使われてる辺の衝突点、もう一個の衝突点、残りの座標という順序を使えばよい
 
+	// 2022 5 9 
+	//　例外出るのmessageの
+	// 重大度レベル	コード	説明	プロジェクト	ファイル	行	抑制状態
+	// メッセージ	LNT - arithmetic - overflow	サブ式は、より広い型に割り当てる前にオーバーフローする可能性があります。	MyLibrary	C : \Users\ichik\Desktop\プロジェクト\Library改造前新規プロジェクト\MyLibrary\ModelObject.cpp	753
+	// の問題解決すれば治るかも
 
 	if (catFrontModelData || catBackModelData)return false;
 
@@ -703,12 +735,13 @@ bool MelLib::ModelObject::MeshCat(const PlaneData& plane, ModelData*& pFront, Mo
 
 	//法線0だったら切断できないため、false
 	if (plane.GetNormal() == 0.0f)return false;
-
+	
 	// 平面情報(回転適応のため、作り直し)
 	PlaneData rotPlane;
 	rotPlane.SetPosition(plane.GetPosition());
-	rotPlane.SetNormal(LibMath::RotateZXYVector3(plane.GetNormal(),
-		DirectX::XMFLOAT3(-modelConstDatas[0].angle.x, -modelConstDatas[0].angle.y, -modelConstDatas[0].angle.z)).Normalize());
+	DirectX::XMFLOAT3 xmAngle = DirectX::XMFLOAT3(-modelConstDatas[objectNames[0]].angle.x, -modelConstDatas[objectNames[0]].angle.y, -modelConstDatas[objectNames[0]].angle.z);
+	Vector3 normal = LibMath::RotateZXYVector3(plane.GetNormal(), xmAngle);
+	rotPlane.SetNormal(normal);
 
 	//モデルの頂点を三角形ごとにまとめたもの
 	struct ModelTri

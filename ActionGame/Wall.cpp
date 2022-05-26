@@ -24,10 +24,10 @@ Wall::Wall(const MelLib::Vector3& pos, const MelLib::Vector3& angle, const MelLi
 	wallSpr.SetScale(scale);
 	wallSpr.SetPosition(pos);
 
-	boardDatas.resize(1);
-	boardDatas[0].SetAngle(angle);
-	boardDatas[0].SetSize(scale);
-	boardDatas[0].SetPosition(pos);
+	boardDatas["main"].resize(1);
+	boardDatas["main"][0].SetAngle(angle);
+	boardDatas["main"][0].SetSize(scale);
+	boardDatas["main"][0].SetPosition(pos);
 
 	
 	

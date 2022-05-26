@@ -25,8 +25,8 @@ EnemyAttack::EnemyAttack
 {
 	// アニメーションに合わせてsphereを動かす
 
-	sphereDatas.resize(1);
-	sphereDatas[0].SetRadius(radius);
+	sphereDatas["main"].resize(1);
+	sphereDatas["main"][0].SetRadius(radius);
 
 
 	deadTimer.SetMaxTime(deadTime);
@@ -38,7 +38,7 @@ void EnemyAttack::Update()
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())return;
 
 	// 座標計算してセット
-  	sphereDatas[0].SetPosition(MODEL.CalcAnimationPosition
+  	sphereDatas["main"][0].SetPosition(MODEL.CalcAnimationPosition
 	(
 		SPHERE_START_POSITION,
 		1.0f,
@@ -55,9 +55,9 @@ void EnemyAttack::Update()
 	}
 }
 
-void EnemyAttack::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)
+void EnemyAttack::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)
 {
-	if (typeid(*object) == typeid(Player)
+	if (typeid(object) == typeid(Player)
 		&& !pPlayer->GetIsMuteki())
 	{
 		pPlayer->DownHP(power);

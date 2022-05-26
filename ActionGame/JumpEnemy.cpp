@@ -149,16 +149,16 @@ JumpEnemy::JumpEnemy(const MelLib::Vector3 pos, int wallNum)
 	//modelObjects["main"]
 
 	// 判定セット
-	sphereDatas.resize(1);
-	sphereDatas[0].SetPosition(pos + MelLib::Vector3(0,20,0)); 
-	sphereDatas[0].SetRadius(10.0f);
+	sphereDatas["main"].resize(1);
+	sphereDatas["main"][0].SetPosition(pos + MelLib::Vector3(0,20,0)); 
+	sphereDatas["main"][0].SetRadius(10.0f);
 
 	// 地形用判定セット
-	segment3DDatas.resize(1);
+	segment3DDatas["main"].resize(1);
 	MelLib::Value2<MelLib::Vector3>segmentPos(GetPosition());
 	segmentPos.v1 += MelLib::Vector3(0, 10, 0);
 	segmentPos.v2 += MelLib::Vector3(0, 0, 0);
-	segment3DDatas[0].SetPosition(segmentPos);
+	segment3DDatas["main"][0].SetPosition(segmentPos);
 
 	// 追加時浮いてても落下するようにするための呼び出し
 	FallStart(0.0f);
@@ -170,7 +170,7 @@ JumpEnemy::JumpEnemy(const MelLib::Vector3 pos, int wallNum)
 	modelObjects["main"].SetAnimationEndStopFlag(true);
 
 	// 攻撃判定作成
-	enemyAttack = std::make_shared<NormalEnemyAttack>(30, sphereDatas[0].GetRadius());
+	enemyAttack = std::make_shared<NormalEnemyAttack>(30, sphereDatas["main"][0].GetRadius());
 
 
 

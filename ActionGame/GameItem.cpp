@@ -16,9 +16,9 @@ void GameItem::Erase()
 
 GameItem::GameItem(const MelLib::Vector3& pos)
 {
-	sphereDatas.resize(1);
-	sphereDatas[0].SetPosition(pos);
-	sphereDatas[0].SetRadius(5);
+	sphereDatas["main"].resize(1);
+	sphereDatas["main"][0].SetPosition(pos);
+	sphereDatas["main"][0].SetRadius(5);
 
 	modelObjects["main"].SetPosition(pos);
 
@@ -34,7 +34,7 @@ void GameItem::Draw()
 {
 }
 
-void GameItem::Hit(const MelLib::GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)
+void GameItem::Hit(const MelLib::GameObject&  object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)
 {
 	
 }

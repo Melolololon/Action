@@ -12,11 +12,11 @@ public:
 	void Draw()override;
 	void Hit
 	(
-		const GameObject* const  object,
-		const MelLib::ShapeType3D& collisionType,
-		const int arrayNum,
-		const MelLib::ShapeType3D& hitObjColType,
-		const int hitObjArrayNum
+		const GameObject&  object,
+		const MelLib::ShapeType3D collisionType,
+		const std::string& shapeName,
+		const MelLib::ShapeType3D hitObjColType,
+		const std::string& hitShapeName
 	)override;
 };
 

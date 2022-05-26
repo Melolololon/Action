@@ -21,11 +21,11 @@ void Bamboo::Update()
 }
 
 
-void Bamboo::Hit(const GameObject* const object, const MelLib::ShapeType3D& collisionType, const int arrayNum, const MelLib::ShapeType3D& hitObjColType, const int hitObjArrayNum)
+void Bamboo::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)
 {
 	MelLib::ModelData* pFront = nullptr;
 	MelLib::ModelData* pBack = nullptr;
-	MeshCat(object, pFront, pBack);
+	//MeshCat(object, pFront, pBack);
 	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<Bamboo>(GetPosition(), pFront));
 	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<Bamboo>(GetPosition(), pBack));
 }
