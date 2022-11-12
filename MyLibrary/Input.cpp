@@ -725,19 +725,19 @@ bool Input::PadCheck(const UCHAR padNum)
 {
 	if (padNum > 3)
 	{
-#ifdef _DEBUG
-
-		OutputDebugString(L"パッド番号が4を超えています。\n");
-#endif // _DEBUG
+//#ifdef _DEBUG
+//
+//		OutputDebugString(L"パッド番号が4を超えています。\n");
+//#endif // _DEBUG
 		return false;
 	}
 	if (!GetPadConnectedFlag(padNum))
 	{
-#ifdef _DEBUG
-		std::wstring padNumWStr = std::to_wstring(padNum);
-		padNumWStr += L"Pコントローラーが接続されていません。\n";
-		OutputDebugString(padNumWStr.c_str());
-#endif // _DEBUG
+//#ifdef _DEBUG
+//		std::wstring padNumWStr = std::to_wstring(padNum);
+//		padNumWStr += L"Pコントローラーが接続されていません。\n";
+//		OutputDebugString(padNumWStr.c_str());
+//#endif // _DEBUG
 		return false;
 	}
 

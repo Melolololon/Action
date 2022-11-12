@@ -82,11 +82,12 @@ namespace MelLib
 		SphereData hitSphereData;
 		BoxData hitBoxData;
 		Segment3DData hitSegment3DData;
-		RayData hitLayData;
+		RayData hitRayData;
 		PlaneData hitPlaneData;
 		BoardData hitBoardData;
 		CapsuleData hitCapsuleData;
 		TriangleData hitTriangleData;
+		OBBData hitOBBData;
 
 		// 衝突確認時に計算された数値
 		SphereCalcResult sphereCalcResult;
@@ -96,7 +97,6 @@ namespace MelLib
 		RayCalcResult rayCalcResult;
 		BoardCalcResult boardCalcResult;
 		TriangleCalcResult triangleCalcResult;
-		
 
 		// 各当たり判定の前フレームの座標
 		// 当たり判定複数回確認するときに使用(補完用)
@@ -186,7 +186,7 @@ namespace MelLib
 				collisionFlag.triangle = flag;
 			}
 
-			float collisionCheckDistance = 5.0f;
+			float collisionCheckDistance = 15.0f;
 	private:
 		/// <summary>
 		/// 当たり判定数に応じてモデルの生成、削除を行う関数
@@ -235,6 +235,7 @@ namespace MelLib
 		BoardData GetHitBoardData()const { return hitBoardData; }
 		CapsuleData GetHitCapsuleData() const { return hitCapsuleData; }
 		TriangleData GetHitTriangleData() const { return hitTriangleData; }
+		OBBData GetHitOBBData() const { return hitOBBData; }
 
 #pragma region 物理演算
 		//反発とかもHit関数で自分で呼ぶようにする?
@@ -496,6 +497,7 @@ namespace MelLib
 		std::unordered_map<std::string, std::vector<BoardData>> GetBoardDatas()const { return boardDatas; }
 		std::unordered_map<std::string, std::vector<CapsuleData>>GetCapsuleDatas() const { return capsuleDatas; }
 		std::unordered_map<std::string, std::vector<TriangleData>>GetTriangleDatas() const { return triangleDatas; }
+		std::unordered_map<std::string, std::vector<RayData>>GetRayDatas() const { return rayDatas; }
 
 
 
@@ -524,6 +526,7 @@ namespace MelLib
 		{
 			triangleCalcResult = result;
 		}
+		void SetRayCalcResult(const RayCalcResult& result) { rayCalcResult = result; }
 
 		SphereCalcResult GetSphereCalcResult()const { return sphereCalcResult; }
 		BoxCalcResult GetBoxCalcResult()const { return boxCalcResult; }
@@ -531,7 +534,7 @@ namespace MelLib
 		BoardCalcResult GetBoardCalcResult()const { return boardCalcResult; }
 		Segment3DCalcResult GetCapsuleCalcResult()const { return capsuleCalcResult; }
 		TriangleCalcResult GetTriangleCalcResult()const { return triangleCalcResult; }
-
+		RayCalcResult GetRayCalcResult()const { return rayCalcResult; }
 
 		//Vector3& GetLineSegmentHitPosition(const int num);
 		//Vector3& GetBoardHitPosition(const int num);
@@ -549,6 +552,8 @@ namespace MelLib
 		void SetHitSegment3DData(const Segment3DData& segment) { hitSegment3DData = segment; }
 		void SetHitCapsuleData(const CapsuleData& capsule) { hitCapsuleData = capsule; }
 		void SetHitTriangleData(const TriangleData& tri) { hitTriangleData = tri; }
+		void SetHitRayData(const RayData& ray) { hitRayData = ray; }
+		void SetHitOBBData(const OBBData& obb) { hitOBBData = obb; }
 
 		unsigned int GetFrameHitCheckNumber(ShapeType3D type)const;
 
