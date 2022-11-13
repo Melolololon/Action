@@ -40,7 +40,7 @@ void Title::Initialize()
 	pCamera->SetCameraToTargetDistance(90.0f);
 	pCamera->SetRotateCriteriaPosition(MelLib::Vector3(23,16,40));
 
-	fierd.Create(MelLib::ModelData::Get("titleFierd"),nullptr);
+	fierd.Create(MelLib::ModelData::Get("titleFierd"),"field", nullptr);
 	fierd.SetScale(MelLib::Vector3(5,5,5));
 	fierd.SetPosition(MelLib::Vector3(0,-13,-35));
 	fierd.SetAngle(MelLib::Vector3(0, 180, 0));

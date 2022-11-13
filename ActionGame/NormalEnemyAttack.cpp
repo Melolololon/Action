@@ -7,7 +7,8 @@ NormalEnemyAttack::NormalEnemyAttack
 	unsigned int power,
 	float radius
 )
-	:power(power)
+	:GameObject("NormalEnemyAttack")
+	,power(power)
 {
 	sphereDatas["main"].resize(1);
 	sphereDatas["main"][0].SetRadius(radius);

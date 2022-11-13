@@ -106,19 +106,20 @@ void StageObject::MeshCat(const MelLib::GameObject* const object, MelLib::ModelD
 }
 
 StageObject::StageObject(const MelLib::Vector3& pos, const std::string& modelName)
+	:GameObject("modelName")
 {
 
 	SetPosition(pos);
 
 	if (modelName == "")
 	{
-		modelObjects["main"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX),nullptr);
+		modelObjects["main"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX), modelName,nullptr);
 
 		modelObjects["main"].SetScale(3);
 	}
 	else
 	{
-		modelObjects["main"].Create(MelLib::ModelData::Get(modelName), nullptr);
+		modelObjects["main"].Create(MelLib::ModelData::Get(modelName), "object", nullptr);
 	}
 	modelObjects["main"].SetPosition(pos);
 
@@ -131,8 +132,9 @@ StageObject::StageObject(const MelLib::Vector3& pos, const std::string& modelNam
 }
 
 StageObject::StageObject(const MelLib::Vector3& pos, MelLib::ModelData* pCatModelData)
+	:GameObject("object")
 {
-	modelObjects["main"].Create(pCatModelData, nullptr);
+	modelObjects["main"].Create(pCatModelData,"object", nullptr);
 	modelObjects["main"].SetPosition(pos);
 	SetPosition(pos);
 

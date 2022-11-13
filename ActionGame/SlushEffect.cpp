@@ -9,7 +9,8 @@ void SlushEffect::LoadResources()
 	MelLib::Texture::Load(TEXTURE_PATH + "Player/SlushEffect.png", "slushEffect");
 }
 
-SlushEffect::SlushEffect(const MelLib::Vector3& pos, const MelLib::Vector3& slushVector, const MelLib::Vector3& moveDirection,const unsigned int frame, const MelLib::Vector3& direction)
+SlushEffect::SlushEffect(const MelLib::Vector3& pos, const MelLib::Vector3& slushVector, const MelLib::Vector3& moveDirection, const unsigned int frame, const MelLib::Vector3& direction)
+	:GameObject("PlayerSlushEffect")
 {
 	SetPosition(pos);
 

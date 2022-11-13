@@ -19,11 +19,13 @@
 #include"BufferData.h"
 #include"CollisionDetectionData.h"
 #include"Material.h"
+
+#include"GuiValue.h"
+#include"Vector.h"
 //AddColorとかまとめよう!
 
 namespace MelLib
 {
-	
 	//モデルの座標などをまとめたもの
 	class ModelObject
 	{
@@ -69,6 +71,7 @@ namespace MelLib
 
 
 		//[ボーンごと]
+		// これおそらくobj用
 		std::vector<BoneData>boneDatas;
 		std::vector<ParentBoneData> parentBoneDatas;//親ボーンと影響度
 
@@ -125,6 +128,14 @@ namespace MelLib
 		//ModelData* catFrontModelData;
 		//ModelData* catBackModelData;
 
+		std::string objectName;
+
+		/*GuiVector3 guiPosition;
+		GuiVector3 guiAngle;
+		GuiVector3 guiScale;*/
+		// 自動でGUIにデータをセットするかどうか(コピーコンストラクタやコピー代入演算子を使う場合コピー先の名前を使いたいため、falseにする)
+		//bool autoSetGuiData = true;
+
 	private:
 
 		void CreateConstBuffer();
@@ -134,13 +145,26 @@ namespace MelLib
 		void SetCmdList();
 
 		void FbxAnimation();
+
 	public:
 
 		//nullptr渡される可能性を考えると、boolをreturnできるようにしたほうがいい?
-		ModelObject() {}
-		ModelObject( ModelObject& obj);
-		ModelObject& operator= (ModelObject& obj);
+		ModelObject() 
+		{
+		}
+
+		ModelObject(ModelObject& obj,const std::string& name);
+		ModelObject(ModelObject& obj);
+		//ModelObject& operator= (ModelObject& obj);
 		~ModelObject() {}
+
+		enum class CopyModelObjectContent 
+		{
+			ALL,
+			NUMBER_FLAG,
+		};
+		bool CopyModelObject(const ModelObject& obj, const std::string& name, CopyModelObjectContent copyContent);
+
 
 		static bool Initialize(ID3D12Device* dev, const std::vector<ID3D12GraphicsCommandList*>& cmdList);
 
@@ -157,9 +181,9 @@ namespace MelLib
 #pragma region 生成
 
 #pragma region モデルで生成
-		ModelObject(ModelData* pModelData, ConstBufferData* userConstBufferData);
-		static bool Create(ModelData* pModelData, ConstBufferData* userConstBufferData, const std::string& name);
-		bool Create(ModelData* pModelData, ConstBufferData* userConstBufferData = nullptr);
+		ModelObject(ModelData* pModelData, const std::string& objectName, ConstBufferData* userConstBufferData = nullptr);
+		static bool Create(ModelData* pModelData, const std::string& objectName, ConstBufferData* userConstBufferData, const std::string& name);
+		bool Create(ModelData* pModelData,const std::string& objectName, ConstBufferData* userConstBufferData = nullptr);
 #pragma endregion モデルで生成
 
 
@@ -225,8 +249,16 @@ namespace MelLib
 		/// </summary>
 		void SetAnimationFrameEnd() { fbxAnimationData.currentTime = fbxAnimationData.animationTimes.endTime; }
 
+		/// <summary>
+		/// アニメーションのフレームをセットします。
+		/// </summary>
+		/// <param name="fream"></param>
 		void SetCurrentFream(const UINT fream);
 
+		/// <summary>
+		/// アニメーションの再生速度をセットします。
+		/// </summary>
+		/// <param name="magnification"></param>
 		void SetAnimationSpeedMagnification(const unsigned int magnification) { fbxAnimationData.timeMag = magnification; }
 
 		/// <summary>
@@ -235,8 +267,16 @@ namespace MelLib
 		/// <param name="flag"></param>
 		void SetAnimationReversePlayBack(const bool flag);
 
+		/// <summary>
+		/// アニメーションを指定します。
+		/// </summary>
+		/// <param name="name"></param>
 		void SetAnimation(const std::string& name);
 
+		/// <summary>
+		/// アニメーション終了時に再生を終了するかを指定します。
+		/// </summary>
+		/// <param name="flag"></param>
 		void SetAnimationEndStopFlag(const bool flag) { animationEndStop = flag; }
 
 		/// <summary>
@@ -255,6 +295,11 @@ namespace MelLib
 		/// </summary>
 		void SetPar(float par, const std::string& name = "");
 
+		/// <summary>
+		/// マテリアルをセットします。
+		/// </summary>
+		/// <param name="mtl"></param>
+		/// <param name="name"></param>
 		void SetMaterial(Material* mtl,const std::string& name = "");
 
 
@@ -307,7 +352,11 @@ namespace MelLib
 		/// <returns></returns>
 		unsigned int GetAnimationFrame()const { return static_cast<unsigned int>(fbxAnimationData.currentTime.GetFrameCount(FbxTime::eFrames60)); }
 		
-		unsigned int GetAnimationFrameMax()const { return static_cast<unsigned int>(fbxAnimationData.animationTimes.endTime.GetFrameCount(FbxTime::eFrames60)); }
+		/// <summary>
+		/// アニメーションのフレーム数を取得します。
+		/// </summary>
+		/// <returns></returns>
+		unsigned int GetAnimationFrameCount()const { return static_cast<unsigned int>(fbxAnimationData.animationTimes.endTime.GetFrameCount(FbxTime::eFrames60)); }
 #pragma endregion
 
 		//コンピュートシェーダーで計算したほうがいい。

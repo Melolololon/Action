@@ -16,7 +16,8 @@ EnemyAttack::EnemyAttack
 	const MelLib::Vector3& modelStartAngle,
 	const MelLib::Vector3& modelStartScale
 ) :
-	SPHERE_START_POSITION(attackStartPos)
+	GameObject("EnemyAttack")
+	,SPHERE_START_POSITION(attackStartPos)
 	, power(power)
 	, MODEL(model)
 	, MODEL_START_POS(modelStartPos)

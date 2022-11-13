@@ -30,12 +30,13 @@ void Stage::LoadResources(unsigned int stageNum)
 }
 
 Stage::Stage(const unsigned int stageNum)
+	:GameObject("Stage")
 {
 	static const std::string STAGE_NUM_STR = std::to_string(stageNum);
 
-	modelObjects["stage"].Create(MelLib::ModelData::Get("stage" + STAGE_NUM_STR), nullptr);
-	modelObjects["ground"].Create(MelLib::ModelData::Get("ground" + STAGE_NUM_STR), nullptr);
-	modelObjects["wallCollision"].Create(MelLib::ModelData::Get("wallCollision" + STAGE_NUM_STR), nullptr);
+	modelObjects["stage"].Create(MelLib::ModelData::Get("stage" + STAGE_NUM_STR),"Stage", nullptr);
+	modelObjects["ground"].Create(MelLib::ModelData::Get("ground" + STAGE_NUM_STR), "StageGround", nullptr);
+	modelObjects["wallCollision"].Create(MelLib::ModelData::Get("wallCollision" + STAGE_NUM_STR), "WallCollision", nullptr);
 
 	SetStageData(stageNum);
 

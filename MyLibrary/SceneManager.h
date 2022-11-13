@@ -14,6 +14,13 @@ namespace MelLib
 		~SceneManager();
 
 		Scene* currentScene = nullptr;
+
+		//bool stopUpdate = false;
+
+		/// <summary>
+		/// シーンの切り替え処理を行う
+		/// </summary>
+		void Change();
 	public:
 
 		SceneManager(const SceneManager& sceneManager) = delete;//コピーコンストラクタ
@@ -30,8 +37,12 @@ namespace MelLib
 		/// シーンを切り替える処理を行います
 		/// </summary>
 		/// <param name="nextScene"></param>
-		void ChengeScene(Scene* nextScene);
+		//void ChengeScene(Scene* nextScene);
 
+		//void SetStopFlag(bool flag) { stopUpdate = flag; }
+		//void ChangeStopFlag() { stopUpdate = !stopUpdate; }
+
+		//void ResetScene();
 
 		Scene* GetCurrentScene();
 		std::string GetCurrentSceneName();

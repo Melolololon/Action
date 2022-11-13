@@ -62,6 +62,7 @@ void Player::LoadResources()
 }
 
 Player::Player(const MelLib::Vector3& pos)
+	:GameObject("Player")
 {
 
 	//•¨—‰‰Z‚Ì‚½‚ß‚Éseter‚Ægeterì‚é?
@@ -93,7 +94,7 @@ Player::Player(const MelLib::Vector3& pos)
 
 
 	//modelObjects["main"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX), nullptr);
-	modelObjects["main"].Create(MelLib::ModelData::Get("Player"), nullptr);
+	modelObjects["main"].Create(MelLib::ModelData::Get("Player"), "Player", nullptr);
 
 	modelObjects["main"].SetAnimationPlayFlag(true);
 #pragma region ƒ_ƒbƒVƒ…

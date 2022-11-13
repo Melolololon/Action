@@ -93,10 +93,7 @@ void MelLib::ImguiManager::Draw()
 }
 
 
-void MelLib::ImguiManager::BeginDrawWindow
-(
-    const std::string& name
-)
+void MelLib::ImguiManager::BeginDrawWindow(const std::string& name)
 {
     if (CheckReleaseDrawFlag())return;
 
@@ -132,9 +129,15 @@ void MelLib::ImguiManager::SameLine()
     ImGui::SameLine();
 }
 
+bool MelLib::ImguiManager::DrawButton(const std::string& lavel, const Vector2& size)
+{
+    return ImGui::Button(lavel.c_str(), ImVec2(size.x, size.y));
+}
+
 
 bool MelLib::ImguiManager::DrawRadioButton(const std::string& label, int& refInt, const int num)
 {
+
     if (CheckReleaseDrawFlag())return false;
 
     return ImGui::RadioButton(label.c_str(), &refInt, num);
@@ -146,6 +149,19 @@ bool MelLib::ImguiManager::DrawCheckBox(const std::string& label, bool& refBool)
 
     return ImGui::Checkbox(label.c_str(), &refBool);
 }
+
+void MelLib::ImguiManager::DrawList(int& num, const std::vector<std::string>& texts)
+{
+    const size_t TEXTS_SIZE = texts.size();
+    const char** pTexts = new const char* [TEXTS_SIZE];
+    for (int i = 0; i < TEXTS_SIZE; i++)
+    {
+        pTexts[i] = texts[i].c_str();
+    }
+    ImGui::ListBox("", &num, pTexts, texts.size());
+    delete[] pTexts;
+}
+
 
 bool MelLib::ImguiManager::DrawSliderInt(const std::string& label, int& refInt, const int numMin, const int numMax)
 {
@@ -283,27 +299,67 @@ bool MelLib::ImguiManager::DrawColorPicker(const std::string& label, Color& refC
     return result;
 }
 
-bool MelLib::ImguiManager::DrawInputText(const std::string& label, std::string& text, const size_t maxChar,const ImGuiInputTextFlags flag)
+bool MelLib::ImguiManager::DrawTextBox(const std::string& label, std::string& text,const  size_t maxCharNum,const ImGuiInputTextFlags flag)
 {
     // ウィジェットです。キーボードによる入力
     // - InputText()をstd::stringやカスタムの動的文字列型で使用したい場合は、misc/cpp/imgui_stdlib.hやimgui_demo.cppのコメントを参照してください。
     // - ImGuiInputTextFlagsフラグのほとんどはInputText()にのみ有効で、InputFloatX, InputIntX, InputDoubleなどには使えません。
 
-    //if (CheckReleaseDrawFlag())return false;
+    // なぜか可変長配列を使うと文字の下で何かが点滅する
+
+    if (CheckReleaseDrawFlag())return false;
    
-    //size_t size = text.size();
-    //char* str = new char[size + 1];
-    //for (int i = 0; i < size; i++)
-    //{
-    //    str[i] = text[i];
-    //}
-    //str[size] = '\0';
 
-    //bool result = ImGui::InputText(label.c_str(), str, maxChar,flag);
-    //text = str;
-    //delete[] str;
-    //return result;
+    size_t textSize = text.size();
+    if (maxCharNum <= text.size())
+    {
+        text.resize(maxCharNum);
+    }
+
+    char* str = new char[maxCharNum + 1];
+
+    for (int i = 0; i < maxCharNum; i++)
+    {
+        if(i < textSize)str[i] = text[i];
+        else str[i] = ' ';
+    }
+    str[maxCharNum] = '\n';
+
+    bool result = ImGui::InputText(label.c_str(), str, maxCharNum + 1, flag);
+
+    text = str;
+
+    text.resize(maxCharNum);
 
 
-    return false;
+    return result;
+}
+
+bool MelLib::ImguiManager::DrawInputIntBox(const std::string& label, int& num, const int min, const int max, const ImGuiInputTextFlags flag)
+{
+    if (CheckReleaseDrawFlag())return false;
+
+    return ImGui::InputInt(label.c_str(), &num, min, max, flag);
+}
+
+bool MelLib::ImguiManager::DrawInputFloatBox(const std::string& label,  float& num, float min, float max,const std::string& format, ImGuiInputTextFlags flag)
+{
+    if (CheckReleaseDrawFlag())return false;
+
+    // Stepってもしかして範囲じゃない?
+    return ImGui::InputFloat(label.c_str(), &num, min, max, format.c_str(), flag);
+}
+
+bool MelLib::ImguiManager::DrawInputVector3Box(const std::string& label, Vector3& num, const std::string& format , const ImGuiInputTextFlags flag)
+{
+    if (CheckReleaseDrawFlag())return false;
+
+    float f[3] = { num.x,num.y,num.z };
+    bool change = ImGui::InputFloat3(label.c_str(), f,  format.c_str(), flag);
+
+    num.x = f[0];
+    num.y = f[1];
+    num.z = f[2];
+
+    return change;
 }

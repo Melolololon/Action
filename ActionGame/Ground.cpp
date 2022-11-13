@@ -8,6 +8,7 @@
 const MelLib::Vector2 Ground::GROUND_SIZE = MelLib::Vector2(500, 500);
 
 Ground::Ground(const MelLib::Vector3& pos, const MelLib::Vector3& angle, const MelLib::Vector2& scale)
+	:GameObject("Ground")
 {
 	SetPosition(pos);
 

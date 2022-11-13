@@ -6,6 +6,7 @@
 #include"Values.h"
 #include"Easing.h"
 
+#include"SceneEditer.h"
 
 using namespace MelLib;
 
@@ -16,6 +17,17 @@ GameObjectManager::GameObjectManager()
 
 GameObjectManager::~GameObjectManager()
 {
+}
+
+bool MelLib::GameObjectManager::CheckObjectName(const std::string& name)const
+{
+	std::vector<std::string>objectName;
+	GetObjectNames(objectName);
+	for (const auto& n : objectName)
+	{
+		if (name == n)return true;
+	}
+	return false;
 }
 
 GameObjectManager* GameObjectManager::GetInstance()
@@ -39,7 +51,7 @@ void GameObjectManager::Initialize()
 
 void GameObjectManager::Update()
 {
-
+	if (SceneEditer::GetInstance()->GetIsEdit())return;
 
 #pragma region オブジェクトのUpdate
 	//カーソルアップデート
@@ -50,14 +62,47 @@ void GameObjectManager::Update()
 		farPos = cursor->GetFarPos();
 	}
 
-	for (auto& obj : objects)
+	// 拡張forの方が遅い可能性あるけど
+	// オブジェクト多いのに毎フレームオブジェクトの数だけif文の処理行うと重くなるだろうから(Updateで追加されたか確認するために毎ループ確認する必要あり)
+	// これでもいいかも
+	// オブジェクト多いことあるだろうしここ遅くするのはゲームに影響出る
+	// 既にある分だけ確認してあとから追加分処理を行えばいいのでは。今拡張forでやってるように
+	// Releaseだと拡張の方が遅い可能性あり
+	// 存在してるかチェックするときに2つ見ないといけなくてごちゃごちゃするから1つで済むようにする
+	
+	const size_t PRE_OBJECT_SIZE = objects.size();
+	for (int i = 0; i < PRE_OBJECT_SIZE;i++)
 	{
-		obj->SetPreDataPositions();
-		obj->Update();
+		objects[i]->SetGUIData();
+		objects[i]->SetPreDataPositions();
+		objects[i]->Update();
+		objects[i]->SetPrePosition();
 
 		// 仮にここに書いてる
-		obj->SetPreDataPositions();
+		objects[i]->SetPreDataPositions();
 	}
+	
+
+	const size_t OBJECT_SIZE = objects.size();
+	if (PRE_OBJECT_SIZE != OBJECT_SIZE)
+	{
+		if (addObjectSort != OBJECT_SORT_NONE)ObjectSort(addObjectSort, addObjectSortOrderType);
+		for (int i = OBJECT_SIZE - PRE_OBJECT_SIZE - 1; i < OBJECT_SIZE; i++)
+		{
+			objects[i]->SetPreDataPositions();
+			objects[i]->Update();
+			// 仮にここに書いてる
+			// 追加した手だとUpdate前と後に書く必要がある
+			objects[i]->SetPreDataPositions();
+		}
+
+		/*for (auto& a : addObjects)
+		{
+			objects.push_back(a);
+		}
+		addObjects.clear();*/
+	}
+
 
 	for (auto& obj : object2Ds)
 	{
@@ -65,30 +110,14 @@ void GameObjectManager::Update()
 
 	}
 
-	if (addObjects.size() != 0)
-	{
-		for (auto& a : addObjects)
-		{
-			a.get()->SetPreDataPositions();
-			a.get()->Update();
-			objects.push_back(a);
-
-			// 仮にここに書いてる
-			a->SetPreDataPositions();
-		}
-
-		if (addObjectSort != OBJECT_SORT_NONE)ObjectSort(addObjectSort, addObjectSortOrderType);
-
-		addObjects.clear();
-	}
+	// これここに書く必要ある?
+	// これこう書かないとUpdate呼び出す時拡張for使えない
 
 
 	if (addObject2Ds.size() != 0)
 	{
 		for (auto& a : addObject2Ds)
 		{
-
-			a.get()->Update();
 			object2Ds.push_back(a);
 		}
 
@@ -99,18 +128,20 @@ void GameObjectManager::Update()
 
 #pragma region 新判定処理
 
-	size_t objectSize = objects.size();
-
-	std::vector<CollisionDetectionFlag>collisionFlags(objectSize);
-	for (int i = 0; i < objectSize; i++)
+	std::vector<CollisionDetectionFlag>collisionFlags(OBJECT_SIZE);
+	for (int i = 0; i < OBJECT_SIZE; i++)
 	{
 		collisionFlags[i] = objects[i]->GetCollisionFlag();
 	}
 
-	for (int objI = 0; objI < objectSize; objI++)
+	// チェック回数多くてもデータごとに処理するようにすればマルチスレッドで処理できそう
+	// データの数が均等になるように配列で分けて判定する関数に渡す
+	// 全部の判定を確認した後に、Hit関数を呼び出す
+
+	for (int objI = 0; objI < OBJECT_SIZE; objI++)
 	{
 		GameObject* obj1 = objects[objI].get();
-		for (int objJ = 0; objJ < objectSize; objJ++)
+		for (int objJ = 0; objJ < OBJECT_SIZE; objJ++)
 		{
 			GameObject* obj2 = objects[objJ].get();
 
@@ -130,6 +161,7 @@ void GameObjectManager::Update()
 			float checkDistance = obj1->GetCollisionCheckDistance();
 			if (checkDistance < obj2->GetCollisionCheckDistance())checkDistance = obj2->GetCollisionCheckDistance();
 
+			// こういう距離の計算とかマルチスレッドで処理してよさそう
 			float distance = LibMath::CalcDistance3D(obj1->GetPosition(), obj2->GetPosition());
 			if (distance > checkDistance)continue;
 
@@ -2150,7 +2182,7 @@ void GameObjectManager::Update()
 	}
 
 #ifdef _DEBUG
-	for (int i = 0; i < objectSize; i++)
+	for (int i = 0; i < OBJECT_SIZE; i++)
 	{
 		objects[i]->CreateCollisionCheckModel();
 		objects[i]->SetCollisionCheckModelData();
@@ -2161,18 +2193,18 @@ void GameObjectManager::Update()
 
 
 
-	objectSize = object2Ds.size();
+	const size_t OBJECT_SIZE_2D = object2Ds.size();
 
-	std::vector<CollisionDetectionFlag2D>collisionFlag2Ds(objectSize);
-	for (int i = 0; i < objectSize; i++)
+	std::vector<CollisionDetectionFlag2D>collisionFlag2Ds(OBJECT_SIZE_2D);
+	for (int i = 0; i < OBJECT_SIZE_2D; i++)
 	{
 		collisionFlag2Ds[i] = object2Ds[i]->GetCollisionFlag();
 	}
 
-	for (int objI = 0; objI < objectSize; objI++)
+	for (int objI = 0; objI < OBJECT_SIZE_2D; objI++)
 	{
 		GameObject2D* obj1 = object2Ds[objI].get();
-		for (int objJ = 0; objJ < objectSize; objJ++)
+		for (int objJ = 0; objJ < OBJECT_SIZE_2D; objJ++)
 		{
 			GameObject2D* obj2 = object2Ds[objJ].get();
 
@@ -2274,7 +2306,6 @@ void GameObjectManager::Update()
 #pragma endregion
 
 	EraseObjectCheck();
-
 }
 
 void GameObjectManager::Draw()
@@ -2338,21 +2369,45 @@ void GameObjectManager::ReserveObjectArray(const int reserveNum)
 
 void GameObjectManager::AddObject(const std::shared_ptr<GameObject>& object)
 {
-	if (object)
-	{
-		object.get()->FalseEraseManager();
-		addObjects.push_back(object);
+	if (!object)return;
+	
+	object->FalseEraseManager();
 
-	}
+	
+
+
+	// この辺エディターに使う処理だから最終的にはオフにできるようにしたほうが良いかも
+	// 何番まで登録してあるか確認しないといけない
+	//const std::string OBJECT_NAME = object->GetObjectName();
+	//objectAddNumber.try_emplace(OBJECT_NAME, 1);
+
+	//// 既に登録されている名前だったら番号を付ける
+	//if (CheckObjectName(OBJECT_NAME))
+	//{
+	//	// 名前の後に番号追加
+	//	object->SetObjectName(OBJECT_NAME + "_" + std::to_string(objectAddNumber.at(OBJECT_NAME)));
+	//	
+	//	// オブジェクトが増えたため加算
+	//	objectAddNumber[OBJECT_NAME]++;
+	//}
+	
+	
+	//objectNames.emplace(object.get(),object->GetObjectName());
+
+	// ここで追加しないと1回目の追加でも上のチェックに引っかかるためここで追加している
+	objects.push_back(object);
+	//addObjects.push_back(object);
+	
 }
 
 void GameObjectManager::AddObject(const std::shared_ptr<GameObject2D>& object)
 {
-	if (object)
-	{
-		object.get()->FalseEraseManager();
-		addObject2Ds.push_back(object);
-	}
+	if (!object)return;
+
+	object->FalseEraseManager();
+	object->Update();
+	addObject2Ds.push_back(object);
+
 }
 
 void GameObjectManager::SetAddObjectSortState(const ObjectSortType& sort, const bool& orderType)
@@ -2514,6 +2569,36 @@ void GameObjectManager::SetMouseCollisionFlag(const bool flag)
 }
 
 
+
+
+void MelLib::GameObjectManager::GetObjectNames(std::vector<std::string>& refVector)const
+{
+	size_t objectSize = objects.size();
+	refVector.resize(objectSize);
+
+	// Releaseだと拡張forにして{}内でiをインクリメントするよりこっちのほうが速かった
+	// 拡張for自体通常より遅かったなぜ
+	// 見やすいだけで速度は遅い?
+	// 見やすさ考慮する場合でもこれが文字数少なくていい
+	for (int i = 0; i < objectSize; i++)
+	{
+		refVector[i] = objects[i]->GetObjectName();
+	}
+
+}
+
+void MelLib::GameObjectManager::EraseObject(GameObject* p)
+{
+	const size_t SIZE = objects.size();
+	for (size_t i = 0; i < SIZE; i++) 
+	{
+		if (p == objects[i].get()) 
+		{
+			objects.erase(objects.begin() + i);
+			return;
+		}
+	}
+}
 
 void GameObjectManager::AllEraseObject()
 {
