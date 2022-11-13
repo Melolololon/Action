@@ -61,10 +61,10 @@ void Player::LoadResources()
 	// そうじゃないときにエラー出たらマテリアル確認すること
 }
 
+
 Player::Player(const MelLib::Vector3& pos)
 	:GameObject("Player")
 {
-
 	//物理演算のためにseterとgeter作る?
 
 
@@ -134,15 +134,11 @@ Player::Player(const MelLib::Vector3& pos)
 
 void Player::Update()
 {
-
-
 	MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())
 	{
 		if(EditMode::GetInstance()->GetIsEdit())RotCamera();
 		
-
-
 		MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
 		if (typeid(*currentScene) != typeid(Title))
 		{
