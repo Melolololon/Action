@@ -157,6 +157,7 @@ private:
 
 private:
 
+
 #pragma region UpdateŠÖŒW
 
 
@@ -219,7 +220,7 @@ private:
 public:
 	static void LoadResources();
 
-	Player(const MelLib::Vector3& pos);
+	Player(const MelLib::Vector3& pos = 0);
 	~Player() {}
 
 	PlayerSlush* GetPPlayerSlush() { return pPSlush.get(); }

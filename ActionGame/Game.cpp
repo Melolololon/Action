@@ -16,6 +16,7 @@
 
 // シーン
 #include"SceneManager.h"
+#include"SceneEditer.h"
 #include"Fade.h"
 #include"ActionPart.h"
 #include"Title.h"
@@ -78,6 +79,13 @@ void Game::Initialize()
 	MelLib::TextWrite::CreateFontData(/*L"HGPｺﾞｼｯｸE"*/L"Arial",64.0f, "Arial");
 
 	MelLib::Camera::Get()->SetFar(10000.0f);
+
+
+	MelLib::SceneEditer::GetInstance()->Initialize();
+#pragma region エディター登録
+	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Player>(),"Player");
+#pragma endregion
+
 }
 
 void Game::Finalize()
@@ -88,11 +96,15 @@ void Game::Finalize()
 void Game::Update()
 {
 	MelLib::SceneManager::GetInstance()->Update();
+
+	MelLib::SceneEditer::GetInstance()->Update();
 }
 
 void Game::Draw()
 {
 	MelLib::SceneManager::GetInstance()->Draw();
+	MelLib::SceneEditer::GetInstance()->Draw();
+
 }
 
 std::string Game::GetPath(const ResourcePath type)const

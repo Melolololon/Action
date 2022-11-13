@@ -21,7 +21,6 @@
 #include"Material.h"
 
 #include"GuiValue.h"
-#include"Vector.h"
 //AddColor‚Æ‚©‚Ü‚Æ‚ß‚æ‚¤!
 
 namespace MelLib

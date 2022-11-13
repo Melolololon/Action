@@ -97,12 +97,12 @@ void MelLib::ModelData::CreatePrimitiveModel()
 	{
 		const std::string PRIMITIVE_MODEL_NAME = "main";
 		pModelData->objectNames.resize(1, PRIMITIVE_MODEL_NAME);
-		pModelData->vertices.emplace(PRIMITIVE_MODEL_NAME,vertices);
+		pModelData->vertices.emplace(PRIMITIVE_MODEL_NAME, vertices);
 		pModelData->indices.emplace(PRIMITIVE_MODEL_NAME, indices);
 		pModelData->CreateModel();
 		pModelData->directionMaxPos = CalcDirectionMaxPosition(pModelData->vertices, std::vector<std::string>(1, PRIMITIVE_MODEL_NAME));
 		pModelData->meshGlobalTransform.emplace(PRIMITIVE_MODEL_NAME, DirectX::XMMatrixIdentity());
-		
+
 		/*pModelData->material.resize(1);
 		pModelData->material[0] = std::make_unique<ADSAMaterial>();
 		pModelData->material[0]->Create(PipelineState::GetDefaultDrawData(PipelineStateType::MODEL));*/
@@ -144,7 +144,7 @@ void MelLib::ModelData::CreatePrimitiveModel()
 
 	vertices[0].pos = { -0.5f,-0.5f,0.0f };
 	vertices[0].uv = { 0.0f,1.0f };
-	vertices[0].normal = {0.0f,0.0f,-1.0f };
+	vertices[0].normal = { 0.0f,0.0f,-1.0f };
 	vertices[1].pos = { -0.5f,0.5f ,0.0f };
 	vertices[1].uv = { 0.0f,0.0f };
 	vertices[1].normal = { 0.0f,0.0f,-1.0f };
@@ -155,7 +155,7 @@ void MelLib::ModelData::CreatePrimitiveModel()
 	vertices[3].uv = { 1.0f,0.0f };
 	vertices[3].normal = { 0.0f,0.0f,-1.0f };
 
-	
+
 	indices =
 	{
 		0,1,2,2,1,3,//正面
@@ -171,7 +171,7 @@ void MelLib::ModelData::CreatePrimitiveModel()
 	pModelData = pPrimitiveModelDatas[ShapeType3D::BOX].get();
 
 	vertices.resize(24);
-	
+
 	float x = 0.5f;
 	float y = 0.5f;
 	float z = 0.5f;
@@ -241,7 +241,7 @@ void MelLib::ModelData::CreatePrimitiveModel()
 
 
 	//インデックスセット
-	indices = 
+	indices =
 	{
 		0,1,2,2,1,3,//正面
 		4,5,6,6,5,7,//正面の上
@@ -294,7 +294,7 @@ void MelLib::ModelData::CreateModel()
 {
 	//頂点、インデックス、テクスチャバッファ作成
 	modelFileObjectNum = vertices.size();
-	std::unordered_map<std::string,size_t>verticesNum;
+	std::unordered_map<std::string, size_t>verticesNum;
 
 	for (const auto& objectName : objectNames)
 	{
@@ -328,9 +328,9 @@ void MelLib::ModelData::CreateModel()
 	modelFormat = ModelFormat::MODEL_FORMAT_PRIMITIVE;
 	material.reserve(vertices.size());
 
-	
-	directionMaxPos = CalcDirectionMaxPosition(vertices,objectNames);
-	
+
+	directionMaxPos = CalcDirectionMaxPosition(vertices, objectNames);
+
 }
 
 bool MelLib::ModelData::Create
@@ -341,9 +341,10 @@ bool MelLib::ModelData::Create
 	const std::string& name
 )
 {
-	if(vertices.size() != indices.size())
+	if (vertices.size() != indices.size()
+		&& pModelDatas.find(name) != pModelDatas.end())
 	{
-		
+
 		return false;
 	}
 
@@ -358,7 +359,7 @@ bool MelLib::ModelData::Create
 
 	pModelData->material.reserve(vertices.size());
 	pModelData->material[name] = std::make_unique<ADSAMaterial>();
-	pModelData->material[name]->Create(PipelineState::GetDefaultDrawData(PipelineStateType::MODEL),1);
+	pModelData->material[name]->Create(PipelineState::GetDefaultDrawData(PipelineStateType::MODEL), 1);
 
 
 	pModelDatas[name]->batchDeletionFlag = batchDeletionFlag;
@@ -376,7 +377,7 @@ bool MelLib::ModelData::Create
 {
 
 
-	if (vertices.size() != indices.size())
+	if (vertices.size() != indices.size() && pModelDatas.find(name) != pModelDatas.end())
 	{
 
 		return false;
@@ -396,11 +397,11 @@ bool MelLib::ModelData::Create
 
 
 	pModelData->CreateModel();
-	pModelData->directionMaxPos = CalcDirectionMaxPosition(pModelData->vertices,pModelData->objectNames);
+	pModelData->directionMaxPos = CalcDirectionMaxPosition(pModelData->vertices, pModelData->objectNames);
 
 	pModelData->material.reserve(vertices.size());
 	pModelData->material[name] = std::make_unique<ADSAMaterial>();
-	pModelData->material[name]->Create(PipelineState::GetDefaultDrawData(PipelineStateType::MODEL),1);
+	pModelData->material[name]->Create(PipelineState::GetDefaultDrawData(PipelineStateType::MODEL), 1);
 
 
 	pModelDatas[name]->batchDeletionFlag = batchDeletionFlag;
@@ -418,7 +419,7 @@ void MelLib::ModelData::Create
 	this->vertices = vertices;
 	this->indices = indices;
 	CreateModel();
-	directionMaxPos = CalcDirectionMaxPosition(vertices,objectNames);
+	directionMaxPos = CalcDirectionMaxPosition(vertices, objectNames);
 
 	/*material.resize(1);
 	material[0] = std::make_unique<ADSAMaterial>();
@@ -437,17 +438,19 @@ void MelLib::ModelData::Create
 
 bool ModelData::Load(const std::string& path, const bool batchDeletionFlag, const std::string& name)
 {
+	if (pModelDatas.find(name) != pModelDatas.end())return false;
+
 	pModelDatas.emplace(name, std::make_unique<ModelData>());
 	bool result = pModelDatas[name]->LoadModel(path, name);
 
-	if(!result)
+	if (!result)
 	{
 		pModelDatas.erase(name);
 		return false;
 	}
-	
+
 	pModelDatas[name]->batchDeletionFlag = batchDeletionFlag;
-	
+
 
 	return true;
 }
@@ -461,15 +464,15 @@ void MelLib::ModelData::BatchDeletion()
 {
 	std::vector<std::string>deleteName;
 	deleteName.reserve(pModelDatas.size());
-	for(const auto& p : pModelDatas)
+	for (const auto& p : pModelDatas)
 	{
-		if(p.second->batchDeletionFlag)
+		if (p.second->batchDeletionFlag)
 		{
 			deleteName.push_back(p.first);
 		}
 	}
 
-	for(const auto& name : deleteName)
+	for (const auto& name : deleteName)
 	{
 		delete pModelDatas[name].release();
 		pModelDatas.erase(name);
@@ -480,7 +483,7 @@ void ModelData::Initialize(ID3D12Device* pDevice)
 {
 	device = pDevice;
 	defaultMaterial = std::make_unique<ADSAMaterial>();
-	defaultMaterial->Create(PipelineState::GetDefaultDrawData(PipelineStateType::MODEL),1);
+	defaultMaterial->Create(PipelineState::GetDefaultDrawData(PipelineStateType::MODEL), 1);
 	CreatePrimitiveModel();
 }
 
@@ -507,11 +510,11 @@ void MelLib::ModelData::GetAnimationTimeData(const std::string& name, FbxTime& s
 std::vector<DirectX::XMMATRIX> MelLib::ModelData::GetMeshGlobalTransforms()
 {
 	std::vector<DirectX::XMMATRIX> mats(meshGlobalTransform.size());
-	
+
 	for (int i = 0; i < objectNames.size(); i++)
 	{
 		mats[i] = meshGlobalTransform[objectNames[i]];
-	
+
 	}
 	return mats;
 
@@ -531,7 +534,7 @@ const MelLib::ModelData::FbxBone& MelLib::ModelData::GetFbxBone(const std::strin
 std::vector<std::vector<USHORT>> MelLib::ModelData::GetIndices() const
 {
 	std::vector<std::vector<USHORT>>index(objectNames.size());
-	
+
 	for (int i = 0; i < objectNames.size(); i++)
 	{
 		index[i] = indices.at(objectNames[i]);
@@ -542,7 +545,7 @@ std::vector<std::vector<USHORT>> MelLib::ModelData::GetIndices() const
 std::vector<VertexBufferSet> MelLib::ModelData::GetVertexBufferSet()const
 {
 	std::vector<VertexBufferSet> set(objectNames.size());
-	
+
 	for (int i = 0; i < objectNames.size(); i++)
 	{
 		set[i] = vertexBufferSet.at(objectNames[i]);
@@ -569,8 +572,10 @@ void MelLib::ModelData::SetFbxAnimStack(const std::string& name)
 
 bool ModelData::LoadModel(const std::string& path, const std::string& name)
 {
+	//if (pModelDatas.find(name) != pModelDatas.end())return false;
+
 	bool result = false;
-	
+
 	//読み込み結果がfalseだったときの終了処理
 	auto loadFalseEndProcess = [&path]()
 	{
@@ -584,13 +589,13 @@ bool ModelData::LoadModel(const std::string& path, const std::string& name)
 	{
 		//オブジェクトのマテリアル名格納
 		std::string materialFileName;
-		std::unordered_map<std::string,std::string>materialName;
+		std::unordered_map<std::string, std::string>materialName;
 
 		std::vector<Vector3> objBonePositions;
-		std::unordered_map<std::string,std::vector<int>> objBoneNums;
-		
+		std::unordered_map<std::string, std::vector<int>> objBoneNums;
+
 		//[obj内のオブジェクト分]スムーズシェーディングの計算用データ
-		std::unordered_map<std::string ,std::unordered_map < USHORT, std::vector<USHORT> >>smoothData;
+		std::unordered_map<std::string, std::unordered_map < USHORT, std::vector<USHORT> >>smoothData;
 		result = ModelLoader::GetInstance()->LoadObjModel
 		(
 			path,
@@ -619,7 +624,7 @@ bool ModelData::LoadModel(const std::string& path, const std::string& name)
 			{
 				std::string objName = v.first;
 				auto vertexNum = vertices[objName].size();
-				for (int j = 0; j < vertexNum; j++) 
+				for (int j = 0; j < vertexNum; j++)
 				{
 					vertices[objName][j].boneIndex[0] = 0;
 					vertices[objName][j].boneWeight[0] = 1;
@@ -757,7 +762,7 @@ bool ModelData::LoadModel(const std::string& path, const std::string& name)
 
 
 		int materialNum = 0;
-		std::unordered_map<std::string,std::string>texPath;
+		std::unordered_map<std::string, std::string>texPath;
 		std::unordered_map<std::string, ADSAMaterialData>mtlData;
 		result = ModelLoader::GetInstance()->LoadObjMaterial
 		(
@@ -771,16 +776,16 @@ bool ModelData::LoadModel(const std::string& path, const std::string& name)
 		//if (!result)loadFalseEndProcess();
 
 
-		if (materialNum != 0) 
+		if (materialNum != 0)
 		{
 			pTexture.reserve(materialNum);
 			material.reserve(materialNum);
-			for(const auto& objectName:objectNames)
+			for (const auto& objectName : objectNames)
 			{
 				pTexture[objectName] = std::make_unique<Texture>();
 				pTexture[objectName]->LoadModelTexture(texPath[objectName]);
 				material[objectName] = std::make_unique<ADSAMaterial>();
-				material[objectName]->Create(PipelineState::GetDefaultDrawData(PipelineStateType::MODEL),1);
+				material[objectName]->Create(PipelineState::GetDefaultDrawData(PipelineStateType::MODEL), 1);
 				material[objectName]->SetTexture(pTexture[objectName].get());
 				material[objectName]->SetMaterialData(mtlData[objectName]);
 			}
@@ -802,52 +807,52 @@ bool ModelData::LoadModel(const std::string& path, const std::string& name)
 			meshGlobalTransform[objectName] = DirectX::XMMatrixIdentity();
 		}
 	}
-	else 
-	if (path.find(".fbx") != std::string::npos)
-	{	
-		if (!FbxLoader::GetInstance()->LoadFbxModel(path, this))return loadFalseEndProcess();
+	else
+		if (path.find(".fbx") != std::string::npos)
+		{
+			if (!FbxLoader::GetInstance()->LoadFbxModel(path, this))return loadFalseEndProcess();
 
-		boneNum = fbxData.bones.size();
-		modelFormat = ModelFormat::MODEL_FORMAT_FBX;
+			boneNum = fbxData.bones.size();
+			modelFormat = ModelFormat::MODEL_FORMAT_FBX;
 
 #pragma region アニメーション関係準備
-		if (fbxData.bones.size() != 0)
-		{
-			
-			// アニメーション情報が取得できなくなるまでループ
-			for (int i = 0; ; i++) 
+			if (fbxData.bones.size() != 0)
 			{
-				FbxAnimStack* animStack = fbxData.fbxScene->GetSrcObject<FbxAnimStack>(i);
 
-				if (!animStack)break;
+				// アニメーション情報が取得できなくなるまでループ
+				for (int i = 0; ; i++)
+				{
+					FbxAnimStack* animStack = fbxData.fbxScene->GetSrcObject<FbxAnimStack>(i);
 
-				// アニメーション名を取得
-				std::string getAnimationName = animStack->GetName();
-				size_t nameStart = getAnimationName.find_first_of("|") + 1;
-				std::string animationName = getAnimationName.substr(nameStart, getAnimationName.size() - nameStart);
+					if (!animStack)break;
 
-				fbxData.animStackNum.emplace(animationName, i);
-				fbxData.animationDataGetName.emplace(animationName, getAnimationName);
+					// アニメーション名を取得
+					std::string getAnimationName = animStack->GetName();
+					size_t nameStart = getAnimationName.find_first_of("|") + 1;
+					std::string animationName = getAnimationName.substr(nameStart, getAnimationName.size() - nameStart);
+
+					fbxData.animStackNum.emplace(animationName, i);
+					fbxData.animationDataGetName.emplace(animationName, getAnimationName);
+				}
+
+
+				/*FbxTakeInfo* takeInfo = fbxData.fbxScene->GetTakeInfo(animStackname);
+
+				fbxData.animationTimes.startTime = takeInfo->mLocalTimeSpan.GetStart();
+				fbxData.animationTimes.endTime = takeInfo->mLocalTimeSpan.GetStop();*/
+
+				//1秒60フレームで設定されてるアニメーションの場合、eFream60って設定する?
+				//fbxData.animationTimes.freamTime.SetTime(0, 0, 0, 1, 0, FbxTime::EMode::eFrames60);
 			}
-
-
-			/*FbxTakeInfo* takeInfo = fbxData.fbxScene->GetTakeInfo(animStackname);
-
-			fbxData.animationTimes.startTime = takeInfo->mLocalTimeSpan.GetStart();
-			fbxData.animationTimes.endTime = takeInfo->mLocalTimeSpan.GetStop();*/
-
-			//1秒60フレームで設定されてるアニメーションの場合、eFream60って設定する?
-			//fbxData.animationTimes.freamTime.SetTime(0, 0, 0, 1, 0, FbxTime::EMode::eFrames60);
-		}
 
 
 #pragma endregion
 
-	}
-	else
-	{
-		loadFalseEndProcess();
-	}
+		}
+		else
+		{
+			loadFalseEndProcess();
+		}
 
 
 
@@ -875,7 +880,7 @@ bool ModelData::LoadModel(const std::string& path, const std::string& name)
 		FbxVertex* pFbxVertex = nullptr;
 		MapVertices((void**)&pFbxVertex, objectName);
 
-		for(int j = 0; j < verticesNum[objectName];j++)
+		for (int j = 0; j < verticesNum[objectName]; j++)
 		{
 			pFbxVertex[j] = vertices[objectName][j];
 		}
@@ -883,7 +888,7 @@ bool ModelData::LoadModel(const std::string& path, const std::string& name)
 	}
 
 	//端っこ計算
-	directionMaxPos = CalcDirectionMaxPosition(vertices,objectNames);
+	directionMaxPos = CalcDirectionMaxPosition(vertices, objectNames);
 
 	//マテリアル作成
 	//読み込み時に生成するからここに書く必要ない
@@ -961,7 +966,7 @@ std::vector<ADSAMaterial*> MelLib::ModelData::GetPMaterial()
 		else pMtls[i] = material[objectNames[i]].get();
 	}
 
-	
+
 
 	return pMtls;
 
@@ -991,14 +996,14 @@ std::vector<std::vector<FbxVertex>>MelLib::ModelData::GetVertices()const
 std::vector<std::vector<Vector3>> MelLib::ModelData::GetVerticesPosition()const
 {
 	std::vector<std::vector<Vector3>>verticesPos(vertices.size());
-	
-	
+
+
 	for (int i = 0; i < objectNames.size(); i++)
 	{
 		verticesPos[i].resize(vertices.at(objectNames[i]).size());
 
 
-		for (int j = 0,size = verticesPos[i].size(); j < size; j++)
+		for (int j = 0, size = verticesPos[i].size(); j < size; j++)
 		{
 			verticesPos[i][j] = vertices.at(objectNames[i])[j].pos;
 		}
@@ -1006,7 +1011,7 @@ std::vector<std::vector<Vector3>> MelLib::ModelData::GetVerticesPosition()const
 	}
 
 	return verticesPos;
-	
+
 }
 
 std::unordered_map < std::string, std::array<float, 6>> MelLib::ModelData::CalcDirectionMaxPosition
@@ -1018,11 +1023,11 @@ std::unordered_map < std::string, std::array<float, 6>> MelLib::ModelData::CalcD
 {
 	std::unordered_map < std::string, std::array<float, 6>> pos;
 
-	for(int i = 0; i < objectNames.size();i++)
+	for (int i = 0; i < objectNames.size(); i++)
 	{
 		pos[objectNames[i]] = std::array<float, 6>({ -FLT_MAX, FLT_MAX, FLT_MAX,-FLT_MAX, FLT_MAX,-FLT_MAX });
 
-		for(const auto& v : vertices.at(objectNames[i]))
+		for (const auto& v : vertices.at(objectNames[i]))
 		{
 			if (v.pos.y > pos[objectNames[i]][0])pos[objectNames[i]][0] = v.pos.y;
 			if (v.pos.y < pos[objectNames[i]][1])pos[objectNames[i]][1] = v.pos.y;
@@ -1038,7 +1043,7 @@ std::unordered_map < std::string, std::array<float, 6>> MelLib::ModelData::CalcD
 void MelLib::ModelData::AddLoadCollisionData(const std::string& modelName)
 {
 
-	auto copyKeyName = [&modelName](const int start,const int end)
+	auto copyKeyName = [&modelName](const int start, const int end)
 	{
 		std::string keyName;
 
@@ -1047,9 +1052,9 @@ void MelLib::ModelData::AddLoadCollisionData(const std::string& modelName)
 
 		return keyName;
 	};
-	
 
-	if(modelName.find("Sphere_") != std::string::npos)
+
+	if (modelName.find("Sphere_") != std::string::npos)
 	{
 		SphereData data;
 
@@ -1065,9 +1070,9 @@ void MelLib::ModelData::AddLoadCollisionData(const std::string& modelName)
 		sphereDatas.emplace(copyKeyName(7, 0), data);
 	}
 	else
-		if(modelName.find("Box_") != std::string::npos)
-	{
-	}
+		if (modelName.find("Box_") != std::string::npos)
+		{
+		}
 
 
 }
@@ -1115,7 +1120,7 @@ ModelData& MelLib::ModelData::operator=(ModelData& data)
 MelLib::ModelData::~ModelData()
 {
 
-	if(fbxData.fbxScene 
+	if (fbxData.fbxScene
 		&& FbxLoader::GetInstance()->GetInitializeFlag())fbxData.fbxScene->Destroy();
 }
 
