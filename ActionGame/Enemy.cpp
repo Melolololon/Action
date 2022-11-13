@@ -19,6 +19,7 @@ const float Enemy::MOVE_DISTANCE = 400.0f;
 const float Enemy::DEAD_DOWN_SCALE = 0.05f;
 
 Enemy::Enemy(const MelLib::Vector3& pos, const unsigned int hp, const float moveSpeed, int wallNum, const std::string& modelName) :
+	GameObject(modelName),
 	hp(hp)
 	, moveSpeed(moveSpeed)
 	,wallNum(wallNum)
@@ -28,12 +29,12 @@ Enemy::Enemy(const MelLib::Vector3& pos, const unsigned int hp, const float move
 
 	if (modelName == "")
 	{
-		modelObjects["main"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX), nullptr);
+		modelObjects["main"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX),"Enemy", nullptr);
 		modelObjects["main"].SetScale(5);
 	}
 	else
 	{
-		modelObjects["main"].Create(MelLib::ModelData::Get(modelName), nullptr);
+		modelObjects["main"].Create(MelLib::ModelData::Get(modelName),modelName, nullptr);
 	}
 	modelObjects["main"].SetPosition(pos);
 

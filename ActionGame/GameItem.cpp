@@ -15,6 +15,7 @@ void GameItem::Erase()
 }
 
 GameItem::GameItem(const MelLib::Vector3& pos)
+	:GameObject("Item")
 {
 	sphereDatas["main"].resize(1);
 	sphereDatas["main"][0].SetPosition(pos);

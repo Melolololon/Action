@@ -5,6 +5,7 @@
 #include"Vector.h"
 #include"CollisionDetectionData.h"
 #include"Physics.h"
+#include"GuiValue.h"
 
 #include"ModelObject.h"
 
@@ -17,9 +18,33 @@
 
 namespace MelLib
 {
+	// モデルオブジェクトや当たり判定をまとめたもの。
 	class GameObject
 	{
 	private:
+
+		// GameObjectは座標などを動かさない可能性があるオブジェクトのクラスに継承する可能性があり、
+		// そういう書き換えちゃいけないクラスでうっかり書き換えるのを防ぐためにprivate
+
+		// GameObjectのpositionなどはモデルのボーンでいうマスター(全体を動かすためのボーン)
+
+		Vector3& position;
+		// 前フレームの座標
+		Vector3 prePosition;
+		Vector3& angle;
+		Vector3& scale;
+
+
+		// 2022_10_02
+		// これの値もモデルオブジェクトと当たり判定に反映されるようにする
+
+		MelLib::GuiVector3 guiPosition;
+		MelLib::GuiVector3 guiAngle;
+		MelLib::GuiVector3 guiScale;
+
+
+		std::string objectName;
+
 
 		// 開発者用
 #ifdef _DEBUG
@@ -51,9 +76,12 @@ namespace MelLib
 
 #endif // _DEBUG
 
-		Vector3 position = 0;
+
+		/*Vector3 position = 0;
 		Vector3 angle = 0;
-		Vector3 scale = 1;
+		Vector3 scale = 1;*/
+
+		
 
 #pragma region 物理関係
 
@@ -109,6 +137,11 @@ namespace MelLib
 		std::unordered_map<std::string, std::vector<Value2<Vector3>>>capsuleDataPrePositions;
 		std::unordered_map<std::string, std::vector<Value3<Vector3>>>triangleDataPrePositions;
 		std::unordered_map<std::string, std::vector<Vector3>>obbDataPrePositions;
+
+		static std::unordered_map<std::string, int>objectCreateNumber;
+
+		// シーン切替に使う判定
+		bool sceneEndFlag = false;
 
 	protected:
 
@@ -188,6 +221,9 @@ namespace MelLib
 
 			float collisionCheckDistance = 15.0f;
 	private:
+
+		
+
 		/// <summary>
 		/// 当たり判定数に応じてモデルの生成、削除を行う関数
 		/// </summary>
@@ -289,7 +325,9 @@ namespace MelLib
 	public:
 
 		//コンストラクタ
-		GameObject();
+		GameObject(const std::string& name);
+
+
 		//デストラクタ
 		virtual ~GameObject();
 
@@ -330,7 +368,6 @@ namespace MelLib
 		);
 
 
-
 		//void CalcHitPhysics(GameObject* hitObject,const Vector3& hutPreVelocity,const CollisionType& collisionType);
 
 		//virtual const void* GetPtr()const;
@@ -354,7 +391,6 @@ namespace MelLib
 
 
 #pragma region セット
-
 		/// <summary>
 		/// GameObject共通の重力加速度をセットします。
 		/// </summary>
@@ -362,7 +398,7 @@ namespace MelLib
 		static void SetGravutationalAcceleration(const float acc) { gravutationalAcc = acc; };
 
 		/// <summary>
-		/// 座標をセットします。モデルと衝突確認に使うデータは、セット前の座標との差だけ移動します。
+		/// 座標をセットします。モデルオブジェクトと当たり判定はセット前の座標との差だけ移動します。
 		/// </summary>
 		/// <param name="pos"></param>
 		virtual void SetPosition(const Vector3& pos);
@@ -391,11 +427,31 @@ namespace MelLib
 		void SetSubColor(const Color& color);
 		void SetMulColor(const Color& color);
 
+		void SetObjectName(const std::string& name) { objectName = name; }
+
 		void TrueEraseManager() { eraseManager = true; }
 
+		/// <summary>
+		/// GUIを描画するかどうかを設定します。
+		/// </summary>
+		/// <param name="flag"></param>
+		void SetDrawGUIFlag(bool flag);
+
+		/// <summary>
+		/// 開発者用。
+		/// </summary>
+		void SetPrePosition();
+
+		void SetGUIData();
 #pragma endregion
 
 #pragma region ゲット
+		/// <summary>
+		/// シーンを終了するために使用するフラグを取得します。
+		/// </summary>
+		/// <returns></returns>
+		bool GetSceneEndFlag()const { return sceneEndFlag; }
+
 		/// <summary>
 		/// GameObject共通の重力加速度を取得します。
 		/// </summary>
@@ -452,6 +508,20 @@ namespace MelLib
 		/// <returns></returns>
 		bool GetEraseManager()const { return eraseManager; }
 
+		// どうせエディターで全部いじれるようにするから分ける必要ないかも
+		enum class CopyGameObjectContent
+		{
+			ALL,
+			EDIT,
+
+		};
+		/// <summary>
+		/// 引数で指定したオブジェクトにデータをコピーします。
+		/// </summary>
+		/// <param name="object">コピー先のGameObjectの参照</param>
+		/// <param name="content">コピー内容</param>
+		void CopyObjectData(GameObject& object, CopyGameObjectContent content);
+
 #pragma region モデル関係
 		const std::unordered_map<std::string, ModelObject>& GetRefModelObjects()const { return modelObjects; }
 #pragma endregion
@@ -466,6 +536,7 @@ namespace MelLib
 		/// <returns>オブジェクト管理クラスに追加するshared_ptr</returns>
 		virtual std::shared_ptr<GameObject> GetNewPtr();
 
+		std::string GetObjectName()const { return objectName; }
 
 #pragma endregion
 

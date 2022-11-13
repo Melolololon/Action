@@ -1,11 +1,15 @@
 #include "GameObject.h"
 
+#include"GuiValueManager.h"
+
 #include"LibMath.h"
 #include"Physics.h"
 
 using namespace MelLib;
 
 float GameObject::gravutationalAcc = Physics::GRAVITATIONAL_ACCELERATION_EARTH / 30;
+
+std::unordered_map<std::string, int>GameObject::objectCreateNumber;
 
 #ifdef _DEBUG
 
@@ -166,13 +170,40 @@ void MelLib::GameObject::SetDataScale(const Vector3& scale)
 	}
 }
 
-GameObject::GameObject()
+GameObject::GameObject(const std::string& name)
+	:objectName(name)
+	,position(guiPosition.GetRefValue())
+	,angle(guiAngle.GetRefValue())
+	,scale(guiScale.GetRefValue())
 {
+	// このままだと登録しただけでGUIに追加される
+	// オブジェクトマネージャーに追加した時に追加する(SetDataを呼び出す)ようにすれば問題ない
+	// SetDataを呼び出す関数作る
+	// GameObjectを使うけどオブジェクトマネージャーを使わない時はその関数を自分で呼び出してもらう
+
+
+	// 加算
+	objectCreateNumber[objectName]++;
+
+	// 0以外は番号付ける
+	if (objectCreateNumber[objectName] != 1) 
+	{
+		objectName += "_" + std::to_string(objectCreateNumber[objectName] - 1);
+	}
+
+
+
+
+	guiPosition.SetData(0, objectName, "Position", -1000, 1000);
+	guiAngle.SetData(0, objectName, "Angle", -359, 359);
+	guiScale.SetData(1, objectName, "Scale", -10, 10);
+
 }
 
 
 GameObject::~GameObject()
 {
+	GuiValueManager::GetInstance()->DeleteWindow(objectName);
 }
 
 //void GameObject::Initialize()
@@ -230,6 +261,8 @@ void MelLib::GameObject::Hit
 {
 }
 
+
+
 void GameObject::FalseEraseManager()
 {
 	eraseManager = false;
@@ -246,14 +279,14 @@ void MelLib::GameObject::SetPosition(const Vector3& pos)
 {
 	SetModelPosition(pos - position);
 	SetDataPosition(pos - position);
-
+	 
 	position = pos;
 
 }
 
 void MelLib::GameObject::SetAngle(const Vector3& angle)
 {
-	if (this->angle == angle)return;
+	//if (this->angle == angle)return;
 
 	this->angle = angle;
 
@@ -263,7 +296,7 @@ void MelLib::GameObject::SetAngle(const Vector3& angle)
 
 void MelLib::GameObject::SetScale(const Vector3& scale)
 {
-	if (this->scale == scale)return;
+	//if (this->scale == scale)return;
 
 	this->scale = scale;
 
@@ -295,6 +328,60 @@ void MelLib::GameObject::SetMulColor(const Color& color)
 	}
 }
 
+void MelLib::GameObject::SetDrawGUIFlag(bool flag)
+{
+	GuiValueManager::GetInstance()->SetDrawWindowFlag(objectName, flag);
+}
+
+void MelLib::GameObject::SetPrePosition()
+{
+	prePosition = position;
+}
+
+void MelLib::GameObject::SetGUIData()
+{
+	SetModelPosition(position - prePosition);
+	SetDataPosition(position - prePosition);
+
+	SetAngle(angle);
+	SetScale(scale);
+}
+
+
+void MelLib::GameObject::CopyObjectData(GameObject& object, CopyGameObjectContent content)
+{
+	object.position = position;
+	object.angle = angle;
+	object.scale = scale;
+
+	// 当たり判定もコピーを行うようにする
+	
+	// これだとCreateが呼び出されちゃうから合計で2回呼び出される可能性がある
+	// 一回消して作り直さないといけない
+	// 上手くパラメーターやモデルだけ差し替える
+	// 数値をコピーするか全部コピーするか選べるようにした
+	// 2つCreateせずコピーする処理はまだ書いてない2022_11_06
+	// clear()呼び出してるからCreateしたやつ消されるのでは
+
+	ModelObject::CopyModelObjectContent modelObjectC = ModelObject::CopyModelObjectContent::NUMBER_FLAG;
+	
+	// 全部コピーする場合は消す
+	if (content == CopyGameObjectContent::ALL)
+	{
+		object.modelObjects.clear();
+		modelObjectC = ModelObject::CopyModelObjectContent::ALL;
+	}
+
+	for (const auto& modelObj : modelObjects)
+	{
+		//object.modelObjects[modelObj.first] = modelObjects[modelObj.first];
+		// 数値、フラグだけコピー
+		object.modelObjects[modelObj.first].CopyModelObject
+		(modelObjects[modelObj.first], object.objectName, modelObjectC);
+	}
+
+	//object.objectName = objectName;
+}
 
 std::shared_ptr<GameObject> MelLib::GameObject::GetNewPtr()
 {
@@ -589,7 +676,7 @@ void MelLib::GameObject::CollisionCheckModelCreateOrDelete
 			//不足分生成
 			for (int i = objNum; i < dataNum; i++)
 			{
-				modelObjects[data.first][i].Create(ModelData::Get(type), nullptr);
+				modelObjects[data.first][i].Create(ModelData::Get(type),objectName, nullptr);
 
 				modelObjects[data.first][i].SetMaterial(&material);
 			}

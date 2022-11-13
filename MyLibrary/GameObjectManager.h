@@ -48,10 +48,19 @@ namespace MelLib
 		std::vector<std::shared_ptr<GameObject>>objects;
 		//追加されたものを一時的に入れておく配列
 		std::vector<std::shared_ptr<GameObject>>addObjects;
+		// 何個登録されているか確認するための番号を格納する配列
+		std::unordered_map<std::string, int>objectAddNumber;
 
 		std::vector<std::shared_ptr<GameObject2D>>object2Ds;
 		std::vector<std::shared_ptr<GameObject2D>>addObject2Ds;
 		//CollisionFlag checkCollision;
+
+		// 追加したオブジェクトの配列
+		// shared_ptrよりポインタの方がバイト数少ないから比較少なくて処理早いからポインタ
+		// 変更した時の書き直し処理実装面倒だからこれで実装するの後回し
+		// これから取得するなら名前変更あったか確認するフラグ用意する
+		//std::unordered_map<GameObject*, std::string>objectNames;
+
 
 
 		//追加したフレームごとにソートするか
@@ -67,8 +76,6 @@ namespace MelLib
 		Vector3 nearPos;
 		Vector3 farPos;
 
-
-
 	private:
 
 		GameObjectManager();
@@ -78,7 +85,11 @@ namespace MelLib
 		/// </summary>
 		void EraseObjectCheck();
 
-
+		/// <summary>
+		/// 同じ名前のオブジェクトが既に登録されているかを確認します。
+		/// </summary>
+		/// <returns></returns>
+		bool CheckObjectName(const std::string& name)const;
 	public:
 		GameObjectManager(const GameObjectManager& obj) = delete;
 		GameObjectManager& operator=(const GameObjectManager& obj) = delete;
@@ -105,6 +116,7 @@ namespace MelLib
 		/// <param name="flag"></param>
 		void SetMouseCollisionFlag(const bool flag);
 
+		void CheckHit();
 
 #pragma region オブジェクトの配列関係
 
@@ -154,9 +166,10 @@ namespace MelLib
 		/// <returns></returns>
 		const std::vector<std::shared_ptr<GameObject2D>>& GetRefGameObject2D() { return object2Ds; };
 
+		void GetObjectNames(std::vector<std::string>& refVector)const;
 #pragma endregion
 
-
+		void EraseObject(GameObject* p);
 
 		/// <summary>
 		/// 全てのオブジェクトを配列から削除します

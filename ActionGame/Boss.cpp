@@ -5,9 +5,10 @@ void Boss::LoadResources()
 	MelLib::ModelData::Load("Resources/Model/Boss/Boss.fbx",true,"boss");
 }
 
-Boss::Boss(const MelLib::Vector3 pos)
+Boss::Boss(const MelLib::Vector3 pos) 
+	:GameObject("boss")
 {
-	modelObjects["main"].Create(MelLib::ModelData::Get("boss"), nullptr);
+	modelObjects["main"].Create(MelLib::ModelData::Get("boss"),"boss", nullptr);
 
 	modelObjects["main"].SetPosition(pos);
 	sphereDatas["main"].resize(3);

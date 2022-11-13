@@ -5,6 +5,7 @@
 
 
 TutorialEventFlag::TutorialEventFlag(const MelLib::Vector3& pos, const MelLib::Vector3& scale)
+	:GameObject("TutorialEventFlag")
 {
 	sphereDatas["main"].resize(1);
 	sphereDatas["main"][0].SetRadius(scale.x / 2);

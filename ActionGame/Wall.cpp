@@ -14,6 +14,7 @@ void Wall::LoadResources()
 }
 
 Wall::Wall(const MelLib::Vector3& pos, const MelLib::Vector3& angle, const MelLib::Vector2& scale)
+	:GameObject("Wall")
 {
 	SetPosition(pos);
 

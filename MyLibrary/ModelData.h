@@ -31,6 +31,13 @@
 #pragma comment(lib,"zlib-mt.lib")
 #endif // _DEBUG
 
+
+// メモエリア
+// 2022 08 08
+// ボーンの構造体またはクラスを新たに作りたい
+// 当たり判定を持たせたり、位置を変えられるようにしたい
+// ModelBoneをそれにしてもいいかも
+
 namespace MelLib
 {
 	struct Node
@@ -69,7 +76,9 @@ namespace MelLib
 
 
 #pragma region fbx構造体
-		//fbxのボーン情報をまとめたもの
+		
+		
+		// fbxのボーン情報をまとめたもの
 		struct FbxBone
 		{
 			//ボーン名
@@ -79,7 +88,7 @@ namespace MelLib
 
 			FbxBone* parentBone = nullptr;
 
-			//ボーン情報
+			//ボーン情報をまとめたもの
 			FbxCluster* fbxCluster;
 
 			FbxBone(const std::string& name)
@@ -192,7 +201,9 @@ namespace MelLib
 
 		// 複数メッシュに対応させる場合、これ順序保持できるmapにして、名前でこの行列とれるようにする(座標回転関数で名前指定して使用するため)
 		// メッシュのグローバルトランスフォーム行列の配列)
-		std::map<std::string, DirectX::XMMATRIX>meshGlobalTransform;
+		//std::map<std::string, DirectX::XMMATRIX>meshGlobalTransform;
+		// 名前で取るなら順序意味ないしそもそも追加順じゃないから意味ない
+		std::unordered_map<std::string, DirectX::XMMATRIX>meshGlobalTransform;
 
 		UINT boneNum = 0;
 
@@ -252,7 +263,6 @@ namespace MelLib
 
 		void MapIndices(const std::unordered_map<std::string, std::vector<USHORT>>& indices);
 #pragma endregion
-
 
 
 

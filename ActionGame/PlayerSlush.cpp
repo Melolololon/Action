@@ -159,7 +159,8 @@ PlayerSlush::PlayerSlush
 	const MelLib::Vector3 playerStartScale,
 	const bool slushLeft
 )
-	:attackType(type)
+	:GameObject("PlayerSlush")
+	,attackType(type)
 	,PLAYER_MODEL(model)
 	, PLAYER_DIRECTION(playerDir)
 	, PLAYER_START_POS(MelLib::Vector3(0,0,0))

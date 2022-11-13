@@ -6,6 +6,7 @@ void EventFlag::LoadResources()
 }
 
 EventFlag::EventFlag(const MelLib::Vector3& pos, const MelLib::Vector3& scale)
+:GameObject("EventFlag")
 {
 	SetPosition(pos);
 
@@ -14,7 +15,7 @@ EventFlag::EventFlag(const MelLib::Vector3& pos, const MelLib::Vector3& scale)
 	sphereDatas["main"][0].SetRadius(scale.x);
 
 	//modelObjects["main"].Create(MelLib::ModelData::Get("event"));
-	modelObjects["main"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX));
+	modelObjects["main"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX),"EventFlag");
 	modelObjects["main"].SetPosition(pos);
 	modelObjects["main"].SetScale(scale);
 }
