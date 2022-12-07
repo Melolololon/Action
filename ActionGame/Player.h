@@ -244,6 +244,7 @@ public:
 		const std::string& hitShapeName
 	)override;
 
+	std::shared_ptr<GameObject> GetNewPtr()override;
 
 	void DownHP(const int power);
 	void LifeUp(const int upNum);
@@ -287,5 +288,11 @@ public:
 
 	void TitleUpdate();
 
+	/// <summary>
+	/// posからプレイヤーへの座標を求めます。
+	/// </summary>
+	/// <param name="pos"></param>
+	/// <returns></returns>
+	MelLib::Vector3 CalcPlayerVector(const MelLib::Vector3& pos)const;
 };
 
