@@ -20,6 +20,7 @@
 #include"Fade.h"
 #include"ActionPart.h"
 #include"Title.h"
+#include"TestScene.h"
 
 #include"Option.h"
 #include"Tutorial.h"
@@ -52,9 +53,6 @@ void Game::Run()
 
 void Game::Initialize()
 {
-
-
-
 	MelLib::ImguiManager::GetInstance()->SetReleaseDrawFlag(true);
 	MelLib::Library::Initialize(1280, 720, MelLib::Color(0, 170, 255, 255), L"Game");
 	MelLib::Library::SetFramesPerSecond60(true);
@@ -70,7 +68,7 @@ void Game::Initialize()
 	Wall::LoadResources();
 	Tutorial::LoadResources();
 
-	MelLib::SceneManager::GetInstance()->SetStartScene(new Title());
+	MelLib::SceneManager::GetInstance()->SetStartScene(new TestScene());
 	Fade::GetInstance()->Initializ();
 
 	Option::GetInstance()->Initialize();
@@ -82,8 +80,10 @@ void Game::Initialize()
 
 
 	MelLib::SceneEditer::GetInstance()->Initialize();
+
 #pragma region エディター登録
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Player>(),"Player");
+	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Stage>(0),"Stage");
 #pragma endregion
 
 }

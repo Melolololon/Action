@@ -25,7 +25,7 @@
 #include"EventFlag.h"
 #include"TutorialEventFlag.h"
 
-
+#include<LibMath.h>
 // テスト
 #include"SlushEffect.h"
 
@@ -73,23 +73,23 @@ Player::Player(const MelLib::Vector3& pos)
 	capsuleDatas["main"][0].SetRadius(3.0f);
 	capsuleDatas["main"][0].GetRefSegment3DData().
 		SetPosition(MelLib::Value2<MelLib::Vector3>
-			(GetPosition() + MelLib::Vector3(0, 15, 0), GetPosition() + MelLib::Vector3(0, -18, 0)));
+			(GetPosition() + MelLib::Vector3(0, 15, 0), GetPosition() + MelLib::Vector3(0, -22, 0)));
 
 	segment3DDatas["main"].resize(3);
 	segment3DDatas["main"][0] = capsuleDatas["main"][0].GetSegment3DData();
 
-	// 壁との判定用
-	segment3DDatas["main"][1].SetPosition
-	(
-		MelLib::Value2<MelLib::Vector3>
-		(GetPosition() + MelLib::Vector3(0, 0, 10), GetPosition() + MelLib::Vector3(0, 0, -10))
-	);
+	//// 壁との判定用
+	//segment3DDatas["main"][1].SetPosition
+	//(
+	//	MelLib::Value2<MelLib::Vector3>
+	//	(GetPosition() + MelLib::Vector3(0, 0, 10), GetPosition() + MelLib::Vector3(0, 0, -10))
+	//);
 
-	segment3DDatas["main"][2].SetPosition
-	(
-		MelLib::Value2<MelLib::Vector3>
-		(GetPosition() + MelLib::Vector3(10, 0, 0), GetPosition() + MelLib::Vector3(-10, 0, 0))
-	);
+	//segment3DDatas["main"][2].SetPosition
+	//(
+	//	MelLib::Value2<MelLib::Vector3>
+	//	(GetPosition() + MelLib::Vector3(10, 0, 0), GetPosition() + MelLib::Vector3(-10, 0, 0))
+	//);
 
 
 
@@ -259,6 +259,11 @@ void Player::TitleUpdate()
 	}
 	CalcMovePhysics();
 	ChangeAnimationData();
+}
+
+MelLib::Vector3 Player::CalcPlayerVector(const MelLib::Vector3& pos)const
+{
+	return GetPosition() - pos;
 }
 
 void Player::ChangeAnimationData()
@@ -953,8 +958,9 @@ void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionTy
 				capsuleData[0].GetSegment3DData().GetCalcResult().boardHitPos.y;*/
 
 
-				//カプセルじゃなくて線分で判定取ってるときの処理
-			addPos.y += segment3DDatas["main"][0].GetCalcResult().triangleHitPos.y - segment3DDatas["main"][0].GetPosition().v2.y;
+			// カプセルじゃなくて線分で判定取ってるときの処理
+			float tHitPosY = GetSegmentCalcResult().triangleHitPos.y;
+			addPos.y += tHitPosY - segment3DDatas["main"][0].GetPosition().v2.y;
 			//segment3DData[0] = capsuleData[0].GetSegment3DData();
 
 			AddPosition(addPos);
@@ -1053,6 +1059,12 @@ void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionTy
 		hitTutorialEventFlag = true;
 	}
 }
+
+std::shared_ptr<MelLib::GameObject> Player::GetNewPtr() 
+{
+	return std::make_shared<Player>();
+}
+
 
 void Player::DownHP(const int power)
 {

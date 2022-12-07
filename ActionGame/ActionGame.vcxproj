@@ -159,6 +159,7 @@
     <ClCompile Include="EditMode.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyAttack.cpp" />
+    <ClCompile Include="EnemySpaunPoint.cpp" />
     <ClCompile Include="EventFlag.cpp" />
     <ClCompile Include="Fade.cpp" />
     <ClCompile Include="Floor.cpp" />
@@ -179,10 +180,12 @@
     <ClCompile Include="SlushEffect.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="StageObject.cpp" />
+    <ClCompile Include="TestScene.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="Tutorial.cpp" />
     <ClCompile Include="TutorialEventFlag.cpp" />
     <ClCompile Include="Wall.cpp" />
+    <ClCompile Include="WeakEnemy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActionPart.h" />
@@ -191,6 +194,7 @@
     <ClInclude Include="EditMode.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyAttack.h" />
+    <ClInclude Include="EnemySpaunPoint.h" />
     <ClInclude Include="EventFlag.h" />
     <ClInclude Include="Fade.h" />
     <ClInclude Include="Floor.h" />
@@ -210,10 +214,12 @@
     <ClInclude Include="SlushEffect.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="StageObject.h" />
+    <ClInclude Include="TestScene.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="Tutorial.h" />
     <ClInclude Include="TutorialEventFlag.h" />
     <ClInclude Include="Wall.h" />
+    <ClInclude Include="WeakEnemy.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DirectXTex\DirectXTex_Desktop_2019_Win10.vcxproj">
