@@ -41,12 +41,14 @@ void EnemySpaunPoint::Attack()
 
 }
 
-void EnemySpaunPoint::CteateEnemy(std::shared_ptr<NewEnemy>& pEnemy, const type_info& type)
+void EnemySpaunPoint::CteateEnemy(std::shared_ptr<NewEnemy>& pEnemy)
 {
-	if (type == typeid(WeakEnemy)) pEnemy = std::shared_ptr<WeakEnemy>();
+	if (CLASS_NAME == typeid(WeakEnemy).name()) pEnemy = std::shared_ptr<WeakEnemy>();
 }
 
-EnemySpaunPoint::EnemySpaunPoint(const type_info& type):GameObject("EnemySpaunPoint")
+EnemySpaunPoint::EnemySpaunPoint(const std::string& className)
+	:GameObject("EnemySpaunPoint")
+	, CLASS_NAME(className)
 {
 	enemys.resize(ENEMY_MAX_NUM);
 	
@@ -54,7 +56,7 @@ EnemySpaunPoint::EnemySpaunPoint(const type_info& type):GameObject("EnemySpaunPo
 	for (auto& enemy: enemys)
 	{
 		// className‚Å‰½‚ð¶¬‚·‚é‚©•ÏX‚·‚é
-		CteateEnemy(enemy, type);
+		CteateEnemy(enemy);
 		MelLib::GameObjectManager::GetInstance()->AddObject(enemy);
 	}
 
@@ -93,4 +95,9 @@ void EnemySpaunPoint::Update()
 void EnemySpaunPoint::Draw()
 {
 	AllDraw();
+}
+
+std::shared_ptr<MelLib::GameObject> EnemySpaunPoint::GetNewPtr()
+{
+	return std::make_shared<EnemySpaunPoint>(CLASS_NAME);
 }

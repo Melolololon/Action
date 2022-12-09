@@ -91,7 +91,7 @@ void Game::Initialize()
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Stage>(0),"Stage");
 
 	// “G’Ç‰Á
-	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<EnemySpaunPoint>(typeid(WeakEnemy)), "Enemy");
+	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<EnemySpaunPoint>(typeid(WeakEnemy).name()), "Enemy");
 #pragma endregion
 
 }
