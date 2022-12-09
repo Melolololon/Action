@@ -8,6 +8,8 @@ class Stage :
 private:
     void SetStageData(unsigned int stageNum);
 
+    // ステージ番号
+    // 0はテストステージ
     const int STAGE_NUM;
 public:
     static void LoadResources(unsigned int stageNum);

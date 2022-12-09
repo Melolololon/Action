@@ -26,7 +26,7 @@ public:
 	};
 
 private:
-
+	static int staticHP;
 
 	static std::unordered_map<ActionType, MelLib::PadButton> keyConfigData;
 
@@ -219,6 +219,8 @@ private:
 
 public:
 	static void LoadResources();
+
+	static int GetStaticHP() { return staticHP; }
 
 	Player(const MelLib::Vector3& pos = 0);
 	~Player() {}

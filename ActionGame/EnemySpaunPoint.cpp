@@ -2,6 +2,9 @@
 #include"GameObjectManager.h"
 #include"LibMath.h"
 
+// ìGÇÃéÌóﬁ
+#include"WeakEnemy.h"
+
 const float EnemySpaunPoint::MIN_DISTANCE = 30.0f;
 const unsigned int EnemySpaunPoint::ENEMY_MAX_NUM = 5;
 
@@ -38,21 +41,28 @@ void EnemySpaunPoint::Attack()
 
 }
 
-EnemySpaunPoint::EnemySpaunPoint():GameObject("EnemySpaunPoint")
+void EnemySpaunPoint::CteateEnemy(std::shared_ptr<NewEnemy>& pEnemy, const type_info& type)
+{
+	if (type == typeid(WeakEnemy)) pEnemy = std::shared_ptr<WeakEnemy>();
+}
+
+EnemySpaunPoint::EnemySpaunPoint(const type_info& type):GameObject("EnemySpaunPoint")
 {
 	enemys.resize(ENEMY_MAX_NUM);
 	
 	// ìGÇÃê∂ê¨Ç∆í«â¡
 	for (auto& enemy: enemys)
 	{
-		enemy = std::shared_ptr<WeakEnemy>();
+		// classNameÇ≈âΩÇê∂ê¨Ç∑ÇÈÇ©ïœçXÇ∑ÇÈ
+		CteateEnemy(enemy, type);
 		MelLib::GameObjectManager::GetInstance()->AddObject(enemy);
 	}
 
 	// é©êgÇí«â¡
 	spaunPoints.push_back(this);
 
-
+	modelObjects["main"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX), "WeakEnemy");
+	modelObjects["main"].SetPosition(GetPosition());
 }
 
 void EnemySpaunPoint::Update()
@@ -82,4 +92,5 @@ void EnemySpaunPoint::Update()
 
 void EnemySpaunPoint::Draw()
 {
+	AllDraw();
 }

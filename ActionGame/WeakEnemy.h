@@ -1,9 +1,9 @@
 #pragma once
-#include <GameObject.h>
+#include "NewEnemy.h"
 
 // Žã‚¢“G
 class WeakEnemy :
-    public MelLib::GameObject
+    public NewEnemy
 {
 private:
 
