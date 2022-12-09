@@ -14,6 +14,9 @@
 #include"HPGauge.h"
 #include"Wall.h"
 
+#include"EnemySpaunPoint.h"
+#include"WeakEnemy.h"
+
 // シーン
 #include"SceneManager.h"
 #include"SceneEditer.h"
@@ -83,7 +86,12 @@ void Game::Initialize()
 
 #pragma region エディター登録
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Player>(),"Player");
+
+	// ステージ登録
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Stage>(0),"Stage");
+
+	// 敵追加
+	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<EnemySpaunPoint>(typeid(WeakEnemy)), "Enemy");
 #pragma endregion
 
 }

@@ -164,11 +164,13 @@
     <ClCompile Include="Fade.cpp" />
     <ClCompile Include="Floor.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GamePlay.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="GameItem.cpp" />
     <ClCompile Include="HPGauge.cpp" />
     <ClCompile Include="JumpEnemy.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NewEnemy.cpp" />
     <ClCompile Include="NoemalEnemy.cpp" />
     <ClCompile Include="NormalEnemyAttack.cpp" />
     <ClCompile Include="Option.cpp" />
@@ -180,6 +182,7 @@
     <ClCompile Include="SlushEffect.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="StageObject.cpp" />
+    <ClCompile Include="StageSelect.cpp" />
     <ClCompile Include="TestScene.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="Tutorial.cpp" />
@@ -199,10 +202,12 @@
     <ClInclude Include="Fade.h" />
     <ClInclude Include="Floor.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GamePlay.h" />
     <ClInclude Include="Ground.h" />
     <ClInclude Include="GameItem.h" />
     <ClInclude Include="HPGauge.h" />
     <ClInclude Include="JumpEnemy.h" />
+    <ClInclude Include="NewEnemy.h" />
     <ClInclude Include="NoemalEnemy.h" />
     <ClInclude Include="NormalEnemyAttack.h" />
     <ClInclude Include="Option.h" />
@@ -214,6 +219,7 @@
     <ClInclude Include="SlushEffect.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="StageObject.h" />
+    <ClInclude Include="StageSelect.h" />
     <ClInclude Include="TestScene.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="Tutorial.h" />

@@ -2,7 +2,7 @@
 #include<GameObject.h>
 
 #include"Player.h"
-#include"WeakEnemy.h"
+#include"NewEnemy.h"
 
 // ‚±‚ê“¯m‚Å‹——£‚ğæ‚é‚æ‚¤‚É‚·‚ê‚Îˆ—­‚È‚­‚Ä‚¢‚¢‚Ì‚Å‚Í
 class EnemySpaunPoint :public MelLib::GameObject
@@ -16,7 +16,7 @@ class EnemySpaunPoint :public MelLib::GameObject
 	static const unsigned int ENEMY_MAX_NUM;
 
 	// ‚±‚±‚É“G‚Ì”z—ñì‚Á‚ÄŠÇ—
-	std::vector<std::shared_ptr<WeakEnemy>>enemys;
+	std::vector<std::shared_ptr<NewEnemy>>enemys;
 	unsigned int enemyNum = ENEMY_MAX_NUM;
 
 	static Player* pPlayer;
@@ -30,8 +30,10 @@ private:
 	void Move();
 	void Rot();
 	void Attack();
+
+	void CteateEnemy(std::shared_ptr<NewEnemy>& pEnemy, const type_info& type);
 public:
-	EnemySpaunPoint();
+	EnemySpaunPoint(const type_info& type);
 	void Update()override;
 	void Draw()override;
 

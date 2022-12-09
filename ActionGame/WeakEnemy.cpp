@@ -4,7 +4,7 @@ void WeakEnemy::Attack()
 {
 }
 
-WeakEnemy::WeakEnemy(const MelLib::Vector3& pos):GameObject("WeakEnemy")
+WeakEnemy::WeakEnemy(const MelLib::Vector3& pos):NewEnemy("WeakEnemy")
 {
 	SetPosition(pos);
 
