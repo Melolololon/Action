@@ -23,7 +23,7 @@ class EnemySpaunPoint :public MelLib::GameObject
 
 	static const float MOVE_SPEED;
 
-	
+	const std::string CLASS_NAME;
 private:
 	bool CalcDistance();
 
@@ -31,11 +31,12 @@ private:
 	void Rot();
 	void Attack();
 
-	void CteateEnemy(std::shared_ptr<NewEnemy>& pEnemy, const type_info& type);
+	void CteateEnemy(std::shared_ptr<NewEnemy>& pEnemy);
 public:
-	EnemySpaunPoint(const type_info& type);
+	EnemySpaunPoint(const std::string& className);
 	void Update()override;
 	void Draw()override;
+	std::shared_ptr<GameObject> GetNewPtr()override;
 
 	static void SetPlayer(Player* p) { pPlayer = p; }
 };
