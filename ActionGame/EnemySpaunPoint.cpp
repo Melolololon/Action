@@ -47,7 +47,7 @@ void EnemySpaunPoint::CteateEnemy(std::shared_ptr<NewEnemy>& pEnemy)
 {
 	if (CLASS_NAME == typeid(WeakEnemy).name())
 	{
-		pEnemy = std::shared_ptr<WeakEnemy>();
+		//pEnemy = std::shared_ptr<WeakEnemy>();
 
 		moveSpeed = WeakEnemy::GetMoveSpeed();
 	}
@@ -59,40 +59,44 @@ EnemySpaunPoint::EnemySpaunPoint(const std::string& className)
 {
 	enemys.resize(ENEMY_MAX_NUM);
 	//
-	//// 敵の生成と追加
-	//for (auto& enemy: enemys)
-	//{
-	//	// classNameで何を生成するか変更する
-	//	CteateEnemy(enemy);
-	//	MelLib::GameObjectManager::GetInstance()->AddObject(enemy);
-	//}
+	// 敵の生成と追加
+	for (auto& enemy: enemys)
+	{
+		// classNameで何を生成するか変更する
+		CteateEnemy(enemy);
+		//MelLib::GameObjectManager::GetInstance()->AddObject(enemy);
+	}
 
-	// 自身を追加
-	spaunPoints.push_back(this);
 
 	modelObjects["main"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX), "WeakEnemy");
 	modelObjects["main"].SetPosition(GetPosition());
 }
 
+void EnemySpaunPoint::Initialize()
+{
+	// 自身を追加
+	spaunPoints.push_back(this);
+}
+
 void EnemySpaunPoint::Update()
 {
 	// 敵0人で削除
-	if (enemyNum <= 0)eraseManager = true;
+	//if (enemyNum <= 0)eraseManager = true;
 
 	// プレイヤーと確認
-	float dis = MelLib::LibMath::CalcDistance3D(GetPosition(), pPlayer->GetPosition());
+	float playerDis = MelLib::LibMath::CalcDistance3D(GetPosition(), pPlayer->GetPosition());
 	// 近かったら攻撃
-	if (dis <= MIN_DISTANCE) Attack();
+	if (playerDis <= MIN_DISTANCE) Attack();
 
 	// 距離を確認
 	for (auto& spaunPoint : spaunPoints) 
 	{
 		if (spaunPoint == this)continue;
 
-		float dis = MelLib::LibMath::CalcDistance3D(GetPosition(), spaunPoint->GetPosition());
+		float spaunDis = MelLib::LibMath::CalcDistance3D(GetPosition(), spaunPoint->GetPosition());
 
 		// 近かったら動かない
-		if (dis <= MIN_DISTANCE) return;
+		if (spaunDis <= MIN_DISTANCE) return;
 	}	
 	
 	// 移動

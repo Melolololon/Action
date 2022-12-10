@@ -29,6 +29,7 @@ void GamePlay::Initialize()
 	// ƒvƒŒƒCƒ„[‚Ìæ“¾
 	pPlayer = Player::GetPPlayer();
 	EnemySpaunPoint::SetPlayer(pPlayer);
+	EnemySpaunPoint::ClearEnemySpauns();
 
 
 }
