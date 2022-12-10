@@ -131,6 +131,9 @@ Player::Player(const MelLib::Vector3& pos)
 	}
 
 	SetPosition(pos);
+
+
+	pPlayer = this;
 }
 
 void Player::Update()
@@ -245,7 +248,6 @@ void Player::Update()
 	preHitGround = hitGround;
 	hitGround = false;
 
-	pPlayer = this;
 }
 
 void Player::TitleUpdate()
@@ -266,7 +268,7 @@ void Player::TitleUpdate()
 
 MelLib::Vector3 Player::CalcPlayerVector(const MelLib::Vector3& pos)const
 {
-	return GetPosition() - pos;
+	return MelLib::Vector3::Normalize(GetPosition() - pos);
 }
 
 void Player::ChangeAnimationData()

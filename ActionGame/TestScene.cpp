@@ -13,6 +13,9 @@ void TestScene::Initialize()
 
 	pPlayer = Player::GetPPlayer();
 	EnemySpaunPoint::SetPlayer(pPlayer);
+
+	EnemySpaunPoint::ClearEnemySpauns();
+	MelLib::GameObjectManager::GetInstance()->InitializeObject();
 }
 
 void TestScene::Update()

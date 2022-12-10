@@ -33,10 +33,13 @@ private:
 	void CteateEnemy(std::shared_ptr<NewEnemy>& pEnemy);
 public:
 	EnemySpaunPoint(const std::string& className);
+	void Initialize()override;
 	void Update()override;
 	void Draw()override;
 	std::shared_ptr<GameObject> GetNewPtr()override;
 
 	static void SetPlayer(Player* p) { pPlayer = p; }
+
+	static void ClearEnemySpauns() { spaunPoints.clear(); }
 };
 

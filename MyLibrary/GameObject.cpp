@@ -304,6 +304,10 @@ void MelLib::GameObject::Hit
 {
 }
 
+void MelLib::GameObject::Initialize()
+{
+}
+
 
 
 void GameObject::FalseEraseManager()
