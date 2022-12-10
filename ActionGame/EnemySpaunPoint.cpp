@@ -1,6 +1,7 @@
 #include "EnemySpaunPoint.h"
 #include"GameObjectManager.h"
 #include"LibMath.h"
+#include<Random.h>
 
 // ìGÇÃéÌóﬁ
 #include"WeakEnemy.h"
@@ -24,11 +25,11 @@ void EnemySpaunPoint::Move()
 
 	AddPosition(playerVector * moveSpeed);
 
-	//// ìGÇàÍêƒÇ…ìÆÇ©Ç∑
-	//for (auto& enemy : enemys)
-	//{
-	//	enemy->AddPosition(playerVector * MOVE_SPEED);
-	//}
+	// ìGÇàÍêƒÇ…ìÆÇ©Ç∑
+	for (auto& enemy : enemys)
+	{
+		enemy->AddPosition(playerVector * moveSpeed);
+	}
 }
 
 void EnemySpaunPoint::Rot()
@@ -43,30 +44,36 @@ void EnemySpaunPoint::Attack()
 
 }
 
-void EnemySpaunPoint::CteateEnemy(std::shared_ptr<NewEnemy>& pEnemy)
+void EnemySpaunPoint::CteateEnemy()
 {
+	enemys.resize(ENEMY_MAX_NUM);
+	
 	if (CLASS_NAME == typeid(WeakEnemy).name())
 	{
-		//pEnemy = std::shared_ptr<WeakEnemy>();
+		for (auto& enemy : enemys)
+		{
+			MelLib::Vector3 enemyPos(
+				MelLib::Random::GetRandomFloatNumberRangeSelect(-10.0f, 10.0f, 2),
+				0,
+				MelLib::Random::GetRandomFloatNumberRangeSelect(-10.0f, 10.0f, 2)
+			);
 
-		moveSpeed = WeakEnemy::GetMoveSpeed();
+
+			enemy = std::make_shared<WeakEnemy>(enemyPos);
+			moveSpeed = WeakEnemy::GetMoveSpeed();
+
+			MelLib::GameObjectManager::GetInstance()->AddObject(enemy);
+
+		}
+
 	}
+
 }
 
 EnemySpaunPoint::EnemySpaunPoint(const std::string& className)
 	:GameObject("EnemySpaunPoint")
 	, CLASS_NAME(className)
 {
-	enemys.resize(ENEMY_MAX_NUM);
-	//
-	// ìGÇÃê∂ê¨Ç∆í«â¡
-	for (auto& enemy: enemys)
-	{
-		// classNameÇ≈âΩÇê∂ê¨Ç∑ÇÈÇ©ïœçXÇ∑ÇÈ
-		CteateEnemy(enemy);
-		//MelLib::GameObjectManager::GetInstance()->AddObject(enemy);
-	}
-
 
 	modelObjects["main"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX), "WeakEnemy");
 	modelObjects["main"].SetPosition(GetPosition());
@@ -76,6 +83,10 @@ void EnemySpaunPoint::Initialize()
 {
 	// é©êgÇí«â¡
 	spaunPoints.push_back(this);
+
+
+	// ìGÇÃê∂ê¨Ç∆í«â¡
+	CteateEnemy();
 }
 
 void EnemySpaunPoint::Update()

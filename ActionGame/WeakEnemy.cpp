@@ -22,6 +22,8 @@ WeakEnemy::WeakEnemy(const MelLib::Vector3& pos):NewEnemy("WeakEnemy")
 	segment3DDatas["main"].resize(1);
 	segment3DDatas["main"][0].SetPosition(capsuleDatas["main"][0].GetSegment3DData().GetPosition());
 
+	// プレイヤーみたいな十字の線判定作って、壁でジャンプするようにする
+
 
 	modelObjects["main"].SetScale(3);
 }

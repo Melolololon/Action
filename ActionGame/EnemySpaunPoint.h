@@ -30,7 +30,7 @@ private:
 	void Rot();
 	void Attack();
 
-	void CteateEnemy(std::shared_ptr<NewEnemy>& pEnemy);
+	void CteateEnemy();
 public:
 	EnemySpaunPoint(const std::string& className);
 	void Initialize()override;
