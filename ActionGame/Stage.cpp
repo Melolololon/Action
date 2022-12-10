@@ -58,6 +58,8 @@ Stage::Stage(const unsigned int stageNum)
 	//{
 	//	triangleDatas["main"][i] = wallCollision[i - groundCollision.size()];
 	//}
+
+	collisionCheckDistance = FLT_MAX;
 }
 
 void Stage::Draw()

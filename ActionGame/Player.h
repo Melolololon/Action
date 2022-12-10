@@ -17,6 +17,8 @@ class Enemy;
 class Player :public MelLib::GameObject
 {
 public:
+	static Player* pPlayer;
+
 	enum class ActionType
 	{
 		JUMP,
@@ -26,7 +28,6 @@ public:
 	};
 
 private:
-	static int staticHP;
 
 	static std::unordered_map<ActionType, MelLib::PadButton> keyConfigData;
 
@@ -218,9 +219,10 @@ private:
 
 
 public:
+	static Player* GetPPlayer() { return pPlayer; }
+
 	static void LoadResources();
 
-	static int GetStaticHP() { return staticHP; }
 
 	Player(const MelLib::Vector3& pos = 0);
 	~Player() {}

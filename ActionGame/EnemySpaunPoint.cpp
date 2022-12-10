@@ -8,7 +8,6 @@
 const float EnemySpaunPoint::MIN_DISTANCE = 30.0f;
 const unsigned int EnemySpaunPoint::ENEMY_MAX_NUM = 5;
 
-const float EnemySpaunPoint::MOVE_SPEED = 0.25f;
 
 std::vector<EnemySpaunPoint*>EnemySpaunPoint::spaunPoints;
 Player* EnemySpaunPoint::pPlayer;
@@ -22,11 +21,14 @@ bool EnemySpaunPoint::CalcDistance()
 void EnemySpaunPoint::Move()
 {
 	MelLib::Vector3 playerVector = pPlayer->CalcPlayerVector(GetPosition());
-	// ìGÇàÍêƒÇ…ìÆÇ©Ç∑
-	for (auto& enemy : enemys)
-	{
-		enemy->AddPosition(playerVector * MOVE_SPEED);
-	}
+
+	AddPosition(playerVector * moveSpeed);
+
+	//// ìGÇàÍêƒÇ…ìÆÇ©Ç∑
+	//for (auto& enemy : enemys)
+	//{
+	//	enemy->AddPosition(playerVector * MOVE_SPEED);
+	//}
 }
 
 void EnemySpaunPoint::Rot()
@@ -43,7 +45,12 @@ void EnemySpaunPoint::Attack()
 
 void EnemySpaunPoint::CteateEnemy(std::shared_ptr<NewEnemy>& pEnemy)
 {
-	if (CLASS_NAME == typeid(WeakEnemy).name()) pEnemy = std::shared_ptr<WeakEnemy>();
+	if (CLASS_NAME == typeid(WeakEnemy).name())
+	{
+		pEnemy = std::shared_ptr<WeakEnemy>();
+
+		moveSpeed = WeakEnemy::GetMoveSpeed();
+	}
 }
 
 EnemySpaunPoint::EnemySpaunPoint(const std::string& className)
@@ -51,14 +58,14 @@ EnemySpaunPoint::EnemySpaunPoint(const std::string& className)
 	, CLASS_NAME(className)
 {
 	enemys.resize(ENEMY_MAX_NUM);
-	
-	// ìGÇÃê∂ê¨Ç∆í«â¡
-	for (auto& enemy: enemys)
-	{
-		// classNameÇ≈âΩÇê∂ê¨Ç∑ÇÈÇ©ïœçXÇ∑ÇÈ
-		CteateEnemy(enemy);
-		MelLib::GameObjectManager::GetInstance()->AddObject(enemy);
-	}
+	//
+	//// ìGÇÃê∂ê¨Ç∆í«â¡
+	//for (auto& enemy: enemys)
+	//{
+	//	// classNameÇ≈âΩÇê∂ê¨Ç∑ÇÈÇ©ïœçXÇ∑ÇÈ
+	//	CteateEnemy(enemy);
+	//	MelLib::GameObjectManager::GetInstance()->AddObject(enemy);
+	//}
 
 	// é©êgÇí«â¡
 	spaunPoints.push_back(this);

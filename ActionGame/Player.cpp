@@ -39,7 +39,7 @@ std::unordered_map<Player::ActionType, MelLib::PadButton> Player::keyConfigData 
 };
 
 const float Player::JUMP_POWER = 2.0f;
-int Player::staticHP;
+Player* Player::pPlayer = nullptr;
 
 std::unordered_map<PlayerSlush::AttackType, const Player::AttackData> Player::attackData =
 {
@@ -244,6 +244,8 @@ void Player::Update()
 
 	preHitGround = hitGround;
 	hitGround = false;
+
+	pPlayer = this;
 }
 
 void Player::TitleUpdate()
@@ -1070,7 +1072,6 @@ std::shared_ptr<MelLib::GameObject> Player::GetNewPtr()
 void Player::DownHP(const int power)
 {
 	hp -= power;
-	staticHP = hp;
 	if (hp <= 0)
 	{
 		hp = 0;

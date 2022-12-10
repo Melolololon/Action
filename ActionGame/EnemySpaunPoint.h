@@ -1,7 +1,6 @@
 #pragma once
-#include<GameObject.h>
-
 #include"Player.h"
+
 #include"NewEnemy.h"
 
 // ‚±‚ê“¯m‚Å‹——£‚ğæ‚é‚æ‚¤‚É‚·‚ê‚Îˆ—­‚È‚­‚Ä‚¢‚¢‚Ì‚Å‚Í
@@ -21,7 +20,7 @@ class EnemySpaunPoint :public MelLib::GameObject
 
 	static Player* pPlayer;
 
-	static const float MOVE_SPEED;
+	float moveSpeed = 0.0f;
 
 	const std::string CLASS_NAME;
 private:

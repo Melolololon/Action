@@ -1,5 +1,7 @@
 #include "WeakEnemy.h"
 
+const float WeakEnemy::MOVE_SPEED = 0.2f;
+
 void WeakEnemy::Attack()
 {
 }

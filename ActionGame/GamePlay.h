@@ -4,7 +4,7 @@
 class GamePlay : public MelLib::Scene
 {
 private:
-	MelLib::GameObject* pPlayer = nullptr;
+	Player* pPlayer = nullptr;
 
 	enum class GameState 
 	{
