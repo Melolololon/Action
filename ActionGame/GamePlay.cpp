@@ -6,6 +6,8 @@
 #include"StageSelect.h"
 #include"Stage.h"
 
+#include"EnemySpaunPoint.h"
+
 void GamePlay::CheckClear()
 {
 	
@@ -13,7 +15,7 @@ void GamePlay::CheckClear()
 
 void GamePlay::CheckGameOver()
 {
-	if (Player::GetStaticHP() <= 0)gameState = GameState::GAME_OVER;
+	if (pPlayer->GetHP() <= 0)gameState = GameState::GAME_OVER;
 }
 
 void GamePlay::Initialize()
@@ -25,8 +27,8 @@ void GamePlay::Initialize()
 
 
 	// プレイヤーの取得
-	pPlayer = MelLib::GameObjectManager::GetInstance()->GetPGameObject("Player_1");
-	// 体力とかは、GuiValueManagetから取得する
+	pPlayer = Player::GetPPlayer();
+	EnemySpaunPoint::SetPlayer(pPlayer);
 
 
 }

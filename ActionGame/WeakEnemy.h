@@ -6,6 +6,9 @@ class WeakEnemy :
     public NewEnemy
 {
 private:
+	static const float MOVE_SPEED;
+
+private:
 
 	void Attack();
 public:
@@ -15,5 +18,6 @@ public:
 	void Update()override;
 	void Draw()override;
 
+	static float GetMoveSpeed() { return MOVE_SPEED; }
 };
 

@@ -1,15 +1,18 @@
 #include "TestScene.h"
 
 #include"Stage.h"
+#include"EnemySpaunPoint.h"
 
 #include<GameObjectManager.h>
+
 
 void TestScene::Initialize()
 {
 	Stage::LoadResources(0);
 
-	// ステージを追加
-	//MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<Stage>(0));
+
+	pPlayer = Player::GetPPlayer();
+	EnemySpaunPoint::SetPlayer(pPlayer);
 }
 
 void TestScene::Update()
