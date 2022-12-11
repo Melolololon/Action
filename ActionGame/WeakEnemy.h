@@ -8,9 +8,12 @@ class WeakEnemy :
 private:
 	static const float MOVE_SPEED;
 
+	int timer = 0;
 private:
 
-	void Attack();
+
+
+
 public:
 
 
@@ -28,4 +31,6 @@ public:
 	)override;
 
 	static float GetMoveSpeed() { return MOVE_SPEED; }
+
+	void Attack();
 };
