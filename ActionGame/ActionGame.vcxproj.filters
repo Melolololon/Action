@@ -165,6 +165,9 @@
     <ClCompile Include="NewEnemy.cpp">
       <Filter>ソース ファイル\Object\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="JumpAttack.cpp">
+      <Filter>ソース ファイル\Object\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -273,6 +276,9 @@
       <Filter>ヘッダー ファイル\Object\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="AttackEffect.h">
+      <Filter>ヘッダー ファイル\Object\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="JumpAttack.h">
       <Filter>ヘッダー ファイル\Object\Player</Filter>
     </ClInclude>
   </ItemGroup>

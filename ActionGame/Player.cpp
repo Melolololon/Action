@@ -10,6 +10,7 @@
 #include"ActionPart.h"
 
 #include"PlayerSlush.h"
+#include"JumpAttack.h"
 
 #include"Stage.h"
 #include"Ground.h"
@@ -28,6 +29,7 @@
 #include<LibMath.h>
 // テスト
 #include"SlushEffect.h"
+
 
 std::unordered_map<Player::ActionType, MelLib::PadButton> Player::keyConfigData =
 {
@@ -49,6 +51,7 @@ std::unordered_map<PlayerSlush::AttackType, const Player::AttackData> Player::at
 	{PlayerSlush::AttackType::NORMAL_2,AttackData(1,30,20,AttackEffect::NONE)},
 	{PlayerSlush::AttackType::NORMAL_3,AttackData(2,30,20,AttackEffect::BE_BLOWN_AWAY)},// これのアニメーションバグるのアニメーション終わる前にキャンセルされて立ちに戻るから?
 	{PlayerSlush::AttackType::DASH_1,AttackData(1,20,10,AttackEffect::BE_BLOWN_AWAY)},
+	{PlayerSlush::AttackType::JUMP,AttackData(2,9999,9999,AttackEffect::BE_BLOWN_AWAY)},
 };
 
 
@@ -221,6 +224,13 @@ void Player::Update()
 	Guard();
 	Attack();
 
+	// 仮の落下攻撃処理
+	if (jumpAttackStartTimer.GetMaxOverFlag()) 
+	{
+		FallStart(-1.0f);
+		jumpAttackStartTimer.ResetTimeZero();
+		jumpAttackStartTimer.SetStopFlag(true);
+	}
 	
 	CalcMovePhysics();
 
@@ -330,7 +340,7 @@ void Player::Move()
 
 	Dash();
 
-	if (isDash)
+	if (isDash && currentAttack == PlayerSlush::AttackType::JUMP)
 	{
 		return;
 	}
@@ -524,7 +534,7 @@ void Player::JumpAnimation()
 void Player::Attack()
 {
 	// 空中攻撃とダッシュ攻撃はいったんなし
-	if (isDrop && isDash)return;
+	//if (isDrop)return;
 
 	if (attackTimer.GetMaxOverFlag())
 	{
@@ -598,6 +608,10 @@ void Player::SetAttackType()
 		}
 		else// 空中攻撃
 		{
+			currentAttack = PlayerSlush::AttackType::JUMP;
+			FallEnd();
+			jumpAttackStartTimer.SetStopFlag(false);
+			jumpAttackStartTimer.SetMaxTime(60 * 0.5);
 		}
 
 		break;
@@ -992,6 +1006,18 @@ void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionTy
 				startAngle = modelObjects["main"].GetAngle();
 				startScale = modelObjects["main"].GetScale();
 			}
+
+
+			if (currentAttack == PlayerSlush::AttackType::JUMP) 
+			{
+				currentAttack = PlayerSlush::AttackType::NONE;
+				// 強制終了
+				attackTimer.SetNowTime(attackData[PlayerSlush::AttackType::JUMP].time);
+
+				// 攻撃判定追加
+				MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<JumpAttack>(GetPosition(),50.0f));
+			}
+
 		}
 		else // そうじゃなかったら壁扱い
 		{

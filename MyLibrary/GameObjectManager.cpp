@@ -1044,9 +1044,9 @@ void GameObjectManager::Update()
 
 								// ç¿ïWÇï‚äÆ
 								Value3< Vector3> pos1 = triangle.GetPosition();
-								Value3< Vector3> prePos1 = prePositions1[triangleData.first][colI];
+								Value3< Vector3> prePos1 = prePositions1[triangleData.first][colJ];
 								Vector3 pos2 = sphere1.GetPosition();
-								Vector3 prePos2 = prePositions2[sphereData.first][colJ];
+								Vector3 prePos2 = prePositions2[sphereData.first][colI];
 
 								if (pos1 == prePos1 && pos2 == prePos2)checkNum = 1;
 
