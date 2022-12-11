@@ -89,6 +89,7 @@ void Game::Initialize()
 
 	// ƒXƒe[ƒW“o˜^
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Stage>(0),"Stage");
+	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Stage>(1),"Stage");
 
 	// “G’Ç‰Á
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<EnemySpaunPoint>(typeid(WeakEnemy).name()), "Enemy");

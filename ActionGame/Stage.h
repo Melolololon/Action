@@ -11,6 +11,8 @@ private:
     // ステージ番号
     // 0はテストステージ
     const int STAGE_NUM;
+
+
 public:
     static void LoadResources(unsigned int stageNum);
 
