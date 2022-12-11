@@ -8,8 +8,11 @@ void WeakEnemy::Attack()
 {
 	timer++;
 
-	if (timer >= 60 * 1.5f)isAttack = false;
-
+	if (timer >= 60 * 1.5f)
+	{
+		isAttack = false;
+		timer = 0;
+	}
 }
 
 WeakEnemy::WeakEnemy(const MelLib::Vector3& pos):NewEnemy("WeakEnemy")

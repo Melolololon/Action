@@ -153,7 +153,10 @@ void EnemySpaunPoint::Update()
 	}	
 	
 	// ˆÚ“®
-	Move();
+	if (!isAttack) 
+	{
+		Move();
+	}
 }
 
 void EnemySpaunPoint::Draw()
