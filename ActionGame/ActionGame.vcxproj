@@ -192,6 +192,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActionPart.h" />
+    <ClInclude Include="AttackEffect.h" />
     <ClInclude Include="Bamboo.h" />
     <ClInclude Include="Boss.h" />
     <ClInclude Include="EditMode.h" />

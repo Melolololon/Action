@@ -7,6 +7,7 @@
 #include"Stage.h"
 
 #include"EnemySpaunPoint.h"
+#include"NewEnemy.h"
 
 void GamePlay::CheckClear()
 {
@@ -34,6 +35,7 @@ void GamePlay::Initialize()
 
 	// ƒvƒŒƒCƒ„[‚Ìæ“¾
 	pPlayer = Player::GetPPlayer();
+	NewEnemy::SetPPlayer(pPlayer);
 	EnemySpaunPoint::SetPlayer(pPlayer);
 	EnemySpaunPoint::ClearEnemySpauns();
 

@@ -2,6 +2,7 @@
 
 #include"Stage.h"
 #include"EnemySpaunPoint.h"
+#include"NewEnemy.h"
 
 #include<GameObjectManager.h>
 
@@ -14,6 +15,7 @@ void TestScene::Initialize()
 
 	pPlayer = Player::GetPPlayer();
 	EnemySpaunPoint::SetPlayer(pPlayer);
+	NewEnemy::SetPPlayer(pPlayer);
 
 	EnemySpaunPoint::ClearEnemySpauns();
 	MelLib::GameObjectManager::GetInstance()->InitializeObject();

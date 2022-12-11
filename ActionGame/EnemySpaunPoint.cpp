@@ -8,7 +8,7 @@
 
 #include"Stage.h"
 
-const float EnemySpaunPoint::MIN_DISTANCE = 60.0f;
+const float EnemySpaunPoint::MIN_DISTANCE = 20.0f;
 const unsigned int EnemySpaunPoint::ENEMY_MAX_NUM = 5;
 
 
@@ -28,10 +28,10 @@ void EnemySpaunPoint::Move()
 
 	AddPosition(moveVector);
 
-	// “G‚ğˆêÄ‚É“®‚©‚·
+	// ‚Á”ò‚ñ‚¾‚è‚µ‚Ä‚È‚©‚Á‚½‚ç“G‚ğˆêÄ‚É“®‚©‚·
 	for (auto& enemy : enemys)
 	{
-		enemy->AddPosition(moveVector);
+		if(enemy->GetCurrentThisAttackEffect() == AttackEffect::NONE)enemy->AddPosition(moveVector);
 	}
 
 	// ”ò‚Ô“G‚©‚»‚êˆÈŠO‚©‚Ìƒtƒ‰ƒO‚ğ‚½‚¹‚Ä”»’f‚·‚é‚æ‚¤‚É‚·‚é
@@ -81,17 +81,18 @@ void EnemySpaunPoint::CteateEnemy()
 		// •‚‚«–h~
 		FallStart(0.0f);
 
+		moveSpeed = WeakEnemy::GetMoveSpeed();
+
 		for (auto& enemy : enemys)
 		{
 			MelLib::Vector3 enemyPos(
-				MelLib::Random::GetRandomFloatNumberRangeSelect(-10.0f, 10.0f, 2),
+				MelLib::Random::GetRandomFloatNumberRangeSelect(-10.0f, 10.0f, 1),
 				0,
-				MelLib::Random::GetRandomFloatNumberRangeSelect(-10.0f, 10.0f, 2)
+				MelLib::Random::GetRandomFloatNumberRangeSelect(-10.0f, 10.0f, 1)
 			);
-
+			enemyPos += GetPosition();
 
 			enemy = std::make_shared<WeakEnemy>(enemyPos);
-			moveSpeed = WeakEnemy::GetMoveSpeed();
 
 			MelLib::GameObjectManager::GetInstance()->AddObject(enemy);
 
@@ -138,8 +139,10 @@ void EnemySpaunPoint::Update()
 	// ‹ß‚©‚Á‚½‚çUŒ‚
 	if (playerDis <= MIN_DISTANCE && !isAttack) Attack();
 
+	bool move = true;
+
 	// ƒvƒŒƒCƒ„[‚Æ‹ß‚©‚Á‚½‚çˆÚ“®‚µ‚È‚¢
-	if (playerDis <= MIN_DISTANCE)return;
+	if (playerDis <= MIN_DISTANCE)move = false;
 
 	// ‹——£‚ğŠm”F
 	for (auto& spaunPoint : spaunPoints) 
@@ -149,13 +152,29 @@ void EnemySpaunPoint::Update()
 		float spaunDis = MelLib::LibMath::CalcDistance3D(GetPosition(), spaunPoint->GetPosition());
 
 		// ‹ß‚©‚Á‚½‚ç“®‚©‚È‚¢
-		if (spaunDis <= MIN_DISTANCE) return;
+		if (spaunDis <= MIN_DISTANCE) move = false;
 	}	
 	
 	// ˆÚ“®
-	if (!isAttack) 
+	if (!isAttack && move)
 	{
 		Move();
+	}
+	else 
+	{
+		// ‰“‚¢“G‚ª‚¢‚½‚ç—áŠO‚Å“®‚©‚·
+		for (auto& enemy : enemys)
+		{
+			if (enemy->GetIsAttack())continue;
+
+			if (MelLib::LibMath::CalcDistance3D(enemy->GetPosition(), pPlayer->GetPosition()) >= MIN_DISTANCE)
+			{
+				MelLib::Vector3 playerNormalizeVector = pPlayer->CalcPlayerVector(enemy->GetPosition());
+				MelLib::Vector3 moveVector = MelLib::Vector3(playerNormalizeVector.x, 0, playerNormalizeVector.z) * moveSpeed;
+
+				enemy->AddPosition(moveVector);
+			}
+		}
 	}
 }
 
