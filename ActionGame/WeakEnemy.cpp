@@ -3,6 +3,7 @@
 #include"Stage.h"
 
 #include"PlayerSlush.h"
+#include"JumpAttack.h"
 
 void WeakEnemy::Attack()
 {
@@ -34,7 +35,7 @@ WeakEnemy::WeakEnemy(const MelLib::Vector3& pos):NewEnemy("WeakEnemy")
 	// プレイヤーみたいな十字の線判定作って、壁でジャンプするようにする
 
 
-	modelObjects["main"].SetScale(3);
+	modelObjects["main"].SetScale(20);
 }
 
 void WeakEnemy::Initialize()
@@ -66,7 +67,7 @@ void WeakEnemy::Hit(const GameObject& object, const MelLib::ShapeType3D collisio
 	//if (isDead)return;
 
 	std::string n = typeid(object).name();
-	if (typeid(object) == typeid(PlayerSlush)/* && !isMuteki*/)
+	if (typeid(object) == typeid(PlayerSlush) || typeid(object) == typeid(JumpAttack) /* && !isMuteki*/)
 	{
 
 		// プレイヤーから現在の攻撃の攻撃力を取得し、体力を減らす
@@ -99,7 +100,8 @@ void WeakEnemy::Hit(const GameObject& object, const MelLib::ShapeType3D collisio
 		}*/
 
 		// 吹っ飛ばし処理
-		if (pPlayer->GetPlayerAttackEffect() == AttackEffect::BE_BLOWN_AWAY) 
+		// 後で1フレーム置いてNONEに切り替えるようにする
+		if (pPlayer->GetPlayerAttackEffect() == AttackEffect::BE_BLOWN_AWAY || typeid(object) == typeid(JumpAttack))
 		{
 			FallStart(0.6f);
 			currentThisAttackEffect = AttackEffect::BE_BLOWN_AWAY;

@@ -162,8 +162,7 @@ private:
 	// デバッグ用(trueにすると強制Tポーズ)
 	bool isTPause = false;
 
-
-
+	MelLib::FrameTimer jumpAttackStartTimer;
 private:
 
 

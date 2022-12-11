@@ -1,8 +1,9 @@
 #pragma once
 
+// UŒ‚‚ð—^‚¦‚½Žž‚ÌŒø‰Ê
 enum class AttackEffect
 {
 	NONE,
-	BE_BLOWN_AWAY,// ‚Á”ò‚Ô
+	BE_BLOWN_AWAY,// ‚Á”ò‚Î‚·
 	SLAM,// ’@‚«‚Â‚¯‚é
 };

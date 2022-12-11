@@ -17,6 +17,7 @@ public:
 		NORMAL_2,//通常(Xボタン)攻撃2番目
 		NORMAL_3,//通常(Xボタン)攻撃3番目
 		DASH_1,// ダッシュ中1番目
+		JUMP,
 	};
 
 private:
