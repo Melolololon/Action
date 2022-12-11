@@ -238,7 +238,7 @@ GameObject::GameObject(const std::string& name)
 
 
 
-	SetPrePosition();
+	SetPreData();
 	//SetGUIData();
 	//SetPreDataPositions();
 }
@@ -247,6 +247,10 @@ GameObject::GameObject(const std::string& name)
 GameObject::~GameObject()
 {
 	GuiValueManager::GetInstance()->DeleteWindow(objectName);
+}
+
+void MelLib::GameObject::Initialize()
+{
 }
 
 //void GameObject::Initialize()
@@ -301,10 +305,6 @@ void MelLib::GameObject::Hit
 	const ShapeType3D hitObjShapeType,
 	const std::string& hitShapeName
 )
-{
-}
-
-void MelLib::GameObject::Initialize()
 {
 }
 
@@ -380,10 +380,13 @@ void MelLib::GameObject::SetDrawGUIFlag(bool flag)
 	GuiValueManager::GetInstance()->SetDrawWindowFlag(objectName, flag);
 }
 
-void MelLib::GameObject::SetPrePosition()
+void MelLib::GameObject::SetPreData()
 {
 	prePosition = position;
+	preAngle = angle;
+	preScale = scale;
 }
+
 
 void MelLib::GameObject::SetGUIData()
 {

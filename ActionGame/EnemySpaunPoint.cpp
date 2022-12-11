@@ -6,7 +6,9 @@
 // “G‚Ìí—Ş
 #include"WeakEnemy.h"
 
-const float EnemySpaunPoint::MIN_DISTANCE = 30.0f;
+#include"Stage.h"
+
+const float EnemySpaunPoint::MIN_DISTANCE = 60.0f;
 const unsigned int EnemySpaunPoint::ENEMY_MAX_NUM = 5;
 
 
@@ -21,15 +23,19 @@ bool EnemySpaunPoint::CalcDistance()
 
 void EnemySpaunPoint::Move()
 {
-	MelLib::Vector3 playerVector = pPlayer->CalcPlayerVector(GetPosition());
+	MelLib::Vector3 playerNormalizeVector = pPlayer->CalcPlayerVector(GetPosition());
+	MelLib::Vector3 moveVector = MelLib::Vector3(playerNormalizeVector.x, 0, playerNormalizeVector.z) * moveSpeed;
 
-	AddPosition(playerVector * moveSpeed);
+	AddPosition(moveVector);
 
 	// “G‚ğˆêÄ‚É“®‚©‚·
 	for (auto& enemy : enemys)
 	{
-		enemy->AddPosition(playerVector * moveSpeed);
+		enemy->AddPosition(moveVector);
 	}
+
+	// ”ò‚Ô“G‚©‚»‚êˆÈŠO‚©‚Ìƒtƒ‰ƒO‚ğ‚½‚¹‚Ä”»’f‚·‚é‚æ‚¤‚É‚·‚é
+	CalcMovePhysics();
 }
 
 void EnemySpaunPoint::Rot()
@@ -50,6 +56,10 @@ void EnemySpaunPoint::CteateEnemy()
 	
 	if (CLASS_NAME == typeid(WeakEnemy).name())
 	{
+
+		// •‚‚«–h~
+		FallStart(0.0f);
+
 		for (auto& enemy : enemys)
 		{
 			MelLib::Vector3 enemyPos(
@@ -77,6 +87,12 @@ EnemySpaunPoint::EnemySpaunPoint(const std::string& className)
 
 	modelObjects["main"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX), "WeakEnemy");
 	modelObjects["main"].SetPosition(GetPosition());
+
+	segment3DDatas["main"].resize(1);
+	MelLib::Vector3 pos = GetPosition();
+	MelLib::Value2<MelLib::Vector3> segmentPos =
+		MelLib::Value2<MelLib::Vector3>(pos + MelLib::Vector3(0, 25.0f, 0), pos + MelLib::Vector3(0, -10.0f, 0));
+	segment3DDatas["main"][0].SetPosition(segmentPos);
 }
 
 void EnemySpaunPoint::Initialize()
@@ -117,6 +133,23 @@ void EnemySpaunPoint::Update()
 void EnemySpaunPoint::Draw()
 {
 	AllDraw();
+}
+
+void EnemySpaunPoint::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)
+{
+	if (typeid(object) == typeid(Stage)
+		&& collisionType == MelLib::ShapeType3D::SEGMENT)
+	{
+
+		MelLib::Vector3 addPos;
+
+		//“Š‚°ã‚°ˆ—I—¹
+		FallEnd();
+
+		addPos.y += GetSegmentCalcResult().triangleHitPos.y - segment3DDatas["main"][0].GetPosition().v2.y;
+
+		AddPosition(addPos);
+	}
 }
 
 std::shared_ptr<MelLib::GameObject> EnemySpaunPoint::GetNewPtr()

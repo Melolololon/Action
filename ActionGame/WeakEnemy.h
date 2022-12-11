@@ -15,9 +15,17 @@ public:
 
 
 	WeakEnemy(const MelLib::Vector3& pos);
+	void Initialize()override;
 	void Update()override;
-	void Draw()override;
+	void Draw()override; 
+    void Hit
+	(
+		const GameObject& object,
+		const MelLib::ShapeType3D collisionType,
+		const std::string& shapeName,
+		const MelLib::ShapeType3D hitObjColType,
+		const std::string& hitShapeName
+	)override;
 
 	static float GetMoveSpeed() { return MOVE_SPEED; }
 };
-

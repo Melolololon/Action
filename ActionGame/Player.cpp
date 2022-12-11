@@ -217,6 +217,7 @@ void Player::Update()
 	Guard();
 	Attack();
 
+	
 	CalcMovePhysics();
 
 	Muteki();
@@ -226,7 +227,8 @@ void Player::Update()
 
 	float angle = MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(direction.x, direction.z), false) - 270;
 	// 回転処理(仮)
-	modelObjects["main"].SetAngle(MelLib::Vector3(0, angle, 0));
+	//modelObjects["main"].SetAngle(MelLib::Vector3(0, angle, 0));
+	SetAngle(MelLib::Vector3(0, angle, 0));
 
 
 	// アニメーションに合わせて再生速度やループを設定する
@@ -755,7 +757,7 @@ void Player::SetCameraData()
 
 	if (!lockOn)
 	{
-		pCamera->SetRotateCriteriaPosition(GetPosition() + MelLib::Vector3(0, 10, 0));
+		pCamera->SetRotateCriteriaPosition(GetPosition() );
 	}
 }
 
