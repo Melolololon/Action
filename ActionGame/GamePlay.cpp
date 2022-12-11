@@ -23,7 +23,13 @@ void GamePlay::Initialize()
 	const unsigned int STAGE_NUM = StageSelect::GetStageNum();
 
 	// シーンの読み込み
+#ifdef _DEBUG
+
+#else
 	MelLib::SceneEditer::GetInstance()->LoadEditData("Stage_" + std::to_string(STAGE_NUM));
+#endif // _DEBUG
+
+	
 
 
 	// プレイヤーの取得
