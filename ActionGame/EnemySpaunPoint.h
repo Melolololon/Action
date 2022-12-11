@@ -36,6 +36,14 @@ public:
 	void Initialize()override;
 	void Update()override;
 	void Draw()override;
+	void Hit
+	(
+		const GameObject& object,
+		const MelLib::ShapeType3D collisionType,
+		const std::string& shapeName,
+		const MelLib::ShapeType3D hitObjColType,
+		const std::string& hitShapeName
+	)override;
 	std::shared_ptr<GameObject> GetNewPtr()override;
 
 	static void SetPlayer(Player* p) { pPlayer = p; }
