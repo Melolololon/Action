@@ -8,8 +8,9 @@
 
 #include"Stage.h"
 
-const float EnemySpaunPoint::MIN_DISTANCE = 20.0f;
-const unsigned int EnemySpaunPoint::ENEMY_MAX_NUM = 5;
+const float EnemySpaunPoint::MIN_DISTANCE = 50.0f;
+const float EnemySpaunPoint::ATTACK_MIN_DISTANCE = 20.0f;
+const unsigned int EnemySpaunPoint::ENEMY_MAX_NUM = 3;
 
 
 std::vector<EnemySpaunPoint*>EnemySpaunPoint::spaunPoints;
@@ -23,15 +24,43 @@ bool EnemySpaunPoint::CalcDistance()
 
 void EnemySpaunPoint::Move()
 {
+	
+
 	MelLib::Vector3 playerNormalizeVector = pPlayer->CalcPlayerVector(GetPosition());
 	MelLib::Vector3 moveVector = MelLib::Vector3(playerNormalizeVector.x, 0, playerNormalizeVector.z) * moveSpeed;
-
 	AddPosition(moveVector);
 
-	// 吹っ飛んだりしてなかったら敵を一斉に動かす
+	minDisEnemyDis = FLT_MAX;
+	for (int i = 0; i < enemys.size(); i++)
+	{
+		MelLib::Vector3 pos = enemys[i]->GetPosition();
+		float dis = MelLib::LibMath::CalcDistance3D(pos, pPlayer->GetPosition());
+
+		if (minDisEnemyDis > dis)
+		{
+			minDisEnemyDis = dis;
+			minDisEnemyNum = i;
+		}
+	}
+
+
+	// 吹っ飛んだりしてなかったら敵を動かす
 	for (auto& enemy : enemys)
 	{
-		if(enemy->GetCurrentThisAttackEffect() == AttackEffect::NONE)enemy->AddPosition(moveVector);
+		if (enemy->GetCurrentThisAttackEffect() == AttackEffect::NONE)
+		{
+			float dis = MelLib::LibMath::CalcDistance3D(enemy->GetPosition(), pPlayer->GetPosition());
+			
+			// 近かったら移動しない
+			if (dis <= MIN_DISTANCE && enemy != enemys[minDisEnemyNum])continue;
+			else if (dis <= ATTACK_MIN_DISTANCE)continue;// 一番近いやつはめっちゃ接近する
+		
+			if (enemy->GetIsAttack())continue;
+
+			playerNormalizeVector = pPlayer->CalcPlayerVector(enemy->GetPosition());
+			moveVector = MelLib::Vector3(playerNormalizeVector.x, 0, playerNormalizeVector.z) * moveSpeed;
+			enemy->AddPosition(moveVector);
+		}
 	}
 
 	// 飛ぶ敵かそれ以外かのフラグを持たせて判断するようにする
@@ -48,20 +77,7 @@ void EnemySpaunPoint::Attack()
 	// 近さで決める
 	// 一度に攻撃するキャラ数に制限をかける
 
-	float minDis = FLT_MAX;
-	for (int i = 0; i < enemys.size();i++)
-	{
-		MelLib::Vector3 pos = enemys[i]->GetPosition();
-		float dis = MelLib::LibMath::CalcDistance3D(pos, pPlayer->GetPosition());
-
-		if (minDis > dis)
-		{
-			minDis = dis;
-			attackEnemyNum = i;
-		}
-	}
-
-	enemys[attackEnemyNum]->StartAttack();
+	enemys[minDisEnemyNum]->StartAttack();
 	isAttack = true;
 
 }
@@ -129,58 +145,64 @@ void EnemySpaunPoint::Initialize()
 
 void EnemySpaunPoint::Update()
 {
+	// 個別にプレイヤーに向かうようにする
+	// 一番近いやつだけ近づく。それ以外は一定距離で待機
+
 	CheckEndAttack();
 
 	// 敵0人で削除
 	//if (enemyNum <= 0)eraseManager = true;
 
+	Move();
 	// プレイヤーと確認
 	playerDis = MelLib::LibMath::CalcDistance3D(GetPosition(), pPlayer->GetPosition());
 	// 近かったら攻撃
-	if (playerDis <= MIN_DISTANCE && !isAttack) Attack();
+	if (!isAttack && minDisEnemyDis <= ATTACK_MIN_DISTANCE) Attack();
 
-	bool move = true;
+	//bool move = true;
 
-	// プレイヤーと近かったら移動しない
-	if (playerDis <= MIN_DISTANCE)move = false;
+	//// プレイヤーと近かったら移動しない
+	//if (playerDis <= MIN_DISTANCE)move = false;
 
-	// 距離を確認
-	for (auto& spaunPoint : spaunPoints) 
-	{
-		if (spaunPoint == this)continue;
+	//// 距離を確認
+	//for (auto& spaunPoint : spaunPoints) 
+	//{
+	//	if (spaunPoint == this)continue;
 
-		float spaunDis = MelLib::LibMath::CalcDistance3D(GetPosition(), spaunPoint->GetPosition());
+	//	float spaunDis = MelLib::LibMath::CalcDistance3D(GetPosition(), spaunPoint->GetPosition());
 
-		// 近かったら動かない
-		if (spaunDis <= MIN_DISTANCE) move = false;
-	}	
+	//	// 近かったら動かない
+	//	if (spaunDis <= MIN_DISTANCE) move = false;
+	//}	
 	
-	// 移動
-	if (!isAttack && move)
-	{
-		Move();
-	}
-	else 
-	{
-		// 遠い敵がいたら例外で動かす
-		for (auto& enemy : enemys)
-		{
-			if (enemy->GetIsAttack())continue;
 
-			if (MelLib::LibMath::CalcDistance3D(enemy->GetPosition(), pPlayer->GetPosition()) >= MIN_DISTANCE)
-			{
-				MelLib::Vector3 playerNormalizeVector = pPlayer->CalcPlayerVector(enemy->GetPosition());
-				MelLib::Vector3 moveVector = MelLib::Vector3(playerNormalizeVector.x, 0, playerNormalizeVector.z) * moveSpeed;
+	//// 移動
+	//if (!isAttack && move)
+	//{
+	//	//Move();
+	//}
+	//else 
+	//{
+	//	/* 遠い敵がいたら例外で動かす
+	//	for (auto& enemy : enemys)
+	//	{
+	//		if (enemy->GetIsAttack())continue;
 
-				enemy->AddPosition(moveVector);
-			}
-		}
-	}
+	//		if (MelLib::LibMath::CalcDistance3D(enemy->GetPosition(), pPlayer->GetPosition()) >= MIN_DISTANCE)
+	//		{
+	//			MelLib::Vector3 playerNormalizeVector = pPlayer->CalcPlayerVector(enemy->GetPosition());
+	//			MelLib::Vector3 moveVector = MelLib::Vector3(playerNormalizeVector.x, 0, playerNormalizeVector.z) * moveSpeed;
+
+	//			enemy->AddPosition(moveVector);
+	//		}
+	//	}*/
+	//}
 }
 
 void EnemySpaunPoint::Draw()
 {
-	AllDraw();
+	modelObjects["main"].SetMulColor(MelLib::Color(0, 255, 0, 255));
+	//AllDraw();
 }
 
 void EnemySpaunPoint::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)

@@ -8,6 +8,7 @@ class EnemySpaunPoint :public MelLib::GameObject
 {
 	// ç≈í·ãóó£
 	static const float MIN_DISTANCE;
+	static const float ATTACK_MIN_DISTANCE;
 
 	static std::vector<EnemySpaunPoint*>spaunPoints;
 	
@@ -25,6 +26,8 @@ class EnemySpaunPoint :public MelLib::GameObject
 
 	const std::string CLASS_NAME;
 
+	float minDisEnemyDis = 0.0f;
+	int minDisEnemyNum = 0;
 #pragma region çUåÇ
 
 	bool isAttack = false;
