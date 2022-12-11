@@ -9,6 +9,7 @@
 void TestScene::Initialize()
 {
 	Stage::LoadResources(0);
+	Stage::LoadResources(1);
 
 
 	pPlayer = Player::GetPPlayer();
