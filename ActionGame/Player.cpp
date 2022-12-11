@@ -209,8 +209,11 @@ void Player::Update()
 		notFallPrePosition[0] = prePosition;
 	}
 
-	Move();
-	Jump();
+	if (currentAttack == PlayerSlush::AttackType::NONE) 
+	{
+		Move();
+		Jump();
+	}
 
 	ReturnStage();
 
