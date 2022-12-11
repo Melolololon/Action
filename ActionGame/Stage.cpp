@@ -47,10 +47,18 @@ Stage::Stage(const unsigned int stageNum)
 
 	SetStageData(STAGE_NUM);
 
+	
+	collisionCheckDistance = FLT_MAX;
+}
+
+void Stage::Initialize()
+{
+	MelLib::ModelData* pColl = MelLib::ModelData::Get("wallCollision" + std::to_string(STAGE_NUM));
+	
 	// 地面の三角形座標を取得
 	std::vector<std::vector<MelLib::TriangleData>>groundCollision;
 	modelObjects["ground"].GetModelTriangleData(groundCollision);
-	
+
 	// 壁の三角形の判定を取得
 	std::vector<std::vector<MelLib::TriangleData>>wallCollision;
 	if (pColl)
@@ -60,22 +68,21 @@ Stage::Stage(const unsigned int stageNum)
 
 	// リサイズして判定を追加
 	size_t triDataSize = groundCollision[0].size();
-	if (pColl)triDataSize = wallCollision[0].size();
+	if (pColl)triDataSize += wallCollision[0].size();
 
 	triangleDatas["main"].resize(triDataSize);
-	for (int i = 0; i < groundCollision.size(); i++)
+	for (int i = 0; i < groundCollision[0].size(); i++)
 	{
 		triangleDatas["main"][i] = groundCollision[0][i];
 	}
-	if (pColl) 
+	if (pColl)
 	{
-		for (int i = groundCollision.size(); i < triangleDatas.size(); i++)
+		for (int i = groundCollision[0].size(); i < triangleDatas.size(); i++)
 		{
 			triangleDatas["main"][i] = wallCollision[0][i - groundCollision.size()];
 		}
 	}
 
-	collisionCheckDistance = FLT_MAX;
 }
 
 void Stage::Draw()

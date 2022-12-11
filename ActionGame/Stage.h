@@ -17,7 +17,7 @@ public:
     static void LoadResources(unsigned int stageNum);
 
     Stage(unsigned int stageNum);
-
+    void Initialize()override;
     void Draw()override;
     std::shared_ptr<GameObject> GetNewPtr()override;
 };
