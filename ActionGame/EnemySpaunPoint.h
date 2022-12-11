@@ -19,16 +19,26 @@ class EnemySpaunPoint :public MelLib::GameObject
 	unsigned int enemyNum = ENEMY_MAX_NUM;
 
 	static Player* pPlayer;
+	float playerDis = 0.0f;
 
 	float moveSpeed = 0.0f;
 
 	const std::string CLASS_NAME;
+
+#pragma region çUåÇ
+
+	bool isAttack = false;
+	unsigned int attackEnemyNum = 0;
+#pragma endregion
+
+
 private:
 	bool CalcDistance();
 
 	void Move();
 	void Rot();
 	void Attack();
+	void CheckEndAttack();
 
 	void CteateEnemy();
 public:

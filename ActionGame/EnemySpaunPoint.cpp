@@ -48,6 +48,27 @@ void EnemySpaunPoint::Attack()
 	// 近さで決める
 	// 一度に攻撃するキャラ数に制限をかける
 
+	float minDis = FLT_MAX;
+	for (int i = 0; i < enemys.size();i++)
+	{
+		MelLib::Vector3 pos = enemys[i]->GetPosition();
+		float dis = MelLib::LibMath::CalcDistance3D(pos, pPlayer->GetPosition());
+
+		if (minDis > dis)
+		{
+			minDis = dis;
+			attackEnemyNum = i;
+		}
+	}
+
+	enemys[attackEnemyNum]->StartAttack();
+	isAttack = true;
+
+}
+
+void EnemySpaunPoint::CheckEndAttack()
+{
+	if (!enemys[attackEnemyNum]->GetIsAttack())isAttack = false;
 }
 
 void EnemySpaunPoint::CteateEnemy()
@@ -107,13 +128,18 @@ void EnemySpaunPoint::Initialize()
 
 void EnemySpaunPoint::Update()
 {
+	CheckEndAttack();
+
 	// 敵0人で削除
 	//if (enemyNum <= 0)eraseManager = true;
 
 	// プレイヤーと確認
-	float playerDis = MelLib::LibMath::CalcDistance3D(GetPosition(), pPlayer->GetPosition());
+	playerDis = MelLib::LibMath::CalcDistance3D(GetPosition(), pPlayer->GetPosition());
 	// 近かったら攻撃
-	if (playerDis <= MIN_DISTANCE) Attack();
+	if (playerDis <= MIN_DISTANCE && !isAttack) Attack();
+
+	// プレイヤーと近かったら移動しない
+	if (playerDis <= MIN_DISTANCE)return;
 
 	// 距離を確認
 	for (auto& spaunPoint : spaunPoints) 

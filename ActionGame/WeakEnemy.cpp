@@ -6,6 +6,10 @@ const float WeakEnemy::MOVE_SPEED = 0.2f;
 
 void WeakEnemy::Attack()
 {
+	timer++;
+
+	if (timer >= 60 * 1.5f)isAttack = false;
+
 }
 
 WeakEnemy::WeakEnemy(const MelLib::Vector3& pos):NewEnemy("WeakEnemy")
@@ -38,10 +42,14 @@ void WeakEnemy::Initialize()
 void WeakEnemy::Update()
 {
 	CalcMovePhysics();
+
+	if (isAttack)Attack();
 }
 
 void WeakEnemy::Draw()
 {
+	if (isAttack)modelObjects["main"].SetMulColor(MelLib::Color(0, 0, 255, 255));
+	else modelObjects["main"].SetMulColor(MelLib::Color(255,255, 255, 255));
 	AllDraw();
 }
 
