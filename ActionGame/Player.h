@@ -4,6 +4,8 @@
 #include<FrameTimer.h>
 #include<Easing.h>
 
+#include"AttackEffect.h"
+
 #include"PlayerSlush.h"
 #include"Input.h"
 #include"Enemy.h"
@@ -26,6 +28,8 @@ public:
 		DASH,
 		GUARD,
 	};
+
+	
 
 private:
 
@@ -75,6 +79,9 @@ private:
 
 	struct AttackData
 	{
+		
+		AttackEffect effect = AttackEffect::NONE;
+
 		int power = 0;
 		int time = 0;
 
@@ -86,10 +93,11 @@ private:
 		int nextTime = 0;
 
 		AttackData() {}
-		AttackData(const int power, const int time, const int nextTime) :
+		AttackData(const int power, const int time, const int nextTime ,const AttackEffect effect) :
 			power(power),
 			time(time),
-			nextTime(nextTime) {}
+			nextTime(nextTime),
+			effect(effect){}
 
 	};
 
@@ -268,6 +276,9 @@ public:
 
 	bool GetHitEventFlag()const { return hitEventFlag; }
 	bool GetHitTutorialEventFlag()const { return hitTutorialEventFlag; }
+
+	//PlayerSlush::AttackType GetPlayerAttackType()const { return currentAttack; }
+	AttackEffect GetPlayerAttackEffect()const { return attackData.at(currentAttack).effect; }
 
 	bool DeadAnimationEnd()const 
 	{

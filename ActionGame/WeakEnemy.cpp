@@ -2,7 +2,7 @@
 #include"Pause.h"
 #include"Stage.h"
 
-const float WeakEnemy::MOVE_SPEED = 0.2f;
+#include"PlayerSlush.h"
 
 void WeakEnemy::Attack()
 {
@@ -47,6 +47,9 @@ void WeakEnemy::Update()
 	CalcMovePhysics();
 
 	if (isAttack)Attack();
+
+	// êÅÇ¡îÚÇ—íÜÇæÇ¡ÇΩÇÁêÅÇ¡îÚÇ‘ìÆçÏÇÇ∑ÇÈ
+	if (currentThisAttackEffect == AttackEffect::BE_BLOWN_AWAY)BeBlownAwayMove();
 }
 
 void WeakEnemy::Draw()
@@ -62,39 +65,46 @@ void WeakEnemy::Hit(const GameObject& object, const MelLib::ShapeType3D collisio
 
 	//if (isDead)return;
 
-	//std::string n = typeid(object).name();
-	//if (typeid(object) == typeid(PlayerSlush) && !isMuteki)
-	//{
+	std::string n = typeid(object).name();
+	if (typeid(object) == typeid(PlayerSlush)/* && !isMuteki*/)
+	{
 
-	//	// ÉvÉåÉCÉÑÅ[Ç©ÇÁåªç›ÇÃçUåÇÇÃçUåÇóÕÇéÊìæÇµÅAëÃóÕÇå∏ÇÁÇ∑
-	//	hp -= pPlayer->GetCurrentAttackPower();
+		// ÉvÉåÉCÉÑÅ[Ç©ÇÁåªç›ÇÃçUåÇÇÃçUåÇóÕÇéÊìæÇµÅAëÃóÕÇå∏ÇÁÇ∑
+		//hp -= pPlayer->GetCurrentAttackPower();
 
-	//	// ñ≥ìGÇ…
-	//	isMuteki = true;
-	//	mutekiTimer.SetStopFlag(false);
+		// ñ≥ìGÇ…
+		//isMuteki = true;
+		//mutekiTimer.SetStopFlag(false);
 
-	//	// çdíºèàóù
-	//	isStun = true;
-	//	modelObjects["main"].SetAnimation("Stun");
+		// çdíºèàóù
+		//isStun = true;
+		//modelObjects["main"].SetAnimation("Stun");
 
-	//	modelObjects["main"].SetAnimationFrameStart();
-	//	modelObjects["main"].SetAnimationEndStopFlag(true);
-	//	modelObjects["main"].SetAnimationReversePlayBack(false);
+		//modelObjects["main"].SetAnimationFrameStart();
+		//modelObjects["main"].SetAnimationEndStopFlag(true);
+		//modelObjects["main"].SetAnimationReversePlayBack(false);
 
-	//	// çUåÇã≠êßèIóπ
-	//	isAttack = false;
-	//	attackTimer.ResetTimeZero();
-	//	attackTimer.SetStopFlag(true);
+		// çUåÇã≠êßèIóπ
+		isAttack = false;
+		//attackTimer.ResetTimeZero();
+		//attackTimer.SetStopFlag(true);
 
 
-	//	// 0Ç…Ç»Ç¡ÇΩÇÁÇ‚ÇÁÇÍèàóù
-	//	if (hp <= 0)
-	//	{
-	//		isDead = true;
+		// 0Ç…Ç»Ç¡ÇΩÇÁÇ‚ÇÁÇÍèàóù
+		/*if (hp <= 0)
+		{
+			isDead = true;
 
-	//		modelObjects["main"].SetAnimation("Dead");
-	//	}
-	//}
+			modelObjects["main"].SetAnimation("Dead");
+		}*/
+
+		// êÅÇ¡îÚÇŒÇµèàóù
+		if (pPlayer->GetPlayerAttackEffect() == AttackEffect::BE_BLOWN_AWAY) 
+		{
+			FallStart(0.6f);
+			currentThisAttackEffect = AttackEffect::BE_BLOWN_AWAY;
+		}
+	}
 
 	if (typeid(object) == typeid(Stage)
 		&& collisionType == MelLib::ShapeType3D::SEGMENT)
@@ -108,5 +118,7 @@ void WeakEnemy::Hit(const GameObject& object, const MelLib::ShapeType3D collisio
 		addPos.y += GetSegmentCalcResult().triangleHitPos.y - segment3DDatas["main"][0].GetPosition().v2.y;
 
 		AddPosition(addPos);
+
+		if (currentThisAttackEffect == AttackEffect::BE_BLOWN_AWAY)currentThisAttackEffect = AttackEffect::NONE;
 	}
 }

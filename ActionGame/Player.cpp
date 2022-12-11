@@ -43,11 +43,12 @@ Player* Player::pPlayer = nullptr;
 
 std::unordered_map<PlayerSlush::AttackType, const Player::AttackData> Player::attackData =
 {
-	{PlayerSlush::AttackType::NONE,AttackData(0,0,0)},
-	{PlayerSlush::AttackType::NORMAL_1,AttackData(1,20,10)},
-	{PlayerSlush::AttackType::NORMAL_2,AttackData(1,30,20)},
-	{PlayerSlush::AttackType::NORMAL_3,AttackData(1,30,20)},// これのアニメーションバグるのアニメーション終わる前にキャンセルされて立ちに戻るから?
-	{PlayerSlush::AttackType::DASH_1,AttackData(1,20,10)},
+	// AttackData(パワー,時間,次の攻撃入力時間)
+	{PlayerSlush::AttackType::NONE,AttackData(0,0,0 ,AttackEffect::NONE)},
+	{PlayerSlush::AttackType::NORMAL_1,AttackData(1,20,10,AttackEffect::NONE)},
+	{PlayerSlush::AttackType::NORMAL_2,AttackData(1,30,20,AttackEffect::NONE)},
+	{PlayerSlush::AttackType::NORMAL_3,AttackData(2,30,20,AttackEffect::BE_BLOWN_AWAY)},// これのアニメーションバグるのアニメーション終わる前にキャンセルされて立ちに戻るから?
+	{PlayerSlush::AttackType::DASH_1,AttackData(1,20,10,AttackEffect::BE_BLOWN_AWAY)},
 };
 
 
@@ -273,7 +274,8 @@ void Player::TitleUpdate()
 
 MelLib::Vector3 Player::CalcPlayerVector(const MelLib::Vector3& pos)const
 {
-	return MelLib::Vector3::Normalize(GetPosition() - pos);
+	MelLib::Vector3 p = GetPosition();
+	return MelLib::Vector3::Normalize(p - pos);
 }
 
 void Player::ChangeAnimationData()

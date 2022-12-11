@@ -6,12 +6,12 @@ class WeakEnemy :
     public NewEnemy
 {
 private:
-	static const float MOVE_SPEED;
 
 	int timer = 0;
+
 private:
 
-
+	
 
 
 public:

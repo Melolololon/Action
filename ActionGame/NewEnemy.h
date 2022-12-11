@@ -1,11 +1,33 @@
 #pragma once
 #include<GameObject.h>
+#include"Player.h"
+#include"AttackEffect.h"
+
 class NewEnemy:public MelLib::GameObject
 {
 protected:
+	void BeBlownAwayMove();
+protected:
 	bool isAttack = false;
-	
+	static Player* pPlayer;
+
+	AttackEffect currentThisAttackEffect = AttackEffect::NONE;
+
+	// ÉvÉåÉCÉÑÅ[Ç÷ÇÃà⁄ìÆ
+	//void ToPlayerMove();
+	//bool CheckMove();
+
+
+	static const float MOVE_SPEED;
+
+	// ç≈í·ãóó£
+	static const float MIN_DISTANCE;
+
+
+
 public:
+	static void SetPPlayer(Player* p) { pPlayer = p; }
+
 	NewEnemy(const std::string& name);
 	void Update()override;
 	void Draw()override;
@@ -23,5 +45,9 @@ public:
 	void StartAttack() { isAttack = true; }
 
 	bool GetIsAttack()const { return isAttack; }
+
+	AttackEffect GetCurrentThisAttackEffect()const { return currentThisAttackEffect; }
+
+
 };
 

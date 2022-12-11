@@ -272,5 +272,8 @@
     <ClInclude Include="NewEnemy.h">
       <Filter>ヘッダー ファイル\Object\Enemy</Filter>
     </ClInclude>
+    <ClInclude Include="AttackEffect.h">
+      <Filter>ヘッダー ファイル\Object\Player</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
