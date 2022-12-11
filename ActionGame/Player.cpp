@@ -79,18 +79,18 @@ Player::Player(const MelLib::Vector3& pos)
 	segment3DDatas["main"].resize(3);
 	segment3DDatas["main"][0] = capsuleDatas["main"][0].GetSegment3DData();
 
-	//// •Ç‚Æ‚Ì”»’è—p
-	//segment3DDatas["main"][1].SetPosition
-	//(
-	//	MelLib::Value2<MelLib::Vector3>
-	//	(GetPosition() + MelLib::Vector3(0, 0, 10), GetPosition() + MelLib::Vector3(0, 0, -10))
-	//);
+	// •Ç‚Æ‚Ì”»’è—p
+	segment3DDatas["main"][1].SetPosition
+	(
+		MelLib::Value2<MelLib::Vector3>
+		(GetPosition() + MelLib::Vector3(0, 0, 10), GetPosition() + MelLib::Vector3(0, 0, -10))
+	);
 
-	//segment3DDatas["main"][2].SetPosition
-	//(
-	//	MelLib::Value2<MelLib::Vector3>
-	//	(GetPosition() + MelLib::Vector3(10, 0, 0), GetPosition() + MelLib::Vector3(-10, 0, 0))
-	//);
+	segment3DDatas["main"][2].SetPosition
+	(
+		MelLib::Value2<MelLib::Vector3>
+		(GetPosition() + MelLib::Vector3(10, 0, 0), GetPosition() + MelLib::Vector3(-10, 0, 0))
+	);
 
 
 
