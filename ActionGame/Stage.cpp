@@ -77,9 +77,14 @@ void Stage::Initialize()
 	}
 	if (pColl)
 	{
-		for (int i = groundCollision[0].size(); i < triangleDatas.size(); i++)
+		const size_t GROUND_TRI_SIZE = groundCollision[0].size();
+		for (int i = GROUND_TRI_SIZE; i < triangleDatas["main"].size(); i++)
 		{
-			triangleDatas["main"][i] = wallCollision[0][i - groundCollision.size()];
+			if (i >= 225) 
+			{
+				int z = 0;
+			}
+			triangleDatas["main"][i] = wallCollision[0][i - GROUND_TRI_SIZE];
 		}
 	}
 
@@ -92,8 +97,10 @@ void Stage::Draw()
 		/*std::vector<MelLib::Texture*> p;
 		modelObjects["stage"].GetPMaterial()->GetPTextures(p);*/
 		modelObjects["stage"].Draw();
+		modelObjects["wallCollision"].Draw();
 	}
 	modelObjects["ground"].Draw();
+
 }
 
 std::shared_ptr<MelLib::GameObject> Stage::GetNewPtr()
