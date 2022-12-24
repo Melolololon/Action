@@ -80,10 +80,6 @@ void Stage::Initialize()
 		const size_t GROUND_TRI_SIZE = groundCollision[0].size();
 		for (int i = GROUND_TRI_SIZE; i < triangleDatas["main"].size(); i++)
 		{
-			if (i >= 225) 
-			{
-				int z = 0;
-			}
 			triangleDatas["main"][i] = wallCollision[0][i - GROUND_TRI_SIZE];
 		}
 	}

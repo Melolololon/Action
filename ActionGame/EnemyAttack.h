@@ -11,7 +11,7 @@ class EnemyAttack :
 private:
 	int power;
 
-	MelLib::FrameTimer deadTimer;
+	
 
 
 	const MelLib::ModelObject& MODEL;
@@ -42,7 +42,6 @@ public:
 		unsigned int power,
 		const MelLib::Vector3& attackStartPos,
 		float radius,
-		int deadTime,
 		const MelLib::ModelObject& model,
 		const MelLib::Vector3& modelStartPos,
 		const MelLib::Vector3& modelStartAngle,

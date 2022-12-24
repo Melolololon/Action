@@ -10,7 +10,7 @@
 
 const float EnemySpaunPoint::MIN_DISTANCE = 50.0f;
 const float EnemySpaunPoint::ATTACK_MIN_DISTANCE = 20.0f;
-const unsigned int EnemySpaunPoint::ENEMY_MAX_NUM = 3;
+const unsigned int EnemySpaunPoint::ENEMY_MAX_NUM = 8;
 
 
 std::vector<EnemySpaunPoint*>EnemySpaunPoint::spaunPoints;
@@ -202,7 +202,7 @@ void EnemySpaunPoint::Update()
 void EnemySpaunPoint::Draw()
 {
 	modelObjects["main"].SetMulColor(MelLib::Color(0, 255, 0, 255));
-	//AllDraw();
+	AllDraw();
 }
 
 void EnemySpaunPoint::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)

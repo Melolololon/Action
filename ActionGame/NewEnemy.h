@@ -6,6 +6,9 @@
 class NewEnemy:public MelLib::GameObject
 {
 protected:
+	/// <summary>
+	/// ‚Á”ò‚Ô“®‚«
+	/// </summary>
 	void BeBlownAwayMove();
 protected:
 	bool isAttack = false;
