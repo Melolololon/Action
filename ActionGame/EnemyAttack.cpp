@@ -10,7 +10,6 @@ EnemyAttack::EnemyAttack
 	unsigned int power,
 	const MelLib::Vector3& attackStartPos,
 	float radius,
-	int deadTime,
 	const MelLib::ModelObject& model,
 	const MelLib::Vector3& modelStartPos,
 	const MelLib::Vector3& modelStartAngle,
@@ -30,8 +29,7 @@ EnemyAttack::EnemyAttack
 	sphereDatas["main"][0].SetRadius(radius);
 
 
-	deadTimer.SetMaxTime(deadTime);
-	deadTimer.SetStopFlag(false);
+	
 }
 
 void EnemyAttack::Update()
@@ -50,10 +48,7 @@ void EnemyAttack::Update()
 		MODEL_START_SCALE
 	));
 
-	if (deadTimer.GetMaxOverFlag())
-	{
-		eraseManager = true;
-	}
+	if (MODEL.GetAnimationEndFlag())eraseManager = true;
 }
 
 void EnemyAttack::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)

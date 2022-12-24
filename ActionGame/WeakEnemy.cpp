@@ -35,7 +35,7 @@ WeakEnemy::WeakEnemy(const MelLib::Vector3& pos):NewEnemy("WeakEnemy")
 	// プレイヤーみたいな十字の線判定作って、壁でジャンプするようにする
 
 
-	modelObjects["main"].SetScale(20);
+	//modelObjects["main"].SetScale(20);
 }
 
 void WeakEnemy::Initialize()
