@@ -32,5 +32,7 @@ public:
 
 	static float GetMoveSpeed() { return MOVE_SPEED; }
 
+	void SetStartAttackAnimation()override;
+
 	void Attack();
 };

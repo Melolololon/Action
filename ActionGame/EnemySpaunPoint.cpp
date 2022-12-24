@@ -78,6 +78,7 @@ void EnemySpaunPoint::Attack()
 	// ˆê“x‚ÉUŒ‚‚·‚éƒLƒƒƒ‰”‚É§ŒÀ‚ð‚©‚¯‚é
 
 	enemys[minDisEnemyNum]->StartAttack();
+	enemys[minDisEnemyNum]->SetStartAttackAnimation();
 	isAttack = true;
 
 }

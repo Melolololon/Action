@@ -103,7 +103,6 @@ void NoemalEnemy::Update()
 				40,
 				MelLib::Vector3(-12, 17, 0),
 				3.0f,
-				60 * 0.2,
 				modelObjects["main"],
 				MelLib::Vector3(0, 0, 0),
 				MelLib::Vector3(0, 0, 0),

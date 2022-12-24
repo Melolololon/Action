@@ -46,6 +46,7 @@ public:
 
 
 	void StartAttack() { isAttack = true; }
+	virtual void SetStartAttackAnimation();
 
 	bool GetIsAttack()const { return isAttack; }
 

@@ -2,17 +2,34 @@
 #include"Pause.h"
 #include"Stage.h"
 
+#include"CapsuleEnemyAttack.h"
+
 #include"PlayerSlush.h"
 #include"JumpAttack.h"
 
+
+#include<GameObjectManager.h>
+
+// 35Fで攻撃発生
+
+void WeakEnemy::SetStartAttackAnimation()
+{
+	modelObjects["main"].SetAnimation("Attack");
+}
+
 void WeakEnemy::Attack()
 {
-	timer++;
+	/*timer++;
 
 	if (timer >= 60 * 1.5f)
 	{
 		isAttack = false;
 		timer = 0;
+	}*/
+
+	if (modelObjects["main"].GetAnimationEndFlag()) 
+	{
+		isAttack = false;
 	}
 }
 
@@ -51,6 +68,35 @@ void WeakEnemy::Update()
 
 	// 吹っ飛び中だったら吹っ飛ぶ動作をする
 	if (currentThisAttackEffect == AttackEffect::BE_BLOWN_AWAY)BeBlownAwayMove();
+
+	// 攻撃判定追加
+	if (modelObjects["main"].GetAnimationFrame() == 35) 
+	{
+		std::shared_ptr<CapsuleEnemyAttack>attack;
+
+		// 判定のセット方法
+		// 1.Tポーズにする
+		// 2.四角いモデルを用意し、当たり判定の位置にセットし、その座標をメモする
+		// 3.2つ目の引数(今回の0の部分)をメモした座標にする
+		// 4.2を行ったときのモデルの座標などを引数の5～7にセットする
+		// 
+		// 0を判定の初期座標に書き換える
+		// 5の部分に、当たり判定の座標ををセットした時の座標、角度、大きさを入力
+		attack = std::make_shared<CapsuleEnemyAttack>
+			(
+				1,
+				0,
+				2.0f,
+				modelObjects["main"],
+				5,
+				5,
+				5,
+				"Bone_R.003",
+				"Body"
+			);
+
+		MelLib::GameObjectManager::GetInstance()->AddObject(attack);
+	}
 }
 
 void WeakEnemy::Draw()
