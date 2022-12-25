@@ -82,10 +82,13 @@ void WeakEnemy::Update()
 		// 
 		// 0を判定の初期座標に書き換える
 		// 5の部分に、当たり判定の座標ををセットした時の座標、角度、大きさを入力
+
+		MelLib::Value2<MelLib::Vector3>p;
+
 		attack = std::make_shared<CapsuleEnemyAttack>
 			(
 				1,
-				0,
+				p,
 				2.0f,
 				modelObjects["main"],
 				5,

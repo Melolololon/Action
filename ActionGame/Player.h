@@ -73,6 +73,8 @@ private:
 
 	// ジャンプ開始位置
 	MelLib::Vector3 fallStartPosition;
+
+	static const float GROUND_HUND_VELOCITY;
 #pragma endregion
 
 #pragma region 攻撃
@@ -118,6 +120,8 @@ private:
 	MelLib::Vector3 startPos;
 	MelLib::Vector3 startScale;
 	MelLib::Vector3 startAngle;
+
+	static const float JUMP_ATTACK_DROP_SPEED;// -1.0f
 #pragma endregion
 
 #pragma region 防御
@@ -163,6 +167,7 @@ private:
 	bool isTPause = false;
 
 	MelLib::FrameTimer jumpAttackStartTimer;
+	MelLib::FrameTimer jumpAttackEndTimer;
 private:
 
 

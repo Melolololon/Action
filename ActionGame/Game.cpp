@@ -61,7 +61,7 @@ void Game::Initialize()
 	MelLib::Library::SetFramesPerSecond60(true);
 
 	//d—Í‰Á‘¬“x‚ğİ’è
-	MelLib::GameObject::SetGravutationalAcceleration(0.1f);
+	MelLib::GameObject::SetGravutationalAcceleration(0.2f);
 
 
 	// ‹¤’Ê“Ç‚İ‚İ
