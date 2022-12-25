@@ -75,7 +75,6 @@ namespace MelLib
 		/// </summary>
 		void Reset();
 
-		std::string GetObjectType(const GameObject& object)const;
 
 		Camera* pEditerCamera = nullptr;
 	private:
@@ -115,7 +114,10 @@ namespace MelLib
 		GameObject* pEditSelectObject = nullptr;
 
 		
+		// エディットモード中かどうか
 		bool isEdit = true;
+		// エディターのオンオフフラグ
+		bool editorFlag = true;
 		bool releaseEdit = false;
 
 		int selectListObjectNum = 0;
@@ -158,6 +160,8 @@ namespace MelLib
 		void Draw();
 
 		bool GetIsEdit()const { return isEdit; }
+		bool GetReleaeEdit()const { return releaseEdit; }
+		bool GetEditerFlag()const { return editorFlag; }
 
 		/// <summary>
 		/// エディタのオンオフを設定します。リリースビルド時にエディタをオンにできるようにしてない場合はオンにできません。
@@ -172,5 +176,6 @@ namespace MelLib
 		void SetReleaseEditFlag(const bool flag);
 
 	
+		void SetEditerFlag(const bool flag) { editorFlag = flag; }
 	};
 }

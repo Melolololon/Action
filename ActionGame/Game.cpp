@@ -71,7 +71,8 @@ void Game::Initialize()
 	Wall::LoadResources();
 	Tutorial::LoadResources();
 
-	MelLib::SceneManager::GetInstance()->SetStartScene(new TestScene());
+	//MelLib::SceneManager::GetInstance()->SetStartScene(new TestScene());
+	MelLib::SceneManager::GetInstance()->SetStartScene(new Title());
 	Fade::GetInstance()->Initializ();
 
 	Option::GetInstance()->Initialize();
@@ -82,7 +83,11 @@ void Game::Initialize()
 	MelLib::Camera::Get()->SetFar(10000.0f);
 
 
+	MelLib::SceneEditer::GetInstance()->SetEditerFlag(false);
 	MelLib::SceneEditer::GetInstance()->Initialize();
+
+
+
 
 #pragma region エディター登録
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Player>(),"Player");
