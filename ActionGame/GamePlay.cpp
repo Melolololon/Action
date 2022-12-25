@@ -1,5 +1,9 @@
 #include "GamePlay.h"
 
+#include"Title.h"
+
+#include"Fade.h"
+
 #include<SceneEditer.h>
 #include<GameObjectManager.h>
 
@@ -27,7 +31,7 @@ void GamePlay::Initialize()
 #ifdef _DEBUG
 
 #else
-	MelLib::SceneEditer::GetInstance()->LoadEditData("Stage_" + std::to_string(STAGE_NUM));
+	//MelLib::SceneEditer::GetInstance()->LoadEditData("Stage_" + std::to_string(STAGE_NUM));
 #endif // _DEBUG
 
 	
@@ -45,10 +49,19 @@ void GamePlay::Initialize()
 void GamePlay::Update()
 {
 
+	Fade::GetInstance()->Update();
+
+
+	if (MelLib::Input::KeyTrigger(DIK_Q) && !Fade::GetInstance()->GetIsFade())
+	{
+		Fade::GetInstance()->Start();
+	}
+	if (Fade::GetInstance()->GetChangeSceneFlag())isEnd = true;
 }
 
 void GamePlay::Draw()
 {
+	Fade::GetInstance()->Draw();
 }
 
 void GamePlay::Finalize()
@@ -57,5 +70,5 @@ void GamePlay::Finalize()
 
 MelLib::Scene* GamePlay::GetNextScene()
 {
-	return nullptr;
+	return new Title();
 }
