@@ -40,8 +40,11 @@ std::unordered_map<Player::ActionType, MelLib::PadButton> Player::keyConfigData 
 
 };
 
-const float Player::JUMP_POWER = 2.0f;
+const float Player::JUMP_POWER = 4.0f;
+const float Player::GROUND_HUND_VELOCITY = -30.0f;
 Player* Player::pPlayer = nullptr;
+
+const float Player::JUMP_ATTACK_DROP_SPEED = -3.0f;
 
 std::unordered_map<PlayerSlush::AttackType, const Player::AttackData> Player::attackData =
 {
@@ -138,6 +141,9 @@ Player::Player(const MelLib::Vector3& pos)
 
 
 	pPlayer = this;
+
+
+	jumpAttackEndTimer.SetMaxTime(60 * 0.5);
 }
 
 void Player::Update()
@@ -224,13 +230,40 @@ void Player::Update()
 	Guard();
 	Attack();
 
-	// 仮の落下攻撃処理
-	if (jumpAttackStartTimer.GetMaxOverFlag()) 
+	// 落下攻撃処理
+	//if (jumpAttackStartTimer.GetMaxOverFlag()) 
+	if(modelObjects["main"].GetAnimationEndFlag()
+		&& currentAttack == PlayerSlush::AttackType::JUMP)
 	{
-		FallStart(-1.0f);
+		FallStart(JUMP_ATTACK_DROP_SPEED);
 		jumpAttackStartTimer.ResetTimeZero();
 		jumpAttackStartTimer.SetStopFlag(true);
 	}
+
+	// ジャンプ攻撃終了
+	if (modelObjects["main"].GetCurrentAnimationName() == "Jump_Attack_End"
+		&& modelObjects["main"].GetAnimationEndFlag())
+	{
+		currentAttack = PlayerSlush::AttackType::NONE;
+		// 強制終了
+		attackTimer.SetNowTime(attackData[PlayerSlush::AttackType::JUMP].time);
+
+		modelObjects["main"].SetAnimationFrame(0);
+		modelObjects["main"].SetAnimation("No_Cont");
+
+	}
+
+	// ジャンプ攻撃終了アニメーション
+	if (jumpAttackEndTimer.GetMaxOverFlag()) 
+	{
+		modelObjects["main"].SetAnimation("Jump_Attack_End");
+		modelObjects["main"].SetAnimationFrame(0);
+		jumpAttackEndTimer.SetStopFlag(true);
+		jumpAttackEndTimer.ResetTimeZero();
+	
+	}
+
+	
 	
 	CalcMovePhysics();
 
@@ -340,7 +373,8 @@ void Player::Move()
 
 	Dash();
 
-	if (isDash && currentAttack == PlayerSlush::AttackType::JUMP)
+	// ダッシュ中またはジャンプ攻撃中は移動不可
+	if (isDash || currentAttack == PlayerSlush::AttackType::JUMP)
 	{
 		return;
 	}
@@ -398,6 +432,9 @@ void Player::Move()
 		moveSpeed = 0.0;
 
 		modelObjects["main"].SetAnimation("No_Cont");
+
+		// アニメーション確認用
+		//modelObjects["main"].SetAnimation("Jump_Attack");
 	}
 
 
@@ -610,6 +647,7 @@ void Player::SetAttackType()
 		{
 			currentAttack = PlayerSlush::AttackType::JUMP;
 			FallEnd();
+			modelObjects["main"].SetAnimation("Jump_Attack");
 			jumpAttackStartTimer.SetStopFlag(false);
 			jumpAttackStartTimer.SetMaxTime(60 * 0.5);
 		}
@@ -950,7 +988,7 @@ void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionTy
 				float velocityY = GetVelocity().y;
 
 				// 高いところから落ちたら手をつくため、動けなくする
-				if (velocityY <= -3.0f)
+				if (velocityY <= GROUND_HUND_VELOCITY)
 				{
 					hitGroundNotMove = true;
 
@@ -1008,11 +1046,9 @@ void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionTy
 			}
 
 
-			if (currentAttack == PlayerSlush::AttackType::JUMP) 
+			if (modelObjects["main"].GetCurrentAnimationName() == "Jump_Attack" && jumpAttackEndTimer.GetNowTime() == 0)
 			{
-				currentAttack = PlayerSlush::AttackType::NONE;
-				// 強制終了
-				attackTimer.SetNowTime(attackData[PlayerSlush::AttackType::JUMP].time);
+				jumpAttackEndTimer.SetStopFlag(false);
 
 				// 攻撃判定追加
 				MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<JumpAttack>(GetPosition(),50.0f));
