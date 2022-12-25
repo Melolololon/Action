@@ -148,6 +148,7 @@ Player::Player(const MelLib::Vector3& pos)
 
 void Player::Update()
 {
+
 	MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())
 	{
@@ -219,20 +220,14 @@ void Player::Update()
 		notFallPrePosition[0] = prePosition;
 	}
 
-	if (currentAttack == PlayerSlush::AttackType::NONE) 
-	{
-		Move();
-		Jump();
-	}
 
-	ReturnStage();
-
-	Guard();
-	Attack();
+	// アニメーションの終了確認フラグがアニメーションのフレームを0にしても切り替わらない(次のフレームにならないとfalseにならない)
+	// からいったんここに書く
 
 	// 落下攻撃処理
-	//if (jumpAttackStartTimer.GetMaxOverFlag()) 
-	if(modelObjects["main"].GetAnimationEndFlag()
+//if (jumpAttackStartTimer.GetMaxOverFlag()) 
+	if (modelObjects["main"].GetCurrentAnimationName() == "Jump_Attack"
+		&& modelObjects["main"].GetAnimationEndFlag()
 		&& currentAttack == PlayerSlush::AttackType::JUMP)
 	{
 		FallStart(JUMP_ATTACK_DROP_SPEED);
@@ -254,16 +249,31 @@ void Player::Update()
 	}
 
 	// ジャンプ攻撃終了アニメーション
-	if (jumpAttackEndTimer.GetMaxOverFlag()) 
+	if (jumpAttackEndTimer.GetMaxOverFlag())
 	{
 		modelObjects["main"].SetAnimation("Jump_Attack_End");
 		modelObjects["main"].SetAnimationFrame(0);
 		jumpAttackEndTimer.SetStopFlag(true);
 		jumpAttackEndTimer.ResetTimeZero();
-	
+
 	}
 
-	
+
+
+
+	if (currentAttack == PlayerSlush::AttackType::NONE) 
+	{
+		Move();
+		Jump();
+	}
+
+	ReturnStage();
+
+	Guard();
+	Attack();
+
+
+
 	
 	CalcMovePhysics();
 
@@ -648,6 +658,7 @@ void Player::SetAttackType()
 			currentAttack = PlayerSlush::AttackType::JUMP;
 			FallEnd();
 			modelObjects["main"].SetAnimation("Jump_Attack");
+			modelObjects["main"].SetAnimationFrame(0);
 			jumpAttackStartTimer.SetStopFlag(false);
 			jumpAttackStartTimer.SetMaxTime(60 * 0.5);
 		}
