@@ -3,6 +3,7 @@
 #include"Stage.h"
 #include"EnemySpaunPoint.h"
 #include"NewEnemy.h"
+#include"WeakEnemy.h"
 
 #include<GameObjectManager.h>
 
@@ -19,6 +20,12 @@ void TestScene::Initialize()
 
 	EnemySpaunPoint::ClearEnemySpauns();
 	MelLib::GameObjectManager::GetInstance()->InitializeObject();
+
+
+	// “–‚½‚è”»’èŠm”F—p
+	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<WeakEnemy>(0));
+
+
 }
 
 void TestScene::Update()

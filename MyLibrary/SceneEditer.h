@@ -75,6 +75,7 @@ namespace MelLib
 		/// </summary>
 		void Reset();
 
+		bool ReleaseCheck();
 
 		Camera* pEditerCamera = nullptr;
 	private:
@@ -115,7 +116,7 @@ namespace MelLib
 
 		
 		// エディットモード中かどうか
-		bool isEdit = true;
+		bool isEdit = false;
 		// エディターのオンオフフラグ
 		bool editorFlag = true;
 		bool releaseEdit = false;
@@ -177,5 +178,6 @@ namespace MelLib
 
 	
 		void SetEditerFlag(const bool flag) { editorFlag = flag; }
+
 	};
 }

@@ -21,14 +21,20 @@
 
 #include"EnemyAttack.h"
 #include"NormalEnemyAttack.h"
+#include"CapsuleEnemyAttack.h"
 #include"JumpEnemy.h"
 
 #include"EventFlag.h"
 #include"TutorialEventFlag.h"
 
 #include<LibMath.h>
+
+
+
 // テスト
 #include"SlushEffect.h"
+
+#include"HPGauge.h"
 
 
 std::unordered_map<Player::ActionType, MelLib::PadButton> Player::keyConfigData =
@@ -117,33 +123,39 @@ Player::Player(const MelLib::Vector3& pos)
 
 	// タイトル用処理
 	MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
-	if (typeid(*currentScene) == typeid(Title))
+	if (currentScene) 
 	{
-		modelObjects["main"].SetScale(MelLib::Vector3(3));
-		modelObjects["main"].SetAngle(0);
-		modelObjects["main"].SetAnimation("No_Cont");
-	}
-	else
-	{
-		modelObjects["main"].SetScale(MelLib::Vector3(3));
-		modelObjects["main"].SetAngle(0);
-		modelObjects["main"].SetPosition(MelLib::Vector3(0, -17, -0));
+		if (typeid(*currentScene) == typeid(Title))
+		{
+			modelObjects["main"].SetScale(MelLib::Vector3(3));
+			modelObjects["main"].SetAngle(0);
+			modelObjects["main"].SetAnimation("No_Cont");
+		}
+		else
+		{
+			modelObjects["main"].SetScale(MelLib::Vector3(3));
+			modelObjects["main"].SetAngle(0);
+			modelObjects["main"].SetPosition(MelLib::Vector3(0, -17, -0));
 
 
-		//浮き防止
-		FallStart(0.0f);
+			//浮き防止
+			FallStart(0.0f);
 
-		// 落下アニメーションからスタート
-		modelObjects["main"].SetAnimation("Jump_Up");
+			// 落下アニメーションからスタート
+			modelObjects["main"].SetAnimation("Jump_Up");
+		}
 	}
 
 	SetPosition(pos);
 
 
 	pPlayer = this;
-
+	HPGauge::SetPPlayer(this);
 
 	jumpAttackEndTimer.SetMaxTime(60 * 0.5);
+
+
+	SetCameraData();
 }
 
 void Player::Update()
@@ -825,7 +837,7 @@ void Player::SetCameraData()
 
 	if (!lockOn)
 	{
-		pCamera->SetRotateCriteriaPosition(GetPosition() );
+		pCamera->SetRotateCriteriaPosition(GetPosition());
 	}
 }
 
@@ -1120,7 +1132,8 @@ void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionTy
 	{
 
 		if (typeid(object) == typeid(EnemyAttack)
-			|| typeid(object) == typeid(NormalEnemyAttack))
+			|| typeid(object) == typeid(NormalEnemyAttack)
+			|| typeid(object) == typeid(CapsuleEnemyAttack))
 		{
 			isMuteki = true;
 			mutekiTimer.SetStopFlag(false);

@@ -132,5 +132,7 @@ public:
 		const std::vector<MelLib::BoxData>& datas,
 		const std::vector<UINT>& costs
 	);
+
+
 };
 
