@@ -33,11 +33,51 @@ void WeakEnemy::Attack()
 	}
 }
 
+void WeakEnemy::AddAttackCollisionDetection()
+{
+	std::shared_ptr<CapsuleEnemyAttack>attack;
+
+	// 判定のセット方法
+	// 1.Tポーズにする
+	// 2.四角いモデルを用意し、当たり判定の位置にセットし、その座標をメモする
+	// 3.2つ目の引数(今回の0の部分)をメモした座標にする
+	// 4.2を行ったときのモデルの座標などを引数の5～7にセットする
+	// 
+	// 0を判定の初期座標に書き換える
+	// 5の部分に、当たり判定の座標ををセットした時の座標、角度、大きさを入力
+
+	// 判定の座標
+	MelLib::Value2<MelLib::Vector3>p = 
+		MelLib::Value2<MelLib::Vector3>(MelLib::Vector3(-4.9, 9.7, 6.5), MelLib::Vector3(-4.9, 9.7, 8));
+
+	attack = std::make_shared<CapsuleEnemyAttack>
+		(
+			1,
+			p,
+			2.0f,
+			modelObjects["main"],
+			0,
+			0,
+			1,
+			"Bone_R.003",
+			"Body"
+		);
+
+	MelLib::GameObjectManager::GetInstance()->AddObject(attack);
+}
+
+void WeakEnemy::LoadResources()
+{
+	MelLib::ModelData::Load("Resources/Model/Enemy/WeakEnemy.fbx", true, "WeakEnemy");
+	int a = 0;
+}
+
 WeakEnemy::WeakEnemy(const MelLib::Vector3& pos):NewEnemy("WeakEnemy")
 {
 	SetPosition(pos);
 
-	modelObjects["main"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX),"WeakEnemy");
+	//modelObjects["main"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX),"WeakEnemy");
+	modelObjects["main"].Create(MelLib::ModelData::Get("WeakEnemy"),"WeakEnemy");
 	modelObjects["main"].SetPosition(pos);
 
 	// 当たり判定の作成
@@ -53,6 +93,12 @@ WeakEnemy::WeakEnemy(const MelLib::Vector3& pos):NewEnemy("WeakEnemy")
 
 
 	//modelObjects["main"].SetScale(20);
+
+	modelObjects["Hit01"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX), "H01");
+	modelObjects["Hit01"].SetPosition(MelLib::Vector3(-4.9, 9.7, 6.5));
+
+	modelObjects["Hit02"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX), "H02");
+	modelObjects["Hit02"].SetPosition(MelLib::Vector3(-4.9, 9.7, 8));
 }
 
 void WeakEnemy::Initialize()
@@ -62,7 +108,7 @@ void WeakEnemy::Initialize()
 
 void WeakEnemy::Update()
 {
-	CalcMovePhysics();
+	//CalcMovePhysics();
 
 	if (isAttack)Attack();
 
@@ -72,33 +118,7 @@ void WeakEnemy::Update()
 	// 攻撃判定追加
 	if (modelObjects["main"].GetAnimationFrame() == 35) 
 	{
-		std::shared_ptr<CapsuleEnemyAttack>attack;
-
-		// 判定のセット方法
-		// 1.Tポーズにする
-		// 2.四角いモデルを用意し、当たり判定の位置にセットし、その座標をメモする
-		// 3.2つ目の引数(今回の0の部分)をメモした座標にする
-		// 4.2を行ったときのモデルの座標などを引数の5～7にセットする
-		// 
-		// 0を判定の初期座標に書き換える
-		// 5の部分に、当たり判定の座標ををセットした時の座標、角度、大きさを入力
-
-		MelLib::Value2<MelLib::Vector3>p;
-
-		attack = std::make_shared<CapsuleEnemyAttack>
-			(
-				1,
-				p,
-				2.0f,
-				modelObjects["main"],
-				5,
-				5,
-				5,
-				"Bone_R.003",
-				"Body"
-			);
-
-		MelLib::GameObjectManager::GetInstance()->AddObject(attack);
+		AddAttackCollisionDetection();
 	}
 }
 

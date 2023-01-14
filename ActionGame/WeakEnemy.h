@@ -11,11 +11,15 @@ private:
 
 private:
 
-	
+	/// <summary>
+	/// UŒ‚‚Ì“–‚½‚è”»’è‚Ì’Ç‰Á
+	/// </summary>
+	void AddAttackCollisionDetection();
 
 
 public:
 
+	static void LoadResources();
 
 	WeakEnemy(const MelLib::Vector3& pos);
 	void Initialize()override;

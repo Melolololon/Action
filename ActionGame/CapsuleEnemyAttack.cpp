@@ -14,8 +14,7 @@ CapsuleEnemyAttack::CapsuleEnemyAttack
 	const std::string& boneName,
 	const std::string& meshName
 )
-	:
-	GameObject("CapsuleEnemyAttack")
+	:GameObject("CapsuleEnemyAttack")
 	, CAPSULE_START_POSITION(attackStartPos)
 	, power(power)
 	, MODEL(model)

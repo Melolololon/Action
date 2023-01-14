@@ -66,13 +66,28 @@ void Game::Initialize()
 
 	// ‹¤’Ê“Ç‚Ýž‚Ý
 	Player::LoadResources();
+
+	Stage::LoadResources(0);
 	SlushEffect::LoadResources();
 	HPGauge::LoadResources();
 	Wall::LoadResources();
 	Tutorial::LoadResources();
+	WeakEnemy::LoadResources();
 
-	//MelLib::SceneManager::GetInstance()->SetStartScene(new TestScene());
-	MelLib::SceneManager::GetInstance()->SetStartScene(new Title());
+#pragma region ƒGƒfƒBƒ^[“o˜^
+	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Player>(), "Player");
+
+	// ƒXƒe[ƒW“o˜^
+	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Stage>(0), "Stage");
+	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Stage>(1), "Stage");
+
+	// “G’Ç‰Á
+	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<EnemySpaunPoint>(typeid(WeakEnemy).name()), "Enemy");
+#pragma endregion
+
+
+	MelLib::SceneManager::GetInstance()->SetStartScene(new TestScene());
+	//MelLib::SceneManager::GetInstance()->SetStartScene(new Title());
 	Fade::GetInstance()->Initializ();
 
 	Option::GetInstance()->Initialize();
@@ -81,6 +96,10 @@ void Game::Initialize()
 	MelLib::TextWrite::CreateFontData(/*L"HGPºÞ¼¯¸E"*/L"Arial",64.0f, "Arial");
 
 	MelLib::Camera::Get()->SetFar(10000.0f);
+	
+	MelLib::Camera::Get()->SetRotateCriteriaPosition(MelLib::Vector3(-8, 15, -10));
+	MelLib::Camera::Get()->SetRotatePoint(MelLib::Camera::RotatePoint::ROTATE_POINT_CAMERA_POSITION);
+	MelLib::Camera::Get()->SetAngle(MelLib::Vector3(35,-20,0));
 
 
 	MelLib::SceneEditer::GetInstance()->SetEditerFlag(false);
@@ -88,17 +107,6 @@ void Game::Initialize()
 
 
 
-
-#pragma region ƒGƒfƒBƒ^[“o˜^
-	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Player>(),"Player");
-
-	// ƒXƒe[ƒW“o˜^
-	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Stage>(0),"Stage");
-	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Stage>(1),"Stage");
-
-	// “G’Ç‰Á
-	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<EnemySpaunPoint>(typeid(WeakEnemy).name()), "Enemy");
-#pragma endregion
 
 }
 

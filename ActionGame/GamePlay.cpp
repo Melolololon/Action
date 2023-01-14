@@ -13,6 +13,8 @@
 #include"EnemySpaunPoint.h"
 #include"NewEnemy.h"
 
+#include"HPGauge.h"
+
 void GamePlay::CheckClear()
 {
 	
@@ -28,14 +30,8 @@ void GamePlay::Initialize()
 	const unsigned int STAGE_NUM = StageSelect::GetStageNum();
 
 	// シーンの読み込み
-#ifdef _DEBUG
-
-#else
 	//MelLib::SceneEditer::GetInstance()->LoadEditData("Stage_" + std::to_string(STAGE_NUM));
-#endif // _DEBUG
-
 	
-
 
 	// プレイヤーの取得
 	pPlayer = Player::GetPPlayer();
@@ -43,12 +39,13 @@ void GamePlay::Initialize()
 	EnemySpaunPoint::SetPlayer(pPlayer);
 	EnemySpaunPoint::ClearEnemySpauns();
 
-
+	// UI追加
+	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<HPGauge>());
 }
 
 void GamePlay::Update()
 {
-
+	MelLib::GameObjectManager::GetInstance()->Update();
 	Fade::GetInstance()->Update();
 
 
@@ -57,10 +54,12 @@ void GamePlay::Update()
 		Fade::GetInstance()->Start();
 	}
 	if (Fade::GetInstance()->GetChangeSceneFlag())isEnd = true;
+
 }
 
 void GamePlay::Draw()
 {
+	MelLib::GameObjectManager::GetInstance()->Draw();
 	Fade::GetInstance()->Draw();
 }
 
