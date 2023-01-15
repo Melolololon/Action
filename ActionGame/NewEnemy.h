@@ -2,6 +2,8 @@
 #include<GameObject.h>
 #include"Player.h"
 #include"AttackEffect.h"
+#include"EnemyHPGauge.h"
+
 
 class NewEnemy:public MelLib::GameObject
 {
@@ -17,7 +19,7 @@ public:
 	};
 
 protected:
-
+	std::unique_ptr<EnemyHPGauge> hpGauge;
 
 	/// <summary>
 	/// ‚Á”ò‚Ô“®‚«
@@ -75,5 +77,7 @@ public:
 	AttackEffect GetCurrentThisAttackEffect()const { return currentThisAttackEffect; }
 
 	ThisState GetThisState()const { return state; }
+
+	int GetHP()const { return hp; }
 };
 

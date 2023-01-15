@@ -160,6 +160,7 @@
     <ClCompile Include="EditMode.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyAttack.cpp" />
+    <ClCompile Include="EnemyHPGauge.cpp" />
     <ClCompile Include="EnemySpaunPoint.cpp" />
     <ClCompile Include="EventFlag.cpp" />
     <ClCompile Include="Fade.cpp" />
@@ -175,6 +176,7 @@
     <ClCompile Include="NewEnemy.cpp" />
     <ClCompile Include="NoemalEnemy.cpp" />
     <ClCompile Include="NormalEnemyAttack.cpp" />
+    <ClCompile Include="OperationExplanation.cpp" />
     <ClCompile Include="Option.cpp" />
     <ClCompile Include="Pause.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -202,6 +204,7 @@
     <ClInclude Include="EditMode.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyAttack.h" />
+    <ClInclude Include="EnemyHPGauge.h" />
     <ClInclude Include="EnemySpaunPoint.h" />
     <ClInclude Include="EventFlag.h" />
     <ClInclude Include="Fade.h" />
@@ -216,6 +219,7 @@
     <ClInclude Include="NewEnemy.h" />
     <ClInclude Include="NoemalEnemy.h" />
     <ClInclude Include="NormalEnemyAttack.h" />
+    <ClInclude Include="OperationExplanation.h" />
     <ClInclude Include="Option.h" />
     <ClInclude Include="Pause.h" />
     <ClInclude Include="Player.h" />

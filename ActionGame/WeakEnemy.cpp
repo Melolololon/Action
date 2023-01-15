@@ -148,7 +148,12 @@ void WeakEnemy::Initialize()
 void WeakEnemy::Update()
 {
 	CalcMovePhysics();
+	hpGauge->SetPosition(GetPosition() + MelLib::Vector3(0, 15, 0));
+	hpGauge->Update();
+	
 	modelObjects["main"].Update();
+
+
 
 	if (state == ThisState::DEAD) 
 	{
@@ -186,6 +191,7 @@ void WeakEnemy::Update()
 		modelObjects["main"].SetAnimation("E_Dash");
 		state = ThisState::MOVE;
 	}
+
 }
 
 void WeakEnemy::Draw()
@@ -193,6 +199,7 @@ void WeakEnemy::Draw()
 	if (isAttack)modelObjects["main"].SetMulColor(MelLib::Color(0, 0, 255, 255));
 	else modelObjects["main"].SetMulColor(MelLib::Color(255,255, 255, 255));
 	AllDraw();
+	hpGauge->Draw();
 }
 
 void WeakEnemy::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)

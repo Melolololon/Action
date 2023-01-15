@@ -40,10 +40,11 @@ void NewEnemy::Dead()
 
 }
 
-NewEnemy::NewEnemy( const std::string& name)
+NewEnemy::NewEnemy(const std::string& name)
 	:GameObject(name)
 {
 	deadEndTimer.SetMaxTime(60 * 0.75);
+	hpGauge = std::make_unique<EnemyHPGauge>(hp);
 }
 
 void NewEnemy::Update()
