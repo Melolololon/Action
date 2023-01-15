@@ -97,12 +97,12 @@ void Game::Initialize()
 
 	MelLib::Camera::Get()->SetFar(10000.0f);
 	
-	MelLib::Camera::Get()->SetRotateCriteriaPosition(MelLib::Vector3(-8, 15, -10));
-	MelLib::Camera::Get()->SetRotatePoint(MelLib::Camera::RotatePoint::ROTATE_POINT_CAMERA_POSITION);
-	MelLib::Camera::Get()->SetAngle(MelLib::Vector3(35,-20,0));
+	//MelLib::Camera::Get()->SetRotateCriteriaPosition(MelLib::Vector3(-8, 15, -10));
+	//MelLib::Camera::Get()->SetRotatePoint(MelLib::Camera::RotatePoint::ROTATE_POINT_CAMERA_POSITION);
+	//MelLib::Camera::Get()->SetAngle(MelLib::Vector3(35,-20,0));
 
 
-	MelLib::SceneEditer::GetInstance()->SetEditerFlag(false);
+	MelLib::SceneEditer::GetInstance()->SetEditerFlag(true);
 	MelLib::SceneEditer::GetInstance()->Initialize();
 
 

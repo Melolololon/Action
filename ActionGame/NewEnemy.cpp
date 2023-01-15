@@ -1,7 +1,7 @@
 #include "NewEnemy.h"
 #include"LibMath.h"
 Player* NewEnemy::pPlayer;
-const float NewEnemy::MOVE_SPEED = 0.2f;
+const float NewEnemy::MOVE_SPEED = 0.6f;
 const float NewEnemy::MIN_DISTANCE = 60.0f;
 //
 //void NewEnemy::ToPlayerMove()

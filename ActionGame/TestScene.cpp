@@ -23,7 +23,7 @@ void TestScene::Initialize()
 
 
 	// “–‚½‚è”»’èŠm”F—p
-	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<WeakEnemy>(0));
+	//MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<WeakEnemy>(0));
 
 
 }

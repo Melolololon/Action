@@ -30,6 +30,8 @@ CapsuleEnemyAttack::CapsuleEnemyAttack
 	capsuleDatas["main"][0].SetSegment3DData(d);
 	capsuleDatas["main"][0].SetRadius(radius);
 
+	collisionCheckDistance = 80.0f;
+
 }
 
 void CapsuleEnemyAttack::Update()
@@ -65,10 +67,17 @@ void CapsuleEnemyAttack::Update()
 		MODEL_START_SCALE
 	);
 
+
 	capsuleDatas["main"][0].GetRefSegment3DData().SetPosition(pos);
 
-	if (MODEL.GetAnimationEndFlag())eraseManager = true;
+	// ‚±‚ê‚È‚¢‚Æ”»’è‚Ì‹——£§ŒÀ‚Ì‚¹‚¢‚Åˆ—–³‹‚³‚ê‚é
+	// ‰¼‚Év1‚Ì’l‚ğİ’è
+	SetPosition(pos.v1);
 
+	if (MODEL.GetAnimationEndFlag())
+	{
+		eraseManager = true;
+	}
 }
 
 void CapsuleEnemyAttack::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)

@@ -16,7 +16,7 @@ private:
 	/// </summary>
 	void AddAttackCollisionDetection();
 
-
+	void Rotate();
 public:
 
 	static void LoadResources();
@@ -39,4 +39,6 @@ public:
 	void SetStartAttackAnimation()override;
 
 	void Attack();
+
+
 };
