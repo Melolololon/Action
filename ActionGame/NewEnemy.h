@@ -5,15 +5,30 @@
 
 class NewEnemy:public MelLib::GameObject
 {
+public:
+	enum class ThisState
+	{
+		MOVE,
+		ATTACK,
+		BE_BLOWN_AWAY,
+		GET_UP
+	};
+
 protected:
+
+
 	/// <summary>
 	/// ‚Á”ò‚Ô“®‚«
 	/// </summary>
 	void BeBlownAwayMove();
 protected:
+	
+
+
 	bool isAttack = false;
 	static Player* pPlayer;
 
+	ThisState state = ThisState::MOVE;
 	AttackEffect currentThisAttackEffect = AttackEffect::NONE;
 
 	// ƒvƒŒƒCƒ„[‚Ö‚ÌˆÚ“®
@@ -29,6 +44,9 @@ protected:
 
 
 public:
+
+
+
 	static void SetPPlayer(Player* p) { pPlayer = p; }
 
 	NewEnemy(const std::string& name);
@@ -52,6 +70,6 @@ public:
 
 	AttackEffect GetCurrentThisAttackEffect()const { return currentThisAttackEffect; }
 
-
+	ThisState GetThisState()const { return state; }
 };
 

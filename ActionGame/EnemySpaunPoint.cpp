@@ -9,8 +9,8 @@
 #include"Stage.h"
 
 const float EnemySpaunPoint::MIN_DISTANCE = 50.0f;
-const float EnemySpaunPoint::ATTACK_MIN_DISTANCE = 20.0f;
-const unsigned int EnemySpaunPoint::ENEMY_MAX_NUM = 8;
+const float EnemySpaunPoint::ATTACK_MIN_DISTANCE = 10.0f;
+const unsigned int EnemySpaunPoint::ENEMY_MAX_NUM = 1;
 
 
 std::vector<EnemySpaunPoint*>EnemySpaunPoint::spaunPoints;
@@ -31,10 +31,14 @@ void EnemySpaunPoint::Move()
 	AddPosition(moveVector);
 
 	minDisEnemyDis = FLT_MAX;
+	
+	MelLib::Vector3 pPos = pPlayer->GetPosition();
+	pPos.y = 0;
 	for (int i = 0; i < enemys.size(); i++)
 	{
 		MelLib::Vector3 pos = enemys[i]->GetPosition();
-		float dis = MelLib::LibMath::CalcDistance3D(pos, pPlayer->GetPosition());
+		pos.y = 0;
+		float dis = MelLib::LibMath::CalcDistance3D(pos, pPos);
 
 		if (minDisEnemyDis > dis)
 		{
@@ -43,19 +47,23 @@ void EnemySpaunPoint::Move()
 		}
 	}
 
+	// ‹——£‚ÌŒvŽZ1‰ñ‚Å‚¢‚¢
 
 	// ‚Á”ò‚ñ‚¾‚è‚µ‚Ä‚È‚©‚Á‚½‚ç“G‚ð“®‚©‚·
 	for (auto& enemy : enemys)
 	{
 		if (enemy->GetCurrentThisAttackEffect() == AttackEffect::NONE)
 		{
-			float dis = MelLib::LibMath::CalcDistance3D(enemy->GetPosition(), pPlayer->GetPosition());
+			MelLib::Vector3 pos = enemy->GetPosition();
+			pos.y = 0;
+			float dis = MelLib::LibMath::CalcDistance3D(pos, pPos);
 			
 			// ‹ß‚©‚Á‚½‚çˆÚ“®‚µ‚È‚¢
 			if (dis <= MIN_DISTANCE && enemy != enemys[minDisEnemyNum])continue;
 			else if (dis <= ATTACK_MIN_DISTANCE)continue;// ˆê”Ô‹ß‚¢‚â‚Â‚Í‚ß‚Á‚¿‚áÚ‹ß‚·‚é
 		
-			if (enemy->GetIsAttack())continue;
+			// ˆÚ“®’†ˆÈŠO‚¾‚Á‚½‚ç–³Ž‹
+			if (enemy->GetThisState() != NewEnemy::ThisState::MOVE)continue;
 
 			playerNormalizeVector = pPlayer->CalcPlayerVector(enemy->GetPosition());
 			moveVector = MelLib::Vector3(playerNormalizeVector.x, 0, playerNormalizeVector.z) * moveSpeed;
