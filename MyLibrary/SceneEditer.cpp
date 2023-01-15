@@ -257,7 +257,6 @@ void MelLib::SceneEditer::LoadEditData(const std::string& sceneName)
 
 	// オブジェクトの削除
 	addObjects.clear();
-	addObjectNames.clear();
 	GameObjectManager::GetInstance()->AllEraseObject();
 
 	// オブジェクトがあるか確認
@@ -286,7 +285,6 @@ void MelLib::SceneEditer::LoadEditData(const std::string& sceneName)
 		// 登録名
 		std::string regName;
 		LoadFileName(file, regName);
-
 
 		// 同じクラス、同じオブジェクト名を探し、make_sharedを返してもらう
 		std::shared_ptr<GameObject> pObject;
