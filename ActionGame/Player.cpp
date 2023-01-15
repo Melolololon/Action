@@ -655,7 +655,7 @@ void Player::SetAttackType()
 		{
 			currentAttack = PlayerSlush::AttackType::DASH_1;
 
-			modelObjects["main"].SetAnimation("Attack_Normal_1");
+			modelObjects["main"].SetAnimation("DashAttack");
 
 			isDash = false;
 			DashEnd();
