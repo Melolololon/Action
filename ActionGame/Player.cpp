@@ -1141,6 +1141,8 @@ void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionTy
 			isStun = true;
 			modelObjects["main"].SetAnimation("Stun");
 
+			
+
 			/*MelLib::Vector3 enemyToPlayer = GetPosition() - object.GetPosition();
 			enemyToPlayer = enemyToPlayer.Normalize();
 			AddPosition(-enemyToPlayer * 0.3f);*/

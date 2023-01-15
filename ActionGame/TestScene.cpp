@@ -4,6 +4,9 @@
 #include"EnemySpaunPoint.h"
 #include"NewEnemy.h"
 #include"WeakEnemy.h"
+#include"CapsuleEnemyAttack.h"
+
+#include"HPGauge.h"
 
 #include<GameObjectManager.h>
 
@@ -17,7 +20,7 @@ void TestScene::Initialize()
 	pPlayer = Player::GetPPlayer();
 	EnemySpaunPoint::SetPlayer(pPlayer);
 	NewEnemy::SetPPlayer(pPlayer);
-
+	CapsuleEnemyAttack::SetPPlayer(pPlayer);
 	EnemySpaunPoint::ClearEnemySpauns();
 	MelLib::GameObjectManager::GetInstance()->InitializeObject();
 
@@ -25,7 +28,9 @@ void TestScene::Initialize()
 	// “–‚½‚è”»’èŠm”F—p
 	//MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<WeakEnemy>(0));
 
-
+	// UI’Ç‰Á
+	HPGauge::SetPPlayer(pPlayer);
+	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<HPGauge>());
 }
 
 void TestScene::Update()
@@ -36,6 +41,7 @@ void TestScene::Update()
 void TestScene::Draw()
 {
 	MelLib::GameObjectManager::GetInstance()->Draw();
+
 }
 
 void TestScene::Finalize()
