@@ -13,6 +13,7 @@ public:
 		BE_BLOWN_AWAY,
 		GET_UP,
 		STUN,
+		DEAD,
 	};
 
 protected:
@@ -22,9 +23,11 @@ protected:
 	/// êÅÇ¡îÚÇ‘ìÆÇ´
 	/// </summary>
 	void BeBlownAwayMove();
+
+	void Dead();
 protected:
 	
-
+	MelLib::FrameTimer deadEndTimer;
 
 	bool isAttack = false;
 	static Player* pPlayer;
@@ -42,7 +45,7 @@ protected:
 	// ç≈í·ãóó£
 	static const float MIN_DISTANCE;
 
-
+	int hp = 10;
 
 public:
 

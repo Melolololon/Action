@@ -150,6 +150,16 @@ void WeakEnemy::Update()
 	CalcMovePhysics();
 	modelObjects["main"].Update();
 
+	if (state == ThisState::DEAD) 
+	{
+		if (modelObjects["main"].GetAnimationEndFlag())
+		{
+			deadEndTimer.SetStopFlag(false);
+		}
+		Dead();
+		return;
+	}
+
 	Rotate();
 
 	if (isAttack)Attack();
@@ -190,13 +200,14 @@ void WeakEnemy::Hit(const GameObject& object, const MelLib::ShapeType3D collisio
 	//if (Pause::GetInstance()->GetIsPause())return;
 
 	//if (isDead)return;
+	if (state == ThisState::DEAD)return;
 
 	std::string n = typeid(object).name();
 	if (typeid(object) == typeid(PlayerSlush) || typeid(object) == typeid(JumpAttack) /* && !isMuteki*/)
 	{
 
 		// ƒvƒŒƒCƒ„[‚©‚çŒ»İ‚ÌUŒ‚‚ÌUŒ‚—Í‚ğæ“¾‚µA‘Ì—Í‚ğŒ¸‚ç‚·
-		//hp -= pPlayer->GetCurrentAttackPower();
+		hp -= pPlayer->GetCurrentAttackPower();
 
 		// –³“G‚É
 		//isMuteki = true;
@@ -217,12 +228,15 @@ void WeakEnemy::Hit(const GameObject& object, const MelLib::ShapeType3D collisio
 
 
 		// 0‚É‚È‚Á‚½‚ç‚â‚ç‚êˆ—
-		/*if (hp <= 0)
+		if (hp <= 0)
 		{
-			isDead = true;
+			state = ThisState::DEAD;
 
 			modelObjects["main"].SetAnimation("Dead");
-		}*/
+			modelObjects["main"].SetAnimationFrameStart();
+			modelObjects["main"].SetAnimationEndStopFlag(true);
+			return;
+		}
 
 
 

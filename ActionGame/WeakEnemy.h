@@ -17,6 +17,8 @@ private:
 	void AddAttackCollisionDetection();
 
 	void Rotate();
+
+
 public:
 
 	static void LoadResources();
