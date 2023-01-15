@@ -74,6 +74,13 @@ void Game::Initialize()
 	Tutorial::LoadResources();
 	WeakEnemy::LoadResources();
 
+	for (int i = 0; i < 4; i++) 
+	{
+		std::string numStr = std::to_string(i);
+		bool res = MelLib::Texture::Load("Resources/Texture/SlushEffect/e_" + numStr + ".png", "slushEffect_" + numStr);
+		int a = 0;
+	}
+
 #pragma region エディター登録
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Player>(), "Player");
 

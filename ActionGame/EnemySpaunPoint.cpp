@@ -24,8 +24,6 @@ bool EnemySpaunPoint::CalcDistance()
 
 void EnemySpaunPoint::Move()
 {
-	
-
 	MelLib::Vector3 playerNormalizeVector = pPlayer->CalcPlayerVector(GetPosition());
 	MelLib::Vector3 moveVector = MelLib::Vector3(playerNormalizeVector.x, 0, playerNormalizeVector.z) * moveSpeed;
 	AddPosition(moveVector);
