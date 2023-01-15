@@ -11,7 +11,8 @@ public:
 		MOVE,
 		ATTACK,
 		BE_BLOWN_AWAY,
-		GET_UP
+		GET_UP,
+		STUN,
 	};
 
 protected:

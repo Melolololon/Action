@@ -9,7 +9,7 @@
 #include"Stage.h"
 
 const float EnemySpaunPoint::MIN_DISTANCE = 50.0f;
-const float EnemySpaunPoint::ATTACK_MIN_DISTANCE = 10.0f;
+const float EnemySpaunPoint::ATTACK_MIN_DISTANCE = 8.0f;
 const unsigned int EnemySpaunPoint::ENEMY_MAX_NUM = 1;
 
 
@@ -40,7 +40,9 @@ void EnemySpaunPoint::Move()
 		pos.y = 0;
 		float dis = MelLib::LibMath::CalcDistance3D(pos, pPos);
 
-		if (minDisEnemyDis > dis)
+		// ˆÚ“®‚µ‚Ä‚È‚¢‚â‚Â‚Í‘ÎÛŠO
+		if (minDisEnemyDis > dis
+			&& enemys[i]->GetThisState() == NewEnemy::ThisState::MOVE)
 		{
 			minDisEnemyDis = dis;
 			minDisEnemyNum = i;
@@ -81,6 +83,7 @@ void EnemySpaunPoint::Rot()
 
 void EnemySpaunPoint::Attack()
 {
+
 	// ‡”ÔŒˆ‚ß‚é‚©‹ß‚³‚ÅŒˆ‚ß‚é‚©
 	// ‹ß‚³‚ÅŒˆ‚ß‚é
 	// ˆê“x‚ÉUŒ‚‚·‚éƒLƒƒƒ‰”‚É§ŒÀ‚ğ‚©‚¯‚é

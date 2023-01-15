@@ -161,7 +161,16 @@ void WeakEnemy::Update()
 		state = ThisState::BE_BLOWN_AWAY;
 	}
 
-	if (state == ThisState::GET_UP
+	if (state == ThisState::STUN) 
+	{
+		MelLib::Vector3 toPlayerVec = pPlayer->GetPosition() - GetPosition();
+		toPlayerVec.y = 0;
+		toPlayerVec = toPlayerVec.Normalize();
+
+		AddPosition(-toPlayerVec * 0.05f);
+	}
+
+	if ((state == ThisState::GET_UP || state == ThisState::STUN)
 		&& modelObjects["main"].GetAnimationEndFlag()) 
 	{
 		modelObjects["main"].SetAnimation("E_Dash");
@@ -215,6 +224,8 @@ void WeakEnemy::Hit(const GameObject& object, const MelLib::ShapeType3D collisio
 			modelObjects["main"].SetAnimation("Dead");
 		}*/
 
+
+
 		// ‚Á”ò‚Î‚µˆ—
 		// Œã‚Å1ƒtƒŒ[ƒ€’u‚¢‚ÄNONE‚ÉØ‚è‘Ö‚¦‚é‚æ‚¤‚É‚·‚é
 		if (pPlayer->GetPlayerAttackEffect() == AttackEffect::BE_BLOWN_AWAY || typeid(object) == typeid(JumpAttack))
@@ -223,6 +234,12 @@ void WeakEnemy::Hit(const GameObject& object, const MelLib::ShapeType3D collisio
 			currentThisAttackEffect = AttackEffect::BE_BLOWN_AWAY;
 			state = ThisState::BE_BLOWN_AWAY;
 			modelObjects["main"].SetAnimation("BeBlownAway");
+			modelObjects["main"].SetAnimationFrameStart();
+		}
+		else 
+		{
+			state = ThisState::STUN;
+			modelObjects["main"].SetAnimation("Stun");
 			modelObjects["main"].SetAnimationFrameStart();
 		}
 	}

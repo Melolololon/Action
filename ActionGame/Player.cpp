@@ -158,6 +158,8 @@ Player::Player(const MelLib::Vector3& pos)
 	SetCameraData();
 }
 
+// ジャンプ攻撃中に攻撃食らうとバグる
+// Tポーズで動かなくなる
 void Player::Update()
 {
 
