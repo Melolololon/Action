@@ -29,9 +29,21 @@ void NewEnemy::BeBlownAwayMove()
 	AddPosition(moveVector);
 }
 
+void NewEnemy::Dead()
+{
+
+	if (deadEndTimer.GetMaxOverFlag()) 
+	{
+		SetScale(GetScale() - 0.1f);
+		if (GetScale().x <= 0)eraseManager = true;
+	}
+
+}
+
 NewEnemy::NewEnemy( const std::string& name)
 	:GameObject(name)
 {
+	deadEndTimer.SetMaxTime(60 * 0.75);
 }
 
 void NewEnemy::Update()
