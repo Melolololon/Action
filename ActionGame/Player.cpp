@@ -835,7 +835,7 @@ void Player::SetCameraData()
 	(GetPosition(), MelLib::LibMath::OtherVector3(pCamera->GetCameraPosition(), pCamera->GetTargetPosition()), 30.0f));*/
 
 	pCamera->SetRotatePoint(MelLib::Camera::RotatePoint::ROTATE_POINT_TARGET_POSITION);
-	pCamera->SetCameraToTargetDistance(80.0f);
+	pCamera->SetCameraToTargetDistance(50.0f);
 
 	if (!lockOn)
 	{
