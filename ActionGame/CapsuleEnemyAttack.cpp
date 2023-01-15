@@ -2,6 +2,8 @@
 
 #include"Pause.h"
 
+Player* CapsuleEnemyAttack::pPlayer;
+
 CapsuleEnemyAttack::CapsuleEnemyAttack
 (
 	unsigned int power, 
@@ -82,4 +84,10 @@ void CapsuleEnemyAttack::Update()
 
 void CapsuleEnemyAttack::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)
 {
+	if (typeid(object) == typeid(Player)
+		/*&& !pPlayer->GetIsMuteki()*/)
+	{
+		pPlayer->DownHP(power);
+		eraseManager = true;
+	}
 }

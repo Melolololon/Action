@@ -64,7 +64,7 @@ void WeakEnemy::AddAttackCollisionDetection()
 
 	attack = std::make_shared<CapsuleEnemyAttack>
 		(
-			1,
+			30,
 			p,
 			2.0f,
 			modelObjects["main"],
