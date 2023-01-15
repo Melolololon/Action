@@ -171,6 +171,9 @@
     <ClCompile Include="CapsuleEnemyAttack.cpp">
       <Filter>ソース ファイル\Object\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="SlushHitEffect.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -286,6 +289,9 @@
     </ClInclude>
     <ClInclude Include="CapsuleEnemyAttack.h">
       <Filter>ヘッダー ファイル\Object\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="SlushHitEffect.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -182,6 +182,7 @@
     <ClCompile Include="RecoveryItem.cpp" />
     <ClCompile Include="Rock.cpp" />
     <ClCompile Include="SlushEffect.cpp" />
+    <ClCompile Include="SlushHitEffect.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="StageObject.cpp" />
     <ClCompile Include="StageSelect.cpp" />
@@ -222,6 +223,7 @@
     <ClInclude Include="RecoveryItem.h" />
     <ClInclude Include="Rock.h" />
     <ClInclude Include="SlushEffect.h" />
+    <ClInclude Include="SlushHitEffect.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="StageObject.h" />
     <ClInclude Include="StageSelect.h" />

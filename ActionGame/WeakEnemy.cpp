@@ -6,7 +6,7 @@
 
 #include"PlayerSlush.h"
 #include"JumpAttack.h"
-
+#include"SlushHitEffect.h"
 
 #include<GameObjectManager.h>
 
@@ -206,55 +206,66 @@ void WeakEnemy::Hit(const GameObject& object, const MelLib::ShapeType3D collisio
 	if (typeid(object) == typeid(PlayerSlush) || typeid(object) == typeid(JumpAttack) /* && !isMuteki*/)
 	{
 
-		// プレイヤーから現在の攻撃の攻撃力を取得し、体力を減らす
-		hp -= pPlayer->GetCurrentAttackPower();
-
-		// 無敵に
-		//isMuteki = true;
-		//mutekiTimer.SetStopFlag(false);
-
-		// 硬直処理
-		//isStun = true;
-		//modelObjects["main"].SetAnimation("Stun");
-
-		//modelObjects["main"].SetAnimationFrameStart();
-		//modelObjects["main"].SetAnimationEndStopFlag(true);
-		//modelObjects["main"].SetAnimationReversePlayBack(false);
-
-		// 攻撃強制終了
-		isAttack = false;
-		//attackTimer.ResetTimeZero();
-		//attackTimer.SetStopFlag(true);
+		if (state == ThisState::MOVE || state == ThisState::ATTACK) {
 
 
-		// 0になったらやられ処理
-		if (hp <= 0)
-		{
-			state = ThisState::DEAD;
-
-			modelObjects["main"].SetAnimation("Dead");
-			modelObjects["main"].SetAnimationFrameStart();
-			modelObjects["main"].SetAnimationEndStopFlag(true);
-			return;
-		}
+			MelLib::Vector3 toCameraVec = (MelLib::Camera::Get()->GetCameraPosition() - GetPosition()).Normalize();
+			MelLib::Vector3 effectAddPos = MelLib::Vector3(0, 6, 0) + toCameraVec * 2.1f;
+			MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<SlushHitEffect>
+				(GetPosition() + effectAddPos));
 
 
 
-		// 吹っ飛ばし処理
-		// 後で1フレーム置いてNONEに切り替えるようにする
-		if (pPlayer->GetPlayerAttackEffect() == AttackEffect::BE_BLOWN_AWAY || typeid(object) == typeid(JumpAttack))
-		{
-			FallStart(0.6f);
-			currentThisAttackEffect = AttackEffect::BE_BLOWN_AWAY;
-			state = ThisState::BE_BLOWN_AWAY;
-			modelObjects["main"].SetAnimation("BeBlownAway");
-			modelObjects["main"].SetAnimationFrameStart();
-		}
-		else 
-		{
-			state = ThisState::STUN;
-			modelObjects["main"].SetAnimation("Stun");
-			modelObjects["main"].SetAnimationFrameStart();
+			// プレイヤーから現在の攻撃の攻撃力を取得し、体力を減らす
+			hp -= pPlayer->GetCurrentAttackPower();
+
+			// 無敵に
+			//isMuteki = true;
+			//mutekiTimer.SetStopFlag(false);
+
+			// 硬直処理
+			//isStun = true;
+			//modelObjects["main"].SetAnimation("Stun");
+
+			//modelObjects["main"].SetAnimationFrameStart();
+			//modelObjects["main"].SetAnimationEndStopFlag(true);
+			//modelObjects["main"].SetAnimationReversePlayBack(false);
+
+			// 攻撃強制終了
+			isAttack = false;
+			//attackTimer.ResetTimeZero();
+			//attackTimer.SetStopFlag(true);
+
+
+			// 0になったらやられ処理
+			if (hp <= 0)
+			{
+				state = ThisState::DEAD;
+
+				modelObjects["main"].SetAnimation("Dead");
+				modelObjects["main"].SetAnimationFrameStart();
+				modelObjects["main"].SetAnimationEndStopFlag(true);
+				return;
+			}
+
+
+
+			// 吹っ飛ばし処理
+			// 後で1フレーム置いてNONEに切り替えるようにする
+			if (pPlayer->GetPlayerAttackEffect() == AttackEffect::BE_BLOWN_AWAY || typeid(object) == typeid(JumpAttack))
+			{
+				FallStart(0.6f);
+				currentThisAttackEffect = AttackEffect::BE_BLOWN_AWAY;
+				state = ThisState::BE_BLOWN_AWAY;
+				modelObjects["main"].SetAnimation("BeBlownAway");
+				modelObjects["main"].SetAnimationFrameStart();
+			}
+			else
+			{
+				state = ThisState::STUN;
+				modelObjects["main"].SetAnimation("Stun");
+				modelObjects["main"].SetAnimationFrameStart();
+			}
 		}
 	}
 
