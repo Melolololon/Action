@@ -1,5 +1,9 @@
 #include "RecoveryItem.h"
 
+void RecoveryItem::LoadResources()
+{
+}
+
 RecoveryItem::RecoveryItem(const MelLib::Vector3& pos):
 	GameItem(pos)
 {

@@ -16,7 +16,7 @@
 
 void WeakEnemy::SetStartAttackAnimation()
 {
-	modelObjects["main"].SetAnimation("Attack_02");
+	modelObjects["main"].SetAnimation("Attack");
 	modelObjects["main"].SetAnimationFrameStart();
 	state = ThisState::ATTACK;
 }

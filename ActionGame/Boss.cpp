@@ -1,8 +1,13 @@
 #include "Boss.h"
 
+
 void Boss::LoadResources()
 {
 	MelLib::ModelData::Load("Resources/Model/Boss/Boss.fbx",true,"boss");
+}
+
+void Boss::SetPlayer()
+{
 }
 
 Boss::Boss(const MelLib::Vector3 pos) 
@@ -24,5 +29,14 @@ void Boss::Draw()
 }
 
 void Boss::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)
+{
+}
+
+
+void Boss::Attack()
+{
+}
+
+void Boss::Move()
 {
 }

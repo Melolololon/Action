@@ -65,9 +65,9 @@ void Game::Initialize()
 
 
 	// ‹¤’Ê“Ç‚Ýž‚Ý
-	Player::LoadResources();
+ 	Player::LoadResources();
 
-	Stage::LoadResources(0);
+ 	Stage::LoadResources(0);
 	SlushEffect::LoadResources();
 	HPGauge::LoadResources();
 	Wall::LoadResources();
@@ -84,12 +84,7 @@ void Game::Initialize()
 #pragma region ƒGƒfƒBƒ^[“o˜^
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Player>(), "Player");
 
-	// ƒXƒe[ƒW“o˜^
-	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Stage>(0), "Stage");
-	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Stage>(1), "Stage");
-
-	// “G’Ç‰Á
-	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<EnemySpaunPoint>(typeid(WeakEnemy).name()), "Enemy");
+	
 #pragma endregion
 
 
@@ -113,7 +108,12 @@ void Game::Initialize()
 	MelLib::SceneEditer::GetInstance()->Initialize();
 
 
+	// ƒXƒe[ƒW“o˜^
+	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Stage>(0), "Stage");
+	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Stage>(2), "Stage");
 
+	// “G’Ç‰Á
+	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<EnemySpaunPoint>(typeid(WeakEnemy).name()), "Enemy");
 
 }
 

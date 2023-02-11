@@ -438,9 +438,9 @@ void MelLib::ModelData::Create
 
 bool ModelData::Load(const std::string& path, const bool batchDeletionFlag, const std::string& name)
 {
-	if (pModelDatas.find(name) != pModelDatas.end())return false;
+	if (pModelDatas[name])return false;
 
-	pModelDatas.emplace(name, std::make_unique<ModelData>());
+	pModelDatas[name] = std::make_unique<ModelData>();
 	bool result = pModelDatas[name]->LoadModel(path, name);
 
 	if(!result)
@@ -572,7 +572,7 @@ void MelLib::ModelData::SetFbxAnimStack(const std::string& name)
 
 bool ModelData::LoadModel(const std::string& path, const std::string& name)
 {
-	//if (pModelDatas.find(name) != pModelDatas.end())return false;
+	//if (pModelDatas[name])return false;
 
 	bool result = false;
 	
@@ -959,6 +959,7 @@ std::vector<ADSAMaterial*> MelLib::ModelData::GetPMaterial()
 		}
 	}
 
+	// ここマテリアルあるオブジェクトとないオブジェクト混ざってると例外出る
 	std::vector<ADSAMaterial*>pMtls(size);
 	for (int i = 0; i < objectNames.size(); i++)
 	{
