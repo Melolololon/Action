@@ -25,9 +25,9 @@ void Stage::LoadResources(unsigned int stageNum)
 {
 	const std::string STAGE_NUM_STR = std::to_string(stageNum);
 	
-	MelLib::ModelData::Load("Resources/Model/Stage/StageGround_" + STAGE_NUM_STR + ".obj", true, "ground" + STAGE_NUM_STR);
-	MelLib::ModelData::Load("Resources/Model/Stage/Stage_" + STAGE_NUM_STR + ".obj",true,"stage" + STAGE_NUM_STR);
-	MelLib::ModelData::Load("Resources/Model/Stage/WallCollision_" + STAGE_NUM_STR + ".obj",true,"wallCollision" + STAGE_NUM_STR);
+	bool res = MelLib::ModelData::Load("Resources/Model/Stage/StageGround_" + STAGE_NUM_STR + ".obj", true, "ground" + STAGE_NUM_STR);
+	res = MelLib::ModelData::Load("Resources/Model/Stage/Stage_" + STAGE_NUM_STR + ".obj",true,"stage" + STAGE_NUM_STR);
+	res = MelLib::ModelData::Load("Resources/Model/Stage/WallCollision_" + STAGE_NUM_STR + ".obj",true,"wallCollision" + STAGE_NUM_STR);
 }
 
 Stage::Stage(const unsigned int stageNum)
@@ -93,7 +93,9 @@ void Stage::Draw()
 		/*std::vector<MelLib::Texture*> p;
 		modelObjects["stage"].GetPMaterial()->GetPTextures(p);*/
 		modelObjects["stage"].Draw();
-		modelObjects["wallCollision"].Draw();
+
+		// これコメントアウトしてないと壁判定作成前に表示した時例外出るから注意
+		//modelObjects["wallCollision"].Draw();
 	}
 	modelObjects["ground"].Draw();
 

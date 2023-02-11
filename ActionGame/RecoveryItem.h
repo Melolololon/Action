@@ -7,6 +7,9 @@ class RecoveryItem :
 private:
     static const unsigned int RECOVERY_HP = 20;
 public:
+
+	static void LoadResources();
+
 	RecoveryItem(const MelLib::Vector3& pos);
 	~RecoveryItem() {}
 
