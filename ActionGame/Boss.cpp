@@ -10,22 +10,28 @@ void Boss::SetPlayer()
 {
 }
 
-Boss::Boss(const MelLib::Vector3 pos) 
+Boss::Boss() 
 	:GameObject("boss")
 {
 	modelObjects["main"].Create(MelLib::ModelData::Get("boss"),"boss", nullptr);
+	modelObjects["main"].SetAnimation("No_Cont");
 
-	modelObjects["main"].SetPosition(pos);
-	sphereDatas["main"].resize(3);
 
+	//modelObjects["main"].SetPosition();
+	//sphereDatas["main"].resize(3);
+
+
+	actionTimer.SetMaxTime(60 * 6);
 }
 
 void Boss::Update()
 {
+	if (thisState == ThisState::BATTLE)actionTimer.SetStopFlag(false);
 }
 
 void Boss::Draw()
 {
+	AllDraw();
 }
 
 void Boss::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)
