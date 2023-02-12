@@ -398,7 +398,7 @@ void Player::Move()
 	Dash();
 
 	// ダッシュ中またはジャンプ攻撃中は移動不可
-	if (isDash || currentAttack == PlayerSlush::AttackType::JUMP)
+	if (isDash || currentAttack == PlayerSlush::AttackType::JUMP || isGuard)
 	{
 		return;
 	}
@@ -521,7 +521,8 @@ void Player::Dash()
 
 	if (MelLib::Input::PadButtonTrigger(keyConfigData[ActionType::DASH])
 		&& !isDash
-		&& currentAttack == PlayerSlush::AttackType::NONE)
+		&& currentAttack == PlayerSlush::AttackType::NONE
+		&& !isGuard)
 	{
 		isDash = true;
 
@@ -564,7 +565,9 @@ void Player::Jump()
 	// ジャンプの着地アニメーションは、ジャンプの逆再生でOK
 
 	if (attackTimer.GetNowTime() != 0 
-		|| isDash)return;
+		|| isDash
+		|| isGuard
+		|| isStun)return;
 
 	if (MelLib::Input::PadButtonTrigger(keyConfigData[ActionType::JUMP]))
 	{
@@ -749,9 +752,14 @@ void Player::CreateAttackSlush()
 
 void Player::Guard()
 {
-	if (MelLib::Input::PadButtonState(keyConfigData[ActionType::GUARD]))
+	// 攻撃してない時にボタン押してたらガード
+	if (MelLib::Input::PadButtonState(keyConfigData[ActionType::GUARD])
+		&& currentAttack == PlayerSlush::AttackType::NONE
+		&& !isDash
+		&& !isStun)
 	{
 		isGuard = true;
+		modelObjects["main"].SetAnimation("Guard");
 	}
 	else
 	{
@@ -941,7 +949,8 @@ void Player::HitWall()
 
 void Player::Draw()
 {
-	modelObjects["main"].Draw();
+	AllDraw();
+	//modelObjects["main"].Draw();
 }
 
 void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)

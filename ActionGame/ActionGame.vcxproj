@@ -180,6 +180,7 @@
     <ClCompile Include="Option.cpp" />
     <ClCompile Include="Pause.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerGuard.cpp" />
     <ClCompile Include="PlayerSlush.cpp" />
     <ClCompile Include="RecoveryItem.cpp" />
     <ClCompile Include="Rock.cpp" />
@@ -223,6 +224,7 @@
     <ClInclude Include="Option.h" />
     <ClInclude Include="Pause.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerGuard.h" />
     <ClInclude Include="PlayerSlush.h" />
     <ClInclude Include="RecoveryItem.h" />
     <ClInclude Include="Rock.h" />

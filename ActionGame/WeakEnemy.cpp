@@ -105,7 +105,7 @@ void WeakEnemy::Rotate()
 
 void WeakEnemy::LoadResources()
 {
-	MelLib::ModelData::Load("Resources/Model/Enemy/WeakEnemy.fbx", true, "WeakEnemy");
+	MelLib::ModelData::Load("Resources/Model/Enemy/WeakEnemy/WeakEnemy.fbx", true, "WeakEnemy");
 }
 
 WeakEnemy::WeakEnemy(const MelLib::Vector3& pos):NewEnemy("WeakEnemy")

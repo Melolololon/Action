@@ -13,6 +13,7 @@
 #include"SlushEffect.h"
 #include"HPGauge.h"
 #include"Wall.h"
+#include"Boss.h"
 
 #include"EnemySpaunPoint.h"
 #include"WeakEnemy.h"
@@ -73,6 +74,7 @@ void Game::Initialize()
 	Wall::LoadResources();
 	Tutorial::LoadResources();
 	WeakEnemy::LoadResources();
+	Boss::LoadResources();
 
 	for (int i = 0; i < 4; i++) 
 	{
@@ -114,6 +116,7 @@ void Game::Initialize()
 
 	// “G’Ç‰Á
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<EnemySpaunPoint>(typeid(WeakEnemy).name()), "Enemy");
+	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Boss>(), "Boss");
 
 }
 

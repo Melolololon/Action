@@ -12,13 +12,21 @@ private:
 
 	// 移動や攻撃を制御するタイマー。例　遠くにいる時、このタイマーの時間に応じて移動するか遠距離攻撃するかを決める
 	MelLib::FrameTimer actionTimer;
+	
+	enum class ThisState 
+	{
+		BATTLE,
+		OTHER
+	};
+	ThisState thisState = ThisState::OTHER;
+
 public:
 
 
 	static void LoadResources();
 	static void SetPlayer();
 
-	Boss(const MelLib::Vector3 pos);
+	Boss();
 
 	void Update()override;
 	void Draw()override;
@@ -38,5 +46,7 @@ public:
 	void Attack();
 
 	void Move();
+
+
 };
 
