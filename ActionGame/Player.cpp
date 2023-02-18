@@ -156,6 +156,9 @@ Player::Player(const MelLib::Vector3& pos)
 
 
 	SetCameraData();
+
+
+	collisionCheckDistance = 80.0f;
 }
 
 // ジャンプ攻撃中に攻撃食らうとバグる

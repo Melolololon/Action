@@ -22,9 +22,10 @@ protected:
 public:
 	static void SetPPlayer(Player* p) { pPlayer = p; }
 
-	GameItem();
+	GameItem(const MelLib::Vector3& pos);
 	virtual ~GameItem() {}
 
+	void Initialize()override;
 	void Update()override;
 	void Draw()override;
 
@@ -45,4 +46,5 @@ public:
 		const std::string& hitShapeName
 	)override;
 
+	void CheckHitGround(const GameObject& object);
 };
