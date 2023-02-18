@@ -10,7 +10,7 @@ public:
 
 	static void LoadResources();
 
-	RecoveryItem();
+	RecoveryItem(const MelLib::Vector3& pos);
 	~RecoveryItem() {}
 
 	/// <summary>

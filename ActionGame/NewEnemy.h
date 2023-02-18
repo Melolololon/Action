@@ -7,6 +7,9 @@
 
 class NewEnemy:public MelLib::GameObject
 {
+private:
+	void DropItem();
+
 public:
 	enum class ThisState
 	{

@@ -1,5 +1,11 @@
 #include "NewEnemy.h"
 #include"LibMath.h"
+
+#include"RecoveryItem.h"
+
+#include<Random.h>
+#include<GameObjectManager.h>
+
 Player* NewEnemy::pPlayer;
 const float NewEnemy::MOVE_SPEED = 0.6f;
 const float NewEnemy::MIN_DISTANCE = 60.0f;
@@ -21,6 +27,15 @@ const float NewEnemy::MIN_DISTANCE = 60.0f;
 //	return MelLib::LibMath::CalcDistance3D(GetPosition(), pPlayer->GetPosition()) <= MIN_DISTANCE;
 //}
 
+void NewEnemy::DropItem()
+{
+	//if (MelLib::Random::GetRandomNumber(7) == 0) 
+	{
+		// ドロップした瞬間座標ズレてる?
+		MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<RecoveryItem>(GetPosition() + MelLib::Vector3(0,5,0)));
+	}
+}
+
 void NewEnemy::BeBlownAwayMove()
 {
 	MelLib::Vector3 playerNormalizeVector = pPlayer->CalcPlayerVector(GetPosition());
@@ -32,10 +47,14 @@ void NewEnemy::BeBlownAwayMove()
 void NewEnemy::Dead()
 {
 
-	if (deadEndTimer.GetMaxOverFlag()) 
+	if (deadEndTimer.GetMaxOverFlag())
 	{
 		SetScale(GetScale() - 0.1f);
-		if (GetScale().x <= 0)eraseManager = true;
+		if (GetScale().x <= 0)
+		{
+			DropItem();
+			eraseManager = true;
+		}
 	}
 
 }
