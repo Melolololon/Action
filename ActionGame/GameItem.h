@@ -9,16 +9,20 @@ protected:
 	static Player* pPlayer;
 
 protected:
+
 	bool CheckHitPlayer(const MelLib::GameObject& pObject);
 
 	/// <summary>
 	/// Á‚·‚Æ‚«‚Ìˆ—
 	/// </summary>
 	void Erase();
+
+
+
 public:
 	static void SetPPlayer(Player* p) { pPlayer = p; }
 
-	GameItem(const MelLib::Vector3& pos);
+	GameItem();
 	virtual ~GameItem() {}
 
 	void Update()override;

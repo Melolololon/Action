@@ -10,7 +10,7 @@ public:
 
 	static void LoadResources();
 
-	RecoveryItem(const MelLib::Vector3& pos);
+	RecoveryItem();
 	~RecoveryItem() {}
 
 	/// <summary>
@@ -30,6 +30,6 @@ public:
 		const std::string& hitShapeName
 	)override;
 
-
+	std::shared_ptr<GameObject> GetNewPtr()override;
 };
 

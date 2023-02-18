@@ -15,6 +15,8 @@
 #include"Wall.h"
 #include"Boss.h"
 
+#include"RecoveryItem.h"
+
 #include"EnemySpaunPoint.h"
 #include"WeakEnemy.h"
 
@@ -75,12 +77,15 @@ void Game::Initialize()
 	Tutorial::LoadResources();
 	WeakEnemy::LoadResources();
 	Boss::LoadResources();
+	RecoveryItem::LoadResources();
+
+
 
 	for (int i = 0; i < 4; i++) 
 	{
 		std::string numStr = std::to_string(i);
 		bool res = MelLib::Texture::Load("Resources/Texture/SlushEffect/e_" + numStr + ".png", "slushEffect_" + numStr);
-		int a = 0;
+		
 	}
 
 #pragma region エディター登録
@@ -118,6 +123,8 @@ void Game::Initialize()
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<EnemySpaunPoint>(typeid(WeakEnemy).name()), "Enemy");
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Boss>(), "Boss");
 
+	// アイテム追加
+	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<RecoveryItem>(), "H_Item");
 }
 
 void Game::Finalize()
