@@ -321,6 +321,8 @@ void Player::Update()
 	preHitGround = hitGround;
 	hitGround = false;
 
+
+	if (MelLib::Input::KeyTrigger(DIK_SPACE))hp -= 10;
 }
 
 void Player::TitleUpdate()

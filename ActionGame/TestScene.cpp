@@ -10,6 +10,8 @@
 
 #include<GameObjectManager.h>
 
+#include"GameItem.h"
+
 
 void TestScene::Initialize()
 {
@@ -31,6 +33,8 @@ void TestScene::Initialize()
 	// UI’Ç‰Á
 	HPGauge::SetPPlayer(pPlayer);
 	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<HPGauge>());
+
+	GameItem::SetPPlayer(pPlayer);
 }
 
 void TestScene::Update()
