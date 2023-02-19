@@ -183,6 +183,9 @@
     <ClCompile Include="PlayerGuard.cpp">
       <Filter>ソース ファイル\Object\Player</Filter>
     </ClCompile>
+    <ClCompile Include="ItemEffect.cpp">
+      <Filter>ソース ファイル\Object\Item</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -310,6 +313,9 @@
     </ClInclude>
     <ClInclude Include="PlayerGuard.h">
       <Filter>ヘッダー ファイル\Object\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemEffect.h">
+      <Filter>ヘッダー ファイル\Object\Item</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

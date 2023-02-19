@@ -15,6 +15,7 @@
 #include"Wall.h"
 #include"Boss.h"
 
+#include"ItemEffect.h"
 #include"RecoveryItem.h"
 
 #include"EnemySpaunPoint.h"
@@ -75,6 +76,10 @@ void Game::Initialize()
 	HPGauge::LoadResources();
 	Wall::LoadResources();
 	Tutorial::LoadResources();
+	ItemEffect::LoadResources();
+	
+	// ここにロード書くとシーン切替時に消されるから後で各シーンに変えとく
+	// エディターへの登録も
 	WeakEnemy::LoadResources();
 	Boss::LoadResources();
 	RecoveryItem::LoadResources();

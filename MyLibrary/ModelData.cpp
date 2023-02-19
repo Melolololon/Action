@@ -572,7 +572,7 @@ void MelLib::ModelData::SetFbxAnimStack(const std::string& name)
 
 bool ModelData::LoadModel(const std::string& path, const std::string& name)
 {
-	//if (pModelDatas[name])return false;
+	//if (pModelDatas.find(name) != pModelDatas.end())return false;
 
 	bool result = false;
 	
@@ -958,7 +958,6 @@ std::vector<ADSAMaterial*> MelLib::ModelData::GetPMaterial()
 			material[objectNames[i]] = nullptr;
 		}
 	}
-
 	// ここマテリアルあるオブジェクトとないオブジェクト混ざってると例外出る
 	std::vector<ADSAMaterial*>pMtls(size);
 	for (int i = 0; i < objectNames.size(); i++)

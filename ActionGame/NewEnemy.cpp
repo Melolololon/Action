@@ -32,7 +32,7 @@ void NewEnemy::DropItem()
 	//if (MelLib::Random::GetRandomNumber(7) == 0) 
 	{
 		// ドロップした瞬間座標ズレてる?
-		MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<RecoveryItem>(GetPosition() + MelLib::Vector3(0,5,0)));
+		MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<RecoveryItem>(GetPosition() + MelLib::Vector3(0,10,0)));
 	}
 }
 
