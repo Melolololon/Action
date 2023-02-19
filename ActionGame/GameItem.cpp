@@ -38,10 +38,10 @@ GameItem::GameItem(const MelLib::Vector3& pos)
 
 void GameItem::Initialize()
 {
-	FallStart(1.0f);
+	FallStart(0.3f);
 	sphereDatas["main"][0].SetRadius(20);
 	sphereDatas["main"][0].SetPosition(GetPosition());
-	SetScale(3);
+	SetScale(2);
 	/*MelLib::Vector3 pos = GetPosition();
 	MelLib::Value2<MelLib::Vector3>segmentPos = 
 		MelLib::Value2<MelLib::Vector3>(pos + MelLib::Vector3(0, 25.0f, 0), pos + MelLib::Vector3(0, 0, 0));
