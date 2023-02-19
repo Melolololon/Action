@@ -15,6 +15,7 @@
 
 void TestScene::Initialize()
 {
+	
 	Stage::LoadResources(0);
 	Stage::LoadResources(2);
 
@@ -46,6 +47,7 @@ void TestScene::Draw()
 {
 	MelLib::GameObjectManager::GetInstance()->Draw();
 
+	
 }
 
 void TestScene::Finalize()
