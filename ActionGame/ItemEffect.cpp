@@ -12,6 +12,7 @@ ItemEffect::ItemEffect(const MelLib::Vector3& pos)
 	modelObjects["main"].SetPosition(pos);
 	SetScale(5.0f);
 	modelObjects["main"].Create(MelLib::ModelData::Get("ItemEffect"),"ItemEffect");
+	modelObjects["main"].SetMulColor(MelLib::Color(255,255,255,150));
 }
 
 void ItemEffect::Update()
