@@ -170,6 +170,7 @@
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="GameItem.cpp" />
     <ClCompile Include="HPGauge.cpp" />
+    <ClCompile Include="ItemEffect.cpp" />
     <ClCompile Include="JumpAttack.cpp" />
     <ClCompile Include="JumpEnemy.cpp" />
     <ClCompile Include="main.cpp" />
@@ -215,6 +216,7 @@
     <ClInclude Include="Ground.h" />
     <ClInclude Include="GameItem.h" />
     <ClInclude Include="HPGauge.h" />
+    <ClInclude Include="ItemEffect.h" />
     <ClInclude Include="JumpAttack.h" />
     <ClInclude Include="JumpEnemy.h" />
     <ClInclude Include="NewEnemy.h" />

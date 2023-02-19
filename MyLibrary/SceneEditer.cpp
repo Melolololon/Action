@@ -651,6 +651,7 @@ void MelLib::SceneEditer::Update()
 {
 	if (!editorFlag || !ReleaseCheck())return;
 
+
 	// シーンの更新オンオフ処理
 	if (Input::KeyTrigger(DIK_F5))
 	{
@@ -762,7 +763,6 @@ void MelLib::SceneEditer::Update()
 	// リスト処理
 	ImguiManager::GetInstance()->DrawList(registerObjectListNum, registerObjectNames[registerObjectTypes[selectType]]);
 
-
 	//// ここにスライダー作成処理
 	//int sliderNum = 0;
 	//ImguiManager::GetInstance()->DrawSliderInt("Object", sliderNum, 0, refObjects.size() - 1);
@@ -774,9 +774,6 @@ void MelLib::SceneEditer::Update()
 
 	//// 選ばれたオブジェクトのポインタをpSelectObjectに代入
 	const std::string OBJECT_NAME = registerObjectOrderDatas[registerObjectTypes[selectType]][registerObjectListNum];
-
-
-	
 
 	pEditSelectObject = refObjects[OBJECT_NAME].get();
 	pEditSelectObject->SetGUIData();
@@ -904,9 +901,8 @@ void MelLib::SceneEditer::Update()
 
 	pEditSelectObject->SetPreData();
 
+
 	UpdateCamera();
-
-
 }
 
 void MelLib::SceneEditer::Draw()

@@ -1,19 +1,19 @@
 #include "GameItem.h"
 
+#include<GameObjectManager.h>
+
+#include"ItemEffect.h"
 #include"Stage.h"
 
 Player* GameItem::pPlayer;
 
 bool GameItem::CheckHitPlayer(const MelLib::GameObject& pObject)
 {
-
 	return typeid(pObject) == typeid(Player);
 }
 
 void GameItem::Erase()
 {
-	// ここにエフェクト追加処理
-
 	eraseManager = true;
 }
 
@@ -31,6 +31,9 @@ GameItem::GameItem(const MelLib::Vector3& pos)
 
 	//segment3DDatas["main"].resize(1);
 	//segment3DDatas["main"][0].SetPosition(capsuleDatas["main"][0].GetSegment3DData().GetPosition());
+
+	// アイテムエフェクト追加
+	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<ItemEffect>(GetPosition()));
 }
 
 void GameItem::Initialize()
@@ -38,6 +41,7 @@ void GameItem::Initialize()
 	FallStart(1.0f);
 	sphereDatas["main"][0].SetRadius(20);
 	sphereDatas["main"][0].SetPosition(GetPosition());
+	SetScale(3);
 	/*MelLib::Vector3 pos = GetPosition();
 	MelLib::Value2<MelLib::Vector3>segmentPos = 
 		MelLib::Value2<MelLib::Vector3>(pos + MelLib::Vector3(0, 25.0f, 0), pos + MelLib::Vector3(0, 0, 0));
@@ -48,10 +52,10 @@ void GameItem::Update()
 {
 	// なんか勝手に当たり判定の半径が小さくなってるからどこで変わってるか探す
 	// 今勝手にSetScaleでモデルと判定の大きさが同じになるようになってるから勝手に変わっちゃう
-	sphereDatas["main"][0].SetRadius(5);
+	
 	CalcMovePhysics();
 
-	SetAngle(GetAngle() + MelLib::Vector3(0, 3, 0));
+	SetAngle(GetAngle() + MelLib::Vector3(0, 1.5f, 0));
 }
 
 void GameItem::Draw()
