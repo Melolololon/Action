@@ -195,6 +195,7 @@
     <ClCompile Include="Tutorial.cpp" />
     <ClCompile Include="TutorialEventFlag.cpp" />
     <ClCompile Include="Wall.cpp" />
+    <ClCompile Include="Water.cpp" />
     <ClCompile Include="WeakEnemy.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -240,6 +241,7 @@
     <ClInclude Include="Tutorial.h" />
     <ClInclude Include="TutorialEventFlag.h" />
     <ClInclude Include="Wall.h" />
+    <ClInclude Include="Water.h" />
     <ClInclude Include="WeakEnemy.h" />
   </ItemGroup>
   <ItemGroup>

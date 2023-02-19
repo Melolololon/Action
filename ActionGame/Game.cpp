@@ -14,6 +14,7 @@
 #include"HPGauge.h"
 #include"Wall.h"
 #include"Boss.h"
+#include"Water.h"
 
 #include"ItemEffect.h"
 #include"RecoveryItem.h"
@@ -83,6 +84,7 @@ void Game::Initialize()
 	WeakEnemy::LoadResources();
 	Boss::LoadResources();
 	RecoveryItem::LoadResources();
+	Water::LoadResources();
 
 
 
@@ -123,6 +125,7 @@ void Game::Initialize()
 	// ƒXƒe[ƒW“o˜^
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Stage>(0), "Stage");
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Stage>(2), "Stage");
+	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Water>(), "Stage");
 
 	// “G’Ç‰Á
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<EnemySpaunPoint>(typeid(WeakEnemy).name()), "Enemy");
