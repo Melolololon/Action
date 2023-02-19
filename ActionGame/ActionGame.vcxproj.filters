@@ -186,6 +186,9 @@
     <ClCompile Include="ItemEffect.cpp">
       <Filter>ソース ファイル\Object\Item</Filter>
     </ClCompile>
+    <ClCompile Include="Water.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -316,6 +319,9 @@
     </ClInclude>
     <ClInclude Include="ItemEffect.h">
       <Filter>ヘッダー ファイル\Object\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="Water.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
