@@ -124,7 +124,7 @@ void Game::Initialize()
 
 	// ƒXƒe[ƒW“o˜^
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Stage>(0), "Stage");
-	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Stage>(2), "Stage");
+	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Stage>(1), "Stage");
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Water>(), "Stage");
 
 	// “G’Ç‰Á
