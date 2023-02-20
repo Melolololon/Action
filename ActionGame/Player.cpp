@@ -283,6 +283,10 @@ void Player::Update()
 		Move();
 		Jump();
 	}
+	else 
+	{
+		AttackMove();
+	}
 
 	ReturnStage();
 
@@ -407,9 +411,8 @@ void Player::Move()
 	{
 		return;
 	}
-	else if (attackTimer.GetNowTime() > 0)
+	else if (currentAttack != PlayerSlush::AttackType::NONE)
 	{
-		AttackMove();
 		return;
 	}
 
@@ -497,7 +500,7 @@ void Player::AttackMove()
 	case PlayerSlush::AttackType::NONE:
 		break;
 	case PlayerSlush::AttackType::NORMAL_1:
-		//AddPosition(direction * 0.1f);
+		AddPosition(direction * 0.1f);
 		break;
 	case PlayerSlush::AttackType::NORMAL_2:
 		AddPosition(direction * 0.2f);

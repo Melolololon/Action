@@ -6,7 +6,7 @@ EnemyHPGauge::EnemyHPGauge(const int& hp)
 {
 	hpSprite.Create(MelLib::Texture::Get("hpGauge"));
 	hpSprite.SetBillboardFlag(true, true, true);
-
+	
 }
 
 void EnemyHPGauge::SetPosition(const MelLib::Vector3& pos)
@@ -16,6 +16,8 @@ void EnemyHPGauge::SetPosition(const MelLib::Vector3& pos)
 
 void EnemyHPGauge::Update()
 {
+	// Šg‘åk¬‚ÌŠî€‚ğ“®‚©‚·ŠÖ”ì‚é
+
 	MelLib::Vector2 scale = MelLib::Vector2(10,2);
 
 	float wariai = static_cast<float>(REF_HP) / static_cast<float>(MAX_HP);

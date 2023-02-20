@@ -55,6 +55,12 @@
     <Filter Include="ヘッダー ファイル\Object\Item">
       <UniqueIdentifier>{bee2d535-129a-4332-80a1-6caa125ed67f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\UI">
+      <UniqueIdentifier>{5aeb30f1-7a0c-4b72-a0e2-db41901d8f62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\UI">
+      <UniqueIdentifier>{11f5feb6-fb87-45fe-8fa5-84d37ff5b56a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -126,9 +132,6 @@
     <ClCompile Include="Rock.cpp">
       <Filter>ソース ファイル\Object\Stage</Filter>
     </ClCompile>
-    <ClCompile Include="HPGauge.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Boss.cpp">
       <Filter>ソース ファイル\Object\Enemy</Filter>
     </ClCompile>
@@ -177,9 +180,6 @@
     <ClCompile Include="OperationExplanation.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyHPGauge.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="PlayerGuard.cpp">
       <Filter>ソース ファイル\Object\Player</Filter>
     </ClCompile>
@@ -191,6 +191,12 @@
     </ClCompile>
     <ClCompile Include="Sky.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyHPGauge.cpp">
+      <Filter>ソース ファイル\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="HPGauge.cpp">
+      <Filter>ソース ファイル\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -260,9 +266,6 @@
     <ClInclude Include="Rock.h">
       <Filter>ヘッダー ファイル\Object\Stage</Filter>
     </ClInclude>
-    <ClInclude Include="HPGauge.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Boss.h">
       <Filter>ヘッダー ファイル\Object\Enemy</Filter>
     </ClInclude>
@@ -314,9 +317,6 @@
     <ClInclude Include="OperationExplanation.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyHPGauge.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="PlayerGuard.h">
       <Filter>ヘッダー ファイル\Object\Player</Filter>
     </ClInclude>
@@ -328,6 +328,12 @@
     </ClInclude>
     <ClInclude Include="Sky.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyHPGauge.h">
+      <Filter>ヘッダー ファイル\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="HPGauge.h">
+      <Filter>ヘッダー ファイル\UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
