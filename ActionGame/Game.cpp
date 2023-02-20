@@ -14,6 +14,7 @@
 #include"HPGauge.h"
 #include"Wall.h"
 #include"Boss.h"
+#include"BossAttack.h"
 #include"Water.h"
 
 #include"ItemEffect.h"
@@ -84,6 +85,7 @@ void Game::Initialize()
 	// エディターへの登録も
 	WeakEnemy::LoadResources();
 	Boss::LoadResources();
+	BossAttack::LoadResources();
 	RecoveryItem::LoadResources();
 	Water::LoadResources();
 
@@ -135,13 +137,15 @@ void Game::Initialize()
 	// アイテム追加
 	//MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<RecoveryItem>(), "H_Item");
 
+	// これ原因でDX12のエラーが出る
+	// リリース時に
 	pSky = std::make_unique<Sky>();
 }
 
 void Game::Finalize()
 {
-	delete pSky.release();
 	MelLib::Library::Finalize();
+	delete pSky.release();
 }
 
 void Game::Update()
@@ -156,7 +160,7 @@ void Game::Draw()
 	MelLib::SceneManager::GetInstance()->Draw();
 	MelLib::SceneEditer::GetInstance()->Draw();
 
-	pSky->Draw();
+	//pSky->Draw();
 }
 
 std::string Game::GetPath(const ResourcePath type)const

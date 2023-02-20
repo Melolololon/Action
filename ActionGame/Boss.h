@@ -20,6 +20,10 @@ private:
 	};
 	ThisState thisState = ThisState::OTHER;
 
+	MelLib::Vector3 direction; 
+	int jumpAttackCount = 0;
+	static const int JUMP_ATTACK_MAX_COUNT = 8;
+	MelLib::FrameTimer jumpAttackTimer;
 
 	enum class CurrentAttack 
 	{
