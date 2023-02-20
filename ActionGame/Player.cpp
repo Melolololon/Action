@@ -16,6 +16,9 @@
 #include"Ground.h"
 #include"Wall.h"
 
+#include"RecoveryEffect.h"
+#include"RecoveryItem.h"
+
 #include"Pause.h"
 #include"EditMode.h"
 
@@ -500,13 +503,13 @@ void Player::AttackMove()
 	case PlayerSlush::AttackType::NONE:
 		break;
 	case PlayerSlush::AttackType::NORMAL_1:
-		AddPosition(direction * 0.1f);
+		AddPosition(direction * 0.2f);
 		break;
 	case PlayerSlush::AttackType::NORMAL_2:
-		AddPosition(direction * 0.2f);
+		AddPosition(direction * 0.3f);
 		break;
 	case PlayerSlush::AttackType::NORMAL_3:
-		AddPosition(direction * 0.2f);
+		AddPosition(direction * 0.3f);
 		break;
 	case PlayerSlush::AttackType::DASH_1:
 		break;
@@ -1110,6 +1113,12 @@ void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionTy
 		HitWall();
 	}
 
+
+	// エフェクト追加
+	if (typeid(object) == typeid(RecoveryItem)) 
+	{
+		MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<RecoveryEffect>(GetPosition()));
+	}
 
 	//if (typeid(object) == typeid(Wall) 
 	//	&& collisionType == MelLib::ShapeType3D::SEGMENT)

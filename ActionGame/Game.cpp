@@ -18,6 +18,7 @@
 
 #include"ItemEffect.h"
 #include"RecoveryItem.h"
+#include"RecoveryEffect.h"
 
 #include"EnemySpaunPoint.h"
 #include"WeakEnemy.h"
@@ -86,7 +87,7 @@ void Game::Initialize()
 	RecoveryItem::LoadResources();
 	Water::LoadResources();
 
-
+	RecoveryEffect::LoadResources();
 
 	for (int i = 0; i < 4; i++) 
 	{

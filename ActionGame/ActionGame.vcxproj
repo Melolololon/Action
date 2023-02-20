@@ -183,6 +183,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerGuard.cpp" />
     <ClCompile Include="PlayerSlush.cpp" />
+    <ClCompile Include="RecoveryEffect.cpp" />
     <ClCompile Include="RecoveryItem.cpp" />
     <ClCompile Include="Rock.cpp" />
     <ClCompile Include="Sky.cpp" />
@@ -230,6 +231,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerGuard.h" />
     <ClInclude Include="PlayerSlush.h" />
+    <ClInclude Include="RecoveryEffect.h" />
     <ClInclude Include="RecoveryItem.h" />
     <ClInclude Include="Rock.h" />
     <ClInclude Include="Sky.h" />

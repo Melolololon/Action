@@ -2,6 +2,7 @@
 #include <GameObject.h>
 #include<RouteSearch.h>
 #include<FrameTimer.h>
+
 #include"Player.h"
 
 class Player;
@@ -11,7 +12,6 @@ class Enemy :
 	public MelLib::GameObject
 {
 private:
-
 
 	static Player* pPlayer;
 	static std::vector<std::vector<std::vector<MelLib::AStarNode>>> nodes;
