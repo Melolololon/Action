@@ -111,7 +111,7 @@ void Game::Initialize()
 
 	MelLib::TextWrite::CreateFontData(/*L"HGPºÞ¼¯¸E"*/L"Arial",64.0f, "Arial");
 
-	MelLib::Camera::Get()->SetFar(1000.0f);
+	MelLib::Camera::Get()->SetFar(100000.0f);
 	
 	//MelLib::Camera::Get()->SetRotateCriteriaPosition(MelLib::Vector3(-8, 15, -10));
 	//MelLib::Camera::Get()->SetRotatePoint(MelLib::Camera::RotatePoint::ROTATE_POINT_CAMERA_POSITION);
@@ -133,10 +133,13 @@ void Game::Initialize()
 
 	// ƒAƒCƒeƒ€’Ç‰Á
 	//MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<RecoveryItem>(), "H_Item");
+
+	pSky = std::make_unique<Sky>();
 }
 
 void Game::Finalize()
 {
+	delete pSky.release();
 	MelLib::Library::Finalize();
 }
 
@@ -152,6 +155,7 @@ void Game::Draw()
 	MelLib::SceneManager::GetInstance()->Draw();
 	MelLib::SceneEditer::GetInstance()->Draw();
 
+	pSky->Draw();
 }
 
 std::string Game::GetPath(const ResourcePath type)const
