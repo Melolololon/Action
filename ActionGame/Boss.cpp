@@ -1,6 +1,11 @@
 #include "Boss.h"
 
 #include"Stage.h"
+#include"LibMath.h"
+
+#include"BossAttack.h"
+
+#include<GameObjectManager.h>
 
 
 void Boss::AttackUpdate()
@@ -15,11 +20,50 @@ void Boss::AttackUpdate()
 	default:
 		break;
 	}
+
+	if (jumpAttackTimer.GetMaxOverFlag())
+	{
+
+		static const float ONE_ATTACK_MOVE_DIR = 20.0f;
+
+		MelLib::Vector3 AttackPos = MelLib::LibMath::FloatDistanceMoveVector3
+		(
+			GetPosition(),
+			direction,
+			(jumpAttackCount + 2) * ONE_ATTACK_MOVE_DIR
+		);
+
+		MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<BossAttack>(AttackPos));
+
+		jumpAttackCount++;
+		jumpAttackTimer.ResetTimeZero();
+
+	}
+	if (jumpAttackCount >= JUMP_ATTACK_MAX_COUNT)
+	{
+		jumpAttackCount = 0;
+		jumpAttackTimer.SetStopFlag(true);
+	}
 }
 
 void Boss::JumpAttack()
 {
+	
+
+
 	if (modelObjects["main"].GetAnimationFrame() == 17) FallStart(3.0f);
+
+	if (modelObjects["main"].GetAnimationFrame() == 47) 
+	{
+		jumpAttackTimer.SetStopFlag(false);
+
+	}
+	if (modelObjects["main"].GetAnimationEndFlag()) 
+	{
+		currentAttack = CurrentAttack::NONE;
+		modelObjects["main"].SetAnimation("No_Cont");
+	}
+	
 }
 
 void Boss::LoadResources()
@@ -45,10 +89,13 @@ Boss::Boss()
 
 
 	actionTimer.SetMaxTime(60 * 6);
+	jumpAttackTimer.SetMaxTime(60 * 0.3f);
+	jumpAttackTimer.SetResetFlag(false);
 
 	// âºê›íË
 	modelObjects["main"].SetAnimation("Attack_Jump.001");
 	currentAttack = CurrentAttack::JUMP;
+
 }
 
 std::shared_ptr<MelLib::GameObject> Boss::GetNewPtr()
@@ -74,23 +121,16 @@ void Boss::Update()
 {
 	if (thisState == ThisState::BATTLE)actionTimer.SetStopFlag(false);
 
+	MelLib::Vector2 angle2 = MelLib::LibMath::AngleToVector2(GetAngle().y + 90 , true);
+	direction = MelLib::Vector3(angle2.x, 0, angle2.y);
+	
 
 	modelObjects["main"].Update();
 	modelObjects["main"].SetAnimationPlayFlag(true);
 	AttackUpdate();
 	CalcMovePhysics();
 
-	// âº
-	if (MelLib::Input::KeyState(DIK_Z)) 
-	{
-		modelObjects["main"].SetAnimation("No_Cont");
-		currentAttack = CurrentAttack::NONE;
-	}
-	else 
-	{
-		modelObjects["main"].SetAnimation("Attack_Jump.001");
-		currentAttack = CurrentAttack::JUMP;
-	}
+
 }
 
 void Boss::Draw()
