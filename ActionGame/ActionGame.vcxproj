@@ -185,6 +185,7 @@
     <ClCompile Include="PlayerSlush.cpp" />
     <ClCompile Include="RecoveryItem.cpp" />
     <ClCompile Include="Rock.cpp" />
+    <ClCompile Include="Sky.cpp" />
     <ClCompile Include="SlushEffect.cpp" />
     <ClCompile Include="SlushHitEffect.cpp" />
     <ClCompile Include="Stage.cpp" />
@@ -231,6 +232,7 @@
     <ClInclude Include="PlayerSlush.h" />
     <ClInclude Include="RecoveryItem.h" />
     <ClInclude Include="Rock.h" />
+    <ClInclude Include="Sky.h" />
     <ClInclude Include="SlushEffect.h" />
     <ClInclude Include="SlushHitEffect.h" />
     <ClInclude Include="Stage.h" />

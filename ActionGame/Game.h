@@ -1,5 +1,6 @@
 #pragma once
 #include<string>
+#include"Sky.h"
 
 class Game
 {
@@ -8,6 +9,9 @@ private:
 	~Game(){}
 
 	const std::string texturePath = "Resources/Texture/";
+
+	std::unique_ptr<Sky> pSky;
+
 public:
 	Game(Game& ins) = delete;
 	Game& operator=(Game& ins) = delete;
