@@ -3,6 +3,7 @@
 
 #include<FrameTimer.h>
 #include<Easing.h>
+#include<Emitter3D.h>
 
 #include"AttackEffect.h"
 
@@ -32,6 +33,8 @@ public:
 	
 
 private:
+	//MelLib::Emitter3D emitter;
+
 
 	static std::unordered_map<ActionType, MelLib::PadButton> keyConfigData;
 

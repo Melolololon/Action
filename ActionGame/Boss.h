@@ -20,6 +20,19 @@ private:
 	};
 	ThisState thisState = ThisState::OTHER;
 
+
+	enum class CurrentAttack 
+	{
+		NONE,
+		JUMP,
+	};
+	CurrentAttack currentAttack = CurrentAttack::NONE;
+
+	
+	void AttackUpdate();
+	// UŒ‚ˆê——
+	void JumpAttack();
+
 public:
 
 
@@ -28,6 +41,8 @@ public:
 
 	Boss();
 
+	std::shared_ptr<MelLib::GameObject> GetNewPtr()override;
+	void Initialize()override;
 	void Update()override;
 	void Draw()override;
 	void Hit

@@ -19,9 +19,6 @@ void RecoveryItem::Hit(const GameObject& object, const MelLib::ShapeType3D colli
 
 	if(CheckHitPlayer(object))
 	{
-		// ‰ñ•œ
-		pPlayer->LifeUp(RECOVERY_HP);
-		
 		// íœ
 		Erase();
 	}
