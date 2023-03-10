@@ -71,7 +71,7 @@ std::unordered_map<PlayerSlush::AttackType, const Player::AttackData> Player::at
 void Player::LoadResources()
 {
 	// タイトルでも使うから自動削除削除
-	MelLib::ModelData::Load("Resources/Model/Player/Player.fbx", false, "Player");
+	MelLib::ModelData::Load("Resources/Model/Player/Player_BAG.fbx", false, "Player");
 	//MelLib::ModelData::Load("Resources/Model/Enemy/Mokuzin/Mokuzin.fbx", false, "Player");
 
 	// メッシュ2つ以上の時にマテリアル読むとエラーでる
@@ -1159,6 +1159,7 @@ void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionTy
 	if (!isMuteki)
 	{
 
+		// 通常
 		if (typeid(object) == typeid(EnemyAttack)
 			|| typeid(object) == typeid(NormalEnemyAttack)
 			|| typeid(object) == typeid(CapsuleEnemyAttack))
@@ -1166,6 +1167,7 @@ void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionTy
 			isMuteki = true;
 			mutekiTimer.SetStopFlag(false);
 
+			
 			isStun = true;
 			modelObjects["main"].SetAnimation("Stun");
 
@@ -1175,6 +1177,14 @@ void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionTy
 			enemyToPlayer = enemyToPlayer.Normalize();
 			AddPosition(-enemyToPlayer * 0.3f);*/
 		}
+		// 吹っ飛び
+		if (typeid(object) == typeid(EnemyAttack))
+		{
+			isMuteki = true;
+			mutekiTimer.SetStopFlag(false);
+
+		}
+		
 	}
 
 	if(typeid(object) == typeid(EventFlag))

@@ -1,11 +1,17 @@
 #pragma once
 #include<GameObject.h>
 #include<FrameTimer.h>
+
+#include"Player.h"
 class BossAttack:public MelLib::GameObject
 {
 private:
 	MelLib::FrameTimer deadTimer;
+
+	static Player* pPlayer;
 public:
+	static void SetPPlayer(Player* p) { pPlayer = p; }
+	
 	static void LoadResources();
 	
 	BossAttack(const MelLib::Vector3& pos);
