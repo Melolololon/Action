@@ -88,9 +88,8 @@ Vector3 Random::GetRandomVector3NumberRangeSelect(const float start, const float
 {
 	return Vector3
 	(
-		GetRandomFloatNumberRangeSelect(start, end, digits),
-		GetRandomFloatNumberRangeSelect(start, end, digits),
-		GetRandomFloatNumberRangeSelect(start, end, digits)
+		GetRandomFloatNumberRangeSelect(start,end, digits),
+		GetRandomFloatNumberRangeSelect(start,end, digits),
+		GetRandomFloatNumberRangeSelect(start,end, digits)
 	);
 }
-

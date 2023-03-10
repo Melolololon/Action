@@ -9,6 +9,11 @@ class Stage :
     public MelLib::GameObject
 {
 private:
+    MelLib::ADSAMaterial material;
+
+private:
+
+
     void SetStageData(unsigned int stageNum);
 
     // ステージ番号

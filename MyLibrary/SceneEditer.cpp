@@ -642,6 +642,7 @@ void MelLib::SceneEditer::Initialize()
 	pEditerCamera = Camera::Get(CAMERA_WINDOW_NAME);
 	RenderTarget::Get()->SetCamera(pEditerCamera);
 	pEditerCamera->SetFar(FLT_MAX);
+
 	
 	OtherCameraGuiDrawFlagFalse();
 	isEdit = true;

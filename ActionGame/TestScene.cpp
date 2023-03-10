@@ -12,19 +12,25 @@
 
 #include"GameItem.h"
 
+#include"BossAttack.h"
+
 
 void TestScene::Initialize()
 {
 	
-	Stage::LoadResources(0);
+	//Stage::LoadResources(0);
 	Stage::LoadResources(1);
-	Stage::LoadResources(2);
+	//Stage::LoadResources(2);
 
 
+	// 毎回これ書くの大変だから、シングルトンのプレイヤーのダメージ減らしたりするクラス作るか、
+	// Playerクラスにstaticのポインタ取得関数を作ったほうがいい
 	pPlayer = Player::GetPPlayer();
 	EnemySpaunPoint::SetPlayer(pPlayer);
 	NewEnemy::SetPPlayer(pPlayer);
 	CapsuleEnemyAttack::SetPPlayer(pPlayer);
+	BossAttack::SetPPlayer(pPlayer);
+
 	EnemySpaunPoint::ClearEnemySpauns();
 	MelLib::GameObjectManager::GetInstance()->InitializeObject();
 

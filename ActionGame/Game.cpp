@@ -95,8 +95,10 @@ void Game::Initialize()
 	{
 		std::string numStr = std::to_string(i);
 		bool res = MelLib::Texture::Load("Resources/Texture/SlushEffect/e_" + numStr + ".png", "slushEffect_" + numStr);
-		
 	}
+
+	MelLib::Texture::Load("Resources/Model/Stage/Field_01.png","Grass");
+	MelLib::Texture::Load("Resources/Model/Stage/TitleFierd_Tex.png","Rock");
 
 #pragma region エディター登録
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Player>(), "Player");
@@ -126,7 +128,7 @@ void Game::Initialize()
 
 
 	// ステージ登録
-	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Stage>(0), "Stage");
+	//MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Stage>(0), "Stage");
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Stage>(1), "Stage");
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Water>(), "Stage");
 
@@ -140,6 +142,8 @@ void Game::Initialize()
 	// これ原因でDX12のエラーが出る
 	// リリース時に
 	pSky = std::make_unique<Sky>();
+
+
 }
 
 void Game::Finalize()
@@ -157,10 +161,10 @@ void Game::Update()
 
 void Game::Draw()
 {
+	pSky->Draw();
 	MelLib::SceneManager::GetInstance()->Draw();
 	MelLib::SceneEditer::GetInstance()->Draw();
 
-	//pSky->Draw();
 }
 
 std::string Game::GetPath(const ResourcePath type)const
