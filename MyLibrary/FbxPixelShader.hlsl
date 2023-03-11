@@ -5,7 +5,7 @@
 //スプライトとバッファの生成関数同じだからスプライト側をどうにかしないといけない
 
 Texture3D<float4> tex:register(t0);
-Texture3D<float4> tex2:register(t1);
+//Texture3D<float4> tex2:register(t1);
 SamplerState smp:register(s0);
 
 float4 GetTexColor(GSOutput input,Texture3D<float4> t)
@@ -70,6 +70,7 @@ float4 main(GSOutput input) : SV_TARGET
 	float4 sumColor = BlendAddSubMulColor(texColor, shaderColor);
 
 	return sumColor;
+
 
 	////ワールド行列適応
 	//float start = mul(worldMat,tex3DStart);

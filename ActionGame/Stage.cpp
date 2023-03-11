@@ -68,13 +68,17 @@ Stage::Stage(const unsigned int stageNum)
 
 	// ƒ}ƒeƒŠƒAƒ‹ì¬
 	MelLib::ShaderDataSet set;
+	set.pShaderData = { L"StagePixelShader.hlsl","main","ps_5_0" };
+
 	MelLib::DrawOption op;
 	op.SetModelDefData();
 	material.Create(op, 3, set);
-	
+
 	material.SetTexture(MelLib::Texture::Get("Grass"), "Grass");
 	material.SetTexture(MelLib::Texture::Get("Rock"), "Rock");
+	material.SetTexture(MelLib::Texture::Get("StageMask_1"), "StageMask_1");
 
+	modelObjects["stage"].SetMaterial(&material);
 }
 
 void Stage::Initialize()

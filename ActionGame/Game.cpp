@@ -99,6 +99,7 @@ void Game::Initialize()
 
 	MelLib::Texture::Load("Resources/Model/Stage/Field_01.png","Grass");
 	MelLib::Texture::Load("Resources/Model/Stage/TitleFierd_Tex.png","Rock");
+	bool r = MelLib::Texture::Load("Resources/Model/Stage/Stage_Mask_1.png","StageMask_1");
 
 #pragma region エディター登録
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Player>(), "Player");

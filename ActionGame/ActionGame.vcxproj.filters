@@ -348,4 +348,7 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="StagePixelShader.hlsl" />
+  </ItemGroup>
 </Project>
