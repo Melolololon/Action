@@ -11,9 +11,15 @@
 #include"Stage.h"
 
 #include"EnemySpaunPoint.h"
+#include"CapsuleEnemyAttack.h"
+#include"BossAttack.h"
 #include"NewEnemy.h"
 
+#include"GameItem.h"
+
 #include"HPGauge.h"
+
+#include"EnemyDeadCounter.h"
 
 void GamePlay::CheckClear()
 {
@@ -27,24 +33,57 @@ void GamePlay::CheckGameOver()
 
 void GamePlay::Initialize()
 {
+	EnemyDeadCounter::GetInstance()->Reset();
+
 	const unsigned int STAGE_NUM = StageSelect::GetStageNum();
 
 	// シーンの読み込み
 	//MelLib::SceneEditer::GetInstance()->LoadEditData("Stage_" + std::to_string(STAGE_NUM));
 	
 
-	// プレイヤーの取得
+		//Stage::LoadResources(0);
+	Stage::LoadResources(1);
+	//Stage::LoadResources(2);
+
+
+	// 毎回これ書くの大変だから、シングルトンのプレイヤーのダメージ減らしたりするクラス作るか、
+	// Playerクラスにstaticのポインタ取得関数を作ったほうがいい
 	pPlayer = Player::GetPPlayer();
-	NewEnemy::SetPPlayer(pPlayer);
 	EnemySpaunPoint::SetPlayer(pPlayer);
+	NewEnemy::SetPPlayer(pPlayer);
+	CapsuleEnemyAttack::SetPPlayer(pPlayer);
+	BossAttack::SetPPlayer(pPlayer);
+
 	EnemySpaunPoint::ClearEnemySpauns();
+	MelLib::GameObjectManager::GetInstance()->InitializeObject();
+
+
+	// 当たり判定確認用
+	//MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<WeakEnemy>(0));
 
 	// UI追加
+	HPGauge::SetPPlayer(pPlayer);
 	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<HPGauge>());
+
+	GameItem::SetPPlayer(pPlayer);
+
+
+
+
+	//// プレイヤーの取得
+	//pPlayer = Player::GetPPlayer();
+	//NewEnemy::SetPPlayer(pPlayer);
+	//EnemySpaunPoint::SetPlayer(pPlayer);
+	//EnemySpaunPoint::ClearEnemySpauns();
+
+	//// UI追加
+	//MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<HPGauge>());
 }
 
 void GamePlay::Update()
 {
+	// 敵が死んだらカウント増やし、カウントが一定以上で壁を消したり、クリアさせたりすればいい?
+
 	MelLib::GameObjectManager::GetInstance()->Update();
 	Fade::GetInstance()->Update();
 

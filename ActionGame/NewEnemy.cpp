@@ -6,6 +6,8 @@
 #include<Random.h>
 #include<GameObjectManager.h>
 
+#include "EnemyDeadCounter.h"
+
 Player* NewEnemy::pPlayer;
 const float NewEnemy::MOVE_SPEED = 0.6f;
 const float NewEnemy::MIN_DISTANCE = 60.0f;
@@ -54,9 +56,9 @@ void NewEnemy::Dead()
 		{
 			DropItem();
 			eraseManager = true;
+			EnemyDeadCounter::GetInstance()->CountUp();
 		}
 	}
-
 }
 
 NewEnemy::NewEnemy(const std::string& name)

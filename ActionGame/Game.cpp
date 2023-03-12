@@ -21,6 +21,8 @@
 #include"RecoveryItem.h"
 #include"RecoveryEffect.h"
 
+#include"Wall.h"
+
 #include"EnemySpaunPoint.h"
 #include"WeakEnemy.h"
 
@@ -103,6 +105,7 @@ void Game::Initialize()
 
 #pragma region エディター登録
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Player>(), "Player");
+	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Wall>(), "Wall");
 
 	
 #pragma endregion
