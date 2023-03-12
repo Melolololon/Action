@@ -77,11 +77,16 @@ float4 main(GSOutput input) : SV_TARGET
 	// テクスチャの色取得
 	float4 texColor = GetTexColor(input,tex);
 	float4 texColor2 = GetTexColor(input,tex2);
-	float4 mask = GetMaskColor(input,tex3);
+	
+	// マスク取得
+	float mask = GetMaskColor(input,tex3);
+	float4 maskMulColor2 = float4(texColor2.rgb * mask, texColor2.a);
+	float4 maskMulColor = float4(texColor.rgb * (1 - mask), texColor.a);
 
+	float4 blendColor = (maskMulColor + maskMulColor2) / 2;
 
 	float4 shaderColor = GetShaderColor(input);
-	float4 sumColor = BlendAddSubMulColor(texColor, shaderColor);
+	float4 sumColor = BlendAddSubMulColor(blendColor, shaderColor);
 
-	return mask;
+	return blendColor;
 }
