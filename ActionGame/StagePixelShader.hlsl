@@ -4,7 +4,7 @@
 
 Texture3D<float4> tex:register(t0);
 Texture3D<float4> tex2:register(t1);
-Texture3D<float4> tex3:register(t2);
+Texture3D<float4> maskTex:register(t2);
 SamplerState smp:register(s0);
 
 float4 GetTexColor(GSOutput input, Texture3D<float4> t)
@@ -79,7 +79,7 @@ float4 main(GSOutput input) : SV_TARGET
 	float4 texColor2 = GetTexColor(input,tex2);
 	
 	// ƒ}ƒXƒNŽæ“¾
-	float mask = GetMaskColor(input,tex3);
+	float mask = GetMaskColor(input, maskTex);
 	float4 maskMulColor2 = float4(texColor2.rgb * mask, texColor2.a);
 	float4 maskMulColor = float4(texColor.rgb * (1 - mask), texColor.a);
 

@@ -161,6 +161,7 @@
     <ClCompile Include="EditMode.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyAttack.cpp" />
+    <ClCompile Include="EnemyDeadCounter.cpp" />
     <ClCompile Include="EnemyHPGauge.cpp" />
     <ClCompile Include="EnemySpaunPoint.cpp" />
     <ClCompile Include="EventFlag.cpp" />
@@ -211,6 +212,7 @@
     <ClInclude Include="EditMode.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyAttack.h" />
+    <ClInclude Include="EnemyDeadCounter.h" />
     <ClInclude Include="EnemyHPGauge.h" />
     <ClInclude Include="EnemySpaunPoint.h" />
     <ClInclude Include="EventFlag.h" />

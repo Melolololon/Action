@@ -66,18 +66,24 @@ Stage::Stage(const unsigned int stageNum)
 	
 
 
-	// マテリアル作成
+
+	// シェーダー設定
 	MelLib::ShaderDataSet set;
 	set.pShaderData = { L"StagePixelShader.hlsl","main","ps_5_0" };
 
+	// 描画設定は3Dモデル用のデフォルト設定を適応
 	MelLib::DrawOption op;
 	op.SetModelDefData();
+
+	// マテリアル作成(描画設定,テクスチャ枚数,シェーダーの設定)
 	material.Create(op, 3, set);
 
+	// テクスチャをセット
 	material.SetTexture(MelLib::Texture::Get("Grass"), "Grass");
 	material.SetTexture(MelLib::Texture::Get("Rock"), "Rock");
 	material.SetTexture(MelLib::Texture::Get("StageMask_1"), "StageMask_1");
 
+	// マテリアルをセット
 	modelObjects["stage"].SetMaterial(&material);
 }
 
@@ -94,7 +100,6 @@ void Stage::Initialize()
 		triangleDatas["main"][i] = stageCollision[0][i];
 	}
 	
-
 #pragma region 旧
 	//MelLib::ModelData* pColl = MelLib::ModelData::Get("wallCollision" + std::to_string(STAGE_NUM));
 
@@ -128,8 +133,6 @@ void Stage::Initialize()
 	//}
 
 #pragma endregion
-
-
 
 }
 

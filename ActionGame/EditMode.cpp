@@ -508,7 +508,7 @@ std::shared_ptr<MelLib::GameObject> EditMode::GetPObject
 		break;
 
 	case WALL:
-		return std::make_shared<Wall>(pos, angle, scale.ToVector2());
+		return std::make_shared<Wall>();
 		break;
 
 #pragma endregion

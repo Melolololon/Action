@@ -4,21 +4,28 @@
 class Wall : public MelLib::GameObject
 {
 private:
-	MelLib::Sprite3D wallSpr;
+	/*MelLib::Sprite3D wallSpr;
 
 	MelLib::Vector2 drawAreaLeftUp;
-	MelLib::Vector2 drawAreaRightDown = 1;
+	MelLib::Vector2 drawAreaRightDown = 1;*/
+
+	static MelLib::ADSAMaterial material;
 
 	static unsigned int wallSetCount;
+
+	// ï«ÇÃî‘çÜ(í·Ç¢Ç‚Ç¬Ç©ÇÁè¡Ç¶ÇƒÇ¢Ç≠)
+	MelLib::GuiInt wallNum;
+
 public:
 	static void LoadResources();
 
+	Wall();
 
-	Wall(const MelLib::Vector3& pos, const MelLib::Vector3& angle, const MelLib::Vector2& scale);
-
+	void Initialize()override;
 	void Update()override;
 	void Draw()override;
 
+	std::shared_ptr<MelLib::GameObject>GetNewPtr()override;
 
 };
 
