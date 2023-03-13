@@ -132,7 +132,7 @@ void Game::Initialize()
 
 
 	// ステージ登録
-	//MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Stage>(0), "Stage");
+	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Stage>(0), "Stage");
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Stage>(1), "Stage");
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Water>(), "Stage");
 
@@ -145,6 +145,7 @@ void Game::Initialize()
 
 	// これ原因でDX12のエラーが出る
 	// リリース時に
+	// エラー消えた
 	pSky = std::make_unique<Sky>();
 
 

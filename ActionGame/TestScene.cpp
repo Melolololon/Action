@@ -12,13 +12,14 @@
 
 #include"GameItem.h"
 
+#include"Boss.h"
 #include"BossAttack.h"
 
 
 void TestScene::Initialize()
 {
 	
-	//Stage::LoadResources(0);
+	Stage::LoadResources(0);
 	Stage::LoadResources(1);
 	//Stage::LoadResources(2);
 
@@ -30,6 +31,7 @@ void TestScene::Initialize()
 	NewEnemy::SetPPlayer(pPlayer);
 	CapsuleEnemyAttack::SetPPlayer(pPlayer);
 	BossAttack::SetPPlayer(pPlayer);
+	Boss::SetPPlayer(pPlayer);
 
 	EnemySpaunPoint::ClearEnemySpauns();
 	MelLib::GameObjectManager::GetInstance()->InitializeObject();
