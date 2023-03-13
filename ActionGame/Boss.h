@@ -21,18 +21,18 @@ private:
 	};
 	ThisState thisState = ThisState::OTHER;
 
-	MelLib::Vector3 direction; 
+	MelLib::Vector3 jumpAttackDir; 
 	int jumpAttackCount = 0;
 	static const int JUMP_ATTACK_MAX_COUNT = 8;
 	MelLib::FrameTimer jumpAttackTimer;
 
-	enum class CurrentAttack 
+	enum class CurrentState 
 	{
 		NONE,
 		NORMAL_1,
-		JUMP,
+		JUMP_ATTACK,
 	};
-	CurrentAttack currentAttack = CurrentAttack::NONE;
+	CurrentState currentState = CurrentState::NONE;
 
 	MelLib::GuiInt hp;
 
@@ -43,10 +43,13 @@ private:
 	void SelectAction();
 	void AttackUpdate();
 
-	void NormalAttack();
-	// çUåÇàÍóó
-	void JumpAttack();
+	void AttackEnd();
 
+	void NormalAttackUpdate();
+	// çUåÇàÍóó
+	void JumpAttackUpdate();
+
+	void Rotate();
 public:
 
 

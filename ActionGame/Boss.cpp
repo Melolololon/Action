@@ -5,13 +5,17 @@
 
 #include"BossAttack.h"
 
+#include"JumpAttack.h"
+
+#include"SlushHitEffect.h"
+
 #include<GameObjectManager.h>
 
 Player* Boss::pPlayer;
 
 void Boss::Move()
 {
-	static const float MOVE_SPEED = 0.2f;
+	static const float MOVE_SPEED = 0.4f;
 	
 	// 近くに移動
 	MelLib::Vector3 playerNormalizeVector = pPlayer->CalcPlayerVector(GetPosition());
@@ -22,12 +26,12 @@ void Boss::Move()
 void Boss::SelectAction()
 {
 	// 攻撃中だったらスキップ
-	if (currentAttack != Boss::CurrentAttack::NONE)return;
+	if (currentState != Boss::CurrentState::NONE)return;
 	else if (actionTimer.GetMaxOverFlag())// タイマーが一定以上になったらジャンプ攻撃
 	{
 		actionTimer.SetStopFlag(true);
 
-		currentAttack = Boss::CurrentAttack::JUMP;
+		currentState = Boss::CurrentState::JUMP_ATTACK;
 		modelObjects["main"].SetAnimation("Attack_Jump.001");
 
 		return;
@@ -47,20 +51,20 @@ void Boss::SelectAction()
 	if(playerDir >= MIN_DIR)Move();
 	else// そうではないなら攻撃 
 	{
-		
+		currentState = Boss::CurrentState::NORMAL_1;
 	}
 	
 }
 
 void Boss::AttackUpdate()
 {
-	switch (currentAttack)
+	switch (currentState)
 	{
-	case Boss::CurrentAttack::NORMAL_1:
-		
+	case Boss::CurrentState::NORMAL_1:
+		NormalAttackUpdate();
 		break;
-	case Boss::CurrentAttack::JUMP:
-		JumpAttack();
+	case Boss::CurrentState::JUMP_ATTACK:
+		JumpAttackUpdate();
 		break;
 	default:
 		break;
@@ -70,12 +74,12 @@ void Boss::AttackUpdate()
 	if (jumpAttackTimer.GetMaxOverFlag())
 	{
 
-		static const float ONE_ATTACK_MOVE_DIR = 20.0f;
+		static const float ONE_ATTACK_MOVE_DIR = 30.0f;
 
 		MelLib::Vector3 AttackPos = MelLib::LibMath::FloatDistanceMoveVector3
 		(
 			GetPosition(),
-			direction,
+			jumpAttackDir,
 			(jumpAttackCount + 2) * ONE_ATTACK_MOVE_DIR
 		);
 
@@ -92,11 +96,25 @@ void Boss::AttackUpdate()
 	}
 }
 
-void Boss::NormalAttack()
+void Boss::AttackEnd()
 {
+	// ジャンプ攻撃終了処理
+	if (modelObjects["main"].GetAnimationEndFlag())
+	{
+		currentState = CurrentState::NONE;
+		modelObjects["main"].SetAnimation("No_Cont");
+
+		actionTimer.SetStopFlag(false);
+		actionTimer.ResetTimeZero();
+	}
 }
 
-void Boss::JumpAttack()
+void Boss::NormalAttackUpdate()
+{
+	AttackEnd();
+}
+
+void Boss::JumpAttackUpdate()
 {
 	
 
@@ -108,16 +126,32 @@ void Boss::JumpAttack()
 
 	}
 
-	// ジャンプ攻撃終了処理
-	if (modelObjects["main"].GetAnimationEndFlag()) 
-	{
-		currentAttack = CurrentAttack::NONE;
-		modelObjects["main"].SetAnimation("No_Cont");
-
-		actionTimer.SetStopFlag(false);
-		actionTimer.ResetTimeZero();
-	}
+	AttackEnd();
 	
+}
+
+void Boss::Rotate()
+{
+	// 進行方向に向くように
+	MelLib::Vector3 directionP = (pPlayer->GetPosition() - GetPosition()).Normalize();
+	
+	if (jumpAttackTimer.GetNowTime() == 0)
+	{
+		jumpAttackDir = MelLib::Vector3(directionP.x, 0, directionP.z);
+	}
+
+	// 回転
+	float directionAngle = MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(directionP.x, directionP.z), false) - 270;
+	float preAngle = modelObjects["main"].GetAngle().y;
+
+	// プレイヤーの向きの角度と今の角度が5度以内だったらreturn
+	if (MelLib::LibMath::AngleDifference(directionAngle, preAngle, 5))return;
+
+	SetAngle(MelLib::Vector3(0, directionAngle, 0));
+
+	//// 向きの計算
+	//MelLib::Vector2 angle2 = MelLib::LibMath::AngleToVector2(GetAngle().y + 90, true);
+	//direction = MelLib::Vector3(angle2.x, 0, angle2.y);
 }
 
 void Boss::LoadResources()
@@ -141,7 +175,7 @@ Boss::Boss()
 
 
 	actionTimer.SetMaxTime(60 * 3);
-	jumpAttackTimer.SetMaxTime(60 * 0.3f);
+	jumpAttackTimer.SetMaxTime(60 * 0.1f);
 	jumpAttackTimer.SetResetFlag(false);
 
 	// 仮設定
@@ -181,13 +215,13 @@ void Boss::Update()
 
 
 
-	// 向きの計算
-	MelLib::Vector2 angle2 = MelLib::LibMath::AngleToVector2(GetAngle().y + 90 , true);
-	direction = MelLib::Vector3(angle2.x, 0, angle2.y);
+
 	
 
 	modelObjects["main"].Update();
 	modelObjects["main"].SetAnimationPlayFlag(true);
+
+	if (currentState == Boss::CurrentState::NONE) Rotate();
 
 	SelectAction();
 	AttackUpdate();
@@ -201,6 +235,35 @@ void Boss::Draw()
 
 void Boss::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)
 {
+	//// 0になったらやられ処理
+	if (hp.GetValue() <= 0)
+	{
+		/*state = ThisState::DEAD;
+
+		modelObjects["main"].SetAnimation("Dead");
+		modelObjects["main"].SetAnimationFrameStart();
+		modelObjects["main"].SetAnimationEndStopFlag(true);*/
+
+		eraseManager = true;
+
+		return;
+	}
+
+
+	std::string n = typeid(object).name();
+	if (typeid(object) == typeid(PlayerSlush) || typeid(object) == typeid(JumpAttack) /* && !isMuteki*/)
+	{
+		MelLib::Vector3 toCameraVec = (MelLib::Camera::Get()->GetCameraPosition() - GetPosition()).Normalize();
+		MelLib::Vector3 effectAddPos = MelLib::Vector3(0, 6, 0) + toCameraVec * 2.1f;
+		MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<SlushHitEffect>
+			(GetPosition() + effectAddPos));
+
+		// プレイヤーから現在の攻撃の攻撃力を取得し、体力を減らす
+		hp.SetValue(hp.GetValue() - pPlayer->GetCurrentAttackPower());
+
+	}
+
+
 	if (typeid(object) == typeid(Stage)
 		&& collisionType == MelLib::ShapeType3D::SEGMENT)
 	{
