@@ -8,11 +8,31 @@
 class EnemyAttack :
 	public MelLib::GameObject
 {
+public:
+	enum class AttackType
+	{
+		NORMAL,
+		BE_BLOWN_AWAY,
+	};
+
+
 private:
+
+	void SetAttackTypeTag(AttackType type);
+	void SetInitData(const float radius, AttackType type);
+private:
+	static const std::string ATTACK_TYPE_STR_NORMAL;
+	static const std::string ATTACK_TYPE_STR_BE;
+	
 	int power = 0;
 
-	
-
+	// ごちゃごちゃするからクラス分けてもいいかも AttackTypeはヘッダー用意してそこで宣言しよう
+	enum class MoveType 
+	{
+		OBJECT,// オブジェクトに追尾
+		ANIMATION// アニメーションに合わせる
+	};
+	const MoveType MOVE_TYPE = MoveType::OBJECT;
 
 	const MelLib::ModelObject& MODEL;
 
@@ -21,8 +41,13 @@ private:
 	const MelLib::Vector3 MODEL_START_ANGLE;
 	const MelLib::Vector3 MODEL_START_SCALE;
 
+	
+
 	static Player* pPlayer;
 
+public:
+	
+	static AttackType GetAttackType(const std::string& tag);
 public:
 
 	// startPosを引数で渡すようにせず、クラス名わたしてこっちに定義した座標を持ってくるなりstatic関数で取得してもいい?
@@ -45,8 +70,20 @@ public:
 		const MelLib::ModelObject& model,
 		const MelLib::Vector3& modelStartPos,
 		const MelLib::Vector3& modelStartAngle,
-		const MelLib::Vector3& modelStartScale
+		const MelLib::Vector3& modelStartScale,
+		const AttackType attackType
 	);
+
+	EnemyAttack
+	(
+		unsigned int power,
+		const MelLib::ModelObject& model,
+		float radius,
+		const AttackType attackType
+	);
+
+
+
 	~EnemyAttack() {}
 
 	void Update()override;

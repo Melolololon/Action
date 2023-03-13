@@ -795,7 +795,7 @@ void Player::Stun()
 {
 	if (isBeBlownAway) 
 	{
-		static const float BE_BLOWN_AWAY_SPEED = 2.5f;
+		static const float BE_BLOWN_AWAY_SPEED = 0.75f;
 		AddPosition(beBlownAwayVector * BE_BLOWN_AWAY_SPEED);
 
 		if (!GetIsFall())isBeBlownAway = false;
@@ -966,6 +966,21 @@ void Player::HitWall()
 {
 	AddPosition(MelLib::Vector3(prePosition.x - GetPosition().x, 0, prePosition.z - GetPosition().z));
 	DashEnd();
+}
+
+void Player::StartBeBlownAway(const MelLib::Vector3& hitObjPos)
+{
+	// 吹っ飛びアニメーション
+	modelObjects["main"].SetAnimation("BeBlownAway");
+
+	// 吹っ飛び(XZ)
+	MelLib::Vector3 attackPos = hitObjPos;
+	beBlownAwayVector = -(attackPos - GetPosition());
+	beBlownAwayVector.y = 0;
+	isBeBlownAway = true;
+
+	// 吹っ飛び(Y)
+	FallStart(2.0f);
 }
 
 
@@ -1169,7 +1184,6 @@ void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionTy
 	// 攻撃を受けた時(体力減算はEnemyAttack側で行ってる)
 	if (!isMuteki)
 	{
-
 		// 通常
 		if (typeid(object) == typeid(EnemyAttack)
 			|| typeid(object) == typeid(NormalEnemyAttack)
@@ -1180,7 +1194,16 @@ void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionTy
 
 			
 			isStun = true;
-			modelObjects["main"].SetAnimation("Stun");
+
+			for (auto& tag : object.GetTags()) 
+			{
+				if (EnemyAttack::GetAttackType(tag) == EnemyAttack::AttackType::BE_BLOWN_AWAY)
+				{
+					StartBeBlownAway(object.GetPosition());
+				}
+				else modelObjects["main"].SetAnimation("Stun");
+			}
+
 
 			
 
@@ -1196,19 +1219,8 @@ void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionTy
 			mutekiTimer.SetStopFlag(false);
 
 			isStun = true;
-			// 吹っ飛びアニメーション
-			modelObjects["main"].SetAnimation("BeBlownAway");
 
-			// 吹っ飛び(XZ)
-			MelLib::Vector3 attackPos = object.GetPosition();
-			beBlownAwayVector = -(attackPos - GetPosition());
-			beBlownAwayVector.y = 0;
-			isBeBlownAway = true;
-
-			// 吹っ飛び(Y)
-			FallStart(2.0f);
-			
-			
+			StartBeBlownAway(object.GetPosition());
 			
 		}
 		
@@ -1233,6 +1245,8 @@ std::shared_ptr<MelLib::GameObject> Player::GetNewPtr()
 
 void Player::DownHP(const int power)
 {
+	if (isMuteki)return;
+
 	hp -= power;
 	if (hp <= 0)
 	{

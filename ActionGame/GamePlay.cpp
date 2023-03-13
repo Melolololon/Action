@@ -15,6 +15,7 @@
 
 #include"Boss.h"
 #include"BossAttack.h"
+#include"EnemyAttack.h"
 #include"NewEnemy.h"
 
 #include"GameItem.h"
@@ -56,7 +57,8 @@ void GamePlay::Initialize()
 	CapsuleEnemyAttack::SetPPlayer(pPlayer);
 	BossAttack::SetPPlayer(pPlayer); 
 	Boss::SetPPlayer(pPlayer);
-
+	EnemyAttack::SetPPlayer(pPlayer);
+	
 	EnemySpaunPoint::ClearEnemySpauns();
 	MelLib::GameObjectManager::GetInstance()->InitializeObject();
 

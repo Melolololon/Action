@@ -5,7 +5,7 @@
 
 #include"Player.h"
 
-class Boss:public MelLib::GameObject
+class Boss :public MelLib::GameObject
 {
 private:
 
