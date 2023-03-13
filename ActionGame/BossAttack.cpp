@@ -19,7 +19,7 @@ BossAttack::BossAttack(const MelLib::Vector3& pos)
 	sphereDatas["main"][0].SetPosition(pos);
 	sphereDatas["main"][0].SetRadius(6.0f);
 
-	deadTimer.SetMaxTime(60 * 1.2f);
+	deadTimer.SetMaxTime(60 * 0.8f);
 	SetScale(10.0f);
 	sphereDatas["main"][0].SetRadius(5.0f);
 }
@@ -36,12 +36,7 @@ void BossAttack::Update()
 	{
 		eraseManager = true;
 	}
-
-	
-	if (deadTimer.GetNowTime() <= 60 * 0.3f) 
-	{
-		CalcMovePhysics();
-	}
+	CalcMovePhysics();
 }
 
 void BossAttack::Draw()

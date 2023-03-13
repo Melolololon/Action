@@ -30,6 +30,7 @@ private:
 	{
 		NONE,
 		NORMAL_1,
+		ROLL_ATTACK,
 		JUMP_ATTACK,
 	};
 	CurrentState currentState = CurrentState::NONE;
@@ -46,10 +47,13 @@ private:
 	void AttackEnd();
 
 	void NormalAttackUpdate();
+	void RollAttackUpdate();
 	// çUåÇàÍóó
 	void JumpAttackUpdate();
 
 	void Rotate();
+
+	void MoveToPlayer(const float speed);
 public:
 
 
