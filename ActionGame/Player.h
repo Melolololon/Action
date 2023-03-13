@@ -146,6 +146,7 @@ private:
 	// 攻撃を受けて硬直しているじゃどうか
 	bool isStun = false;
 
+
 	//イベントフラグに衝突したかどうか
 	bool hitEventFlag = false;
 

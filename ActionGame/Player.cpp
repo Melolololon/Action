@@ -26,6 +26,7 @@
 #include"NormalEnemyAttack.h"
 #include"CapsuleEnemyAttack.h"
 #include"JumpEnemy.h"
+#include"BossAttack.h"
 
 #include"EventFlag.h"
 #include"TutorialEventFlag.h"
@@ -71,7 +72,7 @@ std::unordered_map<PlayerSlush::AttackType, const Player::AttackData> Player::at
 void Player::LoadResources()
 {
 	// タイトルでも使うから自動削除削除
-	MelLib::ModelData::Load("Resources/Model/Player/Player_BAG.fbx", false, "Player");
+	MelLib::ModelData::Load("Resources/Model/Player/Player.fbx", false, "Player");
 	//MelLib::ModelData::Load("Resources/Model/Enemy/Mokuzin/Mokuzin.fbx", false, "Player");
 
 	// メッシュ2つ以上の時にマテリアル読むとエラーでる
@@ -195,6 +196,8 @@ void Player::Update()
 	}
 
 
+	CalcMovePhysics();
+
 	if (isStun)
 	{
 		Stun();
@@ -299,7 +302,6 @@ void Player::Update()
 
 
 	
-	CalcMovePhysics();
 
 	Muteki();
 
@@ -1178,11 +1180,24 @@ void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionTy
 			AddPosition(-enemyToPlayer * 0.3f);*/
 		}
 		// 吹っ飛び
-		if (typeid(object) == typeid(EnemyAttack))
+		if (typeid(object) == typeid(BossAttack))
 		{
 			isMuteki = true;
 			mutekiTimer.SetStopFlag(false);
 
+			isStun = true;
+			// 吹っ飛びアニメーション
+			modelObjects["main"].SetAnimation("BeBlownAway");
+
+			// 吹っ飛び(XZ)
+			/*MelLib::Vector3 attackPos = object.GetPosition();
+			MelLib::Vector3 invVec = -(attackPos - GetPosition());*/
+
+			// 吹っ飛び(Y)
+			FallStart(2.0f);
+			
+			
+			
 		}
 		
 	}
