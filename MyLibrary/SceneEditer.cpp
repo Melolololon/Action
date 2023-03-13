@@ -544,7 +544,7 @@ bool MelLib::SceneEditer::ReleaseCheck()
 #ifdef _DEBUG
 
 #else
-	return !releaseEdit
+	return !releaseEdit;
 #endif // _DEBUG
 
 	return true;

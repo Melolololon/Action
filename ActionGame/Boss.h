@@ -8,6 +8,7 @@
 class Boss:public MelLib::GameObject
 {
 private:
+
 	static Player* pPlayer;
 
 	// 移動や攻撃を制御するタイマー。例　遠くにいる時、このタイマーの時間に応じて移動するか遠距離攻撃するかを決める
@@ -28,12 +29,21 @@ private:
 	enum class CurrentAttack 
 	{
 		NONE,
+		NORMAL_1,
 		JUMP,
 	};
 	CurrentAttack currentAttack = CurrentAttack::NONE;
 
-	
+	MelLib::GuiInt hp;
+
+private:
+
+	void Move();
+
+	void SelectAction();
 	void AttackUpdate();
+
+	void NormalAttack();
 	// 攻撃一覧
 	void JumpAttack();
 
@@ -41,7 +51,7 @@ public:
 
 
 	static void LoadResources();
-	static void SetPlayer();
+	static void SetPPlayer(Player* p) { pPlayer = p; }
 
 	Boss();
 
@@ -59,12 +69,7 @@ public:
 	)override;
 
 
-	/// <summary>
-	/// 攻撃
-	/// </summary>
-	void Attack();
 
-	void Move();
 
 
 };
