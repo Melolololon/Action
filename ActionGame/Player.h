@@ -143,9 +143,12 @@ private:
 #pragma endregion
 
 
+
 	// 攻撃を受けて硬直しているじゃどうか
 	bool isStun = false;
 
+	bool isBeBlownAway = false;
+	MelLib::Vector3 beBlownAwayVector;
 
 	//イベントフラグに衝突したかどうか
 	bool hitEventFlag = false;

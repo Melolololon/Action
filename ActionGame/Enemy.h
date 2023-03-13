@@ -88,7 +88,6 @@ protected:
 
 	void Dead();
 
-	
 public:
 
 	Enemy(const MelLib::Vector3& pos, unsigned int hp, float moveSpeed, int wallNum, const std::string& modelName = "");
