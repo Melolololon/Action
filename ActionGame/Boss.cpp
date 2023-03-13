@@ -45,7 +45,7 @@ void Boss::SelectAction()
 
 	float playerDir = MelLib::LibMath::CalcDistance2D(MelLib::Vector2(myPos.x, myPos.z), MelLib::Vector2(playerPos.x, playerPos.z));
 
-	static const float MIN_DIR = 10.0f;
+	static const float MIN_DIR = 20.0f;
 	
 	// ‰“‚©‚Á‚½‚çˆÚ“®
 	if(playerDir >= MIN_DIR)Move();
@@ -74,7 +74,7 @@ void Boss::AttackUpdate()
 	if (jumpAttackTimer.GetMaxOverFlag())
 	{
 
-		static const float ONE_ATTACK_MOVE_DIR = 30.0f;
+		static const float ONE_ATTACK_MOVE_DIR = 20.0f;
 
 		MelLib::Vector3 AttackPos = MelLib::LibMath::FloatDistanceMoveVector3
 		(

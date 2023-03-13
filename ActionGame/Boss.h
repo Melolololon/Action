@@ -23,7 +23,7 @@ private:
 
 	MelLib::Vector3 jumpAttackDir; 
 	int jumpAttackCount = 0;
-	static const int JUMP_ATTACK_MAX_COUNT = 8;
+	static const int JUMP_ATTACK_MAX_COUNT = 12;
 	MelLib::FrameTimer jumpAttackTimer;
 
 	enum class CurrentState 

@@ -10,7 +10,7 @@ void BossAttack::LoadResources()
 BossAttack::BossAttack(const MelLib::Vector3& pos)
 	:GameObject("BossAttack")
 {
-	SetPosition(pos + MelLib::Vector3(0,-5.0f,0));
+	SetPosition(pos + MelLib::Vector3(0,-7.0f,0));
 
 	modelObjects["main"].Create(MelLib::ModelData::Get("BossAttack"), "BossAttack");
 	modelObjects["main"].SetPosition(pos);
@@ -20,7 +20,8 @@ BossAttack::BossAttack(const MelLib::Vector3& pos)
 	sphereDatas["main"][0].SetRadius(6.0f);
 
 	deadTimer.SetMaxTime(60 * 1.2f);
-	SetScale(6.0f);
+	SetScale(10.0f);
+	sphereDatas["main"][0].SetRadius(5.0f);
 }
 
 void BossAttack::Initialize()
@@ -37,7 +38,7 @@ void BossAttack::Update()
 	}
 
 	
-	if (deadTimer.GetNowTime() <= 60 * 0.3f || deadTimer.GetNowTime() >= deadTimer.GetMaxTime() - 60 * 0.2f) 
+	if (deadTimer.GetNowTime() <= 60 * 0.3f) 
 	{
 		CalcMovePhysics();
 	}
