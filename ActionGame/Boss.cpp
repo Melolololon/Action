@@ -3,6 +3,7 @@
 #include"Stage.h"
 #include"LibMath.h"
 
+#include"EnemyAttack.h"
 #include"BossAttack.h"
 
 #include"JumpAttack.h"
@@ -125,7 +126,15 @@ void Boss::NormalAttackUpdate()
 void Boss::RollAttackUpdate() 
 {
 	const int FRAME = modelObjects["main"].GetAnimationFrame();
-	if (FRAME >= 31 && FRAME <= 56)
+	const int ROLL_START_FLAME = 31;
+
+	if (FRAME == ROLL_START_FLAME)
+	{
+		MelLib::GameObjectManager::GetInstance()->AddObject
+		(std::make_shared<EnemyAttack>(10,modelObjects["main"],10.0f,EnemyAttack::AttackType::BE_BLOWN_AWAY));
+	}
+
+	if (FRAME >= ROLL_START_FLAME && FRAME <= 56)
 	{
 		MoveToPlayer(2.5f);
 	}

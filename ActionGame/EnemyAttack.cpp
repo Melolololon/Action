@@ -5,6 +5,17 @@ Player* EnemyAttack::pPlayer;
 #include"EditMode.h"
 #include"Pause.h"
 
+const std::string EnemyAttack::ATTACK_TYPE_STR_NORMAL = "normal";
+const std::string EnemyAttack::ATTACK_TYPE_STR_BE = "beBlownAway";
+
+
+EnemyAttack::AttackType EnemyAttack::GetAttackType(const std::string& tag)
+{
+	if(tag == ATTACK_TYPE_STR_BE)return  AttackType::BE_BLOWN_AWAY;
+
+	return AttackType::NORMAL;
+}
+
 EnemyAttack::EnemyAttack
 (
 	unsigned int power,
@@ -13,7 +24,8 @@ EnemyAttack::EnemyAttack
 	const MelLib::ModelObject& model,
 	const MelLib::Vector3& modelStartPos,
 	const MelLib::Vector3& modelStartAngle,
-	const MelLib::Vector3& modelStartScale
+	const MelLib::Vector3& modelStartScale,
+	const AttackType attackType
 ) :
 	GameObject("EnemyAttack")
 	,SPHERE_START_POSITION(attackStartPos)
@@ -22,31 +34,65 @@ EnemyAttack::EnemyAttack
 	, MODEL_START_POS(modelStartPos)
 	, MODEL_START_ANGLE(modelStartAngle)
 	, MODEL_START_SCALE(modelStartScale)
+	, MOVE_TYPE(MoveType::ANIMATION)
 {
 	// アニメーションに合わせてsphereを動かす
+	SetInitData(radius, attackType);
+}
 
+EnemyAttack::EnemyAttack(unsigned int power, const MelLib::ModelObject& model, float radius, const AttackType attackType)
+	:GameObject("EnemyAttack")
+	, MODEL(model)
+	, MOVE_TYPE(MoveType::OBJECT)
+{
+	SetInitData(radius, attackType);
+}
+
+void EnemyAttack::SetAttackTypeTag(AttackType type)
+{
+	switch (type)
+	{
+	case EnemyAttack::AttackType::NORMAL:
+		tags.push_back(ATTACK_TYPE_STR_NORMAL);
+		break;
+	case EnemyAttack::AttackType::BE_BLOWN_AWAY:
+		tags.push_back(ATTACK_TYPE_STR_BE);
+		break;
+	default:
+		break;
+	}
+}
+
+void EnemyAttack::SetInitData(const float radius, AttackType type)
+{
 	sphereDatas["main"].resize(1);
-	sphereDatas["main"][0].SetRadius(radius);
+	SetScale(radius * 2);
+	SetAttackTypeTag(type);
 
-
-	
 }
 
 void EnemyAttack::Update()
 {
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())return;
 
-	// 座標計算してセット
-  	sphereDatas["main"][0].SetPosition(MODEL.CalcAnimationPosition
-	(
-		SPHERE_START_POSITION,
-		1.0f,
-		"Bone_R.002",
-		"Body",
-		MODEL_START_POS,
-		MODEL_START_ANGLE,
-		MODEL_START_SCALE
-	));
+	if (MOVE_TYPE == MoveType::ANIMATION) 
+	{
+		// 座標計算してセット
+		sphereDatas["main"][0].SetPosition(MODEL.CalcAnimationPosition
+		(
+			SPHERE_START_POSITION,
+			1.0f,
+			"Bone_R.002",
+			"Body",
+			MODEL_START_POS,
+			MODEL_START_ANGLE,
+			MODEL_START_SCALE
+		));
+	}
+	else if (MOVE_TYPE == MoveType::OBJECT) 
+	{
+		SetPosition(MODEL.GetPosition());
+	}
 
 	if (MODEL.GetAnimationEndFlag())eraseManager = true;
 }

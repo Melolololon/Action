@@ -97,18 +97,18 @@ void NoemalEnemy::Update()
 	// ŽžŠÔ‚É‚È‚Á‚½‚çUŒ‚
 	if (attackTimer.GetNowTime() >= ATTACK_START_TIME)
 	{
-		// UŒ‚”»’è‚Ì’Ç‰Á
-		MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<EnemyAttack>
-			(
-				40,
-				MelLib::Vector3(-12, 17, 0),
-				3.0f,
-				modelObjects["main"],
-				MelLib::Vector3(0, 0, 0),
-				MelLib::Vector3(0, 0, 0),
-				3
-				)
-		);
+		//// UŒ‚”»’è‚Ì’Ç‰Á
+		//MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<EnemyAttack>
+		//	(
+		//		40,
+		//		MelLib::Vector3(-12, 17, 0),
+		//		3.0f,
+		//		modelObjects["main"],
+		//		MelLib::Vector3(0, 0, 0),
+		//		MelLib::Vector3(0, 0, 0),
+		//		3
+		//		)
+		//);
 
 		attackTimer.ResetTimeZero();
 		attackTimer.SetStopFlag(true);

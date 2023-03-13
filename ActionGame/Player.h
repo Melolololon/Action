@@ -236,7 +236,7 @@ private:
 	void HitWall();
 #pragma endregion
 
-
+	void StartBeBlownAway(const MelLib::Vector3& hitObjPos);
 public:
 	static Player* GetPPlayer() { return pPlayer; }
 
