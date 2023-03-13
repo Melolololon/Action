@@ -18,9 +18,7 @@ void Boss::Move()
 	static const float MOVE_SPEED = 0.4f;
 	
 	// ãﬂÇ≠Ç…à⁄ìÆ
-	MelLib::Vector3 playerNormalizeVector = pPlayer->CalcPlayerVector(GetPosition());
-	MelLib::Vector3 moveVector = MelLib::Vector3(playerNormalizeVector.x, 0, playerNormalizeVector.z) * MOVE_SPEED;
-	AddPosition(moveVector);
+	MoveToPlayer(MOVE_SPEED);
 }
 
 void Boss::SelectAction()
@@ -45,13 +43,20 @@ void Boss::SelectAction()
 
 	float playerDir = MelLib::LibMath::CalcDistance2D(MelLib::Vector2(myPos.x, myPos.z), MelLib::Vector2(playerPos.x, playerPos.z));
 
-	static const float MIN_DIR = 20.0f;
+	static const float MIN_DIR = 30.0f;
 	
 	// âìÇ©Ç¡ÇΩÇÁà⁄ìÆ
 	if(playerDir >= MIN_DIR)Move();
-	else// ÇªÇ§Ç≈ÇÕÇ»Ç¢Ç»ÇÁçUåÇ 
+	else if (playerDir < MIN_DIR && playerDir >= 6.0f) // ÇªÇ§Ç≈ÇÕÇ»Ç¢Ç»ÇÁçUåÇ 
 	{
+		currentState = Boss::CurrentState::ROLL_ATTACK;
+		modelObjects["main"].SetAnimation("Attack_Roll");
+	}
+	else 
+	{
+		
 		currentState = Boss::CurrentState::NORMAL_1;
+		modelObjects["main"].SetAnimation("Attack");
 	}
 	
 }
@@ -62,6 +67,9 @@ void Boss::AttackUpdate()
 	{
 	case Boss::CurrentState::NORMAL_1:
 		NormalAttackUpdate();
+		break;
+	case Boss::CurrentState::ROLL_ATTACK:
+		RollAttackUpdate();
 		break;
 	case Boss::CurrentState::JUMP_ATTACK:
 		JumpAttackUpdate();
@@ -114,6 +122,17 @@ void Boss::NormalAttackUpdate()
 	AttackEnd();
 }
 
+void Boss::RollAttackUpdate() 
+{
+	const int FRAME = modelObjects["main"].GetAnimationFrame();
+	if (FRAME >= 31 && FRAME <= 56)
+	{
+		MoveToPlayer(2.5f);
+	}
+
+	AttackEnd();
+}
+
 void Boss::JumpAttackUpdate()
 {
 	
@@ -152,6 +171,13 @@ void Boss::Rotate()
 	//// å¸Ç´ÇÃåvéZ
 	//MelLib::Vector2 angle2 = MelLib::LibMath::AngleToVector2(GetAngle().y + 90, true);
 	//direction = MelLib::Vector3(angle2.x, 0, angle2.y);
+}
+
+void Boss::MoveToPlayer(const float speed)
+{
+	MelLib::Vector3 playerNormalizeVector = pPlayer->CalcPlayerVector(GetPosition());
+	MelLib::Vector3 moveVector = MelLib::Vector3(playerNormalizeVector.x, 0, playerNormalizeVector.z) * speed;
+	AddPosition(moveVector);
 }
 
 void Boss::LoadResources()
@@ -212,12 +238,6 @@ void Boss::Initialize()
 
 void Boss::Update()
 {
-
-
-
-
-	
-
 	modelObjects["main"].Update();
 	modelObjects["main"].SetAnimationPlayFlag(true);
 
