@@ -763,6 +763,7 @@ void Player::CreateAttackSlush()
 	if (pRigthSlush)MelLib::GameObjectManager::GetInstance()->AddObject(pRigthSlush);
 }
 
+
 void Player::Guard()
 {
 	// 攻撃してない時にボタン押してたらガード
@@ -792,6 +793,14 @@ void Player::Muteki()
 
 void Player::Stun()
 {
+	if (isBeBlownAway) 
+	{
+		static const float BE_BLOWN_AWAY_SPEED = 2.5f;
+		AddPosition(beBlownAwayVector * BE_BLOWN_AWAY_SPEED);
+
+		if (!GetIsFall())isBeBlownAway = false;
+	}
+
 	if(modelObjects["main"].GetAnimationEndFlag())
 	{
 		isStun = false;
@@ -1179,6 +1188,7 @@ void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionTy
 			enemyToPlayer = enemyToPlayer.Normalize();
 			AddPosition(-enemyToPlayer * 0.3f);*/
 		}
+
 		// 吹っ飛び
 		if (typeid(object) == typeid(BossAttack))
 		{
@@ -1190,8 +1200,10 @@ void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionTy
 			modelObjects["main"].SetAnimation("BeBlownAway");
 
 			// 吹っ飛び(XZ)
-			/*MelLib::Vector3 attackPos = object.GetPosition();
-			MelLib::Vector3 invVec = -(attackPos - GetPosition());*/
+			MelLib::Vector3 attackPos = object.GetPosition();
+			beBlownAwayVector = -(attackPos - GetPosition());
+			beBlownAwayVector.y = 0;
+			isBeBlownAway = true;
 
 			// 吹っ飛び(Y)
 			FallStart(2.0f);
