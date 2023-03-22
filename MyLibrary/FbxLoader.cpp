@@ -296,7 +296,9 @@ void FbxLoader::ParseMaterial(ModelData* fbxModel, FbxNode* fbxNode, const std::
 	if (materialCount == 0)return;
 
 	fbxModel->material[name] = std::make_unique<ADSAMaterial>();
-	fbxModel->material[name]->Create(PipelineState::GetDefaultDrawData(PipelineStateType::MODEL),1);
+	DrawOption dp;
+	dp.SetModelDefData();
+	fbxModel->material[name]->Create(dp,1);
 
 	fbxModel->pTexture[name] = std::make_unique<Texture>();
 
@@ -461,13 +463,14 @@ void FbxLoader::ParseSkin(ModelData* fbxModel, FbxMesh* fbxMesh, FbxNode* node, 
 		return;
 	}
 
-	std::vector<ModelData::FbxBone>& bones = fbxModel->fbxData.bones;
+	std::vector<ModelData::FbxBone>& bones = fbxModel->fbxData.bones[name];
+	
 
 	// クラスターカウント = アーマチュア(ボーン)数
-	const int clusterCount = fbxSkin->GetClusterCount();
-	if (clusterCount == 0)return;
-	bones.reserve(clusterCount);
-
+	const int CLUSTER_COUNT = fbxSkin->GetClusterCount();
+	if (CLUSTER_COUNT == 0)return;
+	bones.reserve(CLUSTER_COUNT);
+	fbxModel->boneNum[name] = CLUSTER_COUNT;
 	//ボーン番号とスキンウェイト
 	struct WeightSet
 	{
@@ -477,7 +480,7 @@ void FbxLoader::ParseSkin(ModelData* fbxModel, FbxMesh* fbxMesh, FbxNode* node, 
 	std::vector<std::list<WeightSet>>weightLists(fbxModel->vertices[name].size());
 
 
-	for (int i = 0; i < clusterCount; i++)
+	for (int i = 0; i < CLUSTER_COUNT; i++)
 	{
 		//ボーン情報(クラスターはSDKで定義されているボーン?)
 		FbxCluster* fbxCluster = fbxSkin->GetCluster(i);
@@ -574,7 +577,7 @@ void MelLib::FbxLoader::SetParentBone(ModelData* fbxModel, FbxNode* node, FbxNod
 	// 送られてきたノードを元に親ボーンを設定
 
 	// ボーンの参照を取得
-	std::vector<ModelData::FbxBone>& bones = fbxModel->fbxData.bones;
+	std::vector<ModelData::FbxBone>& bones = fbxModel->fbxData.bones[name];
 
 	for (auto& bone : bones)
 	{

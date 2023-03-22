@@ -91,6 +91,7 @@ namespace MelLib
 			//ボーン情報をまとめたもの
 			FbxCluster* fbxCluster;
 
+			FbxBone(){}
 			FbxBone(const std::string& name)
 			{
 				this->boneName = name;
@@ -130,18 +131,21 @@ namespace MelLib
 			//メッシュを持つノード
 			Node* meshNode = nullptr;
 
-			// mapなら順番保持されるからそっちにしてもいいかも
-			//std::unordered_map<std::string, FbxBone>bones_u;
-			std::vector<FbxBone>bones;
+			// <メッシュ名,ボーンの配列>
+			std::unordered_map<std::string,std::vector<FbxBone>>bones;
 
-			//FbxAnimationTimes animationTimes;
 
 			// FbxAnimStackを取得するための番号
 			std::unordered_map<std::string, int>animStackNum;
 			// アニメーション情報を取得するための名前
 			std::unordered_map<std::string, std::string>animationDataGetName;
+
 		};
 
+		//// アニメーションでモデルが崩れるのを防ぐ為の変数
+		// 今後1つのメッシュに複数のアーマチュアを割り当てる場合は、ここのuintをumap<アーマチュア名,uint>にする
+		//// モデルの 名前,ボーンの本数
+		std::unordered_map<std::string, unsigned int>boneNum;
 
 #pragma endregion
 
@@ -205,7 +209,6 @@ namespace MelLib
 		// 名前で取るなら順序意味ないしそもそも追加順じゃないから意味ない
 		std::unordered_map<std::string, DirectX::XMMATRIX>meshGlobalTransform;
 
-		UINT boneNum = 0;
 
 		ObjBone objData;
 		FbxData fbxData;
@@ -433,14 +436,14 @@ namespace MelLib
 #pragma region fbx関係
 
 
-		const std::vector<FbxBone>& GetFbxBone() const { return fbxData.bones; }
+		const std::vector<FbxBone>& GetFbxBones(const std::string& name) const { return fbxData.bones.at(name); }
 
 		/// <summary>
 		/// ボーンを取得します。
 		/// </summary>
 		/// <param name="name"></param>
 		/// <returns></returns>
-		const FbxBone& GetFbxBone(const std::string& name)const;
+		void GetFbxBone(const std::string& name ,FbxBone& bone)const;
 
 		Node GetNode(const std::string& name) {return fbxData.nodes[name]; }
 
@@ -486,7 +489,7 @@ namespace MelLib
 		/// ボーン数を取得します。
 		/// </summary>
 		/// <returns></returns>
-		UINT GetBoneNumber() const { return boneNum; }
+		UINT GetBoneNumber(const std::string& name = "") const;
 
 		/// <summary>
 		/// モデルファイルに含まれているオブジェクト(モデル)の数を取得します。

@@ -120,7 +120,7 @@ void Game::Initialize()
 
 	MelLib::TextWrite::CreateFontData(/*L"HGPｺﾞｼｯｸE"*/L"Arial",64.0f, "Arial");
 
-	MelLib::Camera::Get()->SetFar(100000.0f);
+	MelLib::Camera::Get()->SetFar(FLT_MAX);
 	
 	//MelLib::Camera::Get()->SetRotateCriteriaPosition(MelLib::Vector3(-8, 15, -10));
 	//MelLib::Camera::Get()->SetRotatePoint(MelLib::Camera::RotatePoint::ROTATE_POINT_CAMERA_POSITION);
@@ -146,6 +146,7 @@ void Game::Initialize()
 	// これ原因でDX12のエラーが出る
 	// リリース時に
 	// エラー消えた
+	// これくるくる回せば雲も動く
 	pSky = std::make_unique<Sky>();
 
 
