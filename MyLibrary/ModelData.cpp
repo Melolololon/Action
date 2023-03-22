@@ -522,13 +522,14 @@ std::vector<DirectX::XMMATRIX> MelLib::ModelData::GetMeshGlobalTransforms()
 }
 
 
-const MelLib::ModelData::FbxBone& MelLib::ModelData::GetFbxBone(const std::string& name) const
+void MelLib::ModelData::GetFbxBone(const std::string& name, FbxBone& bone) const
 {
-	for (int i = 0; i < boneNum; i++)
+	if (boneNum.size() == 0)return;
+	for (int i = 0; i < boneNum.at(name); i++)
 	{
-		if (fbxData.bones[i].boneName == name)return fbxData.bones[i];
+		if (fbxData.bones.at(name)[i].boneName == name)bone = fbxData.bones.at(name)[i];
 	}
-	return FbxBone(name);
+	
 }
 
 std::vector<std::vector<USHORT>> MelLib::ModelData::GetIndices() const
@@ -611,13 +612,12 @@ bool ModelData::LoadModel(const std::string& path, const std::string& name)
 			&objBonePositions,
 			&objBoneNums
 		);
-		boneNum = objBonePositions.size();
 		modelFileObjectNum = vertices.size();
 
 		if (!result)return loadFalseEndProcess();
 
 
-		if (boneNum == 0)
+		if (objBonePositions.size() == 0)
 		{
 			//ボーンがなかったら0にしとく
 			for (auto& v : vertices)
@@ -812,7 +812,7 @@ bool ModelData::LoadModel(const std::string& path, const std::string& name)
 	{	
 		if (!FbxLoader::GetInstance()->LoadFbxModel(path, this))return loadFalseEndProcess();
 
-		boneNum = fbxData.bones.size();
+		
 		modelFormat = ModelFormat::MODEL_FORMAT_FBX;
 
 #pragma region アニメーション関係準備
@@ -946,6 +946,16 @@ void ModelData::BufferPreparationSetColor
 
 }
 
+
+UINT MelLib::ModelData::GetBoneNumber(const std::string& name) const
+{
+	if (boneNum.size() == 0)return 0;
+	else if (name == "") 
+	{
+		return boneNum.at(objectNames[0]);
+	}
+	return boneNum.at(name);
+}
 
 std::vector<ADSAMaterial*> MelLib::ModelData::GetPMaterial()
 {

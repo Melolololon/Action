@@ -213,6 +213,7 @@
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="RouteSearch.cpp" />
     <ClCompile Include="SceneEditer.cpp" />
+    <ClCompile Include="ShaderData.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Sound3D.cpp" />
     <ClCompile Include="Sound_Unused.cpp" />
@@ -566,7 +567,6 @@
     <ClInclude Include="XInputManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\X-MEN_Team_Project\X-MEN_Team_Project.vcxproj" />
     <None Include="ADSAHeader.hlsli" />
     <None Include="FbxMultiShaderHeader.hlsli" />
     <None Include="FbxShaderHeader.hlsli" />
