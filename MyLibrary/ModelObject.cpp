@@ -2240,9 +2240,9 @@ Vector3 MelLib::ModelObject::CalcAnimationPosition
 	DirectX::XMMATRIX meshGlobalTransform = pModelData->GetMeshGlobalTransform(meshName);
 	DirectX::XMMATRIX invMeshGlobalTransform = DirectX::XMMatrixInverse(nullptr, meshGlobalTransform);
 
-	
+
 	ModelData::FbxBone bone;
-	pModelData->GetFbxBone(boneName, bone);
+	pModelData->GetFbxBone(meshName, boneName, bone);
 
 	// Žæ“¾‚Æ•ÏŠ·
 	DirectX::XMMATRIX matCurrentPose;

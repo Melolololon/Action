@@ -47,6 +47,7 @@ std::unordered_map<Player::ActionType, MelLib::PadButton> Player::keyConfigData 
 	{ActionType::ATTACK, MelLib::PadButton::X},
 	{ActionType::DASH, MelLib::PadButton::B},
 	{ActionType::GUARD, MelLib::PadButton::LB},
+	{ActionType::DEATH_BLOW, MelLib::PadButton::Y},
 
 };
 
@@ -170,6 +171,8 @@ Player::Player(const MelLib::Vector3& pos)
 void Player::Update()
 {
 
+
+
 	MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())
 	{
@@ -195,8 +198,6 @@ void Player::Update()
 		return;
 	}
 
-
-	CalcMovePhysics();
 
 	if (isStun)
 	{
@@ -281,7 +282,7 @@ void Player::Update()
 
 	}
 
-
+	
 
 
 	if (currentAttack == PlayerSlush::AttackType::NONE) 
@@ -294,12 +295,21 @@ void Player::Update()
 		AttackMove();
 	}
 
+	preHitGround = hitGround;
+	hitGround = false;
+
+	CalcMovePhysics();
+
+
 	ReturnStage();
+
+
+	DeathBlow();
+	if (isDeathBlow)return;
+
 
 	Guard();
 	Attack();
-
-
 
 	
 
@@ -330,8 +340,8 @@ void Player::Update()
 	if (dropStartPosY >= DROP_POS_Y)isDrop = true;
 
 
-	preHitGround = hitGround;
-	hitGround = false;
+	/*preHitGround = hitGround;
+	hitGround = false;*/
 
 
 	if (MelLib::Input::KeyTrigger(DIK_SPACE))hp -= 10;
@@ -676,14 +686,14 @@ void Player::SetAttackType()
 			isDash = false;
 			DashEnd();
 		}
-		else if (hitGround)// ’ÊíUŒ‚
+		else if (preHitGround)// ’ÊíUŒ‚
 		{
 			currentAttack = PlayerSlush::AttackType::NORMAL_1;
 
 			modelObjects["main"].SetAnimation("Attack_Normal_1");
 
 		}
-		else// ‹ó’†UŒ‚
+		else if(GetIsFall())// ‹ó’†UŒ‚
 		{
 			currentAttack = PlayerSlush::AttackType::JUMP;
 			FallEnd();
@@ -761,6 +771,41 @@ void Player::CreateAttackSlush()
 
 	if (pPSlush)MelLib::GameObjectManager::GetInstance()->AddObject(pPSlush);
 	if (pRigthSlush)MelLib::GameObjectManager::GetInstance()->AddObject(pRigthSlush);
+}
+
+void Player::DeathBlow()
+{
+
+
+	/*if (!isDeathBlow)return;
+
+	if (modelObjects["main"].GetAnimationEndFlag()) 
+	{
+		std::string aniName = "DeathBlowAttack_";
+		switch (currentAttack)
+		{
+
+			case PlayerSlush::AttackType::DEATH_BLOW_1:
+				aniName += "2";
+				break;
+
+			case PlayerSlush::AttackType::DEATH_BLOW_2:
+				aniName += "3";
+				break;
+			case PlayerSlush::AttackType::DEATH_BLOW_3:
+				aniName = "No_Cont";
+				break;
+
+			default:
+				aniName += "1";
+				break;
+		}
+
+		modelObjects["main"].SetAnimation(aniName);
+		modelObjects["main"].SetAnimationFrame(0);
+	}*/
+
+
 }
 
 

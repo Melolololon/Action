@@ -180,6 +180,8 @@ namespace MelLib
 		/// <returns>注視点の座標</returns>
 		Vector3 GetTargetPosition()const { return targetPosition; }
 
+		Vector3 GetRotateCriteriaPosition()const;
+
 		/// <summary>
 		/// 上ベクトルを取得します。
 		/// </summary>
@@ -189,6 +191,8 @@ namespace MelLib
 		Vector3 GetAngle()const { return angle; }
 
 		std::string GetCameraName()const { return cameraName; }
+
+		float GetCameraToTargetDistance()const { return cameraToTargetDistance; }
 #pragma endregion
 	};
 }

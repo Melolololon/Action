@@ -26,6 +26,7 @@ public:
 	{
 		JUMP,
 		ATTACK,
+		DEATH_BLOW,
 		DASH,
 		GUARD,
 	};
@@ -126,6 +127,13 @@ private:
 
 	static const float JUMP_ATTACK_DROP_SPEED;// -1.0f
 #pragma endregion
+	
+#pragma region •KŽE‹Z
+
+	bool isDeathBlow = false;
+#pragma endregion
+
+
 
 #pragma region –hŒä
 	bool isGuard = false;
@@ -141,6 +149,7 @@ private:
 #pragma region Ž€–S
 	bool isDead = false;
 #pragma endregion
+
 
 
 
@@ -208,6 +217,8 @@ private:
 	void Attack();
 	void SetAttackType();
 	void CreateAttackSlush();
+
+	void DeathBlow();
 
 
 	void Guard();

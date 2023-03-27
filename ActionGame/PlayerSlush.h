@@ -18,6 +18,9 @@ public:
 		NORMAL_3,//通常(Xボタン)攻撃3番目
 		DASH_1,// ダッシュ中1番目
 		JUMP,
+		DEATH_BLOW_1,// 必殺技1
+		DEATH_BLOW_2,
+		DEATH_BLOW_3,
 	};
 
 private:
