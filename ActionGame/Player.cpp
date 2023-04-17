@@ -138,9 +138,9 @@ Player::Player(const MelLib::Vector3& pos)
 		}
 		else
 		{
-			modelObjects["main"].SetScale(MelLib::Vector3(3));
+			/*modelObjects["main"].SetScale(MelLib::Vector3(3));
 			modelObjects["main"].SetAngle(0);
-			modelObjects["main"].SetPosition(MelLib::Vector3(0, -17, -0));
+			modelObjects["main"].SetPosition(MelLib::Vector3(0, -17, -0));*/
 
 
 			//•‚‚«–hŽ~
@@ -151,7 +151,6 @@ Player::Player(const MelLib::Vector3& pos)
 		}
 	}
 
-	SetPosition(pos);
 
 
 	pPlayer = this;
