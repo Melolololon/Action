@@ -37,6 +37,8 @@
 #include"Option.h"
 #include"Tutorial.h"
 
+#include"EnemyDarknessEffect.h"
+
 Game* Game::GetInstance()
 {
 	static Game game;
@@ -101,6 +103,7 @@ void Game::Initialize()
 
 	MelLib::Texture::Load("Resources/Model/Stage/Field_01.png","Grass");
 	MelLib::Texture::Load("Resources/Model/Stage/TitleFierd_Tex.png","Rock");
+	EnemyDarknessEffect::LoadResources();
 	bool r = MelLib::Texture::Load("Resources/Model/Stage/Stage_Mask_1.png","StageMask_1");
 
 #pragma region エディター登録
@@ -128,6 +131,7 @@ void Game::Initialize()
 
 
 	MelLib::SceneEditer::GetInstance()->SetEditerFlag(true);
+	//MelLib::SceneEditer::GetInstance()->SetReleaseEditFlag(true);
 	MelLib::SceneEditer::GetInstance()->Initialize();
 
 

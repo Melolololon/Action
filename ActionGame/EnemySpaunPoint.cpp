@@ -10,7 +10,7 @@
 
 const float EnemySpaunPoint::MIN_DISTANCE = 50.0f;
 const float EnemySpaunPoint::ATTACK_MIN_DISTANCE = 8.0f;
-const unsigned int EnemySpaunPoint::ENEMY_MAX_NUM = 1;
+const unsigned int EnemySpaunPoint::ENEMY_MAX_NUM = 5;
 
 
 std::vector<EnemySpaunPoint*>EnemySpaunPoint::spaunPoints;
@@ -135,6 +135,7 @@ EnemySpaunPoint::EnemySpaunPoint(const std::string& className)
 
 	modelObjects["main"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX), "WeakEnemy");
 	modelObjects["main"].SetPosition(GetPosition());
+	SetScale(5.0f);
 
 	segment3DDatas["main"].resize(1);
 	MelLib::Vector3 pos = GetPosition();

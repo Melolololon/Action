@@ -19,6 +19,9 @@ class Enemy;
 
 class Player :public MelLib::GameObject
 {
+private:
+	MelLib::ADSAMaterial downMaterial;
+
 public:
 	static Player* pPlayer;
 

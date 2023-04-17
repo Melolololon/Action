@@ -147,6 +147,8 @@ void WeakEnemy::Initialize()
 
 void WeakEnemy::Update()
 {
+	AddDarknessEffect();
+
 	CalcMovePhysics();
 	hpGauge->SetPosition(GetPosition() + MelLib::Vector3(0, 15, 0));
 	hpGauge->Update();

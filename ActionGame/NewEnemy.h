@@ -3,10 +3,13 @@
 #include"Player.h"
 #include"AttackEffect.h"
 #include"EnemyHPGauge.h"
-
+#include"FrameTimer.h"
 
 class NewEnemy:public MelLib::GameObject
 {
+private:
+	MelLib::FrameTimer addDarknessEffectTimer;
+
 private:
 	void DropItem();
 
@@ -82,5 +85,7 @@ public:
 	ThisState GetThisState()const { return state; }
 
 	int GetHP()const { return hp; }
+
+	void AddDarknessEffect();
 };
 
