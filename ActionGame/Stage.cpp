@@ -35,26 +35,15 @@ void Stage::LoadResources(unsigned int stageNum)
 
 Stage::Stage(const unsigned int stageNum)
 	:GameObject("Stage")
-	, STAGE_NUM(stageNum)
 {
-	const std::string STAGE_NUM_STR = std::to_string(STAGE_NUM);
+	// Guiの情報をセット
+	this->stageNum.SetData(static_cast<int>(stageNum), "Stage", "StageNumber", 0, 1);
+	// データがあったら上書き
+	//this->stageNum.SetLoadData();
+
+	const std::string STAGE_NUM_STR = std::to_string(this->stageNum.GetValue());
 
 	collisionCheckDistance = FLT_MAX;
-
-#pragma region 旧
-
-	/*MelLib::ModelData* pGround = MelLib::ModelData::Get("ground" + STAGE_NUM_STR);
-	modelObjects["ground"].Create(pGround, "StageGround" + STAGE_NUM_STR, nullptr);
-
-	MelLib::ModelData* pStage = MelLib::ModelData::Get("stage" + STAGE_NUM_STR);
-	if(pStage)modelObjects["stage"].Create(pStage,"Stage" + STAGE_NUM_STR, nullptr);
-
-	MelLib::ModelData* pColl = MelLib::ModelData::Get("wallCollision" + STAGE_NUM_STR);
-	if (pColl)modelObjects["wallCollision"].Create(pColl, "WallCollision" + STAGE_NUM_STR, nullptr);*/
-
-	//SetStageData(STAGE_NUM);
-#pragma endregion
-
 
 
 	MelLib::ModelData* pCollision = MelLib::ModelData::Get("stageCollision" + STAGE_NUM_STR);
@@ -64,9 +53,6 @@ Stage::Stage(const unsigned int stageNum)
 	MelLib::ModelData* pStage = MelLib::ModelData::Get("stage" + STAGE_NUM_STR);
 	modelObjects["stage"].Create(pStage, "stage" + STAGE_NUM_STR, nullptr);
 	
-
-
-
 	// シェーダー設定
 	MelLib::ShaderDataSet set;
 	set.pShaderData = { L"StagePixelShader.hlsl","main","ps_5_0" };
@@ -160,5 +146,5 @@ void Stage::Draw()
 
 std::shared_ptr<MelLib::GameObject> Stage::GetNewPtr()
 {
-	return std::make_shared<Stage>(STAGE_NUM);
+	return std::make_shared<Stage>(stageNum.GetValue());
 }

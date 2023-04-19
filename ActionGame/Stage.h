@@ -18,7 +18,7 @@ private:
 
     // ステージ番号
     // 0はテストステージ
-    const int STAGE_NUM;
+    MelLib::GuiInt stageNum;
 
 
 public:
