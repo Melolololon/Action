@@ -8,6 +8,8 @@
 
 #include "EnemyDeadCounter.h"
 
+#include"EnemyDarknessEffect.h"
+
 Player* NewEnemy::pPlayer;
 const float NewEnemy::MOVE_SPEED = 0.6f;
 const float NewEnemy::MIN_DISTANCE = 60.0f;
@@ -31,7 +33,7 @@ const float NewEnemy::MIN_DISTANCE = 60.0f;
 
 void NewEnemy::DropItem()
 {
-	//if (MelLib::Random::GetRandomNumber(7) == 0) 
+	if (MelLib::Random::GetRandomNumber(7) == 0) 
 	{
 		// ドロップした瞬間座標ズレてる?
 		MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<RecoveryItem>(GetPosition() + MelLib::Vector3(0,3,0)));
@@ -64,6 +66,9 @@ void NewEnemy::Dead()
 NewEnemy::NewEnemy(const std::string& name)
 	:GameObject(name)
 {
+	addDarknessEffectTimer.SetMaxTime(60 * 0.3);
+	addDarknessEffectTimer.SetStopFlag(false);
+
 	deadEndTimer.SetMaxTime(60 * 0.75);
 	hpGauge = std::make_unique<EnemyHPGauge>(hp);
 }
@@ -82,4 +87,14 @@ void NewEnemy::Hit(const GameObject& object, const MelLib::ShapeType3D collision
 
 void NewEnemy::SetStartAttackAnimation()
 {
+}
+
+void NewEnemy::AddDarknessEffect()
+{
+	if (addDarknessEffectTimer.GetMaxOverFlag()) 
+	{
+		//MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<EnemyDarknessEffect>(GetPosition()));
+		addDarknessEffectTimer.ResetTimeZero();
+
+	}
 }

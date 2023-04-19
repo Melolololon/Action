@@ -43,5 +43,5 @@ void SlushHitEffect::Update()
 
 void SlushHitEffect::Draw()
 {
-	effectSprite.Draw();
+	//effectSprite.Draw();
 }

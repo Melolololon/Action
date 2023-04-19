@@ -657,14 +657,15 @@ void MelLib::SceneEditer::MouseInputCamera()
 
 	Vector2 mousePos = MelLib::Input::GetMousePosition();
 	Vector2 mousePosDifference = mousePos - preMousePos;
-	mousePosDifference /= 5;
+	
 
 #pragma region 回転(右クリック)操作
 
 
 	if (Input::MouseButtonState(MouseButton::RIGHT)) 
 	{
-		pCamera->SetAngle(pCamera->GetAngle() + Vector3(mousePosDifference.y,mousePosDifference.x, 0));
+		Vector2 movePos = mousePosDifference / 5;
+		pCamera->SetAngle(pCamera->GetAngle() + Vector3(movePos.y, movePos.x, 0));
 	}
 
 #pragma endregion
@@ -673,8 +674,9 @@ void MelLib::SceneEditer::MouseInputCamera()
 	
 	if (Input::MouseButtonState(MouseButton::CENTER)) 
 	{
+		Vector2 movePos = mousePosDifference / 2;
 		Vector3 rotMoveVector = 
-			LibMath::RotateZXYVector3(Vector3(-mousePosDifference.x, mousePosDifference.y, 0),
+			LibMath::RotateZXYVector3(Vector3(-movePos.x, movePos.y, 0),
 				pCamera->GetAngle());
 		pCamera->SetRotateCriteriaPosition(pCamera->GetRotateCriteriaPosition() + rotMoveVector);
 	}
@@ -970,11 +972,6 @@ void MelLib::SceneEditer::Draw()
 
 	if (!isEdit)return;
 
-#ifdef _DEBUG
-
-#else
-	if (!releaseEdit)return;
-#endif // _DEBUG
 
 	if (pRegisterObjects.size() == 0 || !ImguiManager::GetInstance()->GetReleaseDrawFrag())return;
 

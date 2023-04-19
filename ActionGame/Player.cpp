@@ -75,7 +75,6 @@ void Player::LoadResources()
 	// タイトルでも使うから自動削除削除
 	MelLib::ModelData::Load("Resources/Model/Player/Player.fbx", false, "Player");
 	//MelLib::ModelData::Load("Resources/Model/Enemy/Mokuzin/Mokuzin.fbx", false, "Player");
-
 	// メッシュ2つ以上の時にマテリアル読むとエラーでる
 	// そうじゃないときにエラー出たらマテリアル確認すること
 }
@@ -84,6 +83,7 @@ void Player::LoadResources()
 Player::Player(const MelLib::Vector3& pos)
 	:GameObject("Player")
 {
+
 	//物理演算のためにseterとgeter作る?
 
 
@@ -164,6 +164,14 @@ Player::Player(const MelLib::Vector3& pos)
 
 
 	collisionCheckDistance = 80.0f;
+
+
+
+	/*MelLib::DrawOption op;
+	op.cullMode = MelLib::CullMode::NONE;
+	downMaterial.Create(op, 1);
+	downMaterial.SetTexture(modelObjects["main"].GetPMaterial("Zubon")->GetPTexture());
+	modelObjects["main"].SetMaterial(&downMaterial);*/
 }
 
 // ジャンプ攻撃中に攻撃食らうとバグる

@@ -247,6 +247,7 @@ void Boss::Initialize()
 
 void Boss::Update()
 {
+
 	modelObjects["main"].Update();
 	modelObjects["main"].SetAnimationPlayFlag(true);
 
