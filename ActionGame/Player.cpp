@@ -92,7 +92,7 @@ Player::Player(const MelLib::Vector3& pos)
 	capsuleDatas["main"][0].SetRadius(3.0f);
 	capsuleDatas["main"][0].GetRefSegment3DData().
 		SetPosition(MelLib::Value2<MelLib::Vector3>
-			(GetPosition() + MelLib::Vector3(0, 15, 0), GetPosition() + MelLib::Vector3(0, 0, 0)));
+			(GetPosition() + MelLib::Vector3(0, 15, 0), GetPosition() + MelLib::Vector3(0, -0.1f, 0)));
 
 	segment3DDatas["main"].resize(3);
 	segment3DDatas["main"][0] = capsuleDatas["main"][0].GetSegment3DData();
