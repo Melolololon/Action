@@ -101,13 +101,13 @@ Player::Player(const MelLib::Vector3& pos)
 	segment3DDatas["main"][1].SetPosition
 	(
 		MelLib::Value2<MelLib::Vector3>
-		(GetPosition() + MelLib::Vector3(0, 0, 10), GetPosition() + MelLib::Vector3(0, 0, -10))
+		(GetPosition() + MelLib::Vector3(0, 10, 10), GetPosition() + MelLib::Vector3(0, 10, -10))
 	);
 
 	segment3DDatas["main"][2].SetPosition
 	(
 		MelLib::Value2<MelLib::Vector3>
-		(GetPosition() + MelLib::Vector3(10, 0, 0), GetPosition() + MelLib::Vector3(-10, 0, 0))
+		(GetPosition() + MelLib::Vector3(10, 10, 0), GetPosition() + MelLib::Vector3(-10, 10, 0))
 	);
 
 
@@ -116,6 +116,7 @@ Player::Player(const MelLib::Vector3& pos)
 	modelObjects["main"].Create(MelLib::ModelData::Get("Player"), "Player", nullptr);
 
 	modelObjects["main"].SetAnimationPlayFlag(true);
+
 #pragma region ƒ_ƒbƒVƒ…
 	dashEasing.SetAddPar(5.0f);
 
