@@ -39,6 +39,8 @@
 
 #include"EnemyDarknessEffect.h"
 
+#include"DirectionalLight.h"
+
 Game* Game::GetInstance()
 {
 	static Game game;
@@ -154,6 +156,15 @@ void Game::Initialize()
 	pSky = std::make_unique<Sky>();
 
 
+	// ÉâÉCÉgçÏê¨
+	MelLib::DirectionalLight::Create("Ligth1");
+	MelLib::DirectionalLight::Get("Ligth1").SetDirection(MelLib::Vector3(1, 0, 0));
+
+	MelLib::DirectionalLight::Create("Ligth2");
+	MelLib::DirectionalLight::Get("Ligth2").SetDirection(MelLib::Vector3(-1, 0, 0));
+
+	MelLib::DirectionalLight::Create("Ligth3");
+	MelLib::DirectionalLight::Get("Ligth3").SetDirection(MelLib::Vector3(0, 0, -1));
 }
 
 void Game::Finalize()

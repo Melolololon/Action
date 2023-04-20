@@ -603,6 +603,7 @@ void Player::Jump()
 	if (MelLib::Input::PadButtonTrigger(keyConfigData[ActionType::JUMP]))
 	{
 		FallStart(JUMP_POWER);
+		jumpStartPosition = GetPosition();
 	}
 
 
@@ -644,8 +645,6 @@ void Player::Attack()
 		&& (attackTimer.GetNowTime() == 0 && currentAttack == PlayerSlush::AttackType::NONE
 			|| attackTimer.GetNowTime() >= attackData[currentAttack].nextTime && currentAttack != PlayerSlush::AttackType::NONE))
 	{
-
-
 		attackTimer.ResetTimeZero();
 		attackTimer.SetStopFlag(false);
 
@@ -701,7 +700,7 @@ void Player::SetAttackType()
 			modelObjects["main"].SetAnimation("Attack_Normal_1");
 
 		}
-		else if(GetIsFall())// ‹ó’†UŒ‚
+		else if (GetIsFall() && abs(GetPosition().y - jumpStartPosition.y) >= 10 )// ‹ó’†UŒ‚
 		{
 			currentAttack = PlayerSlush::AttackType::JUMP;
 			FallEnd();
@@ -918,11 +917,20 @@ void Player::SetCameraData()
 	(GetPosition(), MelLib::LibMath::OtherVector3(pCamera->GetCameraPosition(), pCamera->GetTargetPosition()), 30.0f));*/
 
 	pCamera->SetRotatePoint(MelLib::Camera::RotatePoint::ROTATE_POINT_TARGET_POSITION);
-	pCamera->SetCameraToTargetDistance(50.0f);
+	pCamera->SetCameraToTargetDistance(35.0f);
 
 	if (!lockOn)
 	{
-		pCamera->SetRotateCriteriaPosition(GetPosition());
+		MelLib::Vector3 targetPos = GetPosition() + MelLib::Vector3(0, 15, 0);
+
+		if (isDrop) 
+		{
+			MelLib::Vector3 jumpUpCameraVector = 0;
+			targetPos.y -= (GetPosition().y - jumpStartPosition.y) / 7;
+
+		}
+
+		pCamera->SetRotateCriteriaPosition(targetPos);
 	}
 }
 

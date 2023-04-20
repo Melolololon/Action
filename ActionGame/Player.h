@@ -79,7 +79,7 @@ private:
 	float dropStartPosY = 0.0f;
 
 	// ジャンプ開始位置
-	MelLib::Vector3 fallStartPosition;
+	MelLib::Vector3 jumpStartPosition;
 
 	static const float GROUND_HUND_VELOCITY;
 #pragma endregion
