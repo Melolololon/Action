@@ -1,5 +1,4 @@
 #include "Stage.h"
-
 void Stage::SetStageData(const unsigned int stageNum)
 {
 	MelLib::Vector3 stagePosition;
@@ -23,6 +22,8 @@ void Stage::SetStageData(const unsigned int stageNum)
 
 void Stage::LoadResources(unsigned int stageNum)
 {
+	// なぜか2回Stage0が読み込まれてる
+
 	const std::string STAGE_NUM_STR = std::to_string(stageNum);
 	
 	/*bool res = MelLib::ModelData::Load("Resources/Model/Stage/StageGround_" + STAGE_NUM_STR + ".obj", true, "ground" + STAGE_NUM_STR);
@@ -80,12 +81,32 @@ void Stage::Initialize()
 	// ここメッシュ名を指定して呼び出せるようにする
 	modelObjects["stage"].GetModelTriangleData(stageCollision);
 
-	triangleDatas["main"].resize(stageCollision[0].size());
-	for (size_t i = 0; i < stageCollision[0].size(); i++) 
+	size_t resizeNum = stageCollision[0].size();
+	
+	//// ステージに合わせて拡縮しないといけない
+	//std::vector<std::vector<MelLib::TriangleData>>stageColCollision;
+	//MelLib::ModelData* pCollision = MelLib::ModelData::Get("stageCollision" + std::to_string(stageNum.GetValue()));
+	//if (pCollision) 
+	//{
+	//	modelObjects["stageCollision"].SetPosition(modelObjects["stage"].GetPosition());
+	//	modelObjects["stageCollision"].SetAngle(modelObjects["stage"].GetAngle());
+	//	modelObjects["stageCollision"].SetScale(modelObjects["stage"].GetScale());
+
+	//	modelObjects["stageCollision"].GetModelTriangleData(stageColCollision);
+	//	resizeNum += stageColCollision[0].size();
+	//}
+
+	triangleDatas["main"].resize(resizeNum);
+	for (size_t i = 0; i < stageCollision[0].size(); i++)
 	{
 		triangleDatas["main"][i] = stageCollision[0][i];
 	}
-	
+
+	//for (size_t i = 0; i < stageColCollision[0].size(); i++)
+	//{
+	//	triangleDatas["main"][i + stageCollision[0].size()] = stageCollision[0][i];
+	//}
+
 #pragma region 旧
 	//MelLib::ModelData* pColl = MelLib::ModelData::Get("wallCollision" + std::to_string(STAGE_NUM));
 
