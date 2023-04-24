@@ -40,6 +40,7 @@ float4 GetShaderColor(GSOutput input)
 
 	shaderColor.a = m_alpha;
 
+
 	return shaderColor;
 }
 
@@ -87,6 +88,8 @@ float4 main(GSOutput input) : SV_TARGET
 
 	float4 shaderColor = GetShaderColor(input);
 	float4 sumColor = BlendAddSubMulColor(blendColor, shaderColor);
+
+	blendColor.rgb *= 1.7f;
 
 	return blendColor;
 }

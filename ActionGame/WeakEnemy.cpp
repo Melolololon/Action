@@ -147,9 +147,13 @@ void WeakEnemy::Initialize()
 
 void WeakEnemy::Update()
 {
+
+	if (hitGround)FallStart(0.0f);
+
 	AddDarknessEffect();
 
-	CalcMovePhysics();
+	if(state != ThisState::DEAD)CalcMovePhysics();
+
 	hpGauge->SetPosition(GetPosition() + MelLib::Vector3(0, 15, 0));
 	hpGauge->Update();
 	
@@ -190,10 +194,25 @@ void WeakEnemy::Update()
 	if ((state == ThisState::GET_UP || state == ThisState::STUN)
 		&& modelObjects["main"].GetAnimationEndFlag()) 
 	{
-		modelObjects["main"].SetAnimation("E_Dash");
+		
+
 		state = ThisState::MOVE;
 	}
 
+	if (state == ThisState::MOVE) 
+	{
+		if (prePos == GetPosition())
+		{
+			modelObjects["main"].SetAnimation("No_Cont");
+		}
+		else
+		{
+			modelObjects["main"].SetAnimation("E_Dash");
+		}
+	}
+
+	prePos = GetPosition();
+	hitGround = false;
 }
 
 void WeakEnemy::Draw()
@@ -286,6 +305,7 @@ void WeakEnemy::Hit(const GameObject& object, const MelLib::ShapeType3D collisio
 
 		//ìäÇ∞è„Ç∞èàóùèIóπ
 		FallEnd();
+		hitGround = true;
 
 		addPos.y += GetSegmentCalcResult().triangleHitPos.y - segment3DDatas["main"][0].GetPosition().v2.y;
 
