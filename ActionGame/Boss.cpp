@@ -246,12 +246,17 @@ void Boss::Initialize()
 	mutekiTimer.SetMaxTime(60 * 0.2);
 
 	// 仮
-	thisState = ThisState::BATTLE;
+	thisState = ThisState::OTHER;
 
 }
 
 void Boss::Update()
 {
+	// プレイヤーとの距離を計算
+	float toPDis = MelLib::LibMath::CalcDistance3D(pPlayer->GetPosition(), GetPosition());
+	if(toPDis <= 80.0f)thisState = ThisState::BATTLE;
+
+	if (thisState == ThisState::OTHER)return;
 
 	modelObjects["main"].Update();
 	modelObjects["main"].SetAnimationPlayFlag(true);
