@@ -15,7 +15,8 @@ private:
 	};
 	GameState gameState = GameState::PLAY;
 	
-	MelLib::FrameTimer sceneChangeTimer;
+	MelLib::FrameTimer crealFadeStartTimer;
+	MelLib::FrameTimer gameOverFadeStartTimer;
 
 
 private:

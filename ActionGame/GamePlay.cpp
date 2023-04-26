@@ -44,19 +44,19 @@ void GamePlay::Play()
 	if (BossAliveChecker::GetInstance()->GetBossDeadFlag())
 	{
 		gameState = GameState::CLEAR;
-		sceneChangeTimer.SetStopFlag(false);
+		crealFadeStartTimer.SetStopFlag(false);
 	}
 }
 
 void GamePlay::Clear()
 {
-	if (sceneChangeTimer.GetMaxOverFlag())Fade::GetInstance()->Start();
+	if (crealFadeStartTimer.GetMaxOverFlag())Fade::GetInstance()->Start();
 
 }
 
 void GamePlay::GameOver()
 {
-	
+	if (gameOverFadeStartTimer.GetMaxOverFlag())Fade::GetInstance()->Start();
 }
 
 void GamePlay::Initialize()
@@ -107,7 +107,9 @@ void GamePlay::Initialize()
 	//// UI’Ç‰Á
 	//MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<HPGauge>());
 
-	sceneChangeTimer.SetMaxTime(60 * 1);
+	// ŽžŠÔ‚Í‰¼Ý’è
+	gameOverFadeStartTimer.SetMaxTime(60 * 0.5);
+	crealFadeStartTimer.SetMaxTime(60 * 0.5f);
 
 	gameState = GameState::PLAY;
 }
@@ -121,14 +123,15 @@ void GamePlay::Update()
 
 #pragma region ‹¤’Êˆ—
 
-	if (pPlayer->GetHP() <= 0)gameState = GamePlay::GameState::GAME_OVER;
-
+	if (pPlayer->GetHP() <= 0)
+	{
+		gameState = GamePlay::GameState::GAME_OVER;
+		gameOverFadeStartTimer.SetStopFlag(false);
+	}
 
 	// ƒV[ƒ“Ø‚è‘Ö‚¦
 	if (Fade::GetInstance()->GetChangeSceneFlag())isEnd = true;
 #pragma endregion
-
-
 
 	switch (gameState)
 	{
