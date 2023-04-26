@@ -163,6 +163,7 @@
     <ClCompile Include="EditMode.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyAttack.cpp" />
+    <ClCompile Include="EnemyDamageParticle.cpp" />
     <ClCompile Include="EnemyDarknessEffect.cpp" />
     <ClCompile Include="EnemyDeadCounter.cpp" />
     <ClCompile Include="EnemyHPGauge.cpp" />
@@ -217,6 +218,7 @@
     <ClInclude Include="EditMode.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyAttack.h" />
+    <ClInclude Include="EnemyDamageParticle.h" />
     <ClInclude Include="EnemyDarknessEffect.h" />
     <ClInclude Include="EnemyDeadCounter.h" />
     <ClInclude Include="EnemyHPGauge.h" />
