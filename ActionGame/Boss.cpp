@@ -12,6 +12,8 @@
 
 #include<GameObjectManager.h>
 
+#include"BossAliveChecker.h"
+
 Player* Boss::pPlayer;
 
 void Boss::Move()
@@ -55,7 +57,6 @@ void Boss::SelectAction()
 	}
 	else 
 	{
-		
 		currentState = Boss::CurrentState::NORMAL_1;
 		modelObjects["main"].SetAnimation("Attack");
 	}
@@ -197,6 +198,8 @@ void Boss::LoadResources()
 Boss::Boss()
 	:GameObject("boss")
 {
+	BossAliveChecker::GetInstance()->AddBoss(this);
+
 	modelObjects["main"].Create(MelLib::ModelData::Get("boss"), "boss", nullptr);
 	modelObjects["main"].SetAnimation("No_Cont");
 
@@ -218,7 +221,7 @@ Boss::Boss()
 	currentAttack = CurrentAttack::JUMP;*/
 
 
-	hp.SetData(100, "Boss", "HP", 1, 300);
+	hp.SetData(100, GetObjectName(), "HP", 1, 100);
 
 }
 
@@ -240,9 +243,11 @@ void Boss::Initialize()
 	segment3DDatas["main"].resize(1);
 	segment3DDatas["main"][0].SetPosition(capsuleDatas["main"][0].GetSegment3DData().GetPosition());
 
+	mutekiTimer.SetMaxTime(60 * 0.2);
 
 	// âº
 	thisState = ThisState::BATTLE;
+
 }
 
 void Boss::Update()
@@ -251,11 +256,29 @@ void Boss::Update()
 	modelObjects["main"].Update();
 	modelObjects["main"].SetAnimationPlayFlag(true);
 
-	if (currentState == Boss::CurrentState::NONE) Rotate();
+	// çUåÇÇµÇƒÇ»Ç©Ç¡ÇΩÇÁà⁄ìÆÇ∆âÒì]
+	if (currentState == Boss::CurrentState::NONE)
+	{
+		modelObjects["main"].SetAnimation("Move");
+		Rotate();
+	}
 
 	SelectAction();
 	AttackUpdate();
 	CalcMovePhysics();
+
+	// âº
+	if (hp.GetValue() <= 0) 
+	{
+		eraseManager = true;
+	}
+
+	if (mutekiTimer.GetMaxOverFlag()) 
+	{
+		mutekiTimer.ResetTimeZero();
+		mutekiTimer.SetStopFlag(true);
+		isMuteki = false;
+	}
 }
 
 void Boss::Draw()
@@ -281,16 +304,22 @@ void Boss::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType
 
 
 	std::string n = typeid(object).name();
-	if (typeid(object) == typeid(PlayerSlush) || typeid(object) == typeid(JumpAttack) /* && !isMuteki*/)
+	
+	if (!isMuteki) 
 	{
-		MelLib::Vector3 toCameraVec = (MelLib::Camera::Get()->GetCameraPosition() - GetPosition()).Normalize();
-		MelLib::Vector3 effectAddPos = MelLib::Vector3(0, 6, 0) + toCameraVec * 2.1f;
-		MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<SlushHitEffect>
-			(GetPosition() + effectAddPos));
+		if (typeid(object) == typeid(PlayerSlush) || typeid(object) == typeid(JumpAttack) /* && !isMuteki*/)
+		{
+			MelLib::Vector3 toCameraVec = (MelLib::Camera::Get()->GetCameraPosition() - GetPosition()).Normalize();
+			MelLib::Vector3 effectAddPos = MelLib::Vector3(0, 6, 0) + toCameraVec * 2.1f;
+			MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<SlushHitEffect>
+				(GetPosition() + effectAddPos));
 
-		// ÉvÉåÉCÉÑÅ[Ç©ÇÁåªç›ÇÃçUåÇÇÃçUåÇóÕÇéÊìæÇµÅAëÃóÕÇå∏ÇÁÇ∑
-		hp.SetValue(hp.GetValue() - pPlayer->GetCurrentAttackPower());
+			// ÉvÉåÉCÉÑÅ[Ç©ÇÁåªç›ÇÃçUåÇÇÃçUåÇóÕÇéÊìæÇµÅAëÃóÕÇå∏ÇÁÇ∑
+			hp.SetValue(hp.GetValue() - pPlayer->GetCurrentAttackPower());
 
+			isMuteki = true;
+			mutekiTimer.SetStopFlag(false);
+		}
 	}
 
 

@@ -156,8 +156,10 @@
     <ClCompile Include="ActionPart.cpp" />
     <ClCompile Include="Bamboo.cpp" />
     <ClCompile Include="Boss.cpp" />
+    <ClCompile Include="BossAliveChecker.cpp" />
     <ClCompile Include="BossAttack.cpp" />
     <ClCompile Include="CapsuleEnemyAttack.cpp" />
+    <ClCompile Include="Clear.cpp" />
     <ClCompile Include="EditMode.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyAttack.cpp" />
@@ -208,8 +210,10 @@
     <ClInclude Include="AttackEffect.h" />
     <ClInclude Include="Bamboo.h" />
     <ClInclude Include="Boss.h" />
+    <ClInclude Include="BossAliveChecker.h" />
     <ClInclude Include="BossAttack.h" />
     <ClInclude Include="CapsuleEnemyAttack.h" />
+    <ClInclude Include="Clear.h" />
     <ClInclude Include="EditMode.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyAttack.h" />

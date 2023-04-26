@@ -36,6 +36,8 @@ private:
 	CurrentState currentState = CurrentState::NONE;
 
 	MelLib::GuiInt hp;
+	MelLib::FrameTimer mutekiTimer;
+	bool isMuteki = false;
 
 private:
 

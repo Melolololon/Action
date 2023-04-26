@@ -33,6 +33,7 @@
 #include"ActionPart.h"
 #include"Title.h"
 #include"TestScene.h"
+#include"GamePlay.h"
 
 #include"Option.h"
 #include"Tutorial.h"
@@ -116,8 +117,8 @@ void Game::Initialize()
 #pragma endregion
 
 
-	MelLib::SceneManager::GetInstance()->SetStartScene(new TestScene());
-	//MelLib::SceneManager::GetInstance()->SetStartScene(new Title());
+	//MelLib::SceneManager::GetInstance()->SetStartScene(new TestScene());
+	MelLib::SceneManager::GetInstance()->SetStartScene(new GamePlay());
 	Fade::GetInstance()->Initializ();
 
 	Option::GetInstance()->Initialize();

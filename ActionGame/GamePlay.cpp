@@ -15,6 +15,7 @@
 
 #include"Boss.h"
 #include"BossAttack.h"
+#include"BossAliveChecker.h"
 #include"EnemyAttack.h"
 #include"NewEnemy.h"
 
@@ -34,11 +35,37 @@ void GamePlay::CheckGameOver()
 	if (pPlayer->GetHP() <= 0)gameState = GameState::GAME_OVER;
 }
 
+void GamePlay::Play()
+{
+	// ボス戦移行
+
+
+	// ボス戦
+	if (BossAliveChecker::GetInstance()->GetBossDeadFlag())
+	{
+		gameState = GameState::CLEAR;
+		sceneChangeTimer.SetStopFlag(false);
+	}
+}
+
+void GamePlay::Clear()
+{
+	if (sceneChangeTimer.GetMaxOverFlag())Fade::GetInstance()->Start();
+
+}
+
+void GamePlay::GameOver()
+{
+	
+}
+
 void GamePlay::Initialize()
 {
 	EnemyDeadCounter::GetInstance()->Reset();
 
-	const unsigned int STAGE_NUM = StageSelect::GetStageNum();
+	// ステージセレクト追加したらコメントアウト解除
+	//const unsigned int STAGE_NUM = StageSelect::GetStageNum();
+	const unsigned int STAGE_NUM = 1;
 
 	// シーンの読み込み
 	//MelLib::SceneEditer::GetInstance()->LoadEditData("Stage_" + std::to_string(STAGE_NUM));
@@ -62,10 +89,6 @@ void GamePlay::Initialize()
 	EnemySpaunPoint::ClearEnemySpauns();
 	MelLib::GameObjectManager::GetInstance()->InitializeObject();
 
-
-	// 当たり判定確認用
-	//MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<WeakEnemy>(0));
-
 	// UI追加
 	HPGauge::SetPPlayer(pPlayer);
 	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<HPGauge>());
@@ -83,6 +106,10 @@ void GamePlay::Initialize()
 
 	//// UI追加
 	//MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<HPGauge>());
+
+	sceneChangeTimer.SetMaxTime(60 * 1);
+
+	gameState = GameState::PLAY;
 }
 
 void GamePlay::Update()
@@ -92,12 +119,29 @@ void GamePlay::Update()
 	MelLib::GameObjectManager::GetInstance()->Update();
 	Fade::GetInstance()->Update();
 
+#pragma region 共通処理
 
-	if (MelLib::Input::KeyTrigger(DIK_Q) && !Fade::GetInstance()->GetIsFade())
-	{
-		Fade::GetInstance()->Start();
-	}
+	if (pPlayer->GetHP() <= 0)gameState = GamePlay::GameState::GAME_OVER;
+
+
+	// シーン切り替え
 	if (Fade::GetInstance()->GetChangeSceneFlag())isEnd = true;
+#pragma endregion
+
+
+
+	switch (gameState)
+	{
+	case GamePlay::GameState::CLEAR:
+		Clear();
+		break;
+	case GamePlay::GameState::GAME_OVER:
+		GameOver();
+		break;
+	default:
+		Play();
+		break;
+	}
 
 }
 
