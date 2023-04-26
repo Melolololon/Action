@@ -238,7 +238,7 @@ void Boss::Initialize()
 	capsuleDatas["main"].resize(1);
 	capsuleDatas["main"][0].SetRadius(4.5f);
 	capsuleDatas["main"][0].GetRefSegment3DData().
-		SetPosition(MelLib::Value2<MelLib::Vector3>(GetPosition() + MelLib::Vector3(0, 25.0f, 0), GetPosition() + MelLib::Vector3(0,-3.0f, 0)));
+		SetPosition(MelLib::Value2<MelLib::Vector3>(GetPosition() + MelLib::Vector3(0, 25.0f, 0), GetPosition() + MelLib::Vector3(0,-1.0f, 0)));
 
 	segment3DDatas["main"].resize(1);
 	segment3DDatas["main"][0].SetPosition(capsuleDatas["main"][0].GetSegment3DData().GetPosition());
@@ -254,8 +254,10 @@ void Boss::Update()
 {
 	// プレイヤーとの距離を計算
 	float toPDis = MelLib::LibMath::CalcDistance3D(pPlayer->GetPosition(), GetPosition());
-	if(toPDis <= 80.0f)thisState = ThisState::BATTLE;
 
+	if (toPDis <= 200.0f)thisState = ThisState::BATTLE;
+
+	CalcMovePhysics();
 	if (thisState == ThisState::OTHER)return;
 
 	modelObjects["main"].Update();
@@ -270,7 +272,6 @@ void Boss::Update()
 
 	SelectAction();
 	AttackUpdate();
-	CalcMovePhysics();
 
 	// 仮
 	if (hp.GetValue() <= 0) 
