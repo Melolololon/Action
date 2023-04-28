@@ -9,13 +9,24 @@ private:
 	enum class GameState 
 	{
 		PLAY,
+		BOSS,
 		CLEAR,
 		GAME_OVER,
 	};
 	GameState gameState = GameState::PLAY;
+	
+	MelLib::FrameTimer crealFadeStartTimer;
+	MelLib::FrameTimer gameOverFadeStartTimer;
+
+
 private:
 	void CheckClear();
 	void CheckGameOver();
+
+	// ƒQ[ƒ€“àƒV[ƒ“
+	void Play();
+	void Clear();
+	void GameOver();
 
 public:
 	void Initialize()override;//‰Šú‰»

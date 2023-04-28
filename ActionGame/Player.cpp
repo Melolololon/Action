@@ -101,13 +101,13 @@ Player::Player(const MelLib::Vector3& pos)
 	segment3DDatas["main"][1].SetPosition
 	(
 		MelLib::Value2<MelLib::Vector3>
-		(GetPosition() + MelLib::Vector3(0, 10, 10), GetPosition() + MelLib::Vector3(0, 10, -10))
+		(GetPosition() + MelLib::Vector3(0, 10, 20), GetPosition() + MelLib::Vector3(0, 10, -20))
 	);
 
 	segment3DDatas["main"][2].SetPosition
 	(
 		MelLib::Value2<MelLib::Vector3>
-		(GetPosition() + MelLib::Vector3(10, 10, 0), GetPosition() + MelLib::Vector3(-10, 10, 0))
+		(GetPosition() + MelLib::Vector3(20, 10, 0), GetPosition() + MelLib::Vector3(-20, 10, 0))
 	);
 
 
@@ -146,7 +146,7 @@ Player::Player(const MelLib::Vector3& pos)
 
 			//浮き防止
 			FallStart(0.0f);
-
+			jumpStartPosition = GetPosition();
 			// 落下アニメーションからスタート
 			modelObjects["main"].SetAnimation("Jump_Up");
 		}
@@ -263,6 +263,7 @@ void Player::Update()
 		&& currentAttack == PlayerSlush::AttackType::JUMP)
 	{
 		FallStart(JUMP_ATTACK_DROP_SPEED);
+		jumpStartPosition = GetPosition();
 		jumpAttackStartTimer.ResetTimeZero();
 		jumpAttackStartTimer.SetStopFlag(true);
 	}
@@ -365,6 +366,7 @@ void Player::TitleUpdate()
 	if (!GetIsFall())
 	{
 		FallStart(JUMP_POWER);
+		jumpStartPosition = GetPosition();
 		modelObjects["main"].SetAnimation("Jump_Up");
 	}
 	CalcMovePhysics();
@@ -496,8 +498,11 @@ void Player::Move()
 	//if (position.y <= -100)position.y = 100;
 
 	//落下するために
-	if (!GetIsFall())FallStart(0.0f);
-
+	if (!GetIsFall())
+	{
+		jumpStartPosition = GetPosition();
+		FallStart(0.0f);
+	}
 
 
 }
@@ -700,7 +705,7 @@ void Player::SetAttackType()
 			modelObjects["main"].SetAnimation("Attack_Normal_1");
 
 		}
-		else if (GetIsFall() && abs(GetPosition().y - jumpStartPosition.y) >= 10 )// 空中攻撃
+		else if (GetIsFall() && abs(GetPosition().y - jumpStartPosition.y) >= 50 )// 空中攻撃
 		{
 			currentAttack = PlayerSlush::AttackType::JUMP;
 			FallEnd();

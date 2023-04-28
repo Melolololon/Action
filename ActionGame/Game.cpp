@@ -33,6 +33,7 @@
 #include"ActionPart.h"
 #include"Title.h"
 #include"TestScene.h"
+#include"GamePlay.h"
 
 #include"Option.h"
 #include"Tutorial.h"
@@ -116,8 +117,8 @@ void Game::Initialize()
 #pragma endregion
 
 
-	MelLib::SceneManager::GetInstance()->SetStartScene(new TestScene());
-	//MelLib::SceneManager::GetInstance()->SetStartScene(new Title());
+	//MelLib::SceneManager::GetInstance()->SetStartScene(new TestScene());
+	MelLib::SceneManager::GetInstance()->SetStartScene(new GamePlay());
 	Fade::GetInstance()->Initializ();
 
 	Option::GetInstance()->Initialize();
@@ -139,7 +140,6 @@ void Game::Initialize()
 
 	// ƒXƒe[ƒW“o˜^
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Stage>(0), "Stage");
-	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Stage>(1), "Stage");
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Water>(), "Stage");
 
 	// “G’Ç‰Á
@@ -165,6 +165,10 @@ void Game::Initialize()
 
 	MelLib::DirectionalLight::Create("Ligth3");
 	MelLib::DirectionalLight::Get("Ligth3").SetDirection(MelLib::Vector3(0, 0, -1));
+
+
+	MelLib::DirectionalLight::Create("Ligth4");
+	MelLib::DirectionalLight::Get("Ligth4").SetDirection(MelLib::Vector3(0, -0.75f, 0));
 }
 
 void Game::Finalize()

@@ -49,10 +49,13 @@ private:
 	AttackType attackType = AttackType::NORMAL_1;
 
 	bool slushLeft = false;
+
 private:
 	void SetAttackParam();
 
 	void Attack();
+
+	void AddEnemyParticle();
 public:
 
 
@@ -99,6 +102,8 @@ public:
 	MelLib::Value2<MelLib::Vector3>GetSegmentPrePosition()const { return preSegmentPosition; }
 
 #pragma endregion
+
+	
 
 };
 

@@ -70,6 +70,11 @@ Stage::Stage(const unsigned int stageNum)
 	material.SetTexture(MelLib::Texture::Get("Rock"), "Rock");
 	material.SetTexture(MelLib::Texture::Get("StageMask_1"), "StageMask_1");
 
+	MelLib::ADSAMaterialData mtlData;
+	mtlData.ambient = 0.8f;
+	mtlData.diffuse = 0.8f;
+	material.SetMaterialData(mtlData);
+
 	// マテリアルをセット
 	modelObjects["stage"].SetMaterial(&material);
 }
