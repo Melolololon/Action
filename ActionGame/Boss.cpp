@@ -223,6 +223,9 @@ Boss::Boss()
 
 	hp.SetData(100, GetObjectName(), "HP", 1, 100);
 
+
+	tags.push_back("Enemy");
+	tags.push_back("Boss");
 }
 
 std::shared_ptr<MelLib::GameObject> Boss::GetNewPtr()

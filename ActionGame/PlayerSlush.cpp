@@ -9,6 +9,8 @@
 #include"EditMode.h"
 #include"Pause.h"
 
+#include"EnemyDamageParticle.h"
+
 const MelLib::Value2<MelLib::Vector3> PlayerSlush::CAPSULE_START_POS_LEFT = { MelLib::Vector3(14,30,3),MelLib::Vector3(12,30,14) };
 const MelLib::Value2<MelLib::Vector3> PlayerSlush::CAPSULE_START_POS_RIGTH = { MelLib::Vector3(-14,30,3),MelLib::Vector3(-12,30,14) };
 
@@ -147,6 +149,27 @@ void PlayerSlush::Attack()
 	//(capsuleData[0].GetRefSegment3DData().GetAngle() + attackAngle);
 }
 
+void PlayerSlush::AddEnemyParticle()
+{
+	const int PARTICLE_NUM = 1;
+
+	// 敵の線分に一番近い自分の線分の座標を取得
+	const MelLib::Vector3 PARTICLE_POINT = GetCapsuleCalcResult().segment3DCalcResult.thisCapsuleLineClosestPoint;
+
+	// ベクトルを計算
+	const MelLib::Vector3 PARTICLE_VECTOR = 
+		preSegmentPosition.v1 - capsuleDatas["main"][0].GetRefSegment3DData().GetPosition().v1;
+
+	for (int i = 0; i < PARTICLE_NUM; i++) 
+	{
+		MelLib::GameObjectManager::GetInstance()->AddObject
+		(
+			std::make_shared<EnemyDamageParticle>(PARTICLE_POINT, PARTICLE_VECTOR)
+		);
+	}
+	
+}
+
 PlayerSlush::PlayerSlush
 (
 	const MelLib::Vector3& pos, 
@@ -193,8 +216,6 @@ PlayerSlush::PlayerSlush
 
 void PlayerSlush::Update()
 {
-
-
 	MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())
 	{
@@ -229,6 +250,7 @@ void PlayerSlush::Update()
 			std::make_shared<SlushEffect>(MelLib::Vector3(0, 10, 0), slushVector, moveVector, 10, PLAYER_DIRECTION)
 		);
 	}*/
+
 }
 
 void PlayerSlush::Draw()
@@ -237,6 +259,19 @@ void PlayerSlush::Draw()
 
 void PlayerSlush::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)
 {
+	std::vector<std::string> tags;
 
+	tags = object.GetTags();
+
+	for (auto& tag : tags) 
+	{
+		if (tag == "Enemy")
+		{
+			// パーティクル発射
+			AddEnemyParticle();
+
+			break;
+		}
+	}
 }
 
