@@ -33,7 +33,7 @@ CapsuleEnemyAttack::CapsuleEnemyAttack
 	capsuleDatas["main"][0].SetRadius(radius);
 
 	collisionCheckDistance = 80.0f;
-
+	skipCollisionCheckTags.push_back("Stage");
 }
 
 void CapsuleEnemyAttack::Update()

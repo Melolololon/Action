@@ -144,7 +144,7 @@ private:
 #pragma endregion
 
 #pragma region –³“G
-
+	bool isHit = false;
 	bool isMuteki = false;
 	MelLib::FrameTimer mutekiTimer;
 #pragma endregion

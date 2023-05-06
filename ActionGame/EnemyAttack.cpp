@@ -46,6 +46,8 @@ EnemyAttack::EnemyAttack(unsigned int power, const MelLib::ModelObject& model, f
 	, MOVE_TYPE(MoveType::OBJECT)
 {
 	SetInitData(radius, attackType);
+
+	skipCollisionCheckTags.push_back("Stage");
 }
 
 void EnemyAttack::SetAttackTypeTag(AttackType type)

@@ -97,17 +97,20 @@ Player::Player(const MelLib::Vector3& pos)
 	segment3DDatas["main"].resize(3);
 	segment3DDatas["main"][0] = capsuleDatas["main"][0].GetSegment3DData();
 
-	// 壁との判定用
+
+	const float SEGMENT_LENGTH = 30.0f;
+	const float SEGMENT_HEIGTH = 60.0f;
+	// 壁との判定
 	segment3DDatas["main"][1].SetPosition
 	(
 		MelLib::Value2<MelLib::Vector3>
-		(GetPosition() + MelLib::Vector3(0, 10, 20), GetPosition() + MelLib::Vector3(0, 10, -20))
+		(GetPosition() + MelLib::Vector3(0, SEGMENT_HEIGTH, SEGMENT_LENGTH), GetPosition() + MelLib::Vector3(0, SEGMENT_HEIGTH, -SEGMENT_LENGTH))
 	);
 
 	segment3DDatas["main"][2].SetPosition
 	(
 		MelLib::Value2<MelLib::Vector3>
-		(GetPosition() + MelLib::Vector3(20, 10, 0), GetPosition() + MelLib::Vector3(-20, 10, 0))
+		(GetPosition() + MelLib::Vector3(SEGMENT_LENGTH, SEGMENT_HEIGTH, 0), GetPosition() + MelLib::Vector3(-SEGMENT_LENGTH, SEGMENT_HEIGTH, 0))
 	);
 
 
@@ -123,7 +126,7 @@ Player::Player(const MelLib::Vector3& pos)
 
 #pragma endregion
 
-	mutekiTimer.SetMaxTime(60 * 1.5);
+	mutekiTimer.SetMaxTime(60 * 0.7);
 
 
 
@@ -165,7 +168,7 @@ Player::Player(const MelLib::Vector3& pos)
 
 	collisionCheckDistance = 80.0f;
 
-
+	
 
 	/*MelLib::DrawOption op;
 	op.cullMode = MelLib::CullMode::NONE;
@@ -178,8 +181,6 @@ Player::Player(const MelLib::Vector3& pos)
 // Tポーズで動かなくなる
 void Player::Update()
 {
-	// テスト
-	MelLib::Vector3 pPos = GetPosition();
 
 	MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())
@@ -194,6 +195,8 @@ void Player::Update()
 		return;
 	}
 
+	if (isHit)isMuteki = true;
+	isHit = false;
 
 	hitEventFlag = false;
 	hitTutorialEventFlag = false;
@@ -1255,7 +1258,7 @@ void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionTy
 			|| typeid(object) == typeid(NormalEnemyAttack)
 			|| typeid(object) == typeid(CapsuleEnemyAttack))
 		{
-			isMuteki = true;
+			isHit = true;
 			mutekiTimer.SetStopFlag(false);
 
 			
@@ -1281,7 +1284,7 @@ void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionTy
 		// 吹っ飛び
 		if (typeid(object) == typeid(BossAttack))
 		{
-			isMuteki = true;
+			isHit = true;
 			mutekiTimer.SetStopFlag(false);
 
 			isStun = true;

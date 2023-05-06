@@ -33,6 +33,8 @@ protected:
 	void BeBlownAwayMove();
 
 	void Dead();
+
+	void AddParticle();
 protected:
 	
 	MelLib::FrameTimer deadEndTimer;

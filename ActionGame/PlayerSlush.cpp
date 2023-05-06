@@ -212,6 +212,8 @@ PlayerSlush::PlayerSlush
 	eraseTimer.SetStopFlag(false);
 
 	//SetAttackParam();
+
+	skipCollisionCheckTags.push_back("Stage");
 }
 
 void PlayerSlush::Update()
@@ -268,7 +270,7 @@ void PlayerSlush::Hit(const GameObject& object, const MelLib::ShapeType3D collis
 		if (tag == "Enemy")
 		{
 			// パーティクル発射
-			AddEnemyParticle();
+			//AddEnemyParticle();
 
 			break;
 		}

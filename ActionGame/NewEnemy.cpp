@@ -12,7 +12,7 @@
 
 Player* NewEnemy::pPlayer;
 const float NewEnemy::MOVE_SPEED = 0.6f;
-const float NewEnemy::MIN_DISTANCE = 60.0f;
+const float NewEnemy::MIN_DISTANCE = 15.0f;
 //
 //void NewEnemy::ToPlayerMove()
 //{
@@ -61,6 +61,16 @@ void NewEnemy::Dead()
 			EnemyDeadCounter::GetInstance()->CountUp();
 		}
 	}
+}
+
+void NewEnemy::AddParticle()
+{
+	// ©•ª‚Æ‘Šè‚ÌÅ‹ß“_(‘Šè‚Éˆê”Ô‹ß‚¢“_)‚ğæ“¾
+	MelLib::CapsuleCalcResult result = GetCapsuleCalcResult();
+	MelLib::Vector3 myCapsuleNearPos = result.segment3DCalcResult.thisCapsuleLineClosestPoint;
+	MelLib::Vector3 otherCapsuleNearPos = result.segment3DCalcResult.otherCapsuleLineClosestPoint;
+
+
 }
 
 NewEnemy::NewEnemy(const std::string& name)

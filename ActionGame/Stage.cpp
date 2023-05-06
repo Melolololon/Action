@@ -77,6 +77,8 @@ Stage::Stage(const unsigned int stageNum)
 
 	// マテリアルをセット
 	modelObjects["stage"].SetMaterial(&material);
+
+	tags.push_back("Stage");
 }
 
 void Stage::Initialize()

@@ -219,8 +219,7 @@ void WeakEnemy::Update()
 
 void WeakEnemy::Draw()
 {
-	if (isAttack)modelObjects["main"].SetMulColor(MelLib::Color(0, 0, 255, 255));
-	else modelObjects["main"].SetMulColor(MelLib::Color(255,255, 255, 255));
+	
 	AllDraw();
 	hpGauge->Draw();
 }
@@ -295,6 +294,9 @@ void WeakEnemy::Hit(const GameObject& object, const MelLib::ShapeType3D collisio
 				state = ThisState::STUN;
 				modelObjects["main"].SetAnimation("Stun");
 				modelObjects["main"].SetAnimationFrameStart();
+
+				// パーティクル発射
+				
 			}
 		}
 	}
