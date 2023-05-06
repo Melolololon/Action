@@ -149,9 +149,11 @@ void WeakEnemy::Initialize()
 
 void WeakEnemy::Update()
 {
+	//CheckMutekiEnd();
 
 	if (hitGround)FallStart(0.0f);
 
+	CheckParticleTimer();
 	AddDarknessEffect();
 
 	if(state != ThisState::DEAD)CalcMovePhysics();
@@ -215,6 +217,7 @@ void WeakEnemy::Update()
 
 	prePos = GetPosition();
 	hitGround = false;
+
 }
 
 void WeakEnemy::Draw()
@@ -232,11 +235,15 @@ void WeakEnemy::Hit(const GameObject& object, const MelLib::ShapeType3D collisio
 	if (state == ThisState::DEAD)return;
 
 	std::string n = typeid(object).name();
-	if (typeid(object) == typeid(PlayerSlush) || typeid(object) == typeid(JumpAttack) /* && !isMuteki*/)
+	if ((typeid(object) == typeid(PlayerSlush) || typeid(object) == typeid(JumpAttack))/*&& !isMuteki*/)
 	{
-
-		if (state == ThisState::MOVE || state == ThisState::ATTACK) {
-
+		PlayerSlush::AttackType attackType = pPlayer->GetPlayerAttackType();
+		//if (state != ThisState::DEAD) 
+		// 違う攻撃判定だったらダメージ
+		if (hitAttackName != object.GetTags()[0])
+		{
+			hitAttackName = object.GetTags()[0];
+			hitPlayerAttack = attackType;
 
 			MelLib::Vector3 toCameraVec = (MelLib::Camera::Get()->GetCameraPosition() - GetPosition()).Normalize();
 			MelLib::Vector3 effectAddPos = MelLib::Vector3(0, 6, 0) + toCameraVec * 2.1f;
@@ -248,9 +255,7 @@ void WeakEnemy::Hit(const GameObject& object, const MelLib::ShapeType3D collisio
 			// プレイヤーから現在の攻撃の攻撃力を取得し、体力を減らす
 			hp -= pPlayer->GetCurrentAttackPower();
 
-			// 無敵に
-			//isMuteki = true;
-			//mutekiTimer.SetStopFlag(false);
+			isMuteki = true;
 
 			// 硬直処理
 			//isStun = true;
@@ -296,7 +301,7 @@ void WeakEnemy::Hit(const GameObject& object, const MelLib::ShapeType3D collisio
 				modelObjects["main"].SetAnimationFrameStart();
 
 				// パーティクル発射
-				
+				AddParticle();
 			}
 		}
 	}

@@ -4,11 +4,13 @@
 #include"AttackEffect.h"
 #include"EnemyHPGauge.h"
 #include"FrameTimer.h"
+#include"PlayerSlush.h"
 
 class NewEnemy:public MelLib::GameObject
 {
 private:
 	MelLib::FrameTimer addDarknessEffectTimer;
+	MelLib::FrameTimer addDamagePartucleAddTimer;
 
 private:
 	void DropItem();
@@ -35,6 +37,9 @@ protected:
 	void Dead();
 
 	void AddParticle();
+	void CheckParticleTimer();
+
+	void CheckMutekiEnd();
 protected:
 	
 	MelLib::FrameTimer deadEndTimer;
@@ -57,6 +62,12 @@ protected:
 
 	int hp = 10;
 
+	bool isMuteki = false;
+
+	// Ç±ÇÍè¡Ç∑
+	PlayerSlush::AttackType hitPlayerAttack = PlayerSlush::AttackType::NONE;
+
+	std::string hitAttackName;
 public:
 
 
@@ -89,5 +100,6 @@ public:
 	int GetHP()const { return hp; }
 
 	void AddDarknessEffect();
+
 };
 

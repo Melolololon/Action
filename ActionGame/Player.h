@@ -114,6 +114,7 @@ private:
 	std::shared_ptr<PlayerSlush>pRigthSlush = nullptr;
 	//現在の攻撃
 	PlayerSlush::AttackType currentAttack = PlayerSlush::AttackType::NONE;
+	PlayerSlush::AttackType preAttack = PlayerSlush::AttackType::NONE;
 
 	//攻撃時間タイマー
 	MelLib::FrameTimer attackTimer;
@@ -220,6 +221,7 @@ private:
 	void Attack();
 	void SetAttackType();
 	void CreateAttackSlush();
+	void CheckEraseSlush();
 
 	void DeathBlow();
 
@@ -302,7 +304,7 @@ public:
 	bool GetHitEventFlag()const { return hitEventFlag; }
 	bool GetHitTutorialEventFlag()const { return hitTutorialEventFlag; }
 
-	//PlayerSlush::AttackType GetPlayerAttackType()const { return currentAttack; }
+	PlayerSlush::AttackType GetPlayerAttackType()const { return currentAttack; }
 	AttackEffect GetPlayerAttackEffect()const { return attackData.at(currentAttack).effect; }
 
 	bool DeadAnimationEnd()const 
@@ -310,6 +312,8 @@ public:
 		return modelObjects.at("main").GetAnimationEndFlag()
 			&& modelObjects.at("main").GetCurrentAnimationName() == "Dead";
 	}
+
+	bool GetAttackChangeFrame()const;
 #pragma endregion
 
 #pragma region Set

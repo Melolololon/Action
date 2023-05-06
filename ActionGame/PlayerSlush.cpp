@@ -180,7 +180,8 @@ PlayerSlush::PlayerSlush
 	const MelLib::Vector3 playerStartPos,
 	const MelLib::Vector3 playerStartAngle,
 	const MelLib::Vector3 playerStartScale,
-	const bool slushLeft
+	const bool slushLeft,
+	const std::string& attackName
 )
 	:GameObject("PlayerSlush")
 	,attackType(type)
@@ -190,6 +191,7 @@ PlayerSlush::PlayerSlush
 	, PLAYER_START_ANGLE(0)
 	, PLAYER_START_SCALE(3)
 	, slushLeft(slushLeft)
+	, ATTACK_NAME(attackName)
 {
 
 	
@@ -213,6 +215,8 @@ PlayerSlush::PlayerSlush
 
 	//SetAttackParam();
 
+	tags.push_back(ATTACK_NAME);
+
 	skipCollisionCheckTags.push_back("Stage");
 }
 
@@ -229,7 +233,7 @@ void PlayerSlush::Update()
 
 	preSegmentPosition = capsuleDatas["main"][0].GetSegment3DData().GetRotatePosition();
 
-	if (eraseTimer.GetSameAsMaxFlag())eraseManager = true;
+	if (eraseTimer.GetMaxOverFlag())eraseManager = true;
 	Attack();
 
 	MelLib::Value2<MelLib::Vector3>segmentVector = capsuleDatas["main"][0].GetSegment3DData().GetPosition();

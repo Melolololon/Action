@@ -59,7 +59,7 @@ const float Player::JUMP_ATTACK_DROP_SPEED = -3.0f;
 
 std::unordered_map<PlayerSlush::AttackType, const Player::AttackData> Player::attackData =
 {
-	// AttackData(パワー,時間,次の攻撃入力時間)
+	// AttackData(パワー,攻撃アニメーション終了までの時間,次の攻撃入力時間)
 	{PlayerSlush::AttackType::NONE,AttackData(0,0,0 ,AttackEffect::NONE)},
 	{PlayerSlush::AttackType::NORMAL_1,AttackData(3,20,10,AttackEffect::NONE)},
 	{PlayerSlush::AttackType::NORMAL_2,AttackData(3,30,20,AttackEffect::NONE)},
@@ -181,6 +181,7 @@ Player::Player(const MelLib::Vector3& pos)
 // Tポーズで動かなくなる
 void Player::Update()
 {
+	preAttack = currentAttack;
 
 	MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())
@@ -202,6 +203,8 @@ void Player::Update()
 	hitTutorialEventFlag = false;
 
 	modelObjects["main"].Update();
+
+	
 	
 	if(isDead)
 	{
@@ -294,8 +297,7 @@ void Player::Update()
 
 	}
 
-	
-
+	CreateAttackSlush();
 
 	if (currentAttack == PlayerSlush::AttackType::NONE) 
 	{
@@ -352,11 +354,12 @@ void Player::Update()
 	if (dropStartPosY >= DROP_POS_Y)isDrop = true;
 
 
-	/*preHitGround = hitGround;
-	hitGround = false;*/
 
+}
 
-	if (MelLib::Input::KeyTrigger(DIK_SPACE))hp -= 10;
+bool Player::GetAttackChangeFrame() const
+{
+	return preAttack != currentAttack;
 }
 
 void Player::TitleUpdate()
@@ -637,6 +640,8 @@ void Player::JumpAnimation()
 
 void Player::Attack()
 {
+
+
 	// 空中攻撃とダッシュ攻撃はいったんなし
 	//if (isDrop)return;
 
@@ -672,12 +677,12 @@ void Player::Attack()
 			if (pRigthSlush)pRigthSlush.reset();
 
 
-			CreateAttackSlush();
-
 			//アニメーションをリセット
 			modelObjects["main"].SetAnimationFrameStart();
 		}
 	}
+
+
 
 	//攻撃判定も動かす
 	//if (pPSlush)pPSlush->AddPosition(GetPosition() - prePos);
@@ -723,14 +728,19 @@ void Player::SetAttackType()
 		currentAttack = PlayerSlush::AttackType::NORMAL_2;
 
 		modelObjects["main"].SetAnimation("Attack_Normal_2");
+		
 		break;
 	case PlayerSlush::AttackType::NORMAL_2:
 		currentAttack = PlayerSlush::AttackType::NORMAL_3;
 
 		modelObjects["main"].SetAnimation("Attack_Normal_3");
+
+		
 		break;
 	case PlayerSlush::AttackType::NORMAL_3:
 		currentAttack = PlayerSlush::AttackType::NONE;
+
+
 		break;
 
 	case PlayerSlush::AttackType::DASH_1:
@@ -748,44 +758,79 @@ void Player::SetAttackType()
 void Player::CreateAttackSlush()
 {
 	// 消える時間を次の攻撃へ移行できるようになる時間と同じにすること
-
-
+	const int CURRENT_FRAME = modelObjects["main"].GetAnimationFrame();
+	const int MAX_FRAME = modelObjects["main"].GetAnimationFrameCount();
+	bool addFrame = false;
+	// 攻撃アニメーションは全部2倍速だからCURRENT_FRAMEのifは偶数にする
 	switch (currentAttack)
 	{
 	case PlayerSlush::AttackType::NONE:
 		break;
 	case PlayerSlush::AttackType::NORMAL_1:
-		pRigthSlush = std::make_shared<PlayerSlush>
-			(GetPosition(), direction, currentAttack, attackData[currentAttack].nextTime, modelObjects["main"], startPos, startAngle, startScale, false);
 
+		if (CURRENT_FRAME == 14)
+		{
+			// MAX_FRAME / 2の/2はアニメーション速度　ここあとで関数で取得するように変更する
+			pRigthSlush = std::make_shared<PlayerSlush>
+				(GetPosition(), direction, currentAttack, MAX_FRAME / 2, modelObjects["main"],
+					startPos, startAngle, startScale, false,"N1");
+			addFrame = true;
+		}
 		break;
 	case PlayerSlush::AttackType::NORMAL_2:
+		if (CURRENT_FRAME == 24)
+		{
 
+			pPSlush = std::make_shared<PlayerSlush>
+				(GetPosition(), direction, currentAttack, MAX_FRAME / 2, modelObjects["main"], startPos, startAngle, startScale, true, "N2");
 
-		pPSlush = std::make_shared<PlayerSlush>
-			(GetPosition(), direction, currentAttack, attackData[currentAttack].nextTime, modelObjects["main"], startPos, startAngle, startScale, true);
-
+			addFrame = true;
+		}
 		break;
 	case PlayerSlush::AttackType::NORMAL_3:
-		pPSlush = std::make_shared<PlayerSlush>
-			(GetPosition(), direction, currentAttack, attackData[currentAttack].nextTime, modelObjects["main"], startPos, startAngle, startScale, true);
+		if (CURRENT_FRAME == 18)
+		{
+			pPSlush = std::make_shared<PlayerSlush>
+				(GetPosition(), direction, currentAttack, MAX_FRAME / 2, modelObjects["main"], startPos, startAngle, startScale, true, "N3_L");
 
-		pRigthSlush = std::make_shared<PlayerSlush>
-			(GetPosition(), direction, currentAttack, attackData[currentAttack].nextTime, modelObjects["main"], startPos, startAngle, startScale, false);
+			pRigthSlush = std::make_shared<PlayerSlush>
+				(GetPosition(), direction, currentAttack, MAX_FRAME / 2, modelObjects["main"], startPos, startAngle, startScale, false, "N3_R");
 
-
+			addFrame = true;
+		}
 		break;
 	case PlayerSlush::AttackType::DASH_1:
-		pRigthSlush = std::make_shared<PlayerSlush>
-		(GetPosition(), direction, currentAttack, attackData[currentAttack].nextTime, modelObjects["main"], startPos, startAngle, startScale, false);
+		if (CURRENT_FRAME == 14)
+		{
+			pRigthSlush = std::make_shared<PlayerSlush>
+				(GetPosition(), direction, currentAttack, MAX_FRAME, modelObjects["main"], startPos, startAngle, startScale, false, "D1");
 
+			addFrame = true;
+		}
 		break;
 	default:
 		break;
 	}
 
-	if (pPSlush)MelLib::GameObjectManager::GetInstance()->AddObject(pPSlush);
-	if (pRigthSlush)MelLib::GameObjectManager::GetInstance()->AddObject(pRigthSlush);
+	if (addFrame)MelLib::GameObjectManager::GetInstance()->AddObject(pPSlush);
+	if (addFrame)MelLib::GameObjectManager::GetInstance()->AddObject(pRigthSlush);
+}
+
+void Player::CheckEraseSlush()
+{
+	if (!GetAttackChangeFrame())return;
+
+	// 切り替わりで削除
+	if (pPSlush)
+	{
+		pPSlush->Erase();
+		pPSlush.reset();
+	}
+	if (pRigthSlush)
+	{
+		pRigthSlush->Erase();
+		pRigthSlush.reset();
+	}
 }
 
 void Player::DeathBlow()

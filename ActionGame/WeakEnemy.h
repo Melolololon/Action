@@ -11,6 +11,8 @@ private:
 	MelLib::Vector3 prePos;
 
 	bool hitGround = false;
+
+
 private:
 
 	/// <summary>
