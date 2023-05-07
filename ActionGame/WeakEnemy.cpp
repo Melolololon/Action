@@ -235,10 +235,8 @@ void WeakEnemy::Hit(const GameObject& object, const MelLib::ShapeType3D collisio
 	if (state == ThisState::DEAD)return;
 
 	std::string n = typeid(object).name();
-	if ((typeid(object) == typeid(PlayerSlush) || typeid(object) == typeid(JumpAttack))/*&& !isMuteki*/)
+	if (typeid(object) == typeid(PlayerSlush))
 	{
-		
-		
 		// 違う攻撃判定だったらダメージ
 		if (hitAttackName != object.GetTags()[0])
 		{
@@ -285,7 +283,7 @@ void WeakEnemy::Hit(const GameObject& object, const MelLib::ShapeType3D collisio
 
 			// 吹っ飛ばし処理
 			// 後で1フレーム置いてNONEに切り替えるようにする
-			if (pPlayer->GetPlayerAttackEffect() == AttackEffect::BE_BLOWN_AWAY || typeid(object) == typeid(JumpAttack))
+			if (pPlayer->GetPlayerAttackEffect() == AttackEffect::BE_BLOWN_AWAY)
 			{
 				FallStart(0.6f);
 				currentThisAttackEffect = AttackEffect::BE_BLOWN_AWAY;
@@ -304,6 +302,42 @@ void WeakEnemy::Hit(const GameObject& object, const MelLib::ShapeType3D collisio
 			}
 		}
 	}
+	else if (typeid(object) == typeid(JumpAttack)) 
+	{
+		MelLib::Vector3 toCameraVec = (MelLib::Camera::Get()->GetCameraPosition() - GetPosition()).Normalize();
+		MelLib::Vector3 effectAddPos = MelLib::Vector3(0, 6, 0) + toCameraVec * 2.1f;
+		MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<SlushHitEffect>
+			(GetPosition() + effectAddPos));
+
+		// プレイヤーから現在の攻撃の攻撃力を取得し、体力を減らす
+		hp -= pPlayer->GetCurrentAttackPower();
+
+		isMuteki = true;
+
+
+		// 攻撃強制終了
+		isAttack = false;
+
+
+		// 0になったらやられ処理
+		if (hp <= 0)
+		{
+			state = ThisState::DEAD;
+
+			modelObjects["main"].SetAnimation("Dead");
+			modelObjects["main"].SetAnimationFrameStart();
+			modelObjects["main"].SetAnimationEndStopFlag(true);
+			return;
+		}
+
+
+		FallStart(0.6f);
+		currentThisAttackEffect = AttackEffect::BE_BLOWN_AWAY;
+		state = ThisState::BE_BLOWN_AWAY;
+		modelObjects["main"].SetAnimation("BeBlownAway");
+		modelObjects["main"].SetAnimationFrameStart();
+	}
+
 
 	if (typeid(object) == typeid(Stage)
 		&& collisionType == MelLib::ShapeType3D::SEGMENT)

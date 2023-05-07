@@ -98,7 +98,7 @@ Player::Player(const MelLib::Vector3& pos)
 	segment3DDatas["main"][0] = capsuleDatas["main"][0].GetSegment3DData();
 
 
-	const float SEGMENT_LENGTH = 30.0f;
+	const float SEGMENT_LENGTH = 10.0f;
 	const float SEGMENT_HEIGTH = 60.0f;
 	// •Ç‚Æ‚Ì”»’è
 	segment3DDatas["main"][1].SetPosition
