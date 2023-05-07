@@ -3,22 +3,24 @@
 #include"Player.h"
 class GamePlay : public MelLib::Scene
 {
-private:
-	Player* pPlayer = nullptr;
-
-	enum class GameState 
+public:
+	enum class GamePlayState
 	{
 		PLAY,
 		BOSS,
 		CLEAR,
 		GAME_OVER,
 	};
-	GameState gameState = GameState::PLAY;
-	
+
+
+private:
+	Player* pPlayer = nullptr;
+
+
 	MelLib::FrameTimer crealFadeStartTimer;
 	MelLib::FrameTimer gameOverFadeStartTimer;
 
-
+	static GamePlayState gameState;
 private:
 	void CheckClear();
 	void CheckGameOver();
@@ -34,5 +36,7 @@ public:
 	void Draw()override;
 	void Finalize()override;//èIóπèàóù
 	Scene* GetNextScene()override;//éüÇÃÉVÅ[Éì
+
+	static GamePlayState GetState() { return gameState; }
 };
 

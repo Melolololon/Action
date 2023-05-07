@@ -237,13 +237,12 @@ void WeakEnemy::Hit(const GameObject& object, const MelLib::ShapeType3D collisio
 	std::string n = typeid(object).name();
 	if ((typeid(object) == typeid(PlayerSlush) || typeid(object) == typeid(JumpAttack))/*&& !isMuteki*/)
 	{
-		PlayerSlush::AttackType attackType = pPlayer->GetPlayerAttackType();
-		//if (state != ThisState::DEAD) 
+		
+		
 		// ˆá‚¤UŒ‚”»’è‚¾‚Á‚½‚çƒ_ƒ[ƒW
 		if (hitAttackName != object.GetTags()[0])
 		{
 			hitAttackName = object.GetTags()[0];
-			hitPlayerAttack = attackType;
 
 			MelLib::Vector3 toCameraVec = (MelLib::Camera::Get()->GetCameraPosition() - GetPosition()).Normalize();
 			MelLib::Vector3 effectAddPos = MelLib::Vector3(0, 6, 0) + toCameraVec * 2.1f;

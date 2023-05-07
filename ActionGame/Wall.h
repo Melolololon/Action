@@ -16,7 +16,9 @@ private:
 	// •Ç‚Ì”Ô†(’á‚¢‚â‚Â‚©‚çÁ‚¦‚Ä‚¢‚­)
 	MelLib::GuiInt wallNum;
 
+	bool deleteFlag = false;
 public:
+
 	static void LoadResources();
 
 	Wall();

@@ -25,6 +25,8 @@
 
 #include"EnemyDeadCounter.h"
 
+GamePlay::GamePlayState GamePlay::gameState = GamePlay::GamePlayState::PLAY;
+
 void GamePlay::CheckClear()
 {
 	
@@ -32,18 +34,18 @@ void GamePlay::CheckClear()
 
 void GamePlay::CheckGameOver()
 {
-	if (pPlayer->GetHP() <= 0)gameState = GameState::GAME_OVER;
+	if (pPlayer->GetHP() <= 0)gameState = GamePlayState::GAME_OVER;
 }
 
 void GamePlay::Play()
 {
 	// ボス戦移行
-
+	if(Boss::CheckStateBattle())gameState = GamePlayState::BOSS;
 
 	// ボス戦
 	if (BossAliveChecker::GetInstance()->GetBossDeadFlag())
 	{
-		gameState = GameState::CLEAR;
+		gameState = GamePlayState::CLEAR;
 		crealFadeStartTimer.SetStopFlag(false);
 	}
 }
@@ -111,7 +113,7 @@ void GamePlay::Initialize()
 	gameOverFadeStartTimer.SetMaxTime(60 * 0.5);
 	crealFadeStartTimer.SetMaxTime(60 * 0.5f);
 
-	gameState = GameState::PLAY;
+	gameState = GamePlayState::PLAY;
 }
 
 void GamePlay::Update()
@@ -125,7 +127,7 @@ void GamePlay::Update()
 
 	if (pPlayer->GetHP() <= 0)
 	{
-		gameState = GamePlay::GameState::GAME_OVER;
+		gameState = GamePlay::GamePlayState::GAME_OVER;
 		gameOverFadeStartTimer.SetStopFlag(false);
 	}
 
@@ -135,10 +137,10 @@ void GamePlay::Update()
 
 	switch (gameState)
 	{
-	case GamePlay::GameState::CLEAR:
+	case GamePlay::GamePlayState::CLEAR:
 		Clear();
 		break;
-	case GamePlay::GameState::GAME_OVER:
+	case GamePlay::GamePlayState::GAME_OVER:
 		GameOver();
 		break;
 	default:

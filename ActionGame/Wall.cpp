@@ -1,11 +1,13 @@
 #include "Wall.h"
 #include "Game.h"
 #include"EnemyDeadCounter.h"
+#include"GamePlay.h"
 
 // static変数でカウントして、特定の位置に壁出す?
 
 MelLib::ADSAMaterial Wall::material;
 unsigned int Wall::wallSetCount;
+
 
 void Wall::LoadResources()
 {
@@ -55,6 +57,18 @@ void Wall::Initialize()
 
 void Wall::Update()
 {
+	// 仮
+	if (deleteFlag)
+	{
+		// ボス戦で壁復活
+		if (GamePlay::GetState() == GamePlay::GamePlayState::BOSS) 
+		{
+			deleteFlag = false;
+			collisionFlag.board = true;
+		}
+		return;
+	}
+
 	// 画像のスクロール
 	static const float AREA_SCROLL_SPEED = 0.01f;
 
@@ -65,11 +79,18 @@ void Wall::Update()
 	/*wallSpr.SetDrawLeftUpPosition(drawAreaLeftUp);
 	wallSpr.SetDrawRigthDownPosition(drawAreaRightDown);*/
 
-	if (wallNum.GetValue() <= EnemyDeadCounter::GetInstance()->GetCount())eraseManager = true;
+	if (wallNum.GetValue() <= EnemyDeadCounter::GetInstance()->GetCount() && GamePlay::GetState() != GamePlay::GamePlayState::BOSS)
+	{
+		deleteFlag = true;
+		collisionFlag.board = false;
+	}
+
 }
 
 void Wall::Draw()
 {
+	if (deleteFlag)return;
+
 	//wallSpr.Draw();
 	AllDraw();
 }

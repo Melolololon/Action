@@ -15,6 +15,7 @@
 #include"BossAliveChecker.h"
 
 Player* Boss::pPlayer;
+Boss* Boss::pBoss;
 
 void Boss::Move()
 {
@@ -226,6 +227,8 @@ Boss::Boss()
 
 	tags.push_back("Enemy");
 	tags.push_back("Boss");
+
+	pBoss = this;
 }
 
 std::shared_ptr<MelLib::GameObject> Boss::GetNewPtr()

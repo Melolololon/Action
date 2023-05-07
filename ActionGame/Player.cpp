@@ -761,6 +761,7 @@ void Player::CreateAttackSlush()
 	const int CURRENT_FRAME = modelObjects["main"].GetAnimationFrame();
 	const int MAX_FRAME = modelObjects["main"].GetAnimationFrameCount();
 	bool addFrame = false;
+
 	// 攻撃アニメーションは全部2倍速だからCURRENT_FRAMEのifは偶数にする
 	switch (currentAttack)
 	{
@@ -1260,40 +1261,6 @@ void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionTy
 		MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<RecoveryEffect>(GetPosition()));
 	}
 
-	//if (typeid(object) == typeid(Wall) 
-	//	&& collisionType == MelLib::ShapeType3D::SEGMENT)
-	//{
-	//	
-
-
-	////	MelLib::BoardData board = GetHitBoardData();
-	////	MelLib::Vector3 boardNormal(board.GetNormal());
-	////	MelLib::Vector3 moveVector = GetPosition() - prePos;
-
-	////	// テスト
-	/////*	boardNormal = MelLib::Vector3(0.5,0,-0.5).Normalize();
-	////	moveVector = MelLib::Vector3(-0.5, 0, 0.5);*/
-
-	////	//// 進行方向と一致で反転
-	////	if (std::signbit(boardNormal.x) == std::signbit(moveVector.x))boardNormal.x *= -1;
-	////	if (std::signbit(boardNormal.z) == std::signbit(moveVector.z))boardNormal.z *= -1;
-
-	////	float max = abs(boardNormal.x) + abs(boardNormal.z);
-	////	float hirituX = abs(boardNormal.x) / max;
-	////	float hirituZ = abs(boardNormal.z) / max;
-
-	////	//float length = boardNormal.Length();
-	////	float sum = abs(moveVector.x) + abs(moveVector.z);
-	////	MelLib::Vector3 addPos(sum * hirituX, 0, sum * hirituZ);
-
-	////	// 法線に応じて向きを変える
-	////	if (std::signbit(boardNormal.x))addPos.x *= -1;
-	////	if (std::signbit(boardNormal.z))addPos.z *= -1;
-	////	
-
-	////	AddPosition(addPos);
-
-	//}
 
 	// 攻撃を受けた時(体力減算はEnemyAttack側で行ってる)
 	if (!isMuteki)
@@ -1318,12 +1285,6 @@ void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionTy
 				else modelObjects["main"].SetAnimation("Stun");
 			}
 
-
-			
-
-			/*MelLib::Vector3 enemyToPlayer = GetPosition() - object.GetPosition();
-			enemyToPlayer = enemyToPlayer.Normalize();
-			AddPosition(-enemyToPlayer * 0.3f);*/
 		}
 
 		// 吹っ飛び
