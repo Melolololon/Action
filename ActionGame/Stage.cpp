@@ -88,7 +88,7 @@ void Stage::Initialize()
 	// ここメッシュ名を指定して呼び出せるようにする
 	modelObjects["stage"].GetModelTriangleData(stageCollision);
 
-	size_t resizeNum = stageCollision[0].size();
+	size_t stageTriSize = stageCollision[0].size();
 	
 	//// ステージに合わせて拡縮しないといけない
 	//std::vector<std::vector<MelLib::TriangleData>>stageColCollision;
@@ -103,17 +103,37 @@ void Stage::Initialize()
 	//	resizeNum += stageColCollision[0].size();
 	//}
 
-	triangleDatas["main"].resize(resizeNum);
-	for (size_t i = 0; i < stageCollision[0].size(); i++)
-	{
-		triangleDatas["main"][i] = stageCollision[0][i];
-	}
-
 	//for (size_t i = 0; i < stageColCollision[0].size(); i++)
 	//{
 	//	triangleDatas["main"][i + stageCollision[0].size()] = stageCollision[0][i];
 	//}
 
+
+	//triangleDatas["main"].resize(stageTriSize);
+
+
+	modelObjects["stageCollision"].SetPosition(modelObjects["stage"].GetPosition());
+	modelObjects["stageCollision"].SetAngle(modelObjects["stage"].GetAngle());
+	modelObjects["stageCollision"].SetScale(modelObjects["stage"].GetScale());
+
+	std::vector<std::vector<MelLib::TriangleData>> stageWallColl;
+	modelObjects["stageCollision"].GetModelTriangleData(stageWallColl);
+
+	// 透明な壁の判定数
+	int wallCollNum = stageWallColl[0].size();
+
+	// 判定追加
+	triangleDatas["main"].reserve(stageCollision[0].size() + wallCollNum);
+	for (int i = 0; i < stageTriSize; i++)
+	{
+		if (stageCollision[0][i].GetNormal().y >= 0.6f)triangleDatas["main"].push_back(stageCollision[0][i]);
+	}
+
+	for (int i = 0; i < wallCollNum; i++)
+	{
+		triangleDatas["main"].push_back(stageWallColl[0][i]);
+	}
+	
 #pragma region 旧
 	//MelLib::ModelData* pColl = MelLib::ModelData::Get("wallCollision" + std::to_string(STAGE_NUM));
 

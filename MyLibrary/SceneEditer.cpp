@@ -338,10 +338,7 @@ void MelLib::SceneEditer::LoadEditData(const std::string& sceneName)
 		file.read(reinterpret_cast<char*>(&scale), sizeof(Vector3));
 		pObject->SetScale(scale);
 
-
-
-		// 管理クラスに追加
-		GameObjectManager::GetInstance()->AddObject(pObject);
+		if (!editorFlag && !releaseEdit)GameObjectManager::GetInstance()->AddObject(pObject);
 
 		char c;
 		file.read(&c, 1);
@@ -924,9 +921,6 @@ void MelLib::SceneEditer::Update()
 			// GUIのコピー
 			// これやるなら上のコピーいらないかも
 			GuiValueManager::GetInstance()->CopyGuiValue(pEditSelectObject->GetObjectName(), pObject->GetObjectName());
-
-			// 追加
-			//GameObjectManager::GetInstance()->AddObject(pObject);
 
 			// 全て削除
 			// (登録したオブジェクトのコンストラクタにオブジェクトを追加する処理がある場合、追加されたオブジェクトが表示されるため)

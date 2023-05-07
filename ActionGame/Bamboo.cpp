@@ -26,6 +26,6 @@ void Bamboo::Hit(const GameObject& object, const MelLib::ShapeType3D collisionTy
 	MelLib::ModelData* pFront = nullptr;
 	MelLib::ModelData* pBack = nullptr;
 	//MeshCat(object, pFront, pBack);
-	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<Bamboo>(GetPosition(), pFront));
-	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<Bamboo>(GetPosition(), pBack));
+	/*MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<Bamboo>(GetPosition(), pFront));
+	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<Bamboo>(GetPosition(), pBack));*/
 }

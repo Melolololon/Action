@@ -34,7 +34,7 @@ bool Sprite2DBase::Initialize(const int winWidth, const int winHeight)
 	data.cullMode = CullMode::NONE;
 	data.depthTest = false;
 	data.drawMode = DrawMode::SOLID;
-	
+
 	ShaderDataSet set =
 	{
 		{ L"../MyLibrary/SpriteVertexShader.hlsl","VSmain","vs_5_0" },
@@ -43,7 +43,7 @@ bool Sprite2DBase::Initialize(const int winWidth, const int winHeight)
 		{ L"NULL","","" },
 		{ L"../MyLibrary/SpritePixelShader.hlsl","PSmain","ps_5_0" }
 	};
-	
+
 	auto result = defaultPipeline.CreatePipeline
 	(
 		data,
@@ -138,7 +138,7 @@ void Sprite2DBase::MatrixMap(Texture* texture)
 	constBuffer->Map(0, nullptr, (void**)&constBufferData);
 
 	DirectX::XMMATRIX matWorld = DirectX::XMMatrixIdentity();
-	
+
 
 	Vector2 size;
 	if (texture)
@@ -183,9 +183,9 @@ void Sprite2DBase::MatrixMap(Texture* texture)
 	// 回転前に移動
 	Vector2 textureSize = 1.0f;
 	if (texture)textureSize = texture->GetTextureSize();
-	
+
 	// rotationPoint = 0の時に左上回転になるように動かす
-	if (texture) 
+	if (texture)
 	{
 		matWorld *= DirectX::XMMatrixTranslation(-rotationPoint.x + textureSize.x / 2, -rotationPoint.y + textureSize.y / 2, 0.0f);
 	}
@@ -202,7 +202,7 @@ void Sprite2DBase::MatrixMap(Texture* texture)
 	float width = textureSize.x;
 	float height = textureSize.y;
 	width /= 2;
-	height /= 2; 
+	height /= 2;
 
 	// 座標の数値の部分に左上が来るようにセットし、scalingPoint分ずらして疑似的な拡縮位置をずらす処理を行う
 	/*matWorld *= DirectX::XMMatrixTranslation
@@ -213,12 +213,12 @@ void Sprite2DBase::MatrixMap(Texture* texture)
 	);*/
 
 	MelLib::Vector2 moveVec;
-	if (pTexture) 
+	if (pTexture)
 	{
 		MelLib::Vector2 areaSize = drawRightDownPosition - drawLeftUpPosition;
 		moveVec = pTexture->GetTextureSize() - areaSize;
 	}
-	else 
+	else
 	{
 		MelLib::Vector2 areaSize = drawRightDownPosition - drawLeftUpPosition;
 		moveVec = constData.scale - areaSize;
@@ -231,7 +231,7 @@ void Sprite2DBase::MatrixMap(Texture* texture)
 		0.0f
 	);
 
-	
+
 
 	//中心基準拡縮
 	/*matWorld *= DirectX::XMMatrixTranslation

@@ -138,7 +138,7 @@ void GamePlay::Initialize()
 
 void GamePlay::Update()
 {
-	if(MelLib::Input::KeyTrigger(DIK_A))MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<GameOverSprite>());
+	if(MelLib::Input::KeyTrigger(DIK_A))MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<ClearSprite>());
 
 	MelLib::GameObjectManager::GetInstance()->Update();
 	Fade::GetInstance()->Update();
