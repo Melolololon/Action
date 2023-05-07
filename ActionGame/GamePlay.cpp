@@ -23,6 +23,8 @@
 
 #include"HPGauge.h"
 
+#include"ClearSprite.h"
+
 #include"EnemyDeadCounter.h"
 
 GamePlay::GamePlayState GamePlay::gameState = GamePlay::GamePlayState::PLAY;
@@ -45,9 +47,18 @@ void GamePlay::Play()
 	// ボス戦
 	if (BossAliveChecker::GetInstance()->GetBossDeadFlag())
 	{
+		// クリア追加
+		if (gameState != GamePlayState::CLEAR) 
+		{
+			MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<ClearSprite>());
+		}
+
 		gameState = GamePlayState::CLEAR;
 		crealFadeStartTimer.SetStopFlag(false);
+
 	}
+
+
 }
 
 void GamePlay::Clear()
@@ -114,6 +125,8 @@ void GamePlay::Initialize()
 	crealFadeStartTimer.SetMaxTime(60 * 0.5f);
 
 	gameState = GamePlayState::PLAY;
+
+	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<ClearSprite>());
 }
 
 void GamePlay::Update()
