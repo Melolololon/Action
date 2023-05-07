@@ -139,11 +139,25 @@ void Sprite2DBase::MatrixMap(Texture* texture)
 
 	DirectX::XMMATRIX matWorld = DirectX::XMMatrixIdentity();
 	
+
+	Vector2 size;
+	if (texture)
+	{
+		//matWorld *= DirectX::XMMatrixTranslation(rotationPoint.x - textureSize.x / 2, rotationPoint.y - textureSize.y / 2, 0.0f);
+		size = texture->GetTextureSize();
+	}
+	else
+	{
+		size = constData.scale;
+		//matWorld *= DirectX::XMMatrixTranslation(rotationPoint.x - constData.scale.x / 2, rotationPoint.y - constData.scale.y / 2, 0.0f);
+	}
+
 	const Vector2 MOVE_VECTOR = Vector2
 	(
-		constData.position.x * (scalingPoint.x - 0.5f),
-		constData.position.y * (scalingPoint.y - 0.5f)
+		size.x * (scalingPoint.x - 0.5f),
+		size.y * (scalingPoint.y - 0.5f)
 	);
+
 	// à⁄ìÆ
 	matWorld *= DirectX::XMMatrixTranslation
 	(
@@ -197,12 +211,27 @@ void Sprite2DBase::MatrixMap(Texture* texture)
 		constData.position.y + (height * constData.scale.y) + (vertices[0].pos.y - height) - (scalingPoint.y * (constData.scale.y - 1)),
 		0.0f
 	);*/
+
+	MelLib::Vector2 moveVec;
+	if (pTexture) 
+	{
+		MelLib::Vector2 areaSize = drawRightDownPosition - drawLeftUpPosition;
+		moveVec = pTexture->GetTextureSize() - areaSize;
+	}
+	else 
+	{
+		MelLib::Vector2 areaSize = drawRightDownPosition - drawLeftUpPosition;
+		moveVec = constData.scale - areaSize;
+	}
+
 	matWorld *= DirectX::XMMatrixTranslation
 	(
-		constData.position.x,
-		constData.position.y,
+		constData.position.x - moveVec.x / 2,
+		constData.position.y - moveVec.y / 2,
 		0.0f
 	);
+
+	
 
 	//íÜêSäÓèÄägèk
 	/*matWorld *= DirectX::XMMatrixTranslation

@@ -10,12 +10,12 @@ ClearSprite::ClearSprite()
 	sprites["main"].Create(MelLib::Texture::Get("Clear"));
 	sprites["main"].SetScale(MelLib::Vector2(3,3));
 	sprites["main"].SetScalingPoint(MelLib::Vector2(0.5f, 0.5f));
-	sprites["main"].SetPosition(MelLib::Vector2(700, 380));
+	sprites["main"].SetPosition(MelLib::Vector2(650, 380));
 	
 	sprites["zanzo"].Create(MelLib::Texture::Get("Clear"));
 	sprites["zanzo"].SetScale(MelLib::Vector2(1,1));
 	sprites["zanzo"].SetScalingPoint(MelLib::Vector2(0.5f, 0.5f));
-	sprites["zanzo"].SetPosition(MelLib::Vector2(700, 380));
+	sprites["zanzo"].SetPosition(MelLib::Vector2(650, 380));
 }
 
 void ClearSprite::Update()

@@ -24,6 +24,7 @@
 #include"HPGauge.h"
 
 #include"ClearSprite.h"
+#include"GameOverSprite.h"
 
 #include"EnemyDeadCounter.h"
 
@@ -71,6 +72,12 @@ void GamePlay::Clear()
 void GamePlay::GameOver()
 {
 	if (gameOverFadeStartTimer.GetMaxOverFlag())Fade::GetInstance()->Start();
+
+	// クリア追加
+	if (gameOverFadeStartTimer.GetNowTime() == 60.0f * 2.0f)
+	{
+		MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<GameOverSprite>());
+	}
 }
 
 void GamePlay::Initialize()
@@ -122,7 +129,7 @@ void GamePlay::Initialize()
 	//MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<HPGauge>());
 
 	// 時間は仮設定
-	gameOverFadeStartTimer.SetMaxTime(60 * 0.5f);
+	gameOverFadeStartTimer.SetMaxTime(60 * 5.0f);
 	crealFadeStartTimer.SetMaxTime(60 * 5.0f);
 
 	gameState = GamePlayState::PLAY;
@@ -131,12 +138,7 @@ void GamePlay::Initialize()
 
 void GamePlay::Update()
 {
-	if (MelLib::Input::KeyTrigger(DIK_A)) 
-	{
-		MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<ClearSprite>());
-	}
-
-	// 敵が死んだらカウント増やし、カウントが一定以上で壁を消したり、クリアさせたりすればいい?
+	if(MelLib::Input::KeyTrigger(DIK_A))MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<GameOverSprite>());
 
 	MelLib::GameObjectManager::GetInstance()->Update();
 	Fade::GetInstance()->Update();

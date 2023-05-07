@@ -27,6 +27,7 @@
 #include"WeakEnemy.h"
 
 #include"ClearSprite.h"
+#include"GameOverSprite.h"
 
 // ÉVÅ[Éì
 #include"SceneManager.h"
@@ -100,7 +101,8 @@ void Game::Initialize()
 
 	RecoveryEffect::LoadResources();
 
-	ClearSprite::LoadResources();
+	ClearSprite::LoadResources(); 
+	GameOverSprite::LoadResources();
 
 	for (int i = 0; i < 4; i++) 
 	{

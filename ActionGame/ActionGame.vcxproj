@@ -173,6 +173,7 @@
     <ClCompile Include="Fade.cpp" />
     <ClCompile Include="Floor.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameOverSprite.cpp" />
     <ClCompile Include="GamePlay.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="GameItem.cpp" />
@@ -229,6 +230,7 @@
     <ClInclude Include="Fade.h" />
     <ClInclude Include="Floor.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameOverSprite.h" />
     <ClInclude Include="GamePlay.h" />
     <ClInclude Include="Ground.h" />
     <ClInclude Include="GameItem.h" />

@@ -130,7 +130,7 @@ void Sprite2D::Draw(const std::string& rtName)
 	// 頂点座標に表示範囲を適応
 	vertices[0].pos = { -areaSize.x / 2 , areaSize.y / 2, 0 };
 	vertices[1].pos = { -areaSize.x / 2 ,-areaSize.y / 2,0 };
-	vertices[2].pos = { areaSize.x / 2  ,   areaSize.y / 2 ,0 };
+	vertices[2].pos = { areaSize.x / 2  , areaSize.y / 2 ,0 };
 	vertices[3].pos = { areaSize.x / 2  , -areaSize.y / 2,0 };
 #pragma endregion
 

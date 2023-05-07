@@ -14,7 +14,7 @@ HPGauge::HPGauge()
 {
 	sprites["gauge"].Create(MelLib::Texture::Get("hpGauge"));
 	sprites["gauge"].SetPosition(MelLib::Vector2(30,30));
-
+	
 }
 
 void HPGauge::Update()
