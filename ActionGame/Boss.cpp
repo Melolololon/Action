@@ -193,7 +193,7 @@ void Boss::MoveToPlayer(const float speed)
 
 void Boss::LoadResources()
 {
-	MelLib::ModelData::Load("Resources/Model/Boss/Boss.fbx",true,"boss");
+	MelLib::ModelData::Load("Resources/Model/Boss/Boss.fbx", false,"boss");
 }
 
 Boss::Boss()

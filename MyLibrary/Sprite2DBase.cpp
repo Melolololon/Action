@@ -139,12 +139,28 @@ void Sprite2DBase::MatrixMap(Texture* texture)
 
 	DirectX::XMMATRIX matWorld = DirectX::XMMatrixIdentity();
 	
+	// ˆÚ“®
+	matWorld *= DirectX::XMMatrixTranslation
+	(
+		constData.position.x + (constData.position.x * scalingPoint.x),
+		constData.position.y + (constData.position.y * scalingPoint.y),
+		0.0f
+	);
+
 	// Šgk
 	matWorld *= DirectX::XMMatrixScaling
 	(
 		constData.scale.x,
 		constData.scale.y,
 		1
+	);
+
+	// –ß‚·
+	matWorld *= DirectX::XMMatrixTranslation
+	(
+		constData.position.x - (constData.position.x * scalingPoint.x),
+		constData.position.y - (constData.position.y * scalingPoint.y),
+		0.0f
 	);
 
 	// ‰ñ“]‘O‚ÉˆÚ“®
@@ -172,13 +188,18 @@ void Sprite2DBase::MatrixMap(Texture* texture)
 	height /= 2; 
 
 	// À•W‚Ì”’l‚Ì•”•ª‚É¶ã‚ª—ˆ‚é‚æ‚¤‚ÉƒZƒbƒg‚µAscalingPoint•ª‚¸‚ç‚µ‚Ä‹^Ž—“I‚ÈŠgkˆÊ’u‚ð‚¸‚ç‚·ˆ—‚ðs‚¤
-	matWorld *= DirectX::XMMatrixTranslation
+	/*matWorld *= DirectX::XMMatrixTranslation
 	(
 		constData.position.x + (width * constData.scale.x) + (vertices[2].pos.x - width) - (scalingPoint.x * (constData.scale.x - 1)),
 		constData.position.y + (height * constData.scale.y) + (vertices[0].pos.y - height) - (scalingPoint.y * (constData.scale.y - 1)),
 		0.0f
+	);*/
+	matWorld *= DirectX::XMMatrixTranslation
+	(
+		constData.position.x,
+		constData.position.y,
+		0.0f
 	);
-
 
 	//’†SŠî€Šgk
 	/*matWorld *= DirectX::XMMatrixTranslation
@@ -188,15 +209,15 @@ void Sprite2DBase::MatrixMap(Texture* texture)
 		0.0f
 	);*/
 
-	// –ß‚·
-	if (texture)
-	{
-		matWorld *= DirectX::XMMatrixTranslation(rotationPoint.x - textureSize.x / 2, rotationPoint.y - textureSize.y / 2, 0.0f);
-	}
-	else
-	{
-		matWorld *= DirectX::XMMatrixTranslation(rotationPoint.x - constData.scale.x / 2, rotationPoint.y - constData.scale.y / 2, 0.0f);
-	}
+	//// –ß‚·
+	//if (texture)
+	//{
+	//	matWorld *= DirectX::XMMatrixTranslation(rotationPoint.x - textureSize.x / 2, rotationPoint.y - textureSize.y / 2, 0.0f);
+	//}
+	//else
+	//{
+	//	matWorld *= DirectX::XMMatrixTranslation(rotationPoint.x - constData.scale.x / 2, rotationPoint.y - constData.scale.y / 2, 0.0f);
+	//}
 
 
 	constBufferData->mat = matWorld * cameraMatrix;

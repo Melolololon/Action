@@ -30,8 +30,8 @@ void Stage::LoadResources(unsigned int stageNum)
 	res = MelLib::ModelData::Load("Resources/Model/Stage/Stage_" + STAGE_NUM_STR + ".obj",true,"stage" + STAGE_NUM_STR);
 	res = MelLib::ModelData::Load("Resources/Model/Stage/WallCollision_" + STAGE_NUM_STR + ".obj",true,"wallCollision" + STAGE_NUM_STR);*/
 
-	bool res = MelLib::ModelData::Load("Resources/Model/Stage/StageCollision_" + STAGE_NUM_STR + ".obj", true, "stageCollision" + STAGE_NUM_STR);
-	res = MelLib::ModelData::Load("Resources/Model/Stage/Stage_" + STAGE_NUM_STR + ".obj", true, "stage" + STAGE_NUM_STR);
+	bool res = MelLib::ModelData::Load("Resources/Model/Stage/StageCollision_" + STAGE_NUM_STR + ".obj", false, "stageCollision" + STAGE_NUM_STR);
+	res = MelLib::ModelData::Load("Resources/Model/Stage/Stage_" + STAGE_NUM_STR + ".obj", false, "stage" + STAGE_NUM_STR);
 }
 
 Stage::Stage(const unsigned int stageNum)

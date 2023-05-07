@@ -4,7 +4,7 @@ Player* BossAttack::pPlayer;
 
 void BossAttack::LoadResources()
 {
-	bool r = MelLib::ModelData::Load("Resources/Model/Boss/BossAttack/BossAttack.obj", true, "BossAttack");
+	bool r = MelLib::ModelData::Load("Resources/Model/Boss/BossAttack/BossAttack.obj", false, "BossAttack");
 }
 
 BossAttack::BossAttack(const MelLib::Vector3& pos)

@@ -4,9 +4,12 @@ class ClearSprite
 	: public MelLib::GameObject2D
 {
 private:
-
+	float alphaMul = 0.0f;
+	float zanzoAlphaMul = 100.0f;
 
 public:
+	static void LoadResources();
+
 	//コンストラクタ
 	ClearSprite();
 	//デストラクタ

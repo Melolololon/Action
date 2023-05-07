@@ -26,6 +26,8 @@
 #include"EnemySpaunPoint.h"
 #include"WeakEnemy.h"
 
+#include"ClearSprite.h"
+
 // ÉVÅ[Éì
 #include"SceneManager.h"
 #include"SceneEditer.h"
@@ -97,6 +99,8 @@ void Game::Initialize()
 	Water::LoadResources();
 
 	RecoveryEffect::LoadResources();
+
+	ClearSprite::LoadResources();
 
 	for (int i = 0; i < 4; i++) 
 	{
