@@ -51,7 +51,7 @@ std::unordered_map<Player::ActionType, MelLib::PadButton> Player::keyConfigData 
 
 };
 
-const float Player::JUMP_POWER = 4.0f;
+const float Player::JUMP_POWER = 3.0f;
 const float Player::GROUND_HUND_VELOCITY = -30.0f;
 Player* Player::pPlayer = nullptr;
 
@@ -713,7 +713,7 @@ void Player::SetAttackType()
 			modelObjects["main"].SetAnimation("Attack_Normal_1");
 
 		}
-		else if (GetIsFall() && abs(GetPosition().y - jumpStartPosition.y) >= 50 )// ‹ó’†UŒ‚
+		else if (GetIsFall() && abs(GetPosition().y - jumpStartPosition.y) >= 30 )// ‹ó’†UŒ‚
 		{
 			currentAttack = PlayerSlush::AttackType::JUMP;
 			FallEnd();
