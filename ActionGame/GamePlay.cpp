@@ -47,11 +47,7 @@ void GamePlay::Play()
 	// ボス戦
 	if (BossAliveChecker::GetInstance()->GetBossDeadFlag())
 	{
-		// クリア追加
-		if (gameState != GamePlayState::CLEAR) 
-		{
-			MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<ClearSprite>());
-		}
+		
 
 		gameState = GamePlayState::CLEAR;
 		crealFadeStartTimer.SetStopFlag(false);
@@ -65,6 +61,11 @@ void GamePlay::Clear()
 {
 	if (crealFadeStartTimer.GetMaxOverFlag())Fade::GetInstance()->Start();
 
+	// クリア追加
+	if (crealFadeStartTimer.GetNowTime() == 60.0f * 2.0f)
+	{
+		MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<ClearSprite>());
+	}
 }
 
 void GamePlay::GameOver()
@@ -121,16 +122,20 @@ void GamePlay::Initialize()
 	//MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<HPGauge>());
 
 	// 時間は仮設定
-	gameOverFadeStartTimer.SetMaxTime(60 * 0.5);
-	crealFadeStartTimer.SetMaxTime(60 * 0.5f);
+	gameOverFadeStartTimer.SetMaxTime(60 * 0.5f);
+	crealFadeStartTimer.SetMaxTime(60 * 5.0f);
 
 	gameState = GamePlayState::PLAY;
 
-	MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<ClearSprite>());
 }
 
 void GamePlay::Update()
 {
+	if (MelLib::Input::KeyTrigger(DIK_A)) 
+	{
+		MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<ClearSprite>());
+	}
+
 	// 敵が死んだらカウント増やし、カウントが一定以上で壁を消したり、クリアさせたりすればいい?
 
 	MelLib::GameObjectManager::GetInstance()->Update();
