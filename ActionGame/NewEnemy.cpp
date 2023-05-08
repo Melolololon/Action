@@ -66,48 +66,58 @@ void NewEnemy::Dead()
 
 void NewEnemy::AddParticle()
 {
-	return;
 
-	// 0じゃなかったらreturn
-	if(addDamagePartucleAddTimer.GetNowTime() != 0)
-	{
-		return;
-	}
-	addDamagePartucleAddTimer.SetStopFlag(false);
 
-	// 自分と相手の最近点(相手に一番近い点)を取得
-	const MelLib::CapsuleCalcResult RESULT = GetCapsuleCalcResult();
-	const MelLib::Vector3 MY_CAPSULE_NEAR_POINT = RESULT.segment3DCalcResult.thisCapsuleLineClosestPoint;
-	const MelLib::Vector3 OTHER_CAPSYLE_NEAR_POINT = RESULT.segment3DCalcResult.otherCapsuleLineClosestPoint;
+	//// 自分と相手の最近点(相手に一番近い点)を取得
+	//const MelLib::CapsuleCalcResult RESULT = GetCapsuleCalcResult();
+	//const MelLib::Vector3 MY_CAPSULE_NEAR_POINT = RESULT.segment3DCalcResult.thisCapsuleLineClosestPoint;
+	//const MelLib::Vector3 OTHER_CAPSYLE_NEAR_POINT = RESULT.segment3DCalcResult.otherCapsuleLineClosestPoint;
 
-	// 発射方向を計算
-	const MelLib::Vector3 MOVE_VECTOR = OTHER_CAPSYLE_NEAR_POINT - MY_CAPSULE_NEAR_POINT;
+	//// 発射方向を計算
+	//const MelLib::Vector3 MOVE_VECTOR = OTHER_CAPSYLE_NEAR_POINT - MY_CAPSULE_NEAR_POINT;
 
-	const int PARTICLE_NUM =  5;
+	//const int PARTICLE_NUM =  4;
+	//for (int i = 0; i < PARTICLE_NUM; i++)
+	//{
+	//	MelLib::GameObjectManager::GetInstance()->AddObject
+	//	(
+	//		std::make_shared<EnemyDamageParticle>(MY_CAPSULE_NEAR_POINT, MOVE_VECTOR)
+	//	);
+	//}
+
+	const int PARTICLE_NUM =  4;
 	for (int i = 0; i < PARTICLE_NUM; i++)
 	{
 		MelLib::GameObjectManager::GetInstance()->AddObject
 		(
-			std::make_shared<EnemyDamageParticle>(MY_CAPSULE_NEAR_POINT, MOVE_VECTOR)
+			std::make_shared<EnemyDamageParticle>(GetPosition(), 
+				MelLib::Vector3(
+				MelLib::Random::GetRandomFloatNumberRangeSelect(-2,2,1),
+				MelLib::Random::GetRandomFloatNumberRangeSelect(1.0f,3.0f,2),
+				MelLib::Random::GetRandomFloatNumberRangeSelect(-2,2,1)))
 		);
 	}
 }
 
 void NewEnemy::CheckParticleTimer()
 {
-	// 時間がMAX超えたらリセット
-	if (addDamagePartucleAddTimer.GetMaxOverFlag())
-	{
-		addDamagePartucleAddTimer.ResetTimeZero();
+	//// 時間がMAX超えたらリセット
+	//if (addDamagePartucleAddTimer.GetMaxOverFlag())
+	//{
+	//	addDamagePartucleAddTimer.ResetTimeZero();
 
-		addDamagePartucleAddTimer.SetStopFlag(true);
-	}
+	//	addDamagePartucleAddTimer.SetStopFlag(true);
+	//}
 }
 
 void NewEnemy::CheckMutekiEnd()
 {
 	// プレイヤーの攻撃が切り替わったら無敵終了
-	if (pPlayer->GetAttackChangeFrame())isMuteki = false;
+	if (mutekiTimer.GetMaxOverFlag())
+	{
+		isMuteki = false;
+		mutekiTimer.SetStopFlag(true);
+	}
 }
 
 void NewEnemy::CheckAttackTagDelete()
@@ -122,7 +132,8 @@ NewEnemy::NewEnemy(const std::string& name)
 	addDarknessEffectTimer.SetMaxTime(60.0f * 0.3);
 	addDarknessEffectTimer.SetStopFlag(false);
 
-	addDamagePartucleAddTimer.SetMaxTime(60.0f * 0.5f);
+	mutekiTimer.SetMaxTime(60 * 0.5f);
+
 	
 	deadEndTimer.SetMaxTime(60.0f * 0.75f);
 	hpGauge = std::make_unique<EnemyHPGauge>(hp);

@@ -16,6 +16,7 @@
 #include"Boss.h"
 #include"BossAttack.h"
 #include"Water.h"
+#include"EnemyDamageParticle.h"
 
 #include"ItemEffect.h"
 #include"RecoveryItem.h"
@@ -85,6 +86,7 @@ void Game::Initialize()
  	Player::LoadResources();
 
  	Stage::LoadResources(1);
+	Water::LoadResources();
 	SlushEffect::LoadResources();
 	HPGauge::LoadResources();
 	Wall::LoadResources();
@@ -97,7 +99,9 @@ void Game::Initialize()
 	Boss::LoadResources();
 	BossAttack::LoadResources();
 	RecoveryItem::LoadResources();
-	Water::LoadResources();
+	EnemyDamageParticle::LoadResources();
+
+
 
 	RecoveryEffect::LoadResources();
 

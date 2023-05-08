@@ -17,6 +17,7 @@ private:
     MelLib::FrameTimer deadTimer;
 
 public:
+
     EnemyDamageParticle(const MelLib::Vector3& pos , const MelLib::Vector3& vec);
     ~EnemyDamageParticle();
 

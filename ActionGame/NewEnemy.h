@@ -65,6 +65,7 @@ protected:
 	int hp = 10;
 
 	bool isMuteki = false;
+	MelLib::FrameTimer mutekiTimer;
 
 	// Ç±ÇÍè¡Ç∑
 	PlayerSlush::AttackType hitPlayerAttack = PlayerSlush::AttackType::NONE;

@@ -149,7 +149,7 @@ void WeakEnemy::Initialize()
 
 void WeakEnemy::Update()
 {
-	//CheckMutekiEnd();
+	CheckMutekiEnd();
 	CheckAttackTagDelete();
 
 	if (hitGround)FallStart(0.0f);
@@ -241,6 +241,8 @@ void WeakEnemy::Hit(const GameObject& object, const MelLib::ShapeType3D collisio
 		// 違う攻撃判定だったらダメージ
 		if (hitAttackName != object.GetTags()[0])
 		{
+			AddParticle();
+
 			hitAttackName = object.GetTags()[0];
 
 			MelLib::Vector3 toCameraVec = (MelLib::Camera::Get()->GetCameraPosition() - GetPosition()).Normalize();
@@ -303,8 +305,11 @@ void WeakEnemy::Hit(const GameObject& object, const MelLib::ShapeType3D collisio
 			}
 		}
 	}
-	else if (typeid(object) == typeid(JumpAttack)) 
+
+	if (typeid(object) == typeid(JumpAttack) && isMuteki) 
 	{
+
+
 		MelLib::Vector3 toCameraVec = (MelLib::Camera::Get()->GetCameraPosition() - GetPosition()).Normalize();
 		MelLib::Vector3 effectAddPos = MelLib::Vector3(0, 6, 0) + toCameraVec * 2.1f;
 		MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<SlushHitEffect>
@@ -314,7 +319,7 @@ void WeakEnemy::Hit(const GameObject& object, const MelLib::ShapeType3D collisio
 		hp -= pPlayer->GetCurrentAttackPower();
 
 		isMuteki = true;
-
+		mutekiTimer.SetStopFlag(false);
 
 		// 攻撃強制終了
 		isAttack = false;

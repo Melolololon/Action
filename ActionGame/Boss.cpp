@@ -135,7 +135,7 @@ void Boss::RollAttackUpdate()
 	if (FRAME == ROLL_START_FLAME)
 	{
 		MelLib::GameObjectManager::GetInstance()->AddObject
-		(std::make_shared<EnemyAttack>(10,modelObjects["main"],10.0f,EnemyAttack::AttackType::BE_BLOWN_AWAY));
+		(std::make_shared<EnemyAttack>(50,modelObjects["main"],10.0f,EnemyAttack::AttackType::BE_BLOWN_AWAY));
 	}
 
 	if (FRAME >= ROLL_START_FLAME && FRAME <= 56)
