@@ -40,6 +40,8 @@ protected:
 	void CheckParticleTimer();
 
 	void CheckMutekiEnd();
+
+	void CheckAttackTagDelete();
 protected:
 	
 	MelLib::FrameTimer deadEndTimer;

@@ -110,6 +110,11 @@ void NewEnemy::CheckMutekiEnd()
 	if (pPlayer->GetAttackChangeFrame())isMuteki = false;
 }
 
+void NewEnemy::CheckAttackTagDelete()
+{
+	if (modelObjects["main"].GetCurrentAnimationName() == "Stun" && modelObjects["main"].GetAnimationEndFlag())hitAttackName = "";
+}
+
 
 NewEnemy::NewEnemy(const std::string& name)
 	:GameObject(name)
@@ -122,6 +127,7 @@ NewEnemy::NewEnemy(const std::string& name)
 	deadEndTimer.SetMaxTime(60.0f * 0.75f);
 	hpGauge = std::make_unique<EnemyHPGauge>(hp);
 
+	EnemyDeadCounter::GetInstance()->AddEnemyCount();
 }
 
 void NewEnemy::Update()

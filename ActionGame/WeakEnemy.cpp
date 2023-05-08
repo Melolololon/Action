@@ -150,6 +150,7 @@ void WeakEnemy::Initialize()
 void WeakEnemy::Update()
 {
 	//CheckMutekiEnd();
+	CheckAttackTagDelete();
 
 	if (hitGround)FallStart(0.0f);
 

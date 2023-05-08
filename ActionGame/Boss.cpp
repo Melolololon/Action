@@ -238,13 +238,13 @@ std::shared_ptr<MelLib::GameObject> Boss::GetNewPtr()
 
 void Boss::Initialize()
 {
-	FallStart(0.0f);
+	
 
 	// ìñÇΩÇËîªíËÇÃçÏê¨
 	capsuleDatas["main"].resize(1);
 	capsuleDatas["main"][0].SetRadius(4.5f);
 	capsuleDatas["main"][0].GetRefSegment3DData().
-		SetPosition(MelLib::Value2<MelLib::Vector3>(GetPosition() + MelLib::Vector3(0, 25.0f, 0), GetPosition() + MelLib::Vector3(0,-1.0f, 0)));
+		SetPosition(MelLib::Value2<MelLib::Vector3>(GetPosition() + MelLib::Vector3(0, 25.0f, 0), GetPosition() + MelLib::Vector3(0,0.0f, 0)));
 
 	segment3DDatas["main"].resize(1);
 	segment3DDatas["main"][0].SetPosition(capsuleDatas["main"][0].GetSegment3DData().GetPosition());
@@ -258,12 +258,16 @@ void Boss::Initialize()
 
 void Boss::Update()
 {
+
+	FallStart(0.0f);
+	CalcMovePhysics();
+
 	// ÉvÉåÉCÉÑÅ[Ç∆ÇÃãóó£ÇåvéZ
 	float toPDis = MelLib::LibMath::CalcDistance3D(pPlayer->GetPosition(), GetPosition());
 
 	if (toPDis <= 200.0f)thisState = ThisState::BATTLE;
 
-	CalcMovePhysics();
+	
 	if (thisState == ThisState::OTHER)return;
 
 	modelObjects["main"].Update();
@@ -272,7 +276,7 @@ void Boss::Update()
 	// çUåÇÇµÇƒÇ»Ç©Ç¡ÇΩÇÁà⁄ìÆÇ∆âÒì]
 	if (currentState == Boss::CurrentState::NONE)
 	{
-		modelObjects["main"].SetAnimation("Move");
+		modelObjects["main"].SetAnimation("Work");
 		Rotate();
 	}
 

@@ -33,7 +33,7 @@ class EnemySpaunPoint :public MelLib::GameObject
 	bool isAttack = false;
 	unsigned int attackEnemyNum = 0;
 #pragma endregion
-
+	bool createEnemy = false;
 
 private:
 	bool CalcDistance();

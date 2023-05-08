@@ -48,8 +48,6 @@ void GamePlay::Play()
 	// ƒ{ƒXí
 	if (BossAliveChecker::GetInstance()->GetBossDeadFlag())
 	{
-		
-
 		gameState = GamePlayState::CLEAR;
 		crealFadeStartTimer.SetStopFlag(false);
 
@@ -138,7 +136,6 @@ void GamePlay::Initialize()
 
 void GamePlay::Update()
 {
-	if(MelLib::Input::KeyTrigger(DIK_A))MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<ClearSprite>());
 
 	MelLib::GameObjectManager::GetInstance()->Update();
 	Fade::GetInstance()->Update();
@@ -178,6 +175,7 @@ void GamePlay::Draw()
 
 void GamePlay::Finalize()
 {
+	MelLib::GameObjectManager::GetInstance()->AllEraseObject();
 }
 
 MelLib::Scene* GamePlay::GetNextScene()

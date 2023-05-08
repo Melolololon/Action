@@ -1329,7 +1329,8 @@ void Player::DownHP(const int power)
 		isDead = true;
 
 		modelObjects["main"].SetAnimationFrameStart();
-
+		modelObjects["main"].SetAnimationEndStopFlag(true);
+		modelObjects["main"].SetAnimation("Dead");
 	}
 }
 
