@@ -19,7 +19,7 @@ Boss* Boss::pBoss;
 
 void Boss::Move()
 {
-	static const float MOVE_SPEED = 0.4f;
+	static const float MOVE_SPEED = 0.5f;
 	
 	// 近くに移動
 	MoveToPlayer(MOVE_SPEED);
@@ -27,18 +27,10 @@ void Boss::Move()
 
 void Boss::SelectAction()
 {
+
 	// 攻撃中だったらスキップ
 	if (currentState != Boss::CurrentState::NONE)return;
-	else if (actionTimer.GetMaxOverFlag())// タイマーが一定以上になったらジャンプ攻撃
-	{
-		actionTimer.SetStopFlag(true);
-
-		currentState = Boss::CurrentState::JUMP_ATTACK;
-		modelObjects["main"].SetAnimation("Attack_Jump.001");
-
-		return;
-
-	}
+	
 	else actionTimer.SetStopFlag(false);
 
 
@@ -50,18 +42,28 @@ void Boss::SelectAction()
 	static const float MIN_DIR = 30.0f;
 	
 	// 遠かったら移動
-	if(playerDir >= MIN_DIR)Move();
-	else if (playerDir < MIN_DIR && playerDir >= 6.0f) // そうではないなら攻撃 
+	if (playerDir >= MIN_DIR)
 	{
-		currentState = Boss::CurrentState::ROLL_ATTACK;
-		modelObjects["main"].SetAnimation("Attack_Roll");
+		Move();
+		return;
 	}
-	else 
+
+	if (actionTimer.GetMaxOverFlag()) 
 	{
-		currentState = Boss::CurrentState::NORMAL_1;
-		modelObjects["main"].SetAnimation("Attack");
+		if (playerDir < MIN_DIR && playerDir >= 6.0f) // そうではないなら攻撃 
+		{
+			currentState = Boss::CurrentState::ROLL_ATTACK;
+			modelObjects["main"].SetAnimation("Attack_Roll");
+		}
+		else
+		{
+			currentState = Boss::CurrentState::JUMP_ATTACK;
+			modelObjects["main"].SetAnimation("Attack_Jump.001");
+		}
+
+
+		actionTimer.SetStopFlag(true);
 	}
-	
 }
 
 void Boss::AttackUpdate()
@@ -109,7 +111,7 @@ void Boss::AttackUpdate()
 
 void Boss::AttackEnd()
 {
-	// ジャンプ攻撃終了処理
+	// 攻撃終了処理
 	if (modelObjects["main"].GetAnimationEndFlag())
 	{
 		currentState = CurrentState::NONE;
@@ -210,12 +212,10 @@ Boss::Boss()
 
 
 	actionTimer.SetResetFlag(false);
+	actionTimer.SetMaxTime(60 * 1.5f);
 
-
-
-	actionTimer.SetMaxTime(60 * 3);
-	jumpAttackTimer.SetMaxTime(60 * 0.1f);
 	jumpAttackTimer.SetResetFlag(false);
+	jumpAttackTimer.SetMaxTime(60 * 0.1f);
 
 	// 仮設定
 	/*modelObjects["main"].SetAnimation("Attack_Jump.001");

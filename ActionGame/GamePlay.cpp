@@ -86,14 +86,9 @@ void GamePlay::Initialize()
 	//const unsigned int STAGE_NUM = StageSelect::GetStageNum();
 	const unsigned int STAGE_NUM = 1;
 
-	// シーンの読み込み
-	//MelLib::SceneEditer::GetInstance()->LoadEditData("Stage_" + std::to_string(STAGE_NUM));
-	
 
-		//Stage::LoadResources(0);
-	Stage::LoadResources(1);
-	//Stage::LoadResources(2);
 
+	MelLib::SceneEditer::GetInstance()->LoadEditData("_Kesuna_Mendanyou");
 
 	// 毎回これ書くの大変だから、シングルトンのプレイヤーのダメージ減らしたりするクラス作るか、
 	// Playerクラスにstaticのポインタ取得関数を作ったほうがいい
@@ -131,6 +126,7 @@ void GamePlay::Initialize()
 	crealFadeStartTimer.SetMaxTime(60 * 5.0f);
 
 	gameState = GamePlayState::PLAY;
+
 
 }
 

@@ -66,7 +66,7 @@ void NewEnemy::Dead()
 
 void NewEnemy::AddParticle()
 {
-
+	return;
 
 	// 0‚¶‚á‚È‚©‚Á‚½‚çreturn
 	if(addDamagePartucleAddTimer.GetNowTime() != 0)

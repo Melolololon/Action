@@ -149,13 +149,17 @@ void EnemySpaunPoint::Initialize()
 	// 自身を追加
 	spaunPoints.push_back(this);
 
-
-	// 敵の生成と追加
-	CteateEnemy();
 }
 
 void EnemySpaunPoint::Update()
 {
+	if (!createEnemy) 
+	{
+		// 敵の生成と追加
+		CteateEnemy();
+		createEnemy = true;
+	}
+
 	// 個別にプレイヤーに向かうようにする
 	// 一番近いやつだけ近づく。それ以外は一定距離で待機
 

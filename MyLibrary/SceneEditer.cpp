@@ -325,7 +325,7 @@ void MelLib::SceneEditer::LoadEditData(const std::string& sceneName)
 		// それを解決すればよさそう
 
 		// 追加オブジェクト一覧に追加
-		addObjects.push_back(pObject);
+		if (editorFlag)addObjects.push_back(pObject);
 
 		//座標とか
 		Vector3 position;
@@ -338,7 +338,7 @@ void MelLib::SceneEditer::LoadEditData(const std::string& sceneName)
 		file.read(reinterpret_cast<char*>(&scale), sizeof(Vector3));
 		pObject->SetScale(scale);
 
-		if (!editorFlag && !releaseEdit)GameObjectManager::GetInstance()->AddObject(pObject);
+		if(!editorFlag)GameObjectManager::GetInstance()->AddObject(pObject);
 
 		char c;
 		file.read(&c, 1);
