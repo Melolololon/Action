@@ -322,7 +322,7 @@ void Player::Update()
 	if (isDeathBlow)return;
 
 
-	Guard();
+	//Guard();
 	Attack();
 
 	

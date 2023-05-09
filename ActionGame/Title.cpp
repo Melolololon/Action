@@ -34,7 +34,7 @@ void Title::Initialize()
 
 	titleSprite = std::make_shared<MelLib::Sprite2D>();
 	titleSprite->Create(MelLib::Texture::Get("title"));
-	titleSprite->SetPosition(MelLib::Vector2(270,30));
+	titleSprite->SetPosition(MelLib::Vector2(370,150));
 
 	MelLib::Camera* pCamera = MelLib::Camera::Get();
 	pCamera->SetAngle(MelLib::Vector3(20,-5,0));
@@ -107,7 +107,7 @@ void Title::Draw()
 	if (!pushGameStart) 
 	{
 		MelLib::TextWrite::Draw
-		(MelLib::Vector2(470, 400), MelLib::Color(255, 255, 255, 255), L"Aボタンを押してください", "Arial");
+		(MelLib::Vector2(700, 700), MelLib::Color(255, 255, 255, 255), L"Aボタンを押してください", "Arial");
 	}
 }
 

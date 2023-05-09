@@ -80,6 +80,9 @@ void GamePlay::GameOver()
 
 void GamePlay::Initialize()
 {
+	MelLib::Camera::Get()->SetAngle(MelLib::Vector3(0, 180, 0));
+
+
 	EnemyDeadCounter::GetInstance()->Reset();
 
 	// ステージセレクト追加したらコメントアウト解除

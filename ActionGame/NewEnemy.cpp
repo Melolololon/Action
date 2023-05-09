@@ -12,7 +12,7 @@
 #include"EnemyDarknessEffect.h"
 
 Player* NewEnemy::pPlayer;
-const float NewEnemy::MOVE_SPEED = 0.6f;
+const float NewEnemy::MOVE_SPEED = 0.5f;
 const float NewEnemy::MIN_DISTANCE = 15.0f;
 //
 //void NewEnemy::ToPlayerMove()

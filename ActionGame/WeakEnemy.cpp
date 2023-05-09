@@ -306,7 +306,7 @@ void WeakEnemy::Hit(const GameObject& object, const MelLib::ShapeType3D collisio
 		}
 	}
 
-	if (typeid(object) == typeid(JumpAttack) && isMuteki) 
+	if (typeid(object) == typeid(JumpAttack) && !isMuteki) 
 	{
 
 
