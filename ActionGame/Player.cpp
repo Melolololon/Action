@@ -999,6 +999,7 @@ void Player::RotCamera()
 
 	// キーボード用
 
+
 	if (cameraSpeed >= MAX_CAMERA_SPEED)cameraSpeed = MAX_CAMERA_SPEED;
 
 	cameraAngle += addCameraAngle;
