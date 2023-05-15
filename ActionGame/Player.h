@@ -40,7 +40,9 @@ private:
 	//MelLib::Emitter3D emitter;
 
 
-	static std::unordered_map<ActionType, MelLib::PadButton> keyConfigData;
+	static std::unordered_map<ActionType, MelLib::PadButton> padConfigData;
+	static std::unordered_map<ActionType, BYTE> keyboardConfigData;
+	static std::unordered_map<ActionType, MelLib::MouseButton> mouseConfigData;
 
 	//前フレームの座標を格納する変数
 	MelLib::Vector3 prePosition;
@@ -76,11 +78,13 @@ private:
 
 	// 落下中かどうか
 	bool isDrop = false;
+	
 	float dropStartPosY = 0.0f;
 
 	// ジャンプ開始位置
 	MelLib::Vector3 jumpStartPosition;
 
+	// 着地時に手を着く落下速度
 	static const float GROUND_HUND_VELOCITY;
 #pragma endregion
 
@@ -288,7 +292,7 @@ public:
 	void DownHP(const int power);
 	void LifeUp(const int upNum);
 #pragma region Get
-	static const std::unordered_map<Player::ActionType, MelLib::PadButton> GetKeyConfigData() { return keyConfigData; }
+	static const std::unordered_map<Player::ActionType, MelLib::PadButton> GetKeyConfigData() { return padConfigData; }
 
 	unsigned int GetCurrentAttackPower()const { return attackData[currentAttack].power; }
 
@@ -318,7 +322,7 @@ public:
 
 #pragma region Set
 
-	static void SetKeyConfigData(const ActionType type, const MelLib::PadButton button) { keyConfigData[type] = button; }
+	static void SetKeyConfigData(const ActionType type, const MelLib::PadButton button) { padConfigData[type] = button; }
 
 	/// <summary>
 	/// ロックオン強制終了

@@ -41,14 +41,26 @@
 #include"HPGauge.h"
 
 
-std::unordered_map<Player::ActionType, MelLib::PadButton> Player::keyConfigData =
+std::unordered_map<Player::ActionType, MelLib::PadButton> Player::padConfigData =
 {
 	{ActionType::JUMP, MelLib::PadButton::A},
 	{ActionType::ATTACK, MelLib::PadButton::X},
 	{ActionType::DASH, MelLib::PadButton::B},
 	{ActionType::GUARD, MelLib::PadButton::LB},
-	{ActionType::DEATH_BLOW, MelLib::PadButton::Y},
+	{ActionType::DEATH_BLOW, MelLib::PadButton::Y}
+};
 
+std::unordered_map<Player::ActionType, BYTE> Player::keyboardConfigData =
+{
+	{ActionType::JUMP, DIK_SPACE},
+	{ActionType::DASH, DIK_LSHIFT},
+	{ActionType::DEATH_BLOW, DIK_LCONTROL}
+};
+
+std::unordered_map<Player::ActionType, MelLib::MouseButton> Player::mouseConfigData =
+{
+	{ActionType::ATTACK, MelLib::MouseButton::LEFT},
+	{ActionType::GUARD, MelLib::MouseButton::RIGHT}
 };
 
 const float Player::JUMP_POWER = 3.0f;
@@ -455,6 +467,7 @@ void Player::Move()
 	static const float FRAME_UP_FAST_WARK_SPEED = MAX_FAST_WARK_SPEED / 10;
 	static const float FRAME_UP_WARK_SPEED = MAX_WALK_SPEED / 10;
 
+	// 傾けたら移動
 	if (MelLib::Input::LeftStickUp(WALK_STICK_PAR)
 		|| MelLib::Input::LeftStickDown(WALK_STICK_PAR)
 		|| MelLib::Input::LeftStickRight(WALK_STICK_PAR)
@@ -475,6 +488,8 @@ void Player::Move()
 			addPos *= moveSpeed;
 
 			modelObjects["main"].SetAnimation("Dash");
+
+
 		}
 		else
 		{
@@ -485,6 +500,34 @@ void Player::Move()
 
 			modelObjects["main"].SetAnimation("Walk");
 		}
+
+		// キーボード用
+		if (MelLib::Input::KeyState(DIK_W)) 
+		{
+			addPos *= moveSpeed;
+
+			modelObjects["main"].SetAnimation("Dash");
+
+		}
+		else if (MelLib::Input::KeyState(DIK_A)) 
+		{
+			addPos *= moveSpeed;
+
+			modelObjects["main"].SetAnimation("Dash");
+		}
+		else if (MelLib::Input::KeyState(DIK_S)) 
+		{
+			addPos *= moveSpeed;
+
+			modelObjects["main"].SetAnimation("Dash");
+		}
+		else if (MelLib::Input::KeyState(DIK_D)) 
+		{
+			addPos *= moveSpeed;
+
+			modelObjects["main"].SetAnimation("Dash");
+		}
+
 
 		AddPosition(addPos);
 
@@ -561,7 +604,8 @@ void Player::Dash()
 
 	static const float DASH_DISTANCE = 100.0f;
 
-	if (MelLib::Input::PadButtonTrigger(keyConfigData[ActionType::DASH])
+	if ((MelLib::Input::PadButtonTrigger(padConfigData[ActionType::DASH]) 
+		|| MelLib::Input::KeyState(keyboardConfigData[ActionType::DASH]))
 		&& !isDash
 		&& currentAttack == PlayerSlush::AttackType::NONE
 		&& !isGuard)
@@ -611,7 +655,8 @@ void Player::Jump()
 		|| isGuard
 		|| isStun)return;
 
-	if (MelLib::Input::PadButtonTrigger(keyConfigData[ActionType::JUMP]))
+	if (MelLib::Input::PadButtonTrigger(padConfigData[ActionType::JUMP])
+		|| MelLib::Input::KeyState(keyboardConfigData[ActionType::JUMP]))
 	{
 		FallStart(JUMP_POWER);
 		jumpStartPosition = GetPosition();
@@ -654,7 +699,8 @@ void Player::Attack()
 	}
 
 	//ifの2行目のタイマー確認は、コンボ終了後にNONEにするため、その攻撃中に入らないようにするために書いてる
-	if (MelLib::Input::PadButtonTrigger(keyConfigData[ActionType::ATTACK])
+	if ((MelLib::Input::PadButtonTrigger(padConfigData[ActionType::ATTACK])
+		|| MelLib::Input::MouseButtonTrigger(mouseConfigData[ActionType::ATTACK]))
 		&& (attackTimer.GetNowTime() == 0 && currentAttack == PlayerSlush::AttackType::NONE
 			|| attackTimer.GetNowTime() >= attackData[currentAttack].nextTime && currentAttack != PlayerSlush::AttackType::NONE))
 	{
@@ -873,7 +919,7 @@ void Player::DeathBlow()
 void Player::Guard()
 {
 	// 攻撃してない時にボタン押してたらガード
-	if (MelLib::Input::PadButtonState(keyConfigData[ActionType::GUARD])
+	if (MelLib::Input::PadButtonState(padConfigData[ActionType::GUARD])
 		&& currentAttack == PlayerSlush::AttackType::NONE
 		&& !isDash
 		&& !isStun)
@@ -945,10 +991,13 @@ void Player::RotCamera()
 		&& !MelLib::Input::RightStickDown(30.0f))cameraSpeed = 0.0f;
 	else cameraSpeed += FRAME_UP_CAMERA_SPEED;
 
+	// パッド用
 	if (MelLib::Input::RightStickLeft(30.0f))addCameraAngle.y = -cameraSpeed;
 	else if (MelLib::Input::RightStickRight(30.0f))addCameraAngle.y = cameraSpeed;
 	if (MelLib::Input::RightStickUp(30.0f))addCameraAngle.x = -cameraSpeed;
 	else if (MelLib::Input::RightStickDown(30.0f))addCameraAngle.x = cameraSpeed;
+
+	// キーボード用
 
 	if (cameraSpeed >= MAX_CAMERA_SPEED)cameraSpeed = MAX_CAMERA_SPEED;
 
