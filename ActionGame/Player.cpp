@@ -467,14 +467,15 @@ void Player::Move()
 	static const float FRAME_UP_FAST_WARK_SPEED = MAX_FAST_WARK_SPEED / 10;
 	static const float FRAME_UP_WARK_SPEED = MAX_WALK_SPEED / 10;
 
+
+
 	// 傾けたら移動
 	if (MelLib::Input::LeftStickUp(WALK_STICK_PAR)
 		|| MelLib::Input::LeftStickDown(WALK_STICK_PAR)
 		|| MelLib::Input::LeftStickRight(WALK_STICK_PAR)
 		|| MelLib::Input::LeftStickLeft(WALK_STICK_PAR))
 	{
-		direction = MelLib::Input::LeftStickVector3(20.0f,MelLib::Camera::Get(), false, true);
-
+		direction = MelLib::Input::LeftStickVector3(20.0f, MelLib::Camera::Get(), false, true);
 		MelLib::Vector3 addPos = direction;
 
 		//ダッシュの傾き量を超えていたらダッシュ
@@ -483,16 +484,16 @@ void Player::Move()
 			|| MelLib::Input::LeftStickRight(FAST_WARK_STICK_PAR)
 			|| MelLib::Input::LeftStickLeft(FAST_WARK_STICK_PAR))
 		{
+			// 上限までだんだん加算して移動速度を上げていく
 			if (moveSpeed < MAX_FAST_WARK_SPEED)moveSpeed += FRAME_UP_FAST_WARK_SPEED;
 			else moveSpeed = MAX_FAST_WARK_SPEED;
 			addPos *= moveSpeed;
 
 			modelObjects["main"].SetAnimation("Dash");
-
-
 		}
 		else
 		{
+			// 上限までだんだん加算して移動速度を上げていく
 			if (moveSpeed < MAX_WALK_SPEED)moveSpeed += FRAME_UP_WARK_SPEED;
 			else moveSpeed = MAX_WALK_SPEED;
 			addPos *= moveSpeed;
@@ -500,38 +501,31 @@ void Player::Move()
 
 			modelObjects["main"].SetAnimation("Walk");
 		}
+	}
+	else if (MelLib::Input::KeyState(DIK_W)
+		|| MelLib::Input::KeyState(DIK_A)
+		|| MelLib::Input::KeyState(DIK_S)
+		|| MelLib::Input::KeyState(DIK_D)) 
+	{
+		// キーに応じて移動方向を設定
+		if (MelLib::Input::KeyState(DIK_W)) direction = MelLib::Vector3(0, 0, 1);
+		else if (MelLib::Input::KeyState(DIK_S))direction = MelLib::Vector3(0, 0, -1);
+		if (MelLib::Input::KeyState(DIK_A)) direction = MelLib::Vector3(-1, 0, 0);
+		else if (MelLib::Input::KeyState(DIK_D)) direction = MelLib::Vector3(1, 0, 0);
+		
+		// カメラに合わせて回転
+		direction = MelLib::LibMath::RotateZXYVector3(direction,MelLib::Camera::Get()->GetAngle());
+		// 加算値に向きを代入
+		MelLib::Vector3 addPos = direction;
 
-		// キーボード用
-		if (MelLib::Input::KeyState(DIK_W)) 
-		{
-			addPos *= moveSpeed;
+		if (moveSpeed < MAX_FAST_WARK_SPEED)moveSpeed += FRAME_UP_FAST_WARK_SPEED;
+		else moveSpeed = MAX_FAST_WARK_SPEED;
 
-			modelObjects["main"].SetAnimation("Dash");
-
-		}
-		else if (MelLib::Input::KeyState(DIK_A)) 
-		{
-			addPos *= moveSpeed;
-
-			modelObjects["main"].SetAnimation("Dash");
-		}
-		else if (MelLib::Input::KeyState(DIK_S)) 
-		{
-			addPos *= moveSpeed;
-
-			modelObjects["main"].SetAnimation("Dash");
-		}
-		else if (MelLib::Input::KeyState(DIK_D)) 
-		{
-			addPos *= moveSpeed;
-
-			modelObjects["main"].SetAnimation("Dash");
-		}
-
-
+		// 速度を加算
+		addPos *= moveSpeed;
 		AddPosition(addPos);
 
-
+		modelObjects["main"].SetAnimation("Dash");
 	}
 	else
 	{
@@ -997,8 +991,17 @@ void Player::RotCamera()
 	if (MelLib::Input::RightStickUp(30.0f))addCameraAngle.x = -cameraSpeed;
 	else if (MelLib::Input::RightStickDown(30.0f))addCameraAngle.x = cameraSpeed;
 
-	// キーボード用
+#pragma region キーボード用カメラ操作
 
+
+	preFrameMousePosition = frameMousePosition;
+	
+	MelLib::Vector2 preToCurrentPosVector = MelLib::GameObjectManager::GetInstance().
+	
+	frameMousePosition = MelLib::Input::GetMousePosition();
+
+
+#pragma endregion
 
 	if (cameraSpeed >= MAX_CAMERA_SPEED)cameraSpeed = MAX_CAMERA_SPEED;
 

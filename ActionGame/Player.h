@@ -185,6 +185,10 @@ private:
 	bool lockOn = false;
 	const MelLib::GameObject* lockOnEnemy = nullptr;
 	float lockOnEnemyDistance = FLT_MAX;
+
+	// キーマウ用
+	MelLib::Vector2 preFrameMousePosition;
+	MelLib::Vector2 frameMousePosition;
 #pragma endregion
 
 	// デバッグ用(trueにすると強制Tポーズ)

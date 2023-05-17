@@ -75,7 +75,8 @@ void Title::Update()
 		|| MelLib::Input::PadButtonTrigger(MelLib::PadButton::B)
 		|| MelLib::Input::PadButtonTrigger(MelLib::PadButton::START)
 		|| MelLib::Input::KeyTrigger(DIK_SPACE)
-		|| MelLib::Input::KeyTrigger(DIK_RETURN);
+		|| MelLib::Input::KeyTrigger(DIK_RETURN)
+		|| MelLib::Input::MouseButtonTrigger(MelLib::MouseButton::LEFT);
 
 	if (pushSceneChangeButton && !Fade::GetInstance()->GetIsFade())
 	{

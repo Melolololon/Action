@@ -30,7 +30,7 @@ void EnemyDamageParticle::Initialize()
 void EnemyDamageParticle::Update()
 {
 	float moveSpeed = MelLib::Random::GetRandomFloatNumberRangeSelect(-3, 3, 2);
-	spr.SetPosition(spr.GetPosition() + MOVE_VECTOR * moveSpeed);
+	spr.SetPosition(spr.GetPosition() + moveVector * moveSpeed);
 }
 
 void EnemyDamageParticle::Draw()
