@@ -8,9 +8,9 @@
 
 #include"Stage.h"
 
-const float EnemySpaunPoint::MIN_DISTANCE = 50.0f;
+const float EnemySpaunPoint::MIN_DISTANCE = 60.0f;
 const float EnemySpaunPoint::ATTACK_MIN_DISTANCE = 8.0f;
-const unsigned int EnemySpaunPoint::ENEMY_MAX_NUM = 3;
+const unsigned int EnemySpaunPoint::ENEMY_MAX_NUM = 10;
 
 
 std::vector<EnemySpaunPoint*>EnemySpaunPoint::spaunPoints;
@@ -149,13 +149,17 @@ void EnemySpaunPoint::Initialize()
 	// 自身を追加
 	spaunPoints.push_back(this);
 
-
-	// 敵の生成と追加
-	CteateEnemy();
 }
 
 void EnemySpaunPoint::Update()
 {
+	if (!createEnemy) 
+	{
+		// 敵の生成と追加
+		CteateEnemy();
+		createEnemy = true;
+	}
+
 	// 個別にプレイヤーに向かうようにする
 	// 一番近いやつだけ近づく。それ以外は一定距離で待機
 

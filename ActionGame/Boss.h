@@ -10,6 +10,7 @@ class Boss :public MelLib::GameObject
 private:
 
 	static Player* pPlayer;
+	static Boss* pBoss;
 
 	// 移動や攻撃を制御するタイマー。例　遠くにいる時、このタイマーの時間に応じて移動するか遠距離攻撃するかを決める
 	MelLib::FrameTimer actionTimer;
@@ -77,7 +78,7 @@ public:
 		const std::string& hitShapeName
 	)override;
 
-
+	static bool CheckStateBattle() { return pBoss->thisState == ThisState::BATTLE; }
 
 
 

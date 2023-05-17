@@ -23,7 +23,12 @@
 
 #include"HPGauge.h"
 
+#include"ClearSprite.h"
+#include"GameOverSprite.h"
+
 #include"EnemyDeadCounter.h"
+
+GamePlay::GamePlayState GamePlay::gameState = GamePlay::GamePlayState::PLAY;
 
 void GamePlay::CheckClear()
 {
@@ -32,49 +37,61 @@ void GamePlay::CheckClear()
 
 void GamePlay::CheckGameOver()
 {
-	if (pPlayer->GetHP() <= 0)gameState = GameState::GAME_OVER;
+	if (pPlayer->GetHP() <= 0)gameState = GamePlayState::GAME_OVER;
 }
 
 void GamePlay::Play()
 {
 	// ボス戦移行
-
+	if(Boss::CheckStateBattle())gameState = GamePlayState::BOSS;
 
 	// ボス戦
 	if (BossAliveChecker::GetInstance()->GetBossDeadFlag())
 	{
-		gameState = GameState::CLEAR;
+		gameState = GamePlayState::CLEAR;
 		crealFadeStartTimer.SetStopFlag(false);
+
 	}
+
+
 }
 
 void GamePlay::Clear()
 {
 	if (crealFadeStartTimer.GetMaxOverFlag())Fade::GetInstance()->Start();
 
+	// クリア追加
+	if (crealFadeStartTimer.GetNowTime() == 60.0f * 2.0f)
+	{
+		MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<ClearSprite>());
+	}
 }
 
 void GamePlay::GameOver()
 {
 	if (gameOverFadeStartTimer.GetMaxOverFlag())Fade::GetInstance()->Start();
+
+	// クリア追加
+	if (gameOverFadeStartTimer.GetNowTime() == 60.0f * 2.0f)
+	{
+		MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<GameOverSprite>());
+	}
 }
 
 void GamePlay::Initialize()
 {
+	MelLib::Camera::Get()->SetAngle(MelLib::Vector3(0, 180, 0));
+
+
 	EnemyDeadCounter::GetInstance()->Reset();
 
 	// ステージセレクト追加したらコメントアウト解除
 	//const unsigned int STAGE_NUM = StageSelect::GetStageNum();
 	const unsigned int STAGE_NUM = 1;
 
-	// シーンの読み込み
-	//MelLib::SceneEditer::GetInstance()->LoadEditData("Stage_" + std::to_string(STAGE_NUM));
-	
 
-		//Stage::LoadResources(0);
-	Stage::LoadResources(1);
-	//Stage::LoadResources(2);
 
+	MelLib::SceneEditer::GetInstance()->LoadEditData("_Kesuna_Mendanyou");
 
 	// 毎回これ書くの大変だから、シングルトンのプレイヤーのダメージ減らしたりするクラス作るか、
 	// Playerクラスにstaticのポインタ取得関数を作ったほうがいい
@@ -108,15 +125,16 @@ void GamePlay::Initialize()
 	//MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<HPGauge>());
 
 	// 時間は仮設定
-	gameOverFadeStartTimer.SetMaxTime(60 * 0.5);
-	crealFadeStartTimer.SetMaxTime(60 * 0.5f);
+	gameOverFadeStartTimer.SetMaxTime(60 * 5.0f);
+	crealFadeStartTimer.SetMaxTime(60 * 5.0f);
 
-	gameState = GameState::PLAY;
+	gameState = GamePlayState::PLAY;
+
+
 }
 
 void GamePlay::Update()
 {
-	// 敵が死んだらカウント増やし、カウントが一定以上で壁を消したり、クリアさせたりすればいい?
 
 	MelLib::GameObjectManager::GetInstance()->Update();
 	Fade::GetInstance()->Update();
@@ -125,7 +143,7 @@ void GamePlay::Update()
 
 	if (pPlayer->GetHP() <= 0)
 	{
-		gameState = GamePlay::GameState::GAME_OVER;
+		gameState = GamePlay::GamePlayState::GAME_OVER;
 		gameOverFadeStartTimer.SetStopFlag(false);
 	}
 
@@ -135,10 +153,10 @@ void GamePlay::Update()
 
 	switch (gameState)
 	{
-	case GamePlay::GameState::CLEAR:
+	case GamePlay::GamePlayState::CLEAR:
 		Clear();
 		break;
-	case GamePlay::GameState::GAME_OVER:
+	case GamePlay::GamePlayState::GAME_OVER:
 		GameOver();
 		break;
 	default:
@@ -156,6 +174,7 @@ void GamePlay::Draw()
 
 void GamePlay::Finalize()
 {
+	MelLib::GameObjectManager::GetInstance()->AllEraseObject();
 }
 
 MelLib::Scene* GamePlay::GetNextScene()

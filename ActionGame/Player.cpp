@@ -41,17 +41,29 @@
 #include"HPGauge.h"
 
 
-std::unordered_map<Player::ActionType, MelLib::PadButton> Player::keyConfigData =
+std::unordered_map<Player::ActionType, MelLib::PadButton> Player::padConfigData =
 {
 	{ActionType::JUMP, MelLib::PadButton::A},
 	{ActionType::ATTACK, MelLib::PadButton::X},
 	{ActionType::DASH, MelLib::PadButton::B},
 	{ActionType::GUARD, MelLib::PadButton::LB},
-	{ActionType::DEATH_BLOW, MelLib::PadButton::Y},
-
+	{ActionType::DEATH_BLOW, MelLib::PadButton::Y}
 };
 
-const float Player::JUMP_POWER = 4.0f;
+std::unordered_map<Player::ActionType, BYTE> Player::keyboardConfigData =
+{
+	{ActionType::JUMP, DIK_SPACE},
+	{ActionType::DASH, DIK_LSHIFT},
+	{ActionType::DEATH_BLOW, DIK_LCONTROL}
+};
+
+std::unordered_map<Player::ActionType, MelLib::MouseButton> Player::mouseConfigData =
+{
+	{ActionType::ATTACK, MelLib::MouseButton::LEFT},
+	{ActionType::GUARD, MelLib::MouseButton::RIGHT}
+};
+
+const float Player::JUMP_POWER = 3.0f;
 const float Player::GROUND_HUND_VELOCITY = -30.0f;
 Player* Player::pPlayer = nullptr;
 
@@ -59,7 +71,7 @@ const float Player::JUMP_ATTACK_DROP_SPEED = -3.0f;
 
 std::unordered_map<PlayerSlush::AttackType, const Player::AttackData> Player::attackData =
 {
-	// AttackData(パワー,時間,次の攻撃入力時間)
+	// AttackData(パワー,攻撃アニメーション終了までの時間,次の攻撃入力時間)
 	{PlayerSlush::AttackType::NONE,AttackData(0,0,0 ,AttackEffect::NONE)},
 	{PlayerSlush::AttackType::NORMAL_1,AttackData(3,20,10,AttackEffect::NONE)},
 	{PlayerSlush::AttackType::NORMAL_2,AttackData(3,30,20,AttackEffect::NONE)},
@@ -97,17 +109,20 @@ Player::Player(const MelLib::Vector3& pos)
 	segment3DDatas["main"].resize(3);
 	segment3DDatas["main"][0] = capsuleDatas["main"][0].GetSegment3DData();
 
-	// 壁との判定用
+
+	const float SEGMENT_LENGTH = 10.0f;
+	const float SEGMENT_HEIGTH = 60.0f;
+	// 壁との判定
 	segment3DDatas["main"][1].SetPosition
 	(
 		MelLib::Value2<MelLib::Vector3>
-		(GetPosition() + MelLib::Vector3(0, 10, 20), GetPosition() + MelLib::Vector3(0, 10, -20))
+		(GetPosition() + MelLib::Vector3(0, SEGMENT_HEIGTH, SEGMENT_LENGTH), GetPosition() + MelLib::Vector3(0, SEGMENT_HEIGTH, -SEGMENT_LENGTH))
 	);
 
 	segment3DDatas["main"][2].SetPosition
 	(
 		MelLib::Value2<MelLib::Vector3>
-		(GetPosition() + MelLib::Vector3(20, 10, 0), GetPosition() + MelLib::Vector3(-20, 10, 0))
+		(GetPosition() + MelLib::Vector3(SEGMENT_LENGTH, SEGMENT_HEIGTH, 0), GetPosition() + MelLib::Vector3(-SEGMENT_LENGTH, SEGMENT_HEIGTH, 0))
 	);
 
 
@@ -123,7 +138,7 @@ Player::Player(const MelLib::Vector3& pos)
 
 #pragma endregion
 
-	mutekiTimer.SetMaxTime(60 * 1.5);
+	mutekiTimer.SetMaxTime(60 * 0.7);
 
 
 
@@ -165,7 +180,7 @@ Player::Player(const MelLib::Vector3& pos)
 
 	collisionCheckDistance = 500.0f;
 
-
+	
 
 	/*MelLib::DrawOption op;
 	op.cullMode = MelLib::CullMode::NONE;
@@ -178,8 +193,7 @@ Player::Player(const MelLib::Vector3& pos)
 // Tポーズで動かなくなる
 void Player::Update()
 {
-	// テスト
-	MelLib::Vector3 pPos = GetPosition();
+	preAttack = currentAttack;
 
 	MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())
@@ -194,11 +208,15 @@ void Player::Update()
 		return;
 	}
 
+	if (isHit)isMuteki = true;
+	isHit = false;
 
 	hitEventFlag = false;
 	hitTutorialEventFlag = false;
 
 	modelObjects["main"].Update();
+
+	
 	
 	if(isDead)
 	{
@@ -291,8 +309,7 @@ void Player::Update()
 
 	}
 
-	
-
+	CreateAttackSlush();
 
 	if (currentAttack == PlayerSlush::AttackType::NONE) 
 	{
@@ -317,7 +334,7 @@ void Player::Update()
 	if (isDeathBlow)return;
 
 
-	Guard();
+	//Guard();
 	Attack();
 
 	
@@ -349,11 +366,12 @@ void Player::Update()
 	if (dropStartPosY >= DROP_POS_Y)isDrop = true;
 
 
-	/*preHitGround = hitGround;
-	hitGround = false;*/
 
+}
 
-	if (MelLib::Input::KeyTrigger(DIK_SPACE))hp -= 10;
+bool Player::GetAttackChangeFrame() const
+{
+	return preAttack != currentAttack;
 }
 
 void Player::TitleUpdate()
@@ -449,6 +467,7 @@ void Player::Move()
 	static const float FRAME_UP_FAST_WARK_SPEED = MAX_FAST_WARK_SPEED / 10;
 	static const float FRAME_UP_WARK_SPEED = MAX_WALK_SPEED / 10;
 
+	// 傾けたら移動
 	if (MelLib::Input::LeftStickUp(WALK_STICK_PAR)
 		|| MelLib::Input::LeftStickDown(WALK_STICK_PAR)
 		|| MelLib::Input::LeftStickRight(WALK_STICK_PAR)
@@ -469,6 +488,8 @@ void Player::Move()
 			addPos *= moveSpeed;
 
 			modelObjects["main"].SetAnimation("Dash");
+
+
 		}
 		else
 		{
@@ -479,6 +500,34 @@ void Player::Move()
 
 			modelObjects["main"].SetAnimation("Walk");
 		}
+
+		// キーボード用
+		if (MelLib::Input::KeyState(DIK_W)) 
+		{
+			addPos *= moveSpeed;
+
+			modelObjects["main"].SetAnimation("Dash");
+
+		}
+		else if (MelLib::Input::KeyState(DIK_A)) 
+		{
+			addPos *= moveSpeed;
+
+			modelObjects["main"].SetAnimation("Dash");
+		}
+		else if (MelLib::Input::KeyState(DIK_S)) 
+		{
+			addPos *= moveSpeed;
+
+			modelObjects["main"].SetAnimation("Dash");
+		}
+		else if (MelLib::Input::KeyState(DIK_D)) 
+		{
+			addPos *= moveSpeed;
+
+			modelObjects["main"].SetAnimation("Dash");
+		}
+
 
 		AddPosition(addPos);
 
@@ -555,7 +604,8 @@ void Player::Dash()
 
 	static const float DASH_DISTANCE = 100.0f;
 
-	if (MelLib::Input::PadButtonTrigger(keyConfigData[ActionType::DASH])
+	if ((MelLib::Input::PadButtonTrigger(padConfigData[ActionType::DASH]) 
+		|| MelLib::Input::KeyState(keyboardConfigData[ActionType::DASH]))
 		&& !isDash
 		&& currentAttack == PlayerSlush::AttackType::NONE
 		&& !isGuard)
@@ -605,7 +655,8 @@ void Player::Jump()
 		|| isGuard
 		|| isStun)return;
 
-	if (MelLib::Input::PadButtonTrigger(keyConfigData[ActionType::JUMP]))
+	if (MelLib::Input::PadButtonTrigger(padConfigData[ActionType::JUMP])
+		|| MelLib::Input::KeyState(keyboardConfigData[ActionType::JUMP]))
 	{
 		FallStart(JUMP_POWER);
 		jumpStartPosition = GetPosition();
@@ -634,6 +685,8 @@ void Player::JumpAnimation()
 
 void Player::Attack()
 {
+
+
 	// 空中攻撃とダッシュ攻撃はいったんなし
 	//if (isDrop)return;
 
@@ -646,7 +699,8 @@ void Player::Attack()
 	}
 
 	//ifの2行目のタイマー確認は、コンボ終了後にNONEにするため、その攻撃中に入らないようにするために書いてる
-	if (MelLib::Input::PadButtonTrigger(keyConfigData[ActionType::ATTACK])
+	if ((MelLib::Input::PadButtonTrigger(padConfigData[ActionType::ATTACK])
+		|| MelLib::Input::MouseButtonTrigger(mouseConfigData[ActionType::ATTACK]))
 		&& (attackTimer.GetNowTime() == 0 && currentAttack == PlayerSlush::AttackType::NONE
 			|| attackTimer.GetNowTime() >= attackData[currentAttack].nextTime && currentAttack != PlayerSlush::AttackType::NONE))
 	{
@@ -669,12 +723,12 @@ void Player::Attack()
 			if (pRigthSlush)pRigthSlush.reset();
 
 
-			CreateAttackSlush();
-
 			//アニメーションをリセット
 			modelObjects["main"].SetAnimationFrameStart();
 		}
 	}
+
+
 
 	//攻撃判定も動かす
 	//if (pPSlush)pPSlush->AddPosition(GetPosition() - prePos);
@@ -705,7 +759,7 @@ void Player::SetAttackType()
 			modelObjects["main"].SetAnimation("Attack_Normal_1");
 
 		}
-		else if (GetIsFall() && abs(GetPosition().y - jumpStartPosition.y) >= 50 )// 空中攻撃
+		else if (GetIsFall() && abs(GetPosition().y - jumpStartPosition.y) >= 30 )// 空中攻撃
 		{
 			currentAttack = PlayerSlush::AttackType::JUMP;
 			FallEnd();
@@ -720,14 +774,19 @@ void Player::SetAttackType()
 		currentAttack = PlayerSlush::AttackType::NORMAL_2;
 
 		modelObjects["main"].SetAnimation("Attack_Normal_2");
+		
 		break;
 	case PlayerSlush::AttackType::NORMAL_2:
 		currentAttack = PlayerSlush::AttackType::NORMAL_3;
 
 		modelObjects["main"].SetAnimation("Attack_Normal_3");
+
+		
 		break;
 	case PlayerSlush::AttackType::NORMAL_3:
 		currentAttack = PlayerSlush::AttackType::NONE;
+
+
 		break;
 
 	case PlayerSlush::AttackType::DASH_1:
@@ -745,44 +804,80 @@ void Player::SetAttackType()
 void Player::CreateAttackSlush()
 {
 	// 消える時間を次の攻撃へ移行できるようになる時間と同じにすること
+	const int CURRENT_FRAME = modelObjects["main"].GetAnimationFrame();
+	const int MAX_FRAME = modelObjects["main"].GetAnimationFrameCount();
+	bool addFrame = false;
 
-
+	// 攻撃アニメーションは全部2倍速だからCURRENT_FRAMEのifは偶数にする
 	switch (currentAttack)
 	{
 	case PlayerSlush::AttackType::NONE:
 		break;
 	case PlayerSlush::AttackType::NORMAL_1:
-		pRigthSlush = std::make_shared<PlayerSlush>
-			(GetPosition(), direction, currentAttack, attackData[currentAttack].nextTime, modelObjects["main"], startPos, startAngle, startScale, false);
 
+		if (CURRENT_FRAME == 14)
+		{
+			// MAX_FRAME / 2の/2はアニメーション速度　ここあとで関数で取得するように変更する
+			pRigthSlush = std::make_shared<PlayerSlush>
+				(GetPosition(), direction, currentAttack, MAX_FRAME / 2, modelObjects["main"],
+					startPos, startAngle, startScale, false,"N1");
+			addFrame = true;
+		}
 		break;
 	case PlayerSlush::AttackType::NORMAL_2:
+		if (CURRENT_FRAME == 24)
+		{
 
+			pPSlush = std::make_shared<PlayerSlush>
+				(GetPosition(), direction, currentAttack, MAX_FRAME / 2, modelObjects["main"], startPos, startAngle, startScale, true, "N2");
 
-		pPSlush = std::make_shared<PlayerSlush>
-			(GetPosition(), direction, currentAttack, attackData[currentAttack].nextTime, modelObjects["main"], startPos, startAngle, startScale, true);
-
+			addFrame = true;
+		}
 		break;
 	case PlayerSlush::AttackType::NORMAL_3:
-		pPSlush = std::make_shared<PlayerSlush>
-			(GetPosition(), direction, currentAttack, attackData[currentAttack].nextTime, modelObjects["main"], startPos, startAngle, startScale, true);
+		if (CURRENT_FRAME == 18)
+		{
+			pPSlush = std::make_shared<PlayerSlush>
+				(GetPosition(), direction, currentAttack, MAX_FRAME / 2, modelObjects["main"], startPos, startAngle, startScale, true, "N3_L");
 
-		pRigthSlush = std::make_shared<PlayerSlush>
-			(GetPosition(), direction, currentAttack, attackData[currentAttack].nextTime, modelObjects["main"], startPos, startAngle, startScale, false);
+			pRigthSlush = std::make_shared<PlayerSlush>
+				(GetPosition(), direction, currentAttack, MAX_FRAME / 2, modelObjects["main"], startPos, startAngle, startScale, false, "N3_R");
 
-
+			addFrame = true;
+		}
 		break;
 	case PlayerSlush::AttackType::DASH_1:
-		pRigthSlush = std::make_shared<PlayerSlush>
-		(GetPosition(), direction, currentAttack, attackData[currentAttack].nextTime, modelObjects["main"], startPos, startAngle, startScale, false);
+		if (CURRENT_FRAME == 14)
+		{
+			pRigthSlush = std::make_shared<PlayerSlush>
+				(GetPosition(), direction, currentAttack, MAX_FRAME, modelObjects["main"], startPos, startAngle, startScale, false, "D1");
 
+			addFrame = true;
+		}
 		break;
 	default:
 		break;
 	}
 
-	if (pPSlush)MelLib::GameObjectManager::GetInstance()->AddObject(pPSlush);
-	if (pRigthSlush)MelLib::GameObjectManager::GetInstance()->AddObject(pRigthSlush);
+	if (addFrame)MelLib::GameObjectManager::GetInstance()->AddObject(pPSlush);
+	if (addFrame)MelLib::GameObjectManager::GetInstance()->AddObject(pRigthSlush);
+}
+
+void Player::CheckEraseSlush()
+{
+	if (!GetAttackChangeFrame())return;
+
+	// 切り替わりで削除
+	if (pPSlush)
+	{
+		pPSlush->Erase();
+		pPSlush.reset();
+	}
+	if (pRigthSlush)
+	{
+		pRigthSlush->Erase();
+		pRigthSlush.reset();
+	}
 }
 
 void Player::DeathBlow()
@@ -824,7 +919,7 @@ void Player::DeathBlow()
 void Player::Guard()
 {
 	// 攻撃してない時にボタン押してたらガード
-	if (MelLib::Input::PadButtonState(keyConfigData[ActionType::GUARD])
+	if (MelLib::Input::PadButtonState(padConfigData[ActionType::GUARD])
 		&& currentAttack == PlayerSlush::AttackType::NONE
 		&& !isDash
 		&& !isStun)
@@ -896,10 +991,14 @@ void Player::RotCamera()
 		&& !MelLib::Input::RightStickDown(30.0f))cameraSpeed = 0.0f;
 	else cameraSpeed += FRAME_UP_CAMERA_SPEED;
 
+	// パッド用
 	if (MelLib::Input::RightStickLeft(30.0f))addCameraAngle.y = -cameraSpeed;
 	else if (MelLib::Input::RightStickRight(30.0f))addCameraAngle.y = cameraSpeed;
 	if (MelLib::Input::RightStickUp(30.0f))addCameraAngle.x = -cameraSpeed;
 	else if (MelLib::Input::RightStickDown(30.0f))addCameraAngle.x = cameraSpeed;
+
+	// キーボード用
+
 
 	if (cameraSpeed >= MAX_CAMERA_SPEED)cameraSpeed = MAX_CAMERA_SPEED;
 
@@ -1212,40 +1311,6 @@ void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionTy
 		MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<RecoveryEffect>(GetPosition()));
 	}
 
-	//if (typeid(object) == typeid(Wall) 
-	//	&& collisionType == MelLib::ShapeType3D::SEGMENT)
-	//{
-	//	
-
-
-	////	MelLib::BoardData board = GetHitBoardData();
-	////	MelLib::Vector3 boardNormal(board.GetNormal());
-	////	MelLib::Vector3 moveVector = GetPosition() - prePos;
-
-	////	// テスト
-	/////*	boardNormal = MelLib::Vector3(0.5,0,-0.5).Normalize();
-	////	moveVector = MelLib::Vector3(-0.5, 0, 0.5);*/
-
-	////	//// 進行方向と一致で反転
-	////	if (std::signbit(boardNormal.x) == std::signbit(moveVector.x))boardNormal.x *= -1;
-	////	if (std::signbit(boardNormal.z) == std::signbit(moveVector.z))boardNormal.z *= -1;
-
-	////	float max = abs(boardNormal.x) + abs(boardNormal.z);
-	////	float hirituX = abs(boardNormal.x) / max;
-	////	float hirituZ = abs(boardNormal.z) / max;
-
-	////	//float length = boardNormal.Length();
-	////	float sum = abs(moveVector.x) + abs(moveVector.z);
-	////	MelLib::Vector3 addPos(sum * hirituX, 0, sum * hirituZ);
-
-	////	// 法線に応じて向きを変える
-	////	if (std::signbit(boardNormal.x))addPos.x *= -1;
-	////	if (std::signbit(boardNormal.z))addPos.z *= -1;
-	////	
-
-	////	AddPosition(addPos);
-
-	//}
 
 	// 攻撃を受けた時(体力減算はEnemyAttack側で行ってる)
 	if (!isMuteki)
@@ -1255,7 +1320,7 @@ void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionTy
 			|| typeid(object) == typeid(NormalEnemyAttack)
 			|| typeid(object) == typeid(CapsuleEnemyAttack))
 		{
-			isMuteki = true;
+			isHit = true;
 			mutekiTimer.SetStopFlag(false);
 
 			
@@ -1270,18 +1335,12 @@ void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionTy
 				else modelObjects["main"].SetAnimation("Stun");
 			}
 
-
-			
-
-			/*MelLib::Vector3 enemyToPlayer = GetPosition() - object.GetPosition();
-			enemyToPlayer = enemyToPlayer.Normalize();
-			AddPosition(-enemyToPlayer * 0.3f);*/
 		}
 
 		// 吹っ飛び
 		if (typeid(object) == typeid(BossAttack))
 		{
-			isMuteki = true;
+			isHit = true;
 			mutekiTimer.SetStopFlag(false);
 
 			isStun = true;
@@ -1320,7 +1379,8 @@ void Player::DownHP(const int power)
 		isDead = true;
 
 		modelObjects["main"].SetAnimationFrameStart();
-
+		modelObjects["main"].SetAnimationEndStopFlag(true);
+		modelObjects["main"].SetAnimation("Dead");
 	}
 }
 

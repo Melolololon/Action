@@ -6,16 +6,16 @@ const std::string EnemyDamageParticle::PARTICLE_NAME = "EnemyDamageParticle";
 
 EnemyDamageParticle::EnemyDamageParticle(const MelLib::Vector3& pos, const MelLib::Vector3& vec)
 	:GameObject(PARTICLE_NAME)
-	, MOVE_VECTOR(vec)
+	, moveVector(vec)
 {
-	//spr.Create(MelLib::Texture::Get(PARTICLE_NAME));
-	spr.Create(MelLib::Color(255,255,255,255));
+	spr.Create(MelLib::Texture::Get(PARTICLE_NAME));
+	//spr.Create(MelLib::Color(255,255,255,255));
 	spr.SetPosition(pos);
+	spr.SetBillboardFlag(true, true, true);
 
-	speed = MelLib::Random::GetRandomFloatNumberRangeSelect(2, 2.5, 2);
-	
+	moveSpeed = MelLib::Random::GetRandomFloatNumberRangeSelect(0.2f, 1.5f, 1);
 
-	deadTimer.SetMaxTime(60 * 1);
+	deadTimer.SetMaxTime(60.0f * 0.4f);
 	deadTimer.SetStopFlag(false);
 }
 
@@ -29,9 +29,8 @@ void EnemyDamageParticle::Initialize()
 
 void EnemyDamageParticle::Update()
 {
-	spr.SetPosition(spr.GetPosition() + MOVE_VECTOR * speed);
-	if (deadTimer.GetMaxOverFlag()) { eraseManager = true; }
-
+	float moveSpeed = MelLib::Random::GetRandomFloatNumberRangeSelect(-3, 3, 2);
+	spr.SetPosition(spr.GetPosition() + MOVE_VECTOR * moveSpeed);
 }
 
 void EnemyDamageParticle::Draw()
@@ -41,6 +40,6 @@ void EnemyDamageParticle::Draw()
 
 void EnemyDamageParticle::LoadResources()
 {
-	//MelLib::Texture::Load("", PARTICLE_NAME);
+	MelLib::Texture::Load("Resources/Texture/Effect/EnemyDarkEffect.png", PARTICLE_NAME);
 }
 

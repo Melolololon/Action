@@ -15,10 +15,11 @@
 #include"BossAliveChecker.h"
 
 Player* Boss::pPlayer;
+Boss* Boss::pBoss;
 
 void Boss::Move()
 {
-	static const float MOVE_SPEED = 0.4f;
+	static const float MOVE_SPEED = 0.5f;
 	
 	// 近くに移動
 	MoveToPlayer(MOVE_SPEED);
@@ -26,18 +27,10 @@ void Boss::Move()
 
 void Boss::SelectAction()
 {
+
 	// 攻撃中だったらスキップ
 	if (currentState != Boss::CurrentState::NONE)return;
-	else if (actionTimer.GetMaxOverFlag())// タイマーが一定以上になったらジャンプ攻撃
-	{
-		actionTimer.SetStopFlag(true);
-
-		currentState = Boss::CurrentState::JUMP_ATTACK;
-		modelObjects["main"].SetAnimation("Attack_Jump.001");
-
-		return;
-
-	}
+	
 	else actionTimer.SetStopFlag(false);
 
 
@@ -49,18 +42,28 @@ void Boss::SelectAction()
 	static const float MIN_DIR = 30.0f;
 	
 	// 遠かったら移動
-	if(playerDir >= MIN_DIR)Move();
-	else if (playerDir < MIN_DIR && playerDir >= 6.0f) // そうではないなら攻撃 
+	if (playerDir >= MIN_DIR)
 	{
-		currentState = Boss::CurrentState::ROLL_ATTACK;
-		modelObjects["main"].SetAnimation("Attack_Roll");
+		Move();
+		return;
 	}
-	else 
+
+	if (actionTimer.GetMaxOverFlag()) 
 	{
-		currentState = Boss::CurrentState::NORMAL_1;
-		modelObjects["main"].SetAnimation("Attack");
+		if (playerDir < MIN_DIR && playerDir >= 6.0f) // そうではないなら攻撃 
+		{
+			currentState = Boss::CurrentState::ROLL_ATTACK;
+			modelObjects["main"].SetAnimation("Attack_Roll");
+		}
+		else
+		{
+			currentState = Boss::CurrentState::JUMP_ATTACK;
+			modelObjects["main"].SetAnimation("Attack_Jump.001");
+		}
+
+
+		actionTimer.SetStopFlag(true);
 	}
-	
 }
 
 void Boss::AttackUpdate()
@@ -108,7 +111,7 @@ void Boss::AttackUpdate()
 
 void Boss::AttackEnd()
 {
-	// ジャンプ攻撃終了処理
+	// 攻撃終了処理
 	if (modelObjects["main"].GetAnimationEndFlag())
 	{
 		currentState = CurrentState::NONE;
@@ -132,7 +135,7 @@ void Boss::RollAttackUpdate()
 	if (FRAME == ROLL_START_FLAME)
 	{
 		MelLib::GameObjectManager::GetInstance()->AddObject
-		(std::make_shared<EnemyAttack>(10,modelObjects["main"],10.0f,EnemyAttack::AttackType::BE_BLOWN_AWAY));
+		(std::make_shared<EnemyAttack>(50,modelObjects["main"],10.0f,EnemyAttack::AttackType::BE_BLOWN_AWAY));
 	}
 
 	if (FRAME >= ROLL_START_FLAME && FRAME <= 56)
@@ -192,7 +195,7 @@ void Boss::MoveToPlayer(const float speed)
 
 void Boss::LoadResources()
 {
-	MelLib::ModelData::Load("Resources/Model/Boss/Boss.fbx",true,"boss");
+	MelLib::ModelData::Load("Resources/Model/Boss/Boss.fbx", false,"boss");
 }
 
 Boss::Boss()
@@ -209,12 +212,10 @@ Boss::Boss()
 
 
 	actionTimer.SetResetFlag(false);
+	actionTimer.SetMaxTime(60 * 1.5f);
 
-
-
-	actionTimer.SetMaxTime(60 * 3);
-	jumpAttackTimer.SetMaxTime(60 * 0.1f);
 	jumpAttackTimer.SetResetFlag(false);
+	jumpAttackTimer.SetMaxTime(60 * 0.1f);
 
 	// 仮設定
 	/*modelObjects["main"].SetAnimation("Attack_Jump.001");
@@ -226,6 +227,8 @@ Boss::Boss()
 
 	tags.push_back("Enemy");
 	tags.push_back("Boss");
+
+	pBoss = this;
 }
 
 std::shared_ptr<MelLib::GameObject> Boss::GetNewPtr()
@@ -235,13 +238,13 @@ std::shared_ptr<MelLib::GameObject> Boss::GetNewPtr()
 
 void Boss::Initialize()
 {
-	FallStart(0.0f);
+	
 
 	// 当たり判定の作成
 	capsuleDatas["main"].resize(1);
 	capsuleDatas["main"][0].SetRadius(4.5f);
 	capsuleDatas["main"][0].GetRefSegment3DData().
-		SetPosition(MelLib::Value2<MelLib::Vector3>(GetPosition() + MelLib::Vector3(0, 25.0f, 0), GetPosition() + MelLib::Vector3(0,-1.0f, 0)));
+		SetPosition(MelLib::Value2<MelLib::Vector3>(GetPosition() + MelLib::Vector3(0, 25.0f, 0), GetPosition() + MelLib::Vector3(0,0.0f, 0)));
 
 	segment3DDatas["main"].resize(1);
 	segment3DDatas["main"][0].SetPosition(capsuleDatas["main"][0].GetSegment3DData().GetPosition());
@@ -255,12 +258,16 @@ void Boss::Initialize()
 
 void Boss::Update()
 {
+
+	FallStart(0.0f);
+	CalcMovePhysics();
+
 	// プレイヤーとの距離を計算
 	float toPDis = MelLib::LibMath::CalcDistance3D(pPlayer->GetPosition(), GetPosition());
 
 	if (toPDis <= 200.0f)thisState = ThisState::BATTLE;
 
-	CalcMovePhysics();
+	
 	if (thisState == ThisState::OTHER)return;
 
 	modelObjects["main"].Update();
@@ -269,7 +276,7 @@ void Boss::Update()
 	// 攻撃してなかったら移動と回転
 	if (currentState == Boss::CurrentState::NONE)
 	{
-		modelObjects["main"].SetAnimation("Move");
+		modelObjects["main"].SetAnimation("Work");
 		Rotate();
 	}
 

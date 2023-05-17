@@ -43,9 +43,6 @@
     <Filter Include="ヘッダー ファイル\Object\Enemy">
       <UniqueIdentifier>{3d031fd2-d0d9-43b0-8f36-128eb401a83a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\SceneCommon">
-      <UniqueIdentifier>{ee0f21b2-3f10-4664-9e8b-2cd0409f9c8d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\SceneCommon">
       <UniqueIdentifier>{4cff0403-d2e8-4e3c-ae15-df180a13aca7}</UniqueIdentifier>
     </Filter>
@@ -60,6 +57,9 @@
     </Filter>
     <Filter Include="ヘッダー ファイル\UI">
       <UniqueIdentifier>{11f5feb6-fb87-45fe-8fa5-84d37ff5b56a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SceneCommon">
+      <UniqueIdentifier>{ee0f21b2-3f10-4664-9e8b-2cd0409f9c8d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -219,6 +219,12 @@
     <ClCompile Include="EnemyDamageParticle.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="ClearSprite.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="GameOverSprite.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -375,6 +381,12 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="EnemyDamageParticle.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="ClearSprite.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOverSprite.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

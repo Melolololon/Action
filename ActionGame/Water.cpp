@@ -2,7 +2,7 @@
 
 void Water::LoadResources()
 {
-	MelLib::ModelData::Load("Resources/Model/Stage/Water/Water.obj", true, "Water");
+	MelLib::ModelData::Load("Resources/Model/Stage/Water/Water.obj", false, "Water");
 }
 
 Water::Water()

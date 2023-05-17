@@ -44,6 +44,8 @@ private:
 	const MelLib::Vector3 PLAYER_START_POS;
 	const MelLib::Vector3 PLAYER_START_ANGLE;
 	const MelLib::Vector3 PLAYER_START_SCALE;
+
+	const std::string ATTACK_NAME;
 private:
 	MelLib::FrameTimer eraseTimer;
 	AttackType attackType = AttackType::NORMAL_1;
@@ -74,7 +76,8 @@ public:
 		const MelLib::Vector3 playerStartPos,
 		const MelLib::Vector3 playerStartAngle,
 		const MelLib::Vector3 playerStartScale,
-		bool slushLeft
+		bool slushLeft,
+		const std::string& attackName
 	);
 
 	void Update()override;
@@ -96,6 +99,7 @@ public:
 		const std::string& hitShapeName
 	)override;
 
+	void Erase() { eraseManager = true; }
 #pragma region ƒQƒbƒg
 	//return capsuleDatas["main"][0].GetSegment3DData().GetPosition(); 
 	MelLib::Value2<MelLib::Vector3>GetSegmentPosition()const { return capsuleDatas.at("main")[0].GetSegment3DData().GetPosition(); }

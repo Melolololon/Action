@@ -8,14 +8,16 @@ class EnemyDamageParticle :
 {
 private:
     MelLib::Sprite3D spr;
-    const MelLib::Vector3 MOVE_VECTOR;
+    MelLib::Vector3 moveVector;
 
     static const std::string PARTICLE_NAME;
-
-    float speed = 0.0f;
+    float moveSpeed = 0.0f;
+    float downSpeed = 0.01f;
 
     MelLib::FrameTimer deadTimer;
+
 public:
+
     EnemyDamageParticle(const MelLib::Vector3& pos , const MelLib::Vector3& vec);
     ~EnemyDamageParticle();
 

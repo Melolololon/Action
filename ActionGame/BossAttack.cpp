@@ -4,7 +4,7 @@ Player* BossAttack::pPlayer;
 
 void BossAttack::LoadResources()
 {
-	bool r = MelLib::ModelData::Load("Resources/Model/Boss/BossAttack/BossAttack.obj", true, "BossAttack");
+	bool r = MelLib::ModelData::Load("Resources/Model/Boss/BossAttack/BossAttack.obj", false, "BossAttack");
 }
 
 BossAttack::BossAttack(const MelLib::Vector3& pos)
@@ -48,6 +48,6 @@ void BossAttack::Hit(const GameObject& object, const MelLib::ShapeType3D collisi
 {
 	if (typeid(object) == typeid(Player)) 
 	{
-		pPlayer->DownHP(3);
+		pPlayer->DownHP(80);
 	}
 }

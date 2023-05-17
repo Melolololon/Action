@@ -40,7 +40,9 @@ private:
 	//MelLib::Emitter3D emitter;
 
 
-	static std::unordered_map<ActionType, MelLib::PadButton> keyConfigData;
+	static std::unordered_map<ActionType, MelLib::PadButton> padConfigData;
+	static std::unordered_map<ActionType, BYTE> keyboardConfigData;
+	static std::unordered_map<ActionType, MelLib::MouseButton> mouseConfigData;
 
 	//前フレームの座標を格納する変数
 	MelLib::Vector3 prePosition;
@@ -76,11 +78,13 @@ private:
 
 	// 落下中かどうか
 	bool isDrop = false;
+	
 	float dropStartPosY = 0.0f;
 
 	// ジャンプ開始位置
 	MelLib::Vector3 jumpStartPosition;
 
+	// 着地時に手を着く落下速度
 	static const float GROUND_HUND_VELOCITY;
 #pragma endregion
 
@@ -114,6 +118,7 @@ private:
 	std::shared_ptr<PlayerSlush>pRigthSlush = nullptr;
 	//現在の攻撃
 	PlayerSlush::AttackType currentAttack = PlayerSlush::AttackType::NONE;
+	PlayerSlush::AttackType preAttack = PlayerSlush::AttackType::NONE;
 
 	//攻撃時間タイマー
 	MelLib::FrameTimer attackTimer;
@@ -144,7 +149,7 @@ private:
 #pragma endregion
 
 #pragma region 無敵
-
+	bool isHit = false;
 	bool isMuteki = false;
 	MelLib::FrameTimer mutekiTimer;
 #pragma endregion
@@ -220,6 +225,7 @@ private:
 	void Attack();
 	void SetAttackType();
 	void CreateAttackSlush();
+	void CheckEraseSlush();
 
 	void DeathBlow();
 
@@ -286,7 +292,7 @@ public:
 	void DownHP(const int power);
 	void LifeUp(const int upNum);
 #pragma region Get
-	static const std::unordered_map<Player::ActionType, MelLib::PadButton> GetKeyConfigData() { return keyConfigData; }
+	static const std::unordered_map<Player::ActionType, MelLib::PadButton> GetKeyConfigData() { return padConfigData; }
 
 	unsigned int GetCurrentAttackPower()const { return attackData[currentAttack].power; }
 
@@ -302,7 +308,7 @@ public:
 	bool GetHitEventFlag()const { return hitEventFlag; }
 	bool GetHitTutorialEventFlag()const { return hitTutorialEventFlag; }
 
-	//PlayerSlush::AttackType GetPlayerAttackType()const { return currentAttack; }
+	PlayerSlush::AttackType GetPlayerAttackType()const { return currentAttack; }
 	AttackEffect GetPlayerAttackEffect()const { return attackData.at(currentAttack).effect; }
 
 	bool DeadAnimationEnd()const 
@@ -310,11 +316,13 @@ public:
 		return modelObjects.at("main").GetAnimationEndFlag()
 			&& modelObjects.at("main").GetCurrentAnimationName() == "Dead";
 	}
+
+	bool GetAttackChangeFrame()const;
 #pragma endregion
 
 #pragma region Set
 
-	static void SetKeyConfigData(const ActionType type, const MelLib::PadButton button) { keyConfigData[type] = button; }
+	static void SetKeyConfigData(const ActionType type, const MelLib::PadButton button) { padConfigData[type] = button; }
 
 	/// <summary>
 	/// ロックオン強制終了

@@ -16,6 +16,7 @@
 #include"Boss.h"
 #include"BossAttack.h"
 #include"Water.h"
+#include"EnemyDamageParticle.h"
 
 #include"ItemEffect.h"
 #include"RecoveryItem.h"
@@ -25,6 +26,9 @@
 
 #include"EnemySpaunPoint.h"
 #include"WeakEnemy.h"
+
+#include"ClearSprite.h"
+#include"GameOverSprite.h"
 
 // シーン
 #include"SceneManager.h"
@@ -70,7 +74,7 @@ void Game::Run()
 
 void Game::Initialize()
 {
-	MelLib::ImguiManager::GetInstance()->SetReleaseDrawFlag(true);
+	MelLib::ImguiManager::GetInstance()->SetReleaseDrawFlag(false);
 	MelLib::Library::Initialize(1920, 1080, MelLib::Color(0, 170, 255, 255), L"Game");
 	MelLib::Library::SetFramesPerSecond60(true);
 
@@ -81,7 +85,8 @@ void Game::Initialize()
 	// 共通読み込み
  	Player::LoadResources();
 
- 	Stage::LoadResources(0);
+ 	Stage::LoadResources(1);
+	Water::LoadResources();
 	SlushEffect::LoadResources();
 	HPGauge::LoadResources();
 	Wall::LoadResources();
@@ -94,9 +99,14 @@ void Game::Initialize()
 	Boss::LoadResources();
 	BossAttack::LoadResources();
 	RecoveryItem::LoadResources();
-	Water::LoadResources();
+	EnemyDamageParticle::LoadResources();
+
+
 
 	RecoveryEffect::LoadResources();
+
+	ClearSprite::LoadResources(); 
+	GameOverSprite::LoadResources();
 
 	for (int i = 0; i < 4; i++) 
 	{
@@ -109,33 +119,12 @@ void Game::Initialize()
 	EnemyDarknessEffect::LoadResources();
 	bool r = MelLib::Texture::Load("Resources/Model/Stage/Stage_Mask_1.png","StageMask_1");
 
+	MelLib::SceneEditer::GetInstance()->SetEditerFlag(false);
+	MelLib::SceneEditer::GetInstance()->SetReleaseEditFlag(false);
+
 #pragma region エディター登録
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Player>(), "Player");
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Wall>(), "Wall");
-
-	
-#pragma endregion
-
-
-	//MelLib::SceneManager::GetInstance()->SetStartScene(new TestScene());
-	MelLib::SceneManager::GetInstance()->SetStartScene(new GamePlay());
-	Fade::GetInstance()->Initializ();
-
-	Option::GetInstance()->Initialize();
-	
-
-	MelLib::TextWrite::CreateFontData(/*L"HGPｺﾞｼｯｸE"*/L"Arial",64.0f, "Arial");
-
-	MelLib::Camera::Get()->SetFar(FLT_MAX);
-	
-	//MelLib::Camera::Get()->SetRotateCriteriaPosition(MelLib::Vector3(-8, 15, -10));
-	//MelLib::Camera::Get()->SetRotatePoint(MelLib::Camera::RotatePoint::ROTATE_POINT_CAMERA_POSITION);
-	//MelLib::Camera::Get()->SetAngle(MelLib::Vector3(35,-20,0));
-
-
-	MelLib::SceneEditer::GetInstance()->SetEditerFlag(true);
-	//MelLib::SceneEditer::GetInstance()->SetReleaseEditFlag(true);
-	MelLib::SceneEditer::GetInstance()->Initialize();
 
 
 	// ステージ登録
@@ -145,6 +134,23 @@ void Game::Initialize()
 	// 敵追加
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<EnemySpaunPoint>(typeid(WeakEnemy).name()), "Enemy");
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Boss>(), "Boss");
+#pragma endregion
+
+
+	//MelLib::SceneManager::GetInstance()->SetStartScene(new TestScene());
+	MelLib::SceneManager::GetInstance()->SetStartScene(new Title());
+	Fade::GetInstance()->Initializ();
+
+	Option::GetInstance()->Initialize();
+	
+
+	MelLib::TextWrite::CreateFontData(/*L"HGPｺﾞｼｯｸE"*/L"Arial",64.0f, "Arial");
+
+	MelLib::Camera::Get()->SetFar(FLT_MAX);
+
+	MelLib::SceneEditer::GetInstance()->Initialize();
+
+
 
 	// アイテム追加
 	//MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<RecoveryItem>(), "H_Item");

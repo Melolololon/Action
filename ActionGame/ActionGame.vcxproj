@@ -160,6 +160,7 @@
     <ClCompile Include="BossAttack.cpp" />
     <ClCompile Include="CapsuleEnemyAttack.cpp" />
     <ClCompile Include="Clear.cpp" />
+    <ClCompile Include="ClearSprite.cpp" />
     <ClCompile Include="EditMode.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyAttack.cpp" />
@@ -172,6 +173,7 @@
     <ClCompile Include="Fade.cpp" />
     <ClCompile Include="Floor.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameOverSprite.cpp" />
     <ClCompile Include="GamePlay.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="GameItem.cpp" />
@@ -215,6 +217,7 @@
     <ClInclude Include="BossAttack.h" />
     <ClInclude Include="CapsuleEnemyAttack.h" />
     <ClInclude Include="Clear.h" />
+    <ClInclude Include="ClearSprite.h" />
     <ClInclude Include="EditMode.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyAttack.h" />
@@ -227,6 +230,7 @@
     <ClInclude Include="Fade.h" />
     <ClInclude Include="Floor.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameOverSprite.h" />
     <ClInclude Include="GamePlay.h" />
     <ClInclude Include="Ground.h" />
     <ClInclude Include="GameItem.h" />

@@ -237,6 +237,9 @@ void MelLib::SceneEditer::SelectEditData()
 {
 	if (!editorFlag || !ReleaseCheck())return;
 	ImguiManager::GetInstance()->BeginDrawWindow("SelectScene");
+
+
+
 	ImguiManager::GetInstance()->DrawList(selectEditDataNum, sceneFileNames);
 	ImguiManager::GetInstance()->EndDrawWindow();
 
@@ -322,7 +325,7 @@ void MelLib::SceneEditer::LoadEditData(const std::string& sceneName)
 		// それを解決すればよさそう
 
 		// 追加オブジェクト一覧に追加
-		addObjects.push_back(pObject);
+		if (editorFlag)addObjects.push_back(pObject);
 
 		//座標とか
 		Vector3 position;
@@ -335,10 +338,7 @@ void MelLib::SceneEditer::LoadEditData(const std::string& sceneName)
 		file.read(reinterpret_cast<char*>(&scale), sizeof(Vector3));
 		pObject->SetScale(scale);
 
-
-
-		// 管理クラスに追加
-		GameObjectManager::GetInstance()->AddObject(pObject);
+		if(!editorFlag)GameObjectManager::GetInstance()->AddObject(pObject);
 
 		char c;
 		file.read(&c, 1);
@@ -428,6 +428,9 @@ void MelLib::SceneEditer::DrawObjectList()
 	if (OBJECT_SIZE == 0)return;
 	
 	ImguiManager::GetInstance()->BeginDrawWindow("ObjectList");
+	ImguiManager::GetInstance()->SetPosition(Vector2(0, 400));
+	ImguiManager::GetInstance()->SetSize(Vector2(250, 400));
+
 	ImguiManager::GetInstance()->DrawList(selectListObjectNum, objectNames);
 	selectListObjectName = objectNames[selectListObjectNum];
 	ImguiManager::GetInstance()->EndDrawWindow();
@@ -797,6 +800,8 @@ void MelLib::SceneEditer::Update()
 #pragma region 選択
 
 	ImguiManager::GetInstance()->BeginDrawWindow(EDIT_WINDOW_NAME);
+	ImguiManager::GetInstance()->SetPosition(Vector2(0, 0));
+	ImguiManager::GetInstance()->SetSize(Vector2(250, 400));
 
 	// スライダーとボックス切り替えられるようにする
 	bool pushChangeButton = ImguiManager::GetInstance()->DrawButton("ChangeSlider Box");
@@ -916,9 +921,6 @@ void MelLib::SceneEditer::Update()
 			// GUIのコピー
 			// これやるなら上のコピーいらないかも
 			GuiValueManager::GetInstance()->CopyGuiValue(pEditSelectObject->GetObjectName(), pObject->GetObjectName());
-
-			// 追加
-			//GameObjectManager::GetInstance()->AddObject(pObject);
 
 			// 全て削除
 			// (登録したオブジェクトのコンストラクタにオブジェクトを追加する処理がある場合、追加されたオブジェクトが表示されるため)

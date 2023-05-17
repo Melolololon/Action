@@ -34,7 +34,7 @@ void Title::Initialize()
 
 	titleSprite = std::make_shared<MelLib::Sprite2D>();
 	titleSprite->Create(MelLib::Texture::Get("title"));
-	titleSprite->SetPosition(MelLib::Vector2(270,30));
+	titleSprite->SetPosition(MelLib::Vector2(370,150));
 
 	MelLib::Camera* pCamera = MelLib::Camera::Get();
 	pCamera->SetAngle(MelLib::Vector3(20,-5,0));
@@ -73,7 +73,9 @@ void Title::Update()
 	bool pushSceneChangeButton =
 		MelLib::Input::PadButtonTrigger(MelLib::PadButton::A)
 		|| MelLib::Input::PadButtonTrigger(MelLib::PadButton::B)
-		|| MelLib::Input::PadButtonTrigger(MelLib::PadButton::START);
+		|| MelLib::Input::PadButtonTrigger(MelLib::PadButton::START)
+		|| MelLib::Input::KeyTrigger(DIK_SPACE)
+		|| MelLib::Input::KeyTrigger(DIK_RETURN);
 
 	if (pushSceneChangeButton && !Fade::GetInstance()->GetIsFade())
 	{
@@ -104,10 +106,19 @@ void Title::Draw()
 
 	Fade::GetInstance()->Draw();
 
-	if (!pushGameStart) 
+	if (!pushGameStart)
 	{
+		std::wstring buttonText;
+		if (MelLib::Input::GetPadConnectedFlag(1)) 
+		{
+			buttonText = L"Aボタン";
+		}
+		else 
+		{
+			buttonText = L"SPACE";
+		}
 		MelLib::TextWrite::Draw
-		(MelLib::Vector2(470, 400), MelLib::Color(255, 255, 255, 255), L"Aボタンを押してください", "Arial");
+		(MelLib::Vector2(700, 700), MelLib::Color(255, 255, 255, 255), buttonText + L"を押してください", "Arial");
 	}
 }
 
