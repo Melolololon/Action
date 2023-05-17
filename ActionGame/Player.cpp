@@ -1012,6 +1012,7 @@ void Player::RotCamera()
 	//}
 	//else cameraSpeed = 0.0f;
 
+	// ここでカメラの角度を計算
 	//MelLib::Vector2 a = preToCurrentPosVector * cameraSpeed;
 	//// 仮セット
 	//addCameraAngle = cameraAngle + MelLib::Vector3(a.x, a.y, 0);
