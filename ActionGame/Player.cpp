@@ -972,12 +972,12 @@ void Player::RotCamera()
 
 	MelLib::Vector3 cameraAngle = pCamera->GetAngle();
 	MelLib::Vector3 addCameraAngle = 0;
-	static const float MAX_CAMERA_ANGLE_X = 30.0f;
-	static const float MIX_CAMERA_ANGLE_X = -5.0f;
+	const float MAX_CAMERA_ANGLE_X = 30.0f;
+	const float MIX_CAMERA_ANGLE_X = -5.0f;
 
 	//最大値は一旦const(あとで設定で最大値を変えられるようにする)
-	static const float MAX_CAMERA_SPEED = 3.0f;
-	static const float FRAME_UP_CAMERA_SPEED = MAX_CAMERA_SPEED / 10;
+	const float MAX_CAMERA_SPEED = 3.0f;
+	const float FRAME_UP_CAMERA_SPEED = MAX_CAMERA_SPEED / 10;
 
 	if (!MelLib::Input::RightStickLeft(30.0f)
 		&& !MelLib::Input::RightStickRight(30.0f)
@@ -994,12 +994,31 @@ void Player::RotCamera()
 #pragma region キーボード用カメラ操作
 
 
-	preFrameMousePosition = frameMousePosition;
-	
-	//MelLib::Vector2 preToCurrentPosVector = MelLib::Input
-	
-	frameMousePosition = MelLib::Input::GetMousePosition();
+	//preFrameMousePosition = frameMousePosition;
+	//
+	//// 前フレームのマウス座標から現在のフレームのマウス座標へのベクトルを取得
+	//MelLib::Vector2 preToCurrentPosVector = MelLib::Input::GetMouseVector(preFrameMousePosition);
+	//// 正規化
+	//preToCurrentPosVector = preToCurrentPosVector.Normalize();
 
+	//// カメラにセット
+	//MelLib::Camera* pCamera = MelLib::Camera::Get();
+	//
+	//// カメラが動いたらセット
+	//if (preToCurrentPosVector.x != 0
+	//	&& preToCurrentPosVector.y != 0)
+	//{
+	//	cameraSpeed += FRAME_UP_CAMERA_SPEED;
+	//}
+	//else cameraSpeed = 0.0f;
+
+	//MelLib::Vector2 a = preToCurrentPosVector * cameraSpeed;
+	//// 仮セット
+	//addCameraAngle = cameraAngle + MelLib::Vector3(a.x, a.y, 0);
+	//
+	//frameMousePosition = MelLib::Input::GetMousePosition();
+
+	//
 
 #pragma endregion
 
