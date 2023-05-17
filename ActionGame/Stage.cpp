@@ -77,6 +77,8 @@ Stage::Stage(const unsigned int stageNum)
 
 	// マテリアルをセット
 	modelObjects["stage"].SetMaterial(&material);
+
+	collisionCheckDistance = 300.0f;
 }
 
 void Stage::Initialize()

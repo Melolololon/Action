@@ -166,7 +166,6 @@ void Game::Initialize()
 	MelLib::DirectionalLight::Create("Ligth3");
 	MelLib::DirectionalLight::Get("Ligth3").SetDirection(MelLib::Vector3(0, 0, -1));
 
-
 	MelLib::DirectionalLight::Create("Ligth4");
 	MelLib::DirectionalLight::Get("Ligth4").SetDirection(MelLib::Vector3(0, -0.75f, 0));
 }

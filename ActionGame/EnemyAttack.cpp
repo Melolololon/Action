@@ -46,6 +46,7 @@ EnemyAttack::EnemyAttack(unsigned int power, const MelLib::ModelObject& model, f
 	, MOVE_TYPE(MoveType::OBJECT)
 {
 	SetInitData(radius, attackType);
+	collisionCheckDistance = 20.0f;
 }
 
 void EnemyAttack::SetAttackTypeTag(AttackType type)

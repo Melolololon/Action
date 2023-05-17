@@ -1,5 +1,6 @@
 #pragma once
 #include <GameObject.h>
+#include<FrameTimer.h>
 
 // 敵が斬られたときに出てくるパーティクル
 class EnemyDamageParticle :
@@ -10,6 +11,10 @@ private:
     const MelLib::Vector3 MOVE_VECTOR;
 
     static const std::string PARTICLE_NAME;
+
+    float speed = 0.0f;
+
+    MelLib::FrameTimer deadTimer;
 public:
     EnemyDamageParticle(const MelLib::Vector3& pos , const MelLib::Vector3& vec);
     ~EnemyDamageParticle();

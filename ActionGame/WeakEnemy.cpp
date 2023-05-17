@@ -137,6 +137,8 @@ WeakEnemy::WeakEnemy(const MelLib::Vector3& pos):NewEnemy("WeakEnemy")
 	modelObjects["Hit02"].SetPosition(MelLib::Vector3(-4.9, 9.7, 8));*/
 
 	tags.push_back("Enemy");
+
+	collisionCheckDistance = 50.0f;
 }
 
 void WeakEnemy::Initialize()

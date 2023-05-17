@@ -163,7 +163,7 @@ Player::Player(const MelLib::Vector3& pos)
 	SetCameraData();
 
 
-	collisionCheckDistance = 80.0f;
+	collisionCheckDistance = 500.0f;
 
 
 

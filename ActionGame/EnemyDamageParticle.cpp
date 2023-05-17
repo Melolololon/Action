@@ -11,6 +11,12 @@ EnemyDamageParticle::EnemyDamageParticle(const MelLib::Vector3& pos, const MelLi
 	//spr.Create(MelLib::Texture::Get(PARTICLE_NAME));
 	spr.Create(MelLib::Color(255,255,255,255));
 	spr.SetPosition(pos);
+
+	speed = MelLib::Random::GetRandomFloatNumberRangeSelect(2, 2.5, 2);
+	
+
+	deadTimer.SetMaxTime(60 * 1);
+	deadTimer.SetStopFlag(false);
 }
 
 EnemyDamageParticle::~EnemyDamageParticle()
@@ -23,8 +29,9 @@ void EnemyDamageParticle::Initialize()
 
 void EnemyDamageParticle::Update()
 {
-	float moveSpeed = MelLib::Random::GetRandomFloatNumberRangeSelect(-3, 3, 2);
-	spr.SetPosition(spr.GetPosition() + MOVE_VECTOR * moveSpeed);
+	spr.SetPosition(spr.GetPosition() + MOVE_VECTOR * speed);
+	if (deadTimer.GetMaxOverFlag()) { eraseManager = true; }
+
 }
 
 void EnemyDamageParticle::Draw()

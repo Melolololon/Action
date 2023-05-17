@@ -212,6 +212,8 @@ PlayerSlush::PlayerSlush
 	eraseTimer.SetStopFlag(false);
 
 	//SetAttackParam();
+
+	collisionCheckDistance = 30.0f;
 }
 
 void PlayerSlush::Update()
