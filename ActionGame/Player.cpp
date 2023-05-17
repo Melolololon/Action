@@ -996,7 +996,7 @@ void Player::RotCamera()
 
 	preFrameMousePosition = frameMousePosition;
 	
-	MelLib::Vector2 preToCurrentPosVector = MelLib::GameObjectManager::GetInstance().
+	//MelLib::Vector2 preToCurrentPosVector = MelLib::Input
 	
 	frameMousePosition = MelLib::Input::GetMousePosition();
 
