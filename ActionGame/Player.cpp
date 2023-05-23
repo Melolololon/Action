@@ -95,6 +95,7 @@ void Player::LoadResources()
 Player::Player(const MelLib::Vector3& pos)
 	:GameObject("Player")
 {
+	//ShowCursor(FALSE);
 
 	//物理演算のためにseterとgeter作る?
 
@@ -476,6 +477,7 @@ void Player::Move()
 		|| MelLib::Input::LeftStickLeft(WALK_STICK_PAR))
 	{
 		direction = MelLib::Input::LeftStickVector3(20.0f, MelLib::Camera::Get(), false, true);
+		direction.y = 0.0f;
 		MelLib::Vector3 addPos = direction;
 
 		//ダッシュの傾き量を超えていたらダッシュ
@@ -507,14 +509,19 @@ void Player::Move()
 		|| MelLib::Input::KeyState(DIK_S)
 		|| MelLib::Input::KeyState(DIK_D)) 
 	{
+		MelLib::Vector3 moveVector;
 		// キーに応じて移動方向を設定
-		if (MelLib::Input::KeyState(DIK_W)) direction = MelLib::Vector3(0, 0, 1);
-		else if (MelLib::Input::KeyState(DIK_S))direction = MelLib::Vector3(0, 0, -1);
-		if (MelLib::Input::KeyState(DIK_A)) direction = MelLib::Vector3(-1, 0, 0);
-		else if (MelLib::Input::KeyState(DIK_D)) direction = MelLib::Vector3(1, 0, 0);
+		if (MelLib::Input::KeyState(DIK_W)) moveVector.z += 1;
+		else if (MelLib::Input::KeyState(DIK_S))moveVector.z += -1;
+		if (MelLib::Input::KeyState(DIK_A)) moveVector.x += -1;
+		else if (MelLib::Input::KeyState(DIK_D)) moveVector.x += 1;
 		
 		// カメラに合わせて回転
-		direction = MelLib::LibMath::RotateZXYVector3(direction,MelLib::Camera::Get()->GetAngle());
+		moveVector = MelLib::LibMath::RotateZXYVector3(moveVector,MelLib::Camera::Get()->GetAngle());
+		moveVector.y = 0.0f;
+
+		direction = moveVector;
+		
 		// 加算値に向きを代入
 		MelLib::Vector3 addPos = direction;
 
@@ -753,7 +760,7 @@ void Player::SetAttackType()
 			modelObjects["main"].SetAnimation("Attack_Normal_1");
 
 		}
-		else if (GetIsFall() && abs(GetPosition().y - jumpStartPosition.y) >= 30 )// 空中攻撃
+		else if (GetIsFall() && abs(GetPosition().y - jumpStartPosition.y) >= 10 )// 空中攻撃
 		{
 			currentAttack = PlayerSlush::AttackType::JUMP;
 			FallEnd();
@@ -992,7 +999,16 @@ void Player::RotCamera()
 	else if (MelLib::Input::RightStickDown(30.0f))addCameraAngle.x = cameraSpeed;
 
 #pragma region キーボード用カメラ操作
-
+	// やっぱ中心にカーソル固定しないとダメっぽい
+	// それか、ウィンドウ内に収まるようにする
+	// 常に固定だとポーズ作らないとゲームの終了が面倒になる
+	// あとウィンドウのゲーム画面にカーソルがある時は非表示にしたほうが良いかも
+	//if (MelLib::Input::KeyTrigger(DIK_LWIN) || MelLib::Input::KeyTrigger(DIK_RWIN)) 
+	if (MelLib::Input::KeyTrigger(DIK_ESCAPE)) 
+	{
+		isWinActive = !isWinActive;
+		//ShowCursor(!isWinActive);
+	}
 
 	//preFrameMousePosition = frameMousePosition;
 	//
@@ -1001,26 +1017,63 @@ void Player::RotCamera()
 	//// 正規化
 	//preToCurrentPosVector = preToCurrentPosVector.Normalize();
 
-	//// カメラにセット
-	//MelLib::Camera* pCamera = MelLib::Camera::Get();
 	//
 	//// カメラが動いたらセット
 	//if (preToCurrentPosVector.x != 0
 	//	&& preToCurrentPosVector.y != 0)
 	//{
 	//	cameraSpeed += FRAME_UP_CAMERA_SPEED;
+
+	//	// ここでカメラの移動量を計算
+	//	MelLib::Vector2 moveVector = preToCurrentPosVector * cameraSpeed;
+	//	// 角度をセット
+	//	addCameraAngle = MelLib::Vector3(moveVector.y, moveVector.x, 0);
+
+	//	frameMousePosition = MelLib::Input::GetMousePosition();
 	//}
 	//else cameraSpeed = 0.0f;
-
-	// ここでカメラの角度を計算
-	//MelLib::Vector2 a = preToCurrentPosVector * cameraSpeed;
-	//// 仮セット
-	//addCameraAngle = cameraAngle + MelLib::Vector3(a.x, a.y, 0);
 	//
-	//frameMousePosition = MelLib::Input::GetMousePosition();
+	//MelLib::Vector2 winSize(MelLib::Library::GetWindowWidth(), MelLib::Library::GetWindowHeight());
+	//if (isWinActive)MelLib::Input::SetMouseFixedPosition(winSize / 2);
 
-	//
 
+	MelLib::Vector2 winSize(MelLib::Library::GetWindowWidth(), MelLib::Library::GetWindowHeight());
+
+	preFrameMousePosition = frameMousePosition;
+	
+	//// 前フレームのマウス座標から現在のフレームのマウス座標へのベクトルを取得
+	//MelLib::Vector2 preToCurrentPosVector = MelLib::Input::GetMouseVector(preFrameMousePosition);
+	//// 正規化
+	//preToCurrentPosVector = preToCurrentPosVector.Normalize();
+
+	MelLib::Vector2 mousePos = MelLib::Input::GetMousePosition();
+	mousePos.x += 8.0f;
+	mousePos.y += 22.0f;
+	MelLib::Vector2 winHarf = winSize / 2;
+	// カメラが動いたらセット
+	if (!MelLib::LibMath::Difference(mousePos.x, winHarf.x, 2)
+		|| !MelLib::LibMath::Difference(mousePos.y, winHarf.y, 2))
+	{
+		cameraSpeed += FRAME_UP_CAMERA_SPEED;
+
+		// ここでカメラの移動量を計算
+		MelLib::Vector2 moveVector = MelLib::Vector2(mousePos - winHarf).Normalize() * cameraSpeed;
+		moveVector *= 20;
+		
+		// 角度をセット
+		addCameraAngle = MelLib::Vector3(moveVector.y, moveVector.x, 0);
+
+		frameMousePosition = mousePos;
+	}
+	else cameraSpeed = 0.0f;
+	
+	if (isWinActive)MelLib::Input::SetMouseFixedPosition(winHarf);
+
+
+	/*if (MelLib::Input::KeyTrigger(DIK_1)) 
+	{
+		int z = 0;
+	}*/
 #pragma endregion
 
 	if (cameraSpeed >= MAX_CAMERA_SPEED)cameraSpeed = MAX_CAMERA_SPEED;

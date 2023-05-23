@@ -23,6 +23,5 @@ namespace MelLib
 		Vector2 GetPosition2D() { return position2D; }
 		Vector3 GetNearPos() { return nearPos; }
 		Vector3 GetFarPos() { return farPos; }
-
 	};
 }
