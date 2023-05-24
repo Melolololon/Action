@@ -122,13 +122,18 @@ void Pause::Initialize()
 
 void Pause::Update()
 {
-	if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::START) && !isPause)
+	const MelLib::PadButton PAUSE_BUTTON = MelLib::PadButton::START;
+	const BYTE PAUSE_KEY = DIK_ESCAPE;
+	 
+
+
+	if (MelLib::Input::PadButtonTrigger(PAUSE_BUTTON) && !isPause)
 	{
 		isPause = true;
 	}
 	// ポーズ終了
 	else if (isPause &&(MelLib::Input::PadButtonTrigger(MelLib::PadButton::B)
-		|| MelLib::Input::PadButtonTrigger(MelLib::PadButton::START)))
+		|| MelLib::Input::PadButtonTrigger(PAUSE_BUTTON)))
 	{
 		pauseEnd = true;
 

@@ -182,9 +182,15 @@ private:
 #pragma region カメラ
 	float cameraSpeed = 0.0f;
 
+#pragma region ロックオン
+	// ロックオンは、プレイヤーの正面に線分を出し、それを入力に応して回転させ、敵の線分やカプセルとぶつかったらロックオンする
+	// 距離が遠かったら無視
+	// キーマウでどうやってロックオンするか。ホイールを使う？
+
 	bool lockOn = false;
 	const MelLib::GameObject* lockOnEnemy = nullptr;
 	float lockOnEnemyDistance = FLT_MAX;
+#pragma endregion
 
 	// キーマウ用
 	MelLib::Vector2 preFrameMousePosition;
@@ -246,6 +252,7 @@ private:
 	// 死亡処理
 	void Dead();
 
+	void UpdateCamera();
 	// カメラ回転処理
 	void RotCamera();
 	// カメラに値セット

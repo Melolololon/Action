@@ -30,6 +30,8 @@
 
 #include"EventFlag.h"
 #include"TutorialEventFlag.h"
+#include"Pause.h"
+
 
 #include<LibMath.h>
 
@@ -192,7 +194,11 @@ Player::Player(const MelLib::Vector3& pos)
 void Player::Initialize()
 {
 	ShowCursor(FALSE);
-	
+
+	MelLib::Camera* pCamera = MelLib::Camera::Get();
+	pCamera->SetRotatePoint(MelLib::Camera::RotatePoint::ROTATE_POINT_TARGET_POSITION);
+	pCamera->SetCameraToTargetDistance(35.0f);
+
 }
 
 // ジャンプ攻撃中に攻撃食らうとバグる
@@ -204,7 +210,7 @@ void Player::Update()
 	MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())
 	{
-		if(EditMode::GetInstance()->GetIsEdit())RotCamera();
+		if (EditMode::GetInstance()->GetIsEdit())UpdateCamera();
 		
 		MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
 		if (typeid(*currentScene) != typeid(Title))
@@ -235,7 +241,7 @@ void Player::Update()
 	{
 		Stun();
 		SetCameraData();
-		RotCamera();
+		UpdateCamera();
 		LockOn();
 		DashEnd();
 		return;
@@ -260,7 +266,7 @@ void Player::Update()
 		{
 			hitGroundNotMove = false;
 		}
-		RotCamera();
+		UpdateCamera();
 
 		return;
 	}
@@ -347,7 +353,7 @@ void Player::Update()
 
 	Muteki();
 
-	RotCamera();
+	UpdateCamera();
 	//LockOn();
 
 	float angle = MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(direction.x, direction.z), false) - 270;
@@ -971,6 +977,15 @@ void Player::Dead()
 	ChangeAnimationData();
 }
 
+void Player::UpdateCamera()
+{
+	// カメラ回転処理
+	RotCamera();
+	// カメラに値セット
+	SetCameraData();
+
+}
+
 void Player::RotCamera()
 {
 
@@ -1004,12 +1019,8 @@ void Player::RotCamera()
 	else if (MelLib::Input::RightStickDown(30.0f))addCameraAngle.x = cameraSpeed;
 
 #pragma region キーボード用カメラ操作
-	// やっぱ中心にカーソル固定しないとダメっぽい
-	// それか、ウィンドウ内に収まるようにする
-	// 常に固定だとポーズ作らないとゲームの終了が面倒になる
-	// あとウィンドウのゲーム画面にカーソルがある時は非表示にしたほうが良いかも
-	//if (MelLib::Input::KeyTrigger(DIK_LWIN) || MelLib::Input::KeyTrigger(DIK_RWIN)) 
-	if (MelLib::Input::KeyTrigger(DIK_ESCAPE)) 
+	
+	if (MelLib::Input::KeyTrigger(Pause::GetInstance()->GetPauseKey()))
 	{
 		isWinActive = !isWinActive;
 		ShowCursor(!isWinActive);
@@ -1031,7 +1042,10 @@ void Player::RotCamera()
 
 		// ここでカメラの移動量を計算
 		MelLib::Vector2 moveVector = MelLib::Vector2(mousePos - winHarf).Normalize() * cameraSpeed;
-		moveVector *= 20;
+		
+		// パッドの速度を使いまわすと遅いため、数値を掛けて速度を上げる
+		const float MUL_CAMERA_SPEED = 20.0f;
+		moveVector *= MUL_CAMERA_SPEED;
 		
 		// 角度をセット
 		addCameraAngle = MelLib::Vector3(moveVector.y, moveVector.x, 0);
@@ -1040,6 +1054,7 @@ void Player::RotCamera()
 	}
 	else cameraSpeed = 0.0f;
 	
+	// 中心にカーソルを移動
 	if (isWinActive)MelLib::Input::SetMouseFixedPosition(winHarf);
 
 #pragma endregion
@@ -1057,25 +1072,23 @@ void Player::RotCamera()
 	SetCameraData();
 }
 
+
 void Player::SetCameraData()
 {
 	MelLib::Camera* pCamera = MelLib::Camera::Get();
-	/*pCamera->SetRotateCriteriaPosition
-	(MelLib::LibMath::FloatDistanceMoveVector3
-	(GetPosition(), MelLib::LibMath::OtherVector3(pCamera->GetCameraPosition(), pCamera->GetTargetPosition()), 30.0f));*/
 
-	pCamera->SetRotatePoint(MelLib::Camera::RotatePoint::ROTATE_POINT_TARGET_POSITION);
-	pCamera->SetCameraToTargetDistance(35.0f);
-
-	if (!lockOn)
+	if (lockOn)
+	{
+	}
+	else 
 	{
 		MelLib::Vector3 targetPos = GetPosition() + MelLib::Vector3(0, 15, 0);
 
-		if (isDrop) 
+		// 落下中のカメラ制御
+		if (isDrop)
 		{
 			MelLib::Vector3 jumpUpCameraVector = 0;
 			targetPos.y -= (GetPosition().y - jumpStartPosition.y) / 7;
-
 		}
 
 		pCamera->SetRotateCriteriaPosition(targetPos);

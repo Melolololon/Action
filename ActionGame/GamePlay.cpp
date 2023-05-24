@@ -28,6 +28,8 @@
 
 #include"EnemyDeadCounter.h"
 
+#include"Pause.h"
+
 GamePlay::GamePlayState GamePlay::gameState = GamePlay::GamePlayState::PLAY;
 
 void GamePlay::CheckClear()
@@ -130,7 +132,7 @@ void GamePlay::Initialize()
 
 	gameState = GamePlayState::PLAY;
 
-
+	Pause::GetInstance()->Initialize();
 }
 
 void GamePlay::Update()

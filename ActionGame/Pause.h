@@ -5,6 +5,11 @@
 class Pause
 {
 private:
+
+	// キー
+	const MelLib::PadButton PAUSE_BUTTON = MelLib::PadButton::START;
+	const BYTE PAUSE_KEY = DIK_ESCAPE;
+
 	bool loadResource = false;
 
 	// ポーズ中かどうか
@@ -74,5 +79,7 @@ public:
 	bool GetIsPause() { return isPause; }
 	bool GetIsEnd() { return returnTitleFlag; }
 	bool GetIsReStart() { return isReStart; }
+
+	BYTE GetPauseKey()const { return PAUSE_KEY; }
 };
 
