@@ -38,7 +38,7 @@ void Pause::CreateSprite()
 
 
 	pauseBackSpr.Create(MelLib::Color(0, 0, 0, 255));
-	pauseBackSpr.SetScale(MelLib::Vector2(1280, 720));
+	pauseBackSpr.SetScale(MelLib::Vector2(1920, 1080));
 
 
 	std::string texturePath = Game::GetInstance()->GetPath(Game::ResourcePath::TEXTURE);
@@ -85,7 +85,7 @@ void Pause::Initialize()
 	pauseSubAlpha.SetStart(0.0f);
 	pauseSubAlpha.SetEnd(100.0f);
 	pauseSubAlpha.SetPar(100.0f);
-	pauseBackSubAlpha.SetStart(70.0f);
+	pauseBackSubAlpha.SetStart(50.0f);
 	pauseBackSubAlpha.SetEnd(100.0f);
 	pauseBackSubAlpha.SetPar(100.0f);
 
@@ -122,17 +122,18 @@ void Pause::Initialize()
 
 void Pause::Update()
 {
+	bool pushPauseButtonOrKey =
+		MelLib::Input::PadButtonTrigger(PAUSE_BUTTON)
+		|| MelLib::Input::KeyTrigger(PAUSE_KEY);
 	
-	 
+	bool pushPauseEndButtonOrKey = pushPauseButtonOrKey || (MelLib::Input::PadButtonTrigger(MelLib::PadButton::B));
 
-
-	if (MelLib::Input::PadButtonTrigger(PAUSE_BUTTON) && !isPause)
+		if (pushPauseButtonOrKey && !isPause)
 	{
 		isPause = true;
 	}
 	// ポーズ終了
-	else if (isPause &&(MelLib::Input::PadButtonTrigger(MelLib::PadButton::B)
-		|| MelLib::Input::PadButtonTrigger(PAUSE_BUTTON)))
+	else if (pushPauseEndButtonOrKey && isPause)
 	{
 		pauseEnd = true;
 

@@ -137,9 +137,14 @@ void GamePlay::Initialize()
 
 void GamePlay::Update()
 {
-
-	MelLib::GameObjectManager::GetInstance()->Update();
 	Fade::GetInstance()->Update();
+
+	if(!Pause::GetInstance()->GetIsPause())
+	{
+		MelLib::GameObjectManager::GetInstance()->Update();
+	}
+	// プレイヤーにカーソルの表示非表示処理があるため、あえてここに書いてポーズ開始のフレームをずらしている
+	Pause::GetInstance()->Update();
 
 #pragma region 共通処理
 
@@ -171,6 +176,7 @@ void GamePlay::Update()
 void GamePlay::Draw()
 {
 	MelLib::GameObjectManager::GetInstance()->Draw();
+	Pause::GetInstance()->Draw();
 	Fade::GetInstance()->Draw();
 }
 

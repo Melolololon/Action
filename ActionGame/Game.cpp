@@ -30,6 +30,8 @@
 #include"ClearSprite.h"
 #include"GameOverSprite.h"
 
+#include"Pause.h"
+
 // ƒV[ƒ“
 #include"SceneManager.h"
 #include"SceneEditer.h"
@@ -107,6 +109,8 @@ void Game::Initialize()
 
 	ClearSprite::LoadResources(); 
 	GameOverSprite::LoadResources();
+
+	Pause::GetInstance()->Initialize();
 
 	for (int i = 0; i < 4; i++) 
 	{
