@@ -232,7 +232,10 @@ namespace MelLib
 
 
 #pragma region カーソル
-
+		/// <summary>
+		/// マウスカーソルを指定した座標に固定します。
+		/// </summary>
+		static void SetMouseFixedPosition(const MelLib::Vector2& pos);
 
 		static void SetViewMatrix(const DirectX::XMMATRIX& viewMatrix) { viewMat = viewMatrix; }
 		static void SetProjectionMatrix(const DirectX::XMMATRIX& projectionMatrix) { projectionMat = projectionMatrix; }
@@ -271,8 +274,6 @@ namespace MelLib
 		/// <param name="nearPoint"></param>
 		/// <param name="farPoint"></param>
 		static void GetMouse3DLine(Vector3& nearPoint, Vector3& farPoint);
-
-		//static Vector3 Get3DSpaceMouseCursorPosition(const Camera* pCameta, );
 
 		/// <summary>
 		/// カメラの情報を元に、マウスカーソルを座標変換したときの最近点と最遠点を求めます。

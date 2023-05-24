@@ -189,6 +189,7 @@ private:
 	// キーマウ用
 	MelLib::Vector2 preFrameMousePosition;
 	MelLib::Vector2 frameMousePosition;
+	bool isWinActive = true;
 #pragma endregion
 
 	// デバッグ用(trueにすると強制Tポーズ)
