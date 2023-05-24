@@ -195,7 +195,7 @@ private:
 	// キーマウ用
 	MelLib::Vector2 preFrameMousePosition;
 	MelLib::Vector2 frameMousePosition;
-	bool isWinActive = true;
+	bool showMouse = false;
 #pragma endregion
 
 	// デバッグ用(trueにすると強制Tポーズ)
@@ -252,6 +252,7 @@ private:
 	// 死亡処理
 	void Dead();
 
+	// カメラの更新
 	void UpdateCamera();
 	// カメラ回転処理
 	void RotCamera();

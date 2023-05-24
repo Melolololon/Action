@@ -122,8 +122,7 @@ void Pause::Initialize()
 
 void Pause::Update()
 {
-	const MelLib::PadButton PAUSE_BUTTON = MelLib::PadButton::START;
-	const BYTE PAUSE_KEY = DIK_ESCAPE;
+	
 	 
 
 

@@ -240,7 +240,6 @@ void Player::Update()
 	if (isStun)
 	{
 		Stun();
-		SetCameraData();
 		UpdateCamera();
 		LockOn();
 		DashEnd();
@@ -253,8 +252,7 @@ void Player::Update()
 		{
 			JumpAnimation();
 			ChangeAnimationData();
-
-			SetCameraData();
+			UpdateCamera();
 			CalcMovePhysics();
 		}
 		return;
@@ -975,10 +973,17 @@ void Player::Dead()
 {
 	modelObjects["main"].SetAnimation("Dead");
 	ChangeAnimationData();
+
+	if (!showMouse)
+	{
+		ShowCursor(TRUE);
+	}
 }
 
 void Player::UpdateCamera()
 {
+	if (showMouse)return;
+
 	// カメラ回転処理
 	RotCamera();
 	// カメラに値セット
@@ -1022,21 +1027,23 @@ void Player::RotCamera()
 	
 	if (MelLib::Input::KeyTrigger(Pause::GetInstance()->GetPauseKey()))
 	{
-		isWinActive = !isWinActive;
-		ShowCursor(!isWinActive);
+		showMouse = !showMouse;
+		ShowCursor(showMouse);
 	}
 
 	MelLib::Vector2 winSize(MelLib::Library::GetWindowWidth(), MelLib::Library::GetWindowHeight());
 	MelLib::Vector2 winHarf = winSize / 2;
 
 	MelLib::Vector2 mousePos = MelLib::Input::GetMousePosition();
+	
+	// ウィンドウ動かすとバグるからウィンドウ座標取得して補正して対策するかフルスクボーダーレスにするのがいいかも
 	// ウィンドウのバー分座標がずれるため,加算して調整
 	mousePos.x += 8.0f;
 	mousePos.y += 22.0f;
 
 	// カメラが動いたらセット
-	if (!MelLib::LibMath::Difference(mousePos.x, winHarf.x, 2)
-		|| !MelLib::LibMath::Difference(mousePos.y, winHarf.y, 2))
+	if (!MelLib::LibMath::Difference(mousePos.x, winHarf.x, 4)
+		|| !MelLib::LibMath::Difference(mousePos.y, winHarf.y, 4))
 	{
 		cameraSpeed += FRAME_UP_CAMERA_SPEED;
 
@@ -1055,7 +1062,7 @@ void Player::RotCamera()
 	else cameraSpeed = 0.0f;
 	
 	// 中心にカーソルを移動
-	if (isWinActive)MelLib::Input::SetMouseFixedPosition(winHarf);
+	if (!showMouse)MelLib::Input::SetMouseFixedPosition(winHarf);
 
 #pragma endregion
 
@@ -1383,13 +1390,16 @@ void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionTy
 			
 			isStun = true;
 
-			for (auto& tag : object.GetTags()) 
+			for (auto& tag : object.GetTags())
 			{
 				if (EnemyAttack::GetAttackType(tag) == EnemyAttack::AttackType::BE_BLOWN_AWAY)
 				{
 					StartBeBlownAway(object.GetPosition());
 				}
-				else modelObjects["main"].SetAnimation("Stun");
+				else if(!isDrop)
+				{
+					modelObjects["main"].SetAnimation("Stun");
+				}
 			}
 
 		}

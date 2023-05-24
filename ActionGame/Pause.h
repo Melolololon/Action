@@ -1,6 +1,7 @@
 #pragma once
 #include<Easing.h>
 #include<Sprite2D.h>
+#include<Input.h>
 
 class Pause
 {
