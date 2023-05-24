@@ -254,6 +254,8 @@ private:
 
 	// カメラの更新
 	void UpdateCamera();
+	// マウスカーソルの表示非表示切り替え
+	void ChangeMouseCursorShow();
 	// カメラ回転処理
 	void RotCamera();
 	// カメラに値セット

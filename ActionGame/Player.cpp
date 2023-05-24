@@ -982,6 +982,9 @@ void Player::Dead()
 
 void Player::UpdateCamera()
 {
+	ChangeMouseCursorShow();
+
+	// マウスカーソルが見えている(ポーズ中など)だったらreturn
 	if (showMouse)return;
 
 	// カメラ回転処理
@@ -989,6 +992,16 @@ void Player::UpdateCamera()
 	// カメラに値セット
 	SetCameraData();
 
+}
+
+void Player::ChangeMouseCursorShow()
+{
+	if (MelLib::Input::KeyTrigger(Pause::GetInstance()->GetPauseKey())
+		&& !isDead)
+	{
+		showMouse = !showMouse;
+		ShowCursor(showMouse);
+	}
 }
 
 void Player::RotCamera()
@@ -1025,15 +1038,16 @@ void Player::RotCamera()
 
 #pragma region キーボード用カメラ操作
 	
-	if (MelLib::Input::KeyTrigger(Pause::GetInstance()->GetPauseKey()))
-	{
-		showMouse = !showMouse;
-		ShowCursor(showMouse);
-	}
+	
 
+	// ウィンドウサイズを取得
 	MelLib::Vector2 winSize(MelLib::Library::GetWindowWidth(), MelLib::Library::GetWindowHeight());
+	// ウィンドウが動いていることを考慮して座標分加算
+	winSize += MelLib::Library::GetWindowPosition();
+	
 	MelLib::Vector2 winHarf = winSize / 2;
-
+	
+	// マウスのクライアント座標を取得
 	MelLib::Vector2 mousePos = MelLib::Input::GetMousePosition();
 	
 	// ウィンドウ動かすとバグるからウィンドウ座標取得して補正して対策するかフルスクボーダーレスにするのがいいかも
