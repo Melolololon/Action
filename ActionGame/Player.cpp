@@ -95,7 +95,6 @@ void Player::LoadResources()
 Player::Player(const MelLib::Vector3& pos)
 	:GameObject("Player")
 {
-	//ShowCursor(FALSE);
 
 	//物理演算のためにseterとgeter作る?
 
@@ -188,6 +187,12 @@ Player::Player(const MelLib::Vector3& pos)
 	downMaterial.Create(op, 1);
 	downMaterial.SetTexture(modelObjects["main"].GetPMaterial("Zubon")->GetPTexture());
 	modelObjects["main"].SetMaterial(&downMaterial);*/
+}
+
+void Player::Initialize()
+{
+	ShowCursor(FALSE);
+	
 }
 
 // ジャンプ攻撃中に攻撃食らうとバグる
@@ -1007,49 +1012,17 @@ void Player::RotCamera()
 	if (MelLib::Input::KeyTrigger(DIK_ESCAPE)) 
 	{
 		isWinActive = !isWinActive;
-		//ShowCursor(!isWinActive);
+		ShowCursor(!isWinActive);
 	}
 
-	//preFrameMousePosition = frameMousePosition;
-	//
-	//// 前フレームのマウス座標から現在のフレームのマウス座標へのベクトルを取得
-	//MelLib::Vector2 preToCurrentPosVector = MelLib::Input::GetMouseVector(preFrameMousePosition);
-	//// 正規化
-	//preToCurrentPosVector = preToCurrentPosVector.Normalize();
-
-	//
-	//// カメラが動いたらセット
-	//if (preToCurrentPosVector.x != 0
-	//	&& preToCurrentPosVector.y != 0)
-	//{
-	//	cameraSpeed += FRAME_UP_CAMERA_SPEED;
-
-	//	// ここでカメラの移動量を計算
-	//	MelLib::Vector2 moveVector = preToCurrentPosVector * cameraSpeed;
-	//	// 角度をセット
-	//	addCameraAngle = MelLib::Vector3(moveVector.y, moveVector.x, 0);
-
-	//	frameMousePosition = MelLib::Input::GetMousePosition();
-	//}
-	//else cameraSpeed = 0.0f;
-	//
-	//MelLib::Vector2 winSize(MelLib::Library::GetWindowWidth(), MelLib::Library::GetWindowHeight());
-	//if (isWinActive)MelLib::Input::SetMouseFixedPosition(winSize / 2);
-
-
 	MelLib::Vector2 winSize(MelLib::Library::GetWindowWidth(), MelLib::Library::GetWindowHeight());
-
-	preFrameMousePosition = frameMousePosition;
-	
-	//// 前フレームのマウス座標から現在のフレームのマウス座標へのベクトルを取得
-	//MelLib::Vector2 preToCurrentPosVector = MelLib::Input::GetMouseVector(preFrameMousePosition);
-	//// 正規化
-	//preToCurrentPosVector = preToCurrentPosVector.Normalize();
+	MelLib::Vector2 winHarf = winSize / 2;
 
 	MelLib::Vector2 mousePos = MelLib::Input::GetMousePosition();
+	// ウィンドウのバー分座標がずれるため,加算して調整
 	mousePos.x += 8.0f;
 	mousePos.y += 22.0f;
-	MelLib::Vector2 winHarf = winSize / 2;
+
 	// カメラが動いたらセット
 	if (!MelLib::LibMath::Difference(mousePos.x, winHarf.x, 2)
 		|| !MelLib::LibMath::Difference(mousePos.y, winHarf.y, 2))
@@ -1069,11 +1042,6 @@ void Player::RotCamera()
 	
 	if (isWinActive)MelLib::Input::SetMouseFixedPosition(winHarf);
 
-
-	/*if (MelLib::Input::KeyTrigger(DIK_1)) 
-	{
-		int z = 0;
-	}*/
 #pragma endregion
 
 	if (cameraSpeed >= MAX_CAMERA_SPEED)cameraSpeed = MAX_CAMERA_SPEED;

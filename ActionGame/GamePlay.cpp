@@ -104,7 +104,7 @@ void GamePlay::Initialize()
 	EnemyAttack::SetPPlayer(pPlayer);
 	
 	EnemySpaunPoint::ClearEnemySpauns();
-	MelLib::GameObjectManager::GetInstance()->InitializeObject();
+	//MelLib::GameObjectManager::GetInstance()->InitializeObject();
 
 	// UI’Ç‰Á
 	HPGauge::SetPPlayer(pPlayer);

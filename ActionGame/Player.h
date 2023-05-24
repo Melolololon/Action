@@ -273,6 +273,7 @@ public:
 
 	PlayerSlush* GetPPlayerSlush() { return pPSlush.get(); }
 
+	void Initialize()override;
 	void Update()override;
 	void Draw()override;
 	/// <summary>
