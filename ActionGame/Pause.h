@@ -39,7 +39,7 @@ private:
 	std::unordered_map<int, MelLib::Sprite2D>menuStringSprites;
 
 	// ‘I‘ğ‚µ‚½€–Ú‚Ì‘å‚«‚³
-	const MelLib::Vector2 SELECT_SCALE = 1;
+	const MelLib::Vector2 SELECT_SCALE = 1.01f;
 	// ”ñ‘I‘ğ‚Ì€–Ú‚Ì‘å‚«‚³
 	const MelLib::Vector2 UN_SELECTED_SCALE = SELECT_SCALE - 0.3f;
 
