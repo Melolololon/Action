@@ -31,6 +31,11 @@ void EnemyDamageParticle::Update()
 {
 	float moveSpeed = MelLib::Random::GetRandomFloatNumberRangeSelect(-3, 3, 2);
 	spr.SetPosition(spr.GetPosition() + moveVector * moveSpeed);
+	if (deadTimer.GetMaxOverFlag()) 
+	{
+		eraseManager = true;
+	}
+
 }
 
 void EnemyDamageParticle::Draw()

@@ -57,9 +57,9 @@ void NewEnemy::Dead()
 		SetScale(GetScale() - 0.1f);
 		if (GetScale().x <= 0)
 		{
-			DropItem();
-			eraseManager = true;
+			//DropItem();
 			EnemyDeadCounter::GetInstance()->CountUp();
+			eraseManager = true;
 		}
 	}
 }

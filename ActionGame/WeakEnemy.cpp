@@ -170,6 +170,7 @@ void WeakEnemy::Update()
 
 	if (state == ThisState::DEAD) 
 	{
+		
 		if (modelObjects["main"].GetAnimationEndFlag())
 		{
 			deadEndTimer.SetStopFlag(false);
@@ -247,30 +248,17 @@ void WeakEnemy::Hit(const GameObject& object, const MelLib::ShapeType3D collisio
 
 			hitAttackName = object.GetTags()[0];
 
-			MelLib::Vector3 toCameraVec = (MelLib::Camera::Get()->GetCameraPosition() - GetPosition()).Normalize();
+		/*	MelLib::Vector3 toCameraVec = (MelLib::Camera::Get()->GetCameraPosition() - GetPosition()).Normalize();
 			MelLib::Vector3 effectAddPos = MelLib::Vector3(0, 6, 0) + toCameraVec * 2.1f;
 			MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<SlushHitEffect>
-				(GetPosition() + effectAddPos));
-
-
+				(GetPosition() + effectAddPos));*/
 
 			// プレイヤーから現在の攻撃の攻撃力を取得し、体力を減らす
 			hp -= pPlayer->GetCurrentAttackPower();
 
 			isMuteki = true;
-
-			// 硬直処理
-			//isStun = true;
-			//modelObjects["main"].SetAnimation("Stun");
-
-			//modelObjects["main"].SetAnimationFrameStart();
-			//modelObjects["main"].SetAnimationEndStopFlag(true);
-			//modelObjects["main"].SetAnimationReversePlayBack(false);
-
 			// 攻撃強制終了
 			isAttack = false;
-			//attackTimer.ResetTimeZero();
-			//attackTimer.SetStopFlag(true);
 
 
 			// 0になったらやられ処理
@@ -283,8 +271,6 @@ void WeakEnemy::Hit(const GameObject& object, const MelLib::ShapeType3D collisio
 				modelObjects["main"].SetAnimationEndStopFlag(true);
 				return;
 			}
-
-
 
 			// 吹っ飛ばし処理
 			// 後で1フレーム置いてNONEに切り替えるようにする
@@ -302,16 +288,12 @@ void WeakEnemy::Hit(const GameObject& object, const MelLib::ShapeType3D collisio
 				modelObjects["main"].SetAnimation("Stun");
 				modelObjects["main"].SetAnimationFrameStart();
 
-				// パーティクル発射
-				AddParticle();
 			}
 		}
 	}
 
 	if (typeid(object) == typeid(JumpAttack) && !isMuteki) 
 	{
-
-
 		MelLib::Vector3 toCameraVec = (MelLib::Camera::Get()->GetCameraPosition() - GetPosition()).Normalize();
 		MelLib::Vector3 effectAddPos = MelLib::Vector3(0, 6, 0) + toCameraVec * 2.1f;
 		MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<SlushHitEffect>
