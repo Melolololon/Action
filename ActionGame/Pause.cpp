@@ -1,6 +1,7 @@
 #include "Pause.h"
 
 #include<Input.h>
+#include<Collision.h>
 
 #include"Game.h"
 
@@ -66,6 +67,21 @@ void Pause::CreateSprite()
 	operationSpr.Create();
 }
 
+int Pause::HitCheck()
+{
+	MelLib::RectData cursorRect;
+	cursorRect.SetPosition(MelLib::Input::GetMousePosition());
+	cursorRect.SetSize(1.0f);
+
+	for (const auto& sprRect : menuStringRects) 
+	{
+		MelLib::RectData rect = sprRect.second;
+
+		if (MelLib::Collision::RectAndRect(rect, cursorRect))return sprRect.first;
+	}
+	return -1;
+}
+
 Pause* Pause::GetInstance()
 {
 	static Pause p;
@@ -92,9 +108,7 @@ void Pause::Initialize()
 
 	pauseStringSpr.SetPosition(MelLib::Vector2(400, 100));
 	
-	// メニューの初期化
-	static const MelLib::Vector2 TOP_MENU_POSITION = MelLib::Vector2(400,300);
-	static const MelLib::Vector2 MOVE_POSITION = MelLib::Vector2(0, 150);
+	
 	int loopCount = 0;
 	for(auto& sprite : menuStringSprites)
 	{
@@ -114,10 +128,13 @@ void Pause::Initialize()
 		}
 		// 位置をずらしながらセット
 		sprite.second.SetPosition(TOP_MENU_POSITION + MOVE_POSITION * loopCount);
+
+		menuStringRects[loopCount].SetPosition(sprite.second.GetPosition());
+		menuStringRects[loopCount].SetSize(sprite.second.GetTexture()->GetTextureSize());
+
 		loopCount++;
 	}
 
-	
 }
 
 void Pause::Update()
@@ -205,10 +222,29 @@ void Pause::Update()
 		sprite.second.SetSubColor(MelLib::Color(0, 0, 0, MelLib::Color::ParToUChar(pauseSubAlpha.GetValue())));
 	}
 
-
 	// 項目変更
-	if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::UP)
-		|| MelLib::Input::LeftStickUpTrigger(80.0f))
+	// マウス
+	int hitNum = HitCheck();
+	if (hitNum != -1) 
+	{
+		menuStringSprites[currentPauseSelect].SetScale(UN_SELECTED_SCALE);
+		menuStringSprites[currentPauseSelect].SetAddColor(MelLib::Color(0, 0, 0, 0));
+
+		currentPauseSelect = hitNum;
+
+		menuStringSprites[hitNum].SetScale(SELECT_SCALE);
+		menuStringSprites[hitNum].SetAddColor(MelLib::Color(255, 255, 255, 0));
+	}
+
+	// パッド
+	bool inputPadUp = MelLib::Input::PadButtonTrigger(MelLib::PadButton::UP)
+		|| MelLib::Input::LeftStickUpTrigger(80.0f);
+
+	bool inputPadDown = MelLib::Input::PadButtonTrigger(MelLib::PadButton::DOWN)
+		|| MelLib::Input::LeftStickDownTrigger(80.0f);
+
+
+	if (inputPadUp)
 	{
 		menuStringSprites[currentPauseSelect].SetScale(UN_SELECTED_SCALE);
 		menuStringSprites[currentPauseSelect].SetAddColor(MelLib::Color(0, 0, 0, 0));
@@ -219,8 +255,7 @@ void Pause::Update()
 		menuStringSprites[currentPauseSelect].SetScale(SELECT_SCALE);
 		menuStringSprites[currentPauseSelect].SetAddColor(MelLib::Color(255, 255, 255, 0));
 	}
-	else if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::DOWN)
-		|| MelLib::Input::LeftStickDownTrigger(80.0f))
+	else if (inputPadDown)
 	{
 		menuStringSprites[currentPauseSelect].SetScale(UN_SELECTED_SCALE);
 		menuStringSprites[currentPauseSelect].SetAddColor(MelLib::Color(0, 0, 0, 0));
@@ -233,8 +268,12 @@ void Pause::Update()
 	}
 
 
+	bool select =
+		MelLib::Input::PadButtonTrigger(MelLib::PadButton::A)
+		|| MelLib::Input::MouseButtonTrigger(MelLib::MouseButton::LEFT);
+	
 	// 決定
-	if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::A))
+	if (select)
 	{
 
 		// 選択したものに応じて処理を行う

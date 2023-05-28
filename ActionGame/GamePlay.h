@@ -21,6 +21,8 @@ private:
 	MelLib::FrameTimer gameOverFadeStartTimer;
 
 	static GamePlayState gameState;
+
+	bool isRestart = false;
 private:
 	void CheckClear();
 	void CheckGameOver();

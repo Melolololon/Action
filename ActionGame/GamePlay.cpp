@@ -137,19 +137,29 @@ void GamePlay::Initialize()
 
 void GamePlay::Update()
 {
+	
+
+
+#pragma region 共通処理
+	Pause* pause = Pause::GetInstance();
 	Fade::GetInstance()->Update();
 
-	if(!Pause::GetInstance()->GetIsPause())
+	if (!pause->GetIsPause())
 	{
 		MelLib::GameObjectManager::GetInstance()->Update();
 	}
-	
 	// これの処理シーン側か別クラスでもいいかも
 	pPlayer->ChangeMouseCursorShow();
 	// プレイヤーにカーソルの表示非表示処理があるため、あえてここに書いてポーズ開始のフレームをずらしている
-	Pause::GetInstance()->Update();
+	pause->Update();
+	
+	if (pause->GetIsReStart())
+	{
+		isRestart = true;
+		Fade::GetInstance()->Start();
+	}
+	else if (pause->GetIsEnd())Fade::GetInstance()->Start();
 
-#pragma region 共通処理
 
 	if (pPlayer->GetHP() <= 0)
 	{
@@ -190,5 +200,7 @@ void GamePlay::Finalize()
 
 MelLib::Scene* GamePlay::GetNextScene()
 {
+	if (isRestart)return new GamePlay();
+
 	return new Title();
 }

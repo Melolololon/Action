@@ -2,6 +2,7 @@
 #include<Easing.h>
 #include<Sprite2D.h>
 #include<Input.h>
+#include<CollisionDetectionData.h>
 
 class Pause
 {
@@ -33,10 +34,15 @@ private:
 		//static const int OPTION = 2;
 		//static const int CHECK_OPERATION = 3;
 		static const int RETURN_TITLE = 2;
-		static const int NUM_MAX = 2;
+		static const int NUM_MAX = RETURN_TITLE;
 	};
-	// ポーズメニューのスプライトの大きさ
+	// ポーズメニューのスプライト
 	std::unordered_map<int, MelLib::Sprite2D>menuStringSprites;
+
+	// メニュー項目の座標
+	const MelLib::Vector2 TOP_MENU_POSITION = MelLib::Vector2(400, 300);
+	const MelLib::Vector2 MOVE_POSITION = MelLib::Vector2(0, 150);
+	std::unordered_map<int, MelLib::RectData> menuStringRects;
 
 	// 選択した項目の大きさ
 	const MelLib::Vector2 SELECT_SCALE = 1.01f;
@@ -70,6 +76,8 @@ private:
 	void ActionPartPauseDraw();
 
 	void CreateSprite();
+
+	int HitCheck();
 public:
 	Pause(Pause& p) = delete;
 	Pause& operator=(Pause& p) = delete;
