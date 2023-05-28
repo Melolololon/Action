@@ -254,8 +254,7 @@ private:
 
 	// カメラの更新
 	void UpdateCamera();
-	// マウスカーソルの表示非表示切り替え
-	void ChangeMouseCursorShow();
+	
 	// カメラ回転処理
 	void RotCamera();
 	// カメラに値セット
@@ -358,5 +357,8 @@ public:
 	/// <param name="pos"></param>
 	/// <returns></returns>
 	MelLib::Vector3 CalcPlayerVector(const MelLib::Vector3& pos)const;
+
+	// マウスカーソルの表示非表示切り替え
+	void ChangeMouseCursorShow();
 };
 

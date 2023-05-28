@@ -207,6 +207,10 @@ void Player::Update()
 {
 	preAttack = currentAttack;
 
+	// マウスカーソル確認
+	//ChangeMouseCursorShow();
+
+
 	MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())
 	{
@@ -982,7 +986,6 @@ void Player::Dead()
 
 void Player::UpdateCamera()
 {
-	ChangeMouseCursorShow();
 
 	// マウスカーソルが見えている(ポーズ中など)だったらreturn
 	if (showMouse)return;
@@ -996,8 +999,9 @@ void Player::UpdateCamera()
 
 void Player::ChangeMouseCursorShow()
 {
-	if (MelLib::Input::KeyTrigger(Pause::GetInstance()->GetPauseKey())
-		&& !isDead)
+	/*if (MelLib::Input::KeyTrigger(Pause::GetInstance()->GetPauseKey())
+		&& !isDead)*/
+	if(Pause::GetInstance()->PauseTiming())
 	{
 		showMouse = !showMouse;
 		ShowCursor(showMouse);

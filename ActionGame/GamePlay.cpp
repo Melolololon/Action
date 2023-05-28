@@ -143,6 +143,9 @@ void GamePlay::Update()
 	{
 		MelLib::GameObjectManager::GetInstance()->Update();
 	}
+	
+	// これの処理シーン側か別クラスでもいいかも
+	pPlayer->ChangeMouseCursorShow();
 	// プレイヤーにカーソルの表示非表示処理があるため、あえてここに書いてポーズ開始のフレームをずらしている
 	Pause::GetInstance()->Update();
 

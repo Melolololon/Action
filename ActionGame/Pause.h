@@ -13,6 +13,8 @@ private:
 
 	bool loadResource = false;
 
+	// 前フレームのポーズフラグ
+	bool prePause = false;
 	// ポーズ中かどうか
 	bool isPause = false;
 
@@ -82,5 +84,8 @@ public:
 	bool GetIsReStart() { return isReStart; }
 
 	BYTE GetPauseKey()const { return PAUSE_KEY; }
+
+	// 前フレームと今でフラグが違うかどうか
+	bool PauseTiming()const { return isPause != prePause; }
 };
 

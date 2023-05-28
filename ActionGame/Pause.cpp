@@ -122,6 +122,8 @@ void Pause::Initialize()
 
 void Pause::Update()
 {
+	prePause = isPause;
+
 	bool pushPauseButtonOrKey =
 		MelLib::Input::PadButtonTrigger(PAUSE_BUTTON)
 		|| MelLib::Input::KeyTrigger(PAUSE_KEY);
