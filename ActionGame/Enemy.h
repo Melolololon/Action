@@ -25,8 +25,6 @@ private:
 
 	MelLib::Vector3 direction;
 
-
-
 	bool isMuteki = false;
 	MelLib::FrameTimer mutekiTimer;
 

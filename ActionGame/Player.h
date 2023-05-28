@@ -360,5 +360,7 @@ public:
 
 	// マウスカーソルの表示非表示切り替え
 	void ChangeMouseCursorShow();
+
+	bool GetSetStartParam()const { return setStartParam; }
 };
 

@@ -92,6 +92,8 @@ void Pause::Initialize()
 {
 	returnTitleFlag = false;
 	isPause = false;
+	pauseEnd = false;
+	prePause = false;
 	isReStart = false;
 	drawOperation = false;
 	currentPauseSelect = 0;

@@ -84,7 +84,6 @@ void GamePlay::Initialize()
 {
 	MelLib::Camera::Get()->SetAngle(MelLib::Vector3(0, 180, 0));
 
-
 	EnemyDeadCounter::GetInstance()->Reset();
 
 	// ステージセレクト追加したらコメントアウト解除
@@ -137,9 +136,6 @@ void GamePlay::Initialize()
 
 void GamePlay::Update()
 {
-	
-
-
 #pragma region 共通処理
 	Pause* pause = Pause::GetInstance();
 	Fade::GetInstance()->Update();
@@ -151,7 +147,9 @@ void GamePlay::Update()
 	// これの処理シーン側か別クラスでもいいかも
 	pPlayer->ChangeMouseCursorShow();
 	// プレイヤーにカーソルの表示非表示処理があるため、あえてここに書いてポーズ開始のフレームをずらしている
-	pause->Update();
+	
+	// セット完了(地面に着地)したらポーズ可能に
+	if(pPlayer->GetSetStartParam())pause->Update();
 	
 	if (pause->GetIsReStart())
 	{

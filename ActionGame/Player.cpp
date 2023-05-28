@@ -999,8 +999,8 @@ void Player::UpdateCamera()
 
 void Player::ChangeMouseCursorShow()
 {
-	/*if (MelLib::Input::KeyTrigger(Pause::GetInstance()->GetPauseKey())
-		&& !isDead)*/
+	if (!setStartParam)return;
+
 	if(Pause::GetInstance()->PauseTiming())
 	{
 		showMouse = !showMouse;
@@ -1092,9 +1092,6 @@ void Player::RotCamera()
 
 	pCamera->SetAngle(cameraAngle);
 	
-
-	//pCamera->SetRotateCriteriaPosition(position);
-	SetCameraData();
 }
 
 
