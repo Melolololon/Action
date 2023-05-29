@@ -132,7 +132,7 @@ void Pause::Initialize()
 		sprite.second.SetPosition(TOP_MENU_POSITION + MOVE_POSITION * loopCount);
 
 		menuStringRects[loopCount].SetPosition(sprite.second.GetPosition());
-		menuStringRects[loopCount].SetSize(sprite.second.GetTexture()->GetTextureSize());
+		menuStringRects[loopCount].SetSize(sprite.second.GetTexture()->GetTextureSize() * UN_SELECTED_SCALE);
 
 		loopCount++;
 	}
