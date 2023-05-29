@@ -516,6 +516,9 @@ void Player::Move()
 
 			modelObjects["main"].SetAnimation("Walk");
 		}
+
+
+		AddPosition(addPos);
 	}
 	else if (MelLib::Input::KeyState(DIK_W)
 		|| MelLib::Input::KeyState(DIK_A)
@@ -1020,7 +1023,7 @@ void Player::RotCamera()
 	MelLib::Camera* pCamera = MelLib::Camera::Get();
 
 	MelLib::Vector3 cameraAngle = pCamera->GetAngle();
-	MelLib::Vector3 addCameraAngle = 0;
+	MelLib::Vector3 addCameraAngle = 0.0f;
 	const float MAX_CAMERA_ANGLE_X = 30.0f;
 	const float MIX_CAMERA_ANGLE_X = -5.0f;
 
@@ -1039,49 +1042,51 @@ void Player::RotCamera()
 	else if (MelLib::Input::RightStickRight(30.0f))addCameraAngle.y = cameraSpeed;
 	if (MelLib::Input::RightStickUp(30.0f))addCameraAngle.x = -cameraSpeed;
 	else if (MelLib::Input::RightStickDown(30.0f))addCameraAngle.x = cameraSpeed;
+	
+	bool padInput = addCameraAngle != 0.0f;
 
 #pragma region キーボード用カメラ操作
 	
-	
+	if (!padInput) {
 
-	// ウィンドウサイズを取得
-	MelLib::Vector2 winSize(MelLib::Library::GetWindowWidth(), MelLib::Library::GetWindowHeight());
-	// ウィンドウが動いていることを考慮して座標分加算
-	winSize += MelLib::Library::GetWindowPosition();
-	
-	MelLib::Vector2 winHarf = winSize / 2;
-	
-	// マウスのクライアント座標を取得
-	MelLib::Vector2 mousePos = MelLib::Input::GetMousePosition();
-	
-	// ウィンドウ動かすとバグるからウィンドウ座標取得して補正して対策するかフルスクボーダーレスにするのがいいかも
-	// ウィンドウのバー分座標がずれるため,加算して調整
-	mousePos.x += 8.0f;
-	mousePos.y += 22.0f;
+		// ウィンドウサイズを取得
+		MelLib::Vector2 winSize(MelLib::Library::GetWindowWidth(), MelLib::Library::GetWindowHeight());
+		// ウィンドウが動いていることを考慮して座標分加算
+		winSize += MelLib::Library::GetWindowPosition();
 
-	// カメラが動いたらセット
-	if (!MelLib::LibMath::Difference(mousePos.x, winHarf.x, 4)
-		|| !MelLib::LibMath::Difference(mousePos.y, winHarf.y, 4))
-	{
-		cameraSpeed += FRAME_UP_CAMERA_SPEED;
+		MelLib::Vector2 winHarf = winSize / 2;
 
-		// ここでカメラの移動量を計算
-		MelLib::Vector2 moveVector = MelLib::Vector2(mousePos - winHarf).Normalize() * cameraSpeed;
-		
-		// パッドの速度を使いまわすと遅いため、数値を掛けて速度を上げる
-		const float MUL_CAMERA_SPEED = 20.0f;
-		moveVector *= MUL_CAMERA_SPEED;
-		
-		// 角度をセット
-		addCameraAngle = MelLib::Vector3(moveVector.y, moveVector.x, 0);
+		// マウスのクライアント座標を取得
+		MelLib::Vector2 mousePos = MelLib::Input::GetMousePosition();
 
-		frameMousePosition = mousePos;
+		// ウィンドウ動かすとバグるからウィンドウ座標取得して補正して対策するかフルスクボーダーレスにするのがいいかも
+		// ウィンドウのバー分座標がずれるため,加算して調整
+		mousePos.x += 8.0f;
+		mousePos.y += 22.0f;
+
+		// カメラが動いたらセット
+		if (!MelLib::LibMath::Difference(mousePos.x, winHarf.x, 4)
+			|| !MelLib::LibMath::Difference(mousePos.y, winHarf.y, 4))
+		{
+			cameraSpeed += FRAME_UP_CAMERA_SPEED;
+
+			// ここでカメラの移動量を計算
+			MelLib::Vector2 moveVector = MelLib::Vector2(mousePos - winHarf).Normalize() * cameraSpeed;
+
+			// パッドの速度を使いまわすと遅いため、数値を掛けて速度を上げる
+			const float MUL_CAMERA_SPEED = 20.0f;
+			moveVector *= MUL_CAMERA_SPEED;
+
+			// 角度をセット
+			addCameraAngle = MelLib::Vector3(moveVector.y, moveVector.x, 0);
+
+			frameMousePosition = mousePos;
+		}
+		else cameraSpeed = 0.0f;
+
+		// 中心にカーソルを移動
+		if (!showMouse)MelLib::Input::SetMouseFixedPosition(winHarf);
 	}
-	else cameraSpeed = 0.0f;
-	
-	// 中心にカーソルを移動
-	if (!showMouse)MelLib::Input::SetMouseFixedPosition(winHarf);
-
 #pragma endregion
 
 	if (cameraSpeed >= MAX_CAMERA_SPEED)cameraSpeed = MAX_CAMERA_SPEED;

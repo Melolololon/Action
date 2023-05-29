@@ -13,7 +13,7 @@
 
 Player* NewEnemy::pPlayer;
 const float NewEnemy::MOVE_SPEED = 0.5f;
-const float NewEnemy::MIN_DISTANCE = 15.0f;
+const float NewEnemy::MIN_DISTANCE = 25.0f;
 //
 //void NewEnemy::ToPlayerMove()
 //{
@@ -88,13 +88,15 @@ void NewEnemy::AddParticle()
 	const int PARTICLE_NUM =  4;
 	for (int i = 0; i < PARTICLE_NUM; i++)
 	{
+		MelLib::Vector3 vec = MelLib::Vector3(
+			MelLib::Random::GetRandomFloatNumberRangeSelect(-1, 1, 1),
+			1,
+			MelLib::Random::GetRandomFloatNumberRangeSelect(-1, 1, 1)).Normalize();
+		vec.y = 2.2f;
+
 		MelLib::GameObjectManager::GetInstance()->AddObject
 		(
-			std::make_shared<EnemyDamageParticle>(GetPosition(), 
-				MelLib::Vector3(
-				MelLib::Random::GetRandomFloatNumberRangeSelect(-2,2,1),
-				MelLib::Random::GetRandomFloatNumberRangeSelect(1.0f,3.0f,2),
-				MelLib::Random::GetRandomFloatNumberRangeSelect(-2,2,1)))
+			std::make_shared<EnemyDamageParticle>(GetPosition(), vec)
 		);
 	}
 }

@@ -8,7 +8,7 @@
 
 #include"Stage.h"
 
-const float EnemySpaunPoint::MIN_DISTANCE = 60.0f;
+const float EnemySpaunPoint::MIN_DISTANCE = 30.0f;
 const float EnemySpaunPoint::ATTACK_MIN_DISTANCE = 8.0f;
 const unsigned int EnemySpaunPoint::ENEMY_MAX_NUM = 10;
 
@@ -109,13 +109,36 @@ void EnemySpaunPoint::CteateEnemy()
 
 		moveSpeed = WeakEnemy::GetMoveSpeed();
 
+		std::vector<MelLib::Vector3>enemyPoss(enemys.size());
+
 		for (auto& enemy : enemys)
 		{
-			MelLib::Vector3 enemyPos(
-				MelLib::Random::GetRandomFloatNumberRangeSelect(-10.0f, 10.0f, 1),
-				0,
-				MelLib::Random::GetRandomFloatNumberRangeSelect(-10.0f, 10.0f, 1)
-			);
+			MelLib::Vector3 enemyPos;
+			while (1) 
+			{
+				enemyPos = MelLib::Vector3(
+					MelLib::Random::GetRandomFloatNumberRangeSelect(-30.0f, 30.0f, 1),
+					0,
+					MelLib::Random::GetRandomFloatNumberRangeSelect(-30.0f, 30.0f, 1)
+				);
+
+				bool breakLoop = false;
+				
+				for (const auto& ePos : enemyPoss) 
+				{
+					breakLoop = MelLib::LibMath::CalcDistance3D(enemyPos, ePos) >= 5.0f;
+
+					if (!breakLoop) 
+					{
+						continue;
+					}
+				}
+
+				if (breakLoop || enemyPoss.size() == 0)
+				{
+					break;
+				}
+			}
 			enemyPos += GetPosition();
 
 			enemy = std::make_shared<WeakEnemy>(enemyPos);
