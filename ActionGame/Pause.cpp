@@ -97,6 +97,7 @@ void Pause::Initialize()
 	isReStart = false;
 	drawOperation = false;
 	currentPauseSelect = 0;
+	pushPauseSelect = -1;
 
 	CreateSprite();
 
@@ -108,7 +109,7 @@ void Pause::Initialize()
 	pauseBackSubAlpha.SetPar(100.0f);
 
 
-	pauseStringSpr.SetPosition(MelLib::Vector2(400, 100));
+	pauseStringSpr.SetPosition(MelLib::Vector2(700, 150));
 	
 	
 	int loopCount = 0;
@@ -225,82 +226,86 @@ void Pause::Update()
 	}
 
 	// 項目変更
-	// マウス
-	int hitNum = HitCheck();
-	if (hitNum != -1) 
+	if (pushPauseSelect == -1) 
 	{
-		menuStringSprites[currentPauseSelect].SetScale(UN_SELECTED_SCALE);
-		menuStringSprites[currentPauseSelect].SetAddColor(MelLib::Color(0, 0, 0, 0));
-
-		currentPauseSelect = hitNum;
-
-		menuStringSprites[hitNum].SetScale(SELECT_SCALE);
-		menuStringSprites[hitNum].SetAddColor(MelLib::Color(255, 255, 255, 0));
-	}
-
-	// パッド
-	bool inputPadUp = MelLib::Input::PadButtonTrigger(MelLib::PadButton::UP)
-		|| MelLib::Input::LeftStickUpTrigger(80.0f);
-
-	bool inputPadDown = MelLib::Input::PadButtonTrigger(MelLib::PadButton::DOWN)
-		|| MelLib::Input::LeftStickDownTrigger(80.0f);
-
-
-	if (inputPadUp)
-	{
-		menuStringSprites[currentPauseSelect].SetScale(UN_SELECTED_SCALE);
-		menuStringSprites[currentPauseSelect].SetAddColor(MelLib::Color(0, 0, 0, 0));
-
-		currentPauseSelect--;
-		if (currentPauseSelect < 0)currentPauseSelect = PauseMenu::NUM_MAX;
-
-		menuStringSprites[currentPauseSelect].SetScale(SELECT_SCALE);
-		menuStringSprites[currentPauseSelect].SetAddColor(MelLib::Color(255, 255, 255, 0));
-	}
-	else if (inputPadDown)
-	{
-		menuStringSprites[currentPauseSelect].SetScale(UN_SELECTED_SCALE);
-		menuStringSprites[currentPauseSelect].SetAddColor(MelLib::Color(0, 0, 0, 0));
-
-		currentPauseSelect++;
-		if (currentPauseSelect > PauseMenu::NUM_MAX)currentPauseSelect = 0;
-
-		menuStringSprites[currentPauseSelect].SetScale(SELECT_SCALE);
-		menuStringSprites[currentPauseSelect].SetAddColor(MelLib::Color(255, 255, 255, 0));
-	}
-
-
-	bool select =
-		MelLib::Input::PadButtonTrigger(MelLib::PadButton::A)
-		|| MelLib::Input::MouseButtonTrigger(MelLib::MouseButton::LEFT);
-	
-	// 決定
-	if (select)
-	{
-
-		// 選択したものに応じて処理を行う
-		switch (currentPauseSelect)
+		// マウス
+		int hitNum = HitCheck();
+		if (hitNum != -1)
 		{
-		case PauseMenu::PAUSE_END:
-			pauseEnd = true;
-			break;
+			menuStringSprites[currentPauseSelect].SetScale(UN_SELECTED_SCALE);
+			menuStringSprites[currentPauseSelect].SetAddColor(MelLib::Color(0, 0, 0, 0));
 
-		case PauseMenu::RESTART:
-			isReStart = true;
-			break;
+			currentPauseSelect = hitNum;
 
-			/*	case PauseMenu::OPTION:
-					break;
-				case PauseMenu::CHECK_OPERATION:
-					drawOperation = true;
-					break;*/
+			menuStringSprites[hitNum].SetScale(SELECT_SCALE);
+			menuStringSprites[hitNum].SetAddColor(MelLib::Color(255, 255, 255, 0));
+		}
 
-		case PauseMenu::RETURN_TITLE:
-			returnTitleFlag = true;
-			break;
+		// パッド
+		bool inputPadUp = MelLib::Input::PadButtonTrigger(MelLib::PadButton::UP)
+			|| MelLib::Input::LeftStickUpTrigger(80.0f);
+
+		bool inputPadDown = MelLib::Input::PadButtonTrigger(MelLib::PadButton::DOWN)
+			|| MelLib::Input::LeftStickDownTrigger(80.0f);
+
+
+		if (inputPadUp)
+		{
+			menuStringSprites[currentPauseSelect].SetScale(UN_SELECTED_SCALE);
+			menuStringSprites[currentPauseSelect].SetAddColor(MelLib::Color(0, 0, 0, 0));
+
+			currentPauseSelect--;
+			if (currentPauseSelect < 0)currentPauseSelect = PauseMenu::NUM_MAX;
+
+			menuStringSprites[currentPauseSelect].SetScale(SELECT_SCALE);
+			menuStringSprites[currentPauseSelect].SetAddColor(MelLib::Color(255, 255, 255, 0));
+		}
+		else if (inputPadDown)
+		{
+			menuStringSprites[currentPauseSelect].SetScale(UN_SELECTED_SCALE);
+			menuStringSprites[currentPauseSelect].SetAddColor(MelLib::Color(0, 0, 0, 0));
+
+			currentPauseSelect++;
+			if (currentPauseSelect > PauseMenu::NUM_MAX)currentPauseSelect = 0;
+
+			menuStringSprites[currentPauseSelect].SetScale(SELECT_SCALE);
+			menuStringSprites[currentPauseSelect].SetAddColor(MelLib::Color(255, 255, 255, 0));
+		}
+
+
+		bool select =
+			MelLib::Input::PadButtonTrigger(MelLib::PadButton::A)
+			|| MelLib::Input::MouseButtonTrigger(MelLib::MouseButton::LEFT);
+
+		// 決定
+		if (select)
+		{
+
+			// 選択したものに応じて処理を行う
+			switch (currentPauseSelect)
+			{
+			case PauseMenu::PAUSE_END:
+				pauseEnd = true;
+				break;
+
+			case PauseMenu::RESTART:
+				isReStart = true;
+				break;
+
+				/*	case PauseMenu::OPTION:
+						break;
+					case PauseMenu::CHECK_OPERATION:
+						drawOperation = true;
+						break;*/
+
+			case PauseMenu::RETURN_TITLE:
+				returnTitleFlag = true;
+				break;
+			}
+
+			pushPauseSelect = currentPauseSelect;
 		}
 	}
-
 	
 }
 

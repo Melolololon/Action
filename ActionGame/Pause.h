@@ -25,7 +25,7 @@ private:
 	//現在選ばれている項目
 	int currentPauseSelect = 0;
 	//ボタンを押されて選ばれた項目
-	int pushPauseSelect = 0;
+	int pushPauseSelect = -1;
 	// ポーズ中の項目
 	struct PauseMenu
 	{
@@ -40,7 +40,7 @@ private:
 	std::unordered_map<int, MelLib::Sprite2D>menuStringSprites;
 
 	// メニュー項目の座標
-	const MelLib::Vector2 TOP_MENU_POSITION = MelLib::Vector2(400, 300);
+	const MelLib::Vector2 TOP_MENU_POSITION = MelLib::Vector2(700, 450);
 	const MelLib::Vector2 MOVE_POSITION = MelLib::Vector2(0, 150);
 	std::unordered_map<int, MelLib::RectData> menuStringRects;
 

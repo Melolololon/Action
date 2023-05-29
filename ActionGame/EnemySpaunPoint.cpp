@@ -216,8 +216,8 @@ void EnemySpaunPoint::Update()
 
 void EnemySpaunPoint::Draw()
 {
-	modelObjects["main"].SetMulColor(MelLib::Color(0, 255, 0, 255));
-	AllDraw();
+	//modelObjects["main"].SetMulColor(MelLib::Color(0, 255, 0, 255));
+	//AllDraw();
 }
 
 void EnemySpaunPoint::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)
