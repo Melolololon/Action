@@ -141,8 +141,8 @@ void Game::Initialize()
 #pragma endregion
 
 
-	MelLib::SceneManager::GetInstance()->SetStartScene(new TestScene());
-	//MelLib::SceneManager::GetInstance()->SetStartScene(new Title());
+	//MelLib::SceneManager::GetInstance()->SetStartScene(new TestScene());
+	MelLib::SceneManager::GetInstance()->SetStartScene(new Title());
 	Fade::GetInstance()->Initializ();
 
 	Option::GetInstance()->Initialize();
