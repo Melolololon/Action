@@ -28,7 +28,7 @@ Wall::Wall()
 	modelObjects["main"].Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOARD), "Wall");
 	modelObjects["main"].SetMaterial(&material);
 	
-	wallNum.SetData(1,"Wall","DeleteNum",1,99);
+	wallNum.SetData(1,GetObjectName(), "DeleteNum", 1, 99);
 
 	//wallSpr.Create(MelLib::Texture::Get("wall"));
 

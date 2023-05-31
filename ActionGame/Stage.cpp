@@ -38,7 +38,7 @@ Stage::Stage(const unsigned int stageNum)
 	:GameObject("Stage")
 {
 	// Guiの情報をセット
-	this->stageNum.SetData(static_cast<int>(stageNum), "Stage", "StageNumber", 0, 1);
+	this->stageNum.SetData(static_cast<int>(stageNum), GetObjectName(), "StageNumber", 0, 1);
 	// データがあったら上書き
 	//this->stageNum.SetLoadData();
 
