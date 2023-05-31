@@ -62,6 +62,8 @@ protected:
 	// ç≈í·ãóó£
 	static const float MIN_DISTANCE;
 
+	bool reverseMove = false;
+
 	int hp = 10;
 
 	bool isMuteki = false;
@@ -69,8 +71,8 @@ protected:
 
 	// Ç±ÇÍè¡Ç∑
 	PlayerSlush::AttackType hitPlayerAttack = PlayerSlush::AttackType::NONE;
-
 	std::string hitAttackName;
+
 public:
 
 
@@ -104,5 +106,7 @@ public:
 
 	void AddDarknessEffect();
 
+	bool GetReverseMoveFlag()const { return reverseMove; }
+	void SetReverseMoveFlag(const bool flag) { reverseMove = flag; }
 };
 
