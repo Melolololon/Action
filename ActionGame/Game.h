@@ -12,6 +12,8 @@ private:
 
 	std::unique_ptr<Sky> pSky;
 
+	const bool EDITER_FLAG = true;
+
 public:
 	Game(Game& ins) = delete;
 	Game& operator=(Game& ins) = delete;
