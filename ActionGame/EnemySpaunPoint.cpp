@@ -13,12 +13,23 @@ const float EnemySpaunPoint::ATTACK_MIN_DISTANCE = 8.0f;
 const unsigned int EnemySpaunPoint::ENEMY_MAX_NUM = 10;
 
 
-std::vector<EnemySpaunPoint*>EnemySpaunPoint::spaunPoints;
+std::vector<EnemySpaunPoint*>EnemySpaunPoint::spawnPoints;
 Player* EnemySpaunPoint::pPlayer;
 
 
-bool EnemySpaunPoint::CalcDistance()
+bool EnemySpaunPoint::MoveCheck(const NewEnemy* pEnemy)
 {
+	const float MIN_DIS = 10.0f;
+	for (auto& enemy : enemys)
+	{
+		// 自分比較したらスキップ
+		if (enemy.get() == pEnemy)continue;
+
+		if (MelLib::LibMath::CalcDistance3D(enemy->GetPosition(), pEnemy->GetPosition()) <= MIN_DIS)
+		{
+			return true;
+		}
+	}
 	return false;
 }
 
@@ -30,13 +41,13 @@ void EnemySpaunPoint::Move()
 
 	minDisEnemyDis = FLT_MAX;
 	
-	MelLib::Vector3 pPos = pPlayer->GetPosition();
-	pPos.y = 0;
+	MelLib::Vector3 playerPos = pPlayer->GetPosition();
+	playerPos.y = 0;
 	for (int i = 0; i < enemys.size(); i++)
 	{
 		MelLib::Vector3 pos = enemys[i]->GetPosition();
 		pos.y = 0;
-		float dis = MelLib::LibMath::CalcDistance3D(pos, pPos);
+		float dis = MelLib::LibMath::CalcDistance3D(pos, playerPos);
 
 		// 移動してないやつは対象外
 		if (minDisEnemyDis > dis
@@ -47,26 +58,38 @@ void EnemySpaunPoint::Move()
 		}
 	}
 
-	// 距離の計算1回でいい
-
 	// 吹っ飛んだりしてなかったら敵を動かす
 	for (auto& enemy : enemys)
 	{
+		playerNormalizeVector = pPlayer->CalcPlayerVector(enemy->GetPosition());
+		moveVector = MelLib::Vector3(playerNormalizeVector.x, 0, playerNormalizeVector.z) * moveSpeed;
+
 		if (enemy->GetCurrentThisAttackEffect() == AttackEffect::NONE)
 		{
 			MelLib::Vector3 pos = enemy->GetPosition();
 			pos.y = 0;
-			float dis = MelLib::LibMath::CalcDistance3D(pos, pPos);
+			float dis = MelLib::LibMath::CalcDistance3D(pos, playerPos);
 			
 			// 近かったら移動しない
-			if (dis <= MIN_DISTANCE && enemy != enemys[minDisEnemyNum])continue;
+			if (dis <= MIN_DISTANCE && enemy != enemys[minDisEnemyNum])
+			{
+				if (MoveCheck(enemy.get()))
+				{
+					// それか止まるタイミングで敵と近かったらプレイヤーへの逆ベクトルを加算して一定まで話す
+					// これが楽っちゃ楽かも
+					
+					// これだと近づいたり離れたりでガクガクするため、フラグで調整したほうがいい
+
+					enemy->AddPosition(moveVector * -1);
+				}
+
+				continue;
+			}
 			else if (dis <= ATTACK_MIN_DISTANCE)continue;// 一番近いやつはめっちゃ接近する
-		
+
 			// 移動中以外だったら無視
 			if (enemy->GetThisState() != NewEnemy::ThisState::MOVE)continue;
 
-			playerNormalizeVector = pPlayer->CalcPlayerVector(enemy->GetPosition());
-			moveVector = MelLib::Vector3(playerNormalizeVector.x, 0, playerNormalizeVector.z) * moveSpeed;
 			enemy->AddPosition(moveVector);
 		}
 	}
@@ -170,7 +193,7 @@ EnemySpaunPoint::EnemySpaunPoint(const std::string& className)
 void EnemySpaunPoint::Initialize()
 {
 	// 自身を追加
-	spaunPoints.push_back(this);
+	spawnPoints.push_back(this);
 
 }
 

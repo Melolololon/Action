@@ -10,7 +10,7 @@ class EnemySpaunPoint :public MelLib::GameObject
 	static const float MIN_DISTANCE;
 	static const float ATTACK_MIN_DISTANCE;
 
-	static std::vector<EnemySpaunPoint*>spaunPoints;
+	static std::vector<EnemySpaunPoint*>spawnPoints;
 	
 	// ê∂ê¨êî
 	static const unsigned int ENEMY_MAX_NUM;
@@ -36,7 +36,7 @@ class EnemySpaunPoint :public MelLib::GameObject
 	bool createEnemy = false;
 
 private:
-	bool CalcDistance();
+	bool MoveCheck(const NewEnemy* pEnemy);
 
 	void Move();
 	void Rot();
@@ -61,6 +61,6 @@ public:
 
 	static void SetPlayer(Player* p) { pPlayer = p; }
 
-	static void ClearEnemySpauns() { spaunPoints.clear(); }
+	static void ClearEnemySpauns() { spawnPoints.clear(); }
 };
 

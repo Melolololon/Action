@@ -77,7 +77,7 @@ void Game::Run()
 void Game::Initialize()
 {
 	MelLib::ImguiManager::GetInstance()->SetReleaseDrawFlag(false);
-	MelLib::Library::Initialize(1920, 1080, MelLib::Color(0, 170, 255, 255), L"Game");
+	MelLib::Library::Initialize(1920, 1080, MelLib::Color(0, 170, 255, 255), L"aŒ‚–³‘o");
 	MelLib::Library::SetFramesPerSecond60(true);
 
 	//d—Í‰Á‘¬“x‚ğİ’è
