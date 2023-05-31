@@ -42,6 +42,8 @@ protected:
 	void CheckMutekiEnd();
 
 	void CheckAttackTagDelete();
+
+	void CheckDropDead();
 protected:
 	
 	MelLib::FrameTimer deadEndTimer;

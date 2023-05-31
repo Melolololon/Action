@@ -127,6 +127,11 @@ void NewEnemy::CheckAttackTagDelete()
 	if (modelObjects["main"].GetCurrentAnimationName() == "Stun" && modelObjects["main"].GetAnimationEndFlag())hitAttackName = "";
 }
 
+void NewEnemy::CheckDropDead()
+{
+	if (GetPosition().y <= -200.0f)eraseManager = true;
+}
+
 
 NewEnemy::NewEnemy(const std::string& name)
 	:GameObject(name)

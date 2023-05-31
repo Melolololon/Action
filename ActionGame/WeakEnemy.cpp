@@ -151,6 +151,8 @@ void WeakEnemy::Initialize()
 
 void WeakEnemy::Update()
 {
+	CheckDropDead();
+
 	CheckMutekiEnd();
 	CheckAttackTagDelete();
 
