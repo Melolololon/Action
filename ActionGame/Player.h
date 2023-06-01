@@ -10,6 +10,7 @@
 #include"PlayerSlush.h"
 #include"Input.h"
 #include"Enemy.h"
+#include"PlayerDamageEffect.h"
 
 //UŒ‚ŠÔI‚í‚Á‚½‚©‚Ç‚¤‚©”»’è‚©‚çó‚¯æ‚Á‚ÄƒvƒŒƒCƒ„[§Œä‚·‚é?
 //UŒ‚”»’è‚Ì¶‘¶ŠÔ‚ÆUŒ‚ŠÔ‚Íˆá‚¤‚©‚ç‚Æ‚è‚ ‚¦‚¸¡‚Ì‚Ü‚Ü‚Å‚¢‚¢?
@@ -141,17 +142,17 @@ private:
 	bool isDeathBlow = false;
 #pragma endregion
 
-
-
 #pragma region –hŒä
 	bool isGuard = false;
 
 #pragma endregion
 
-#pragma region –³“G
+#pragma region ƒ_ƒ[ƒWŠÖŒW
 	bool isHit = false;
 	bool isMuteki = false;
 	MelLib::FrameTimer mutekiTimer;
+
+	PlayerDamageEffect damageEffect;
 #pragma endregion
 
 #pragma region €–S

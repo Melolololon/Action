@@ -18,7 +18,7 @@ void EnemyHPGauge::Update()
 {
 	// Šg‘åk¬‚ÌŠî€‚ğ“®‚©‚·ŠÖ”ì‚é
 
-	MelLib::Vector2 scale = MelLib::Vector2(10,2);
+	MelLib::Vector2 scale = MelLib::Vector2(10, 1);
 
 	float wariai = static_cast<float>(REF_HP) / static_cast<float>(MAX_HP);
 	scale.x *= wariai;

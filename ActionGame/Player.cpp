@@ -231,7 +231,7 @@ void Player::Update()
 	hitTutorialEventFlag = false;
 
 	modelObjects["main"].Update();
-
+	damageEffect.Update();
 	
 	
 	if(isDead)
@@ -1236,6 +1236,7 @@ void Player::StartBeBlownAway(const MelLib::Vector3& hitObjPos)
 void Player::Draw()
 {
 	AllDraw();
+	damageEffect.Draw();
 	//modelObjects["main"].Draw();
 }
 
@@ -1286,7 +1287,6 @@ void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionTy
 
 
 	// 線分がステージの判定に当たったら入る
-	//if (typeid(object) == typeid(Ground)
 	if (typeid(object) == typeid(Stage)
 		&& collisionType == MelLib::ShapeType3D::SEGMENT)
 	{
@@ -1404,6 +1404,7 @@ void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionTy
 			|| typeid(object) == typeid(NormalEnemyAttack)
 			|| typeid(object) == typeid(CapsuleEnemyAttack))
 		{
+			damageEffect.StartEffect();
 			isHit = true;
 			mutekiTimer.SetStopFlag(false);
 
@@ -1427,14 +1428,15 @@ void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionTy
 		// 吹っ飛び
 		if (typeid(object) == typeid(BossAttack))
 		{
+			damageEffect.StartEffect();
 			isHit = true;
 			mutekiTimer.SetStopFlag(false);
 
 			isStun = true;
 
 			StartBeBlownAway(object.GetPosition());
-			
 		}
+		
 		
 	}
 
