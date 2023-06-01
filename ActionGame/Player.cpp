@@ -140,7 +140,7 @@ Player::Player(const MelLib::Vector3& pos)
 
 #pragma endregion
 
-	mutekiTimer.SetMaxTime(60 * 0.7);
+	mutekiTimer.SetMaxTime(60 * 1.0f);
 
 
 
@@ -1047,17 +1047,22 @@ void Player::RotCamera()
 
 #pragma region キーボード用カメラ操作
 	
-	if (!padInput) {
+	if (!padInput) 
+	{
 
 		// ウィンドウサイズを取得
 		MelLib::Vector2 winSize(MelLib::Library::GetWindowWidth(), MelLib::Library::GetWindowHeight());
-		// ウィンドウが動いていることを考慮して座標分加算
-		winSize += MelLib::Library::GetWindowPosition();
+		
+		MelLib::Vector2 winPos = MelLib::Library::GetWindowPosition();
+
 
 		MelLib::Vector2 winHarf = winSize / 2;
 
+		// ウィンドウが動いていることを考慮して座標分加算
+		winHarf += winPos;
+
 		// マウスのクライアント座標を取得
-		MelLib::Vector2 mousePos = MelLib::Input::GetMousePosition();
+		MelLib::Vector2 mousePos = MelLib::Input::GetMousePosition() + winPos;
 
 		// ウィンドウ動かすとバグるからウィンドウ座標取得して補正して対策するかフルスクボーダーレスにするのがいいかも
 		// ウィンドウのバー分座標がずれるため,加算して調整
@@ -1086,6 +1091,11 @@ void Player::RotCamera()
 
 		// 中心にカーソルを移動
 		if (!showMouse)MelLib::Input::SetMouseFixedPosition(winHarf);
+
+		if (MelLib::Input::KeyTrigger(DIK_2)) 
+		{
+			int z = 0;
+		}
 	}
 #pragma endregion
 

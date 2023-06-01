@@ -151,6 +151,12 @@ void WeakEnemy::Initialize()
 
 void WeakEnemy::Update()
 {
+	if (pPlayer->GetAttackChangeFrame()) 
+	{
+		// これただのフラグにしてもいいかも
+		hitAttackName = "";
+	}
+
 	CheckDropDead();
 
 	CheckMutekiEnd();
@@ -243,6 +249,8 @@ void WeakEnemy::Hit(const GameObject& object, const MelLib::ShapeType3D collisio
 	std::string n = typeid(object).name();
 	if (typeid(object) == typeid(PlayerSlush))
 	{
+		// hitAttackName関係は関数化して確認と代入まとめよう
+
 		// 違う攻撃判定だったらダメージ
 		if (hitAttackName != object.GetTags()[0])
 		{

@@ -10,7 +10,7 @@
 
 const float EnemySpaunPoint::MIN_DISTANCE = 30.0f;
 const float EnemySpaunPoint::ATTACK_MIN_DISTANCE = 8.0f;
-const unsigned int EnemySpaunPoint::ENEMY_MAX_NUM = 10;
+const unsigned int EnemySpaunPoint::ENEMY_MAX_NUM = 2;
 
 
 std::vector<EnemySpaunPoint*>EnemySpaunPoint::spawnPoints;

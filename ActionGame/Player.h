@@ -363,5 +363,6 @@ public:
 	void ChangeMouseCursorShow();
 
 	bool GetSetStartParam()const { return setStartParam; }
+
 };
 
