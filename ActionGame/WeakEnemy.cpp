@@ -165,7 +165,7 @@ void WeakEnemy::Update()
 	if (hitGround)FallStart(0.0f);
 
 	CheckParticleTimer();
-	AddDarknessEffect();
+	//AddDarknessEffect();
 
 	if(state != ThisState::DEAD)CalcMovePhysics();
 
