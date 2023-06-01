@@ -76,7 +76,6 @@ void Game::Run()
 
 void Game::Initialize()
 {
-	MelLib::ImguiManager::GetInstance()->SetReleaseDrawFlag(false);
 	MelLib::Library::Initialize(1920, 1080, MelLib::Color(0, 170, 255, 255), L"ŽaŒ‚–³‘o");
 	MelLib::Library::SetFramesPerSecond60(true);
 
@@ -102,11 +101,7 @@ void Game::Initialize()
 	BossAttack::LoadResources();
 	RecoveryItem::LoadResources();
 	EnemyDamageParticle::LoadResources();
-
-
-
 	RecoveryEffect::LoadResources();
-
 	ClearSprite::LoadResources(); 
 	GameOverSprite::LoadResources();
 
@@ -123,8 +118,9 @@ void Game::Initialize()
 	EnemyDarknessEffect::LoadResources();
 	bool r = MelLib::Texture::Load("Resources/Model/Stage/Stage_Mask_1.png","StageMask_1");
 
-	MelLib::SceneEditer::GetInstance()->SetEditerFlag(false);
-	MelLib::SceneEditer::GetInstance()->SetReleaseEditFlag(false);
+	MelLib::ImguiManager::GetInstance()->SetReleaseDrawFlag(EDITER_FLAG);
+	MelLib::SceneEditer::GetInstance()->SetEditerFlag(EDITER_FLAG);
+	MelLib::SceneEditer::GetInstance()->SetReleaseEditFlag(EDITER_FLAG);
 
 #pragma region ƒGƒfƒBƒ^[“o˜^
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Player>(), "Player");
@@ -140,11 +136,16 @@ void Game::Initialize()
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Boss>(), "Boss");
 #pragma endregion
 
-
-	//MelLib::SceneManager::GetInstance()->SetStartScene(new TestScene());
-	MelLib::SceneManager::GetInstance()->SetStartScene(new Title());
+	if (EDITER_FLAG) 
+	{
+		MelLib::SceneManager::GetInstance()->SetStartScene(new TestScene());
+	}
+	else 
+	{
+		MelLib::SceneManager::GetInstance()->SetStartScene(new Title());
+	}
+	
 	Fade::GetInstance()->Initializ();
-
 	Option::GetInstance()->Initialize();
 	
 
@@ -153,8 +154,6 @@ void Game::Initialize()
 	MelLib::Camera::Get()->SetFar(FLT_MAX);
 
 	MelLib::SceneEditer::GetInstance()->Initialize();
-
-
 
 	// ƒAƒCƒeƒ€’Ç‰Á
 	//MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<RecoveryItem>(), "H_Item");
@@ -189,7 +188,6 @@ void Game::Finalize()
 void Game::Update()
 {
 	MelLib::SceneManager::GetInstance()->Update();
-
 	MelLib::SceneEditer::GetInstance()->Update();
 }
 

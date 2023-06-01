@@ -305,7 +305,7 @@ void Boss::Update()
 void Boss::Draw()
 {
 	AllDraw();
-	hpGauge->Draw();
+	if(hpGauge)hpGauge->Draw();
 }
 
 void Boss::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)
