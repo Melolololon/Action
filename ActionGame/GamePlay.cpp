@@ -149,7 +149,11 @@ void GamePlay::Update()
 	// プレイヤーにカーソルの表示非表示処理があるため、あえてここに書いてポーズ開始のフレームをずらしている
 	
 	// セット完了(地面に着地)したらポーズ可能に
-	if(pPlayer->GetSetStartParam())pause->Update();
+	bool canPause =
+		pPlayer->GetSetStartParam()
+		&& (gameState == GamePlayState::PLAY || gameState == GamePlayState::BOSS);
+
+	if(canPause)pause->Update();
 	
 	if (pause->GetIsReStart())
 	{
