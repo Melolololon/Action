@@ -226,7 +226,7 @@ void Pause::Update()
 	}
 
 	// 項目変更
-	if (pushPauseSelect == -1) 
+	//if (pushPauseSelect == -1) 
 	{
 		// マウス
 		int hitNum = HitCheck();
@@ -275,7 +275,7 @@ void Pause::Update()
 
 		bool select =
 			MelLib::Input::PadButtonTrigger(MelLib::PadButton::A)
-			|| MelLib::Input::MouseButtonTrigger(MelLib::MouseButton::LEFT);
+			|| (MelLib::Input::MouseButtonTrigger(MelLib::MouseButton::LEFT) && hitNum != -1);
 
 		// 決定
 		if (select)
@@ -303,7 +303,7 @@ void Pause::Update()
 				break;
 			}
 
-			pushPauseSelect = currentPauseSelect;
+			//pushPauseSelect = currentPauseSelect;
 		}
 	}
 	
