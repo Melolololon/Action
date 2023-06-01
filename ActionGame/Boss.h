@@ -4,6 +4,7 @@
 #include<FrameTimer.h>
 
 #include"Player.h"
+#include"EnemyHPGauge.h"
 
 class Boss :public MelLib::GameObject
 {
@@ -39,7 +40,7 @@ private:
 	MelLib::GuiInt hp;
 	MelLib::FrameTimer mutekiTimer;
 	bool isMuteki = false;
-
+	std::unique_ptr<EnemyHPGauge> hpGauge;
 private:
 
 	void Move();

@@ -9,6 +9,7 @@
 #include"EditMode.h"
 #include"Pause.h"
 
+#include"Boss.h"
 #include"EnemyDamageParticle.h"
 
 const MelLib::Value2<MelLib::Vector3> PlayerSlush::CAPSULE_START_POS_LEFT = { MelLib::Vector3(14,30,3),MelLib::Vector3(12,30,14) };
@@ -278,6 +279,11 @@ void PlayerSlush::Hit(const GameObject& object, const MelLib::ShapeType3D collis
 
 			break;
 		}
+	}
+
+	if (typeid(object) == typeid(Boss)) 
+	{
+		eraseManager = true;
 	}
 }
 

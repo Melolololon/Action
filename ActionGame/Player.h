@@ -364,5 +364,6 @@ public:
 
 	bool GetSetStartParam()const { return setStartParam; }
 
+	void DrawDamageEffect();
 };
 

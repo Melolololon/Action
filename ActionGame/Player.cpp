@@ -112,7 +112,7 @@ Player::Player(const MelLib::Vector3& pos)
 	segment3DDatas["main"][0] = capsuleDatas["main"][0].GetSegment3DData();
 
 
-	const float SEGMENT_LENGTH = 10.0f;
+	const float SEGMENT_LENGTH = 6.0f;
 	const float SEGMENT_HEIGTH = 60.0f;
 	// 壁との判定
 	segment3DDatas["main"][1].SetPosition
@@ -1011,6 +1011,11 @@ void Player::ChangeMouseCursorShow()
 	}
 }
 
+void Player::DrawDamageEffect()
+{
+	damageEffect.Draw();
+}
+
 void Player::RotCamera()
 {
 
@@ -1092,10 +1097,7 @@ void Player::RotCamera()
 		// 中心にカーソルを移動
 		if (!showMouse)MelLib::Input::SetMouseFixedPosition(winHarf);
 
-		if (MelLib::Input::KeyTrigger(DIK_2)) 
-		{
-			int z = 0;
-		}
+		
 	}
 #pragma endregion
 
@@ -1246,7 +1248,6 @@ void Player::StartBeBlownAway(const MelLib::Vector3& hitObjPos)
 void Player::Draw()
 {
 	AllDraw();
-	damageEffect.Draw();
 	//modelObjects["main"].Draw();
 }
 

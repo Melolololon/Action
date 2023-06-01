@@ -254,6 +254,8 @@ void Boss::Initialize()
 	// ‰¼
 	thisState = ThisState::OTHER;
 
+	hpGauge = std::make_unique<EnemyHPGauge>(hp.GetValue());
+
 }
 
 void Boss::Update()
@@ -295,11 +297,15 @@ void Boss::Update()
 		mutekiTimer.SetStopFlag(true);
 		isMuteki = false;
 	}
+
+	hpGauge->SetPosition(GetPosition() + MelLib::Vector3(0, 15, 0));
+	hpGauge->Update();
 }
 
 void Boss::Draw()
 {
 	AllDraw();
+	hpGauge->Draw();
 }
 
 void Boss::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)

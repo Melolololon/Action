@@ -191,6 +191,7 @@ void GamePlay::Update()
 void GamePlay::Draw()
 {
 	MelLib::GameObjectManager::GetInstance()->Draw();
+	pPlayer->DrawDamageEffect();
 	Pause::GetInstance()->Draw();
 	Fade::GetInstance()->Draw();
 }
