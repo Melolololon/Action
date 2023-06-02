@@ -13,6 +13,8 @@
 #include<GameObjectManager.h>
 
 #include"BossAliveChecker.h"
+#include<Random.h>
+#include"EnemyDamageParticle.h"
 
 Player* Boss::pPlayer;
 Boss* Boss::pBoss;
@@ -329,6 +331,26 @@ void Boss::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType
 	
 	if (!isMuteki) 
 	{
+		if (typeid(object) == typeid(PlayerSlush))
+		{
+			const int PARTICLE_NUM = 4;
+			for (int i = 0; i < PARTICLE_NUM; i++)
+			{
+				MelLib::Vector3 vec = MelLib::Vector3(
+					MelLib::Random::GetRandomFloatNumberRangeSelect(-1, 1, 1),
+					1,
+					MelLib::Random::GetRandomFloatNumberRangeSelect(-1, 1, 1)).Normalize();
+				vec.y = 2.2f;
+
+				MelLib::GameObjectManager::GetInstance()->AddObject
+				(
+					std::make_shared<EnemyDamageParticle>(GetPosition(), vec)
+				);
+			}
+		}
+
+		
+
 		if (typeid(object) == typeid(PlayerSlush) || typeid(object) == typeid(JumpAttack) /* && !isMuteki*/)
 		{
 			MelLib::Vector3 toCameraVec = (MelLib::Camera::Get()->GetCameraPosition() - GetPosition()).Normalize();
