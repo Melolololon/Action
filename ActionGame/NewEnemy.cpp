@@ -129,7 +129,7 @@ void NewEnemy::CheckAttackTagDelete()
 
 void NewEnemy::CheckDropDead()
 {
-	if (GetPosition().y <= -200.0f)eraseManager = true;
+	if (GetPosition().y <= -100.0f)eraseManager = true;
 }
 
 

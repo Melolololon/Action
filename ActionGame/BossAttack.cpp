@@ -48,6 +48,6 @@ void BossAttack::Hit(const GameObject& object, const MelLib::ShapeType3D collisi
 {
 	if (typeid(object) == typeid(Player)) 
 	{
-		pPlayer->DownHP(80);
+		pPlayer->DownHP(40);
 	}
 }

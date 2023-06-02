@@ -135,7 +135,7 @@ void Boss::RollAttackUpdate()
 	if (FRAME == ROLL_START_FLAME)
 	{
 		MelLib::GameObjectManager::GetInstance()->AddObject
-		(std::make_shared<EnemyAttack>(50,modelObjects["main"],10.0f,EnemyAttack::AttackType::BE_BLOWN_AWAY));
+		(std::make_shared<EnemyAttack>(20,modelObjects["main"],10.0f,EnemyAttack::AttackType::BE_BLOWN_AWAY));
 	}
 
 	if (FRAME >= ROLL_START_FLAME && FRAME <= 56)
@@ -254,7 +254,7 @@ void Boss::Initialize()
 	// ‰¼
 	thisState = ThisState::OTHER;
 
-	hpGauge = std::make_unique<EnemyHPGauge>(hp.GetValue());
+	hpGauge = std::make_unique<EnemyHPGauge>(hp.GetRefValue());
 
 }
 
@@ -298,7 +298,7 @@ void Boss::Update()
 		isMuteki = false;
 	}
 
-	hpGauge->SetPosition(GetPosition() + MelLib::Vector3(0, 15, 0));
+	hpGauge->SetPosition(GetPosition() + MelLib::Vector3(0, 25, 0));
 	hpGauge->Update();
 }
 

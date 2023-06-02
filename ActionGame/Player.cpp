@@ -578,11 +578,15 @@ void Player::ReturnStage()
 
 	// 開始位置ぴったりに戻すと、ジャンプせずに落ちた時に、
 	// 落下開始時はすでに足元に足場がなく無限に落ち続けるため、対処が必要
-	if(GetPosition().y <= -1000)
+	if(GetPosition().y <= -300)
 	{
-		SetPosition(notFallPrePosition[_countof(notFallPrePosition) - 1]);
+		//SetPosition(notFallPrePosition[_countof(notFallPrePosition) - 1]);
+		
 
-		DownHP(30);
+		//DownHP(30);
+
+
+		AddPosition(MelLib::Vector3(0, 500, 0));
 	}
 }
 
@@ -1382,7 +1386,7 @@ void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionTy
 				jumpAttackEndTimer.SetStopFlag(false);
 
 				// 攻撃判定追加
-				MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<JumpAttack>(GetPosition(),50.0f));
+				MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<JumpAttack>(GetPosition(),70.0f));
 			}
 
 		}

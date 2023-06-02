@@ -5,7 +5,7 @@ PlayerDamageEffect::PlayerDamageEffect()
 	spr.Create(MelLib::Color(255, 0, 0, 0));
 	spr.SetScale(2000);
 	alpha.SetAddPar(3.0f);
-	alpha.SetEnd(150.0f);
+	alpha.SetEnd(100.0f);
 }
 
 void PlayerDamageEffect::Update()
@@ -37,7 +37,7 @@ void PlayerDamageEffect::Update()
 	float setAlpha = alpha.GetValue();
 	if (setAlpha >= 100.0f)setAlpha = 100.0f;
 	else if(setAlpha <= 0.0f)setAlpha = 0.0f;
-	spr.SetAddColor(MelLib::Color(0, setAlpha));
+	spr.SetAddColor(MelLib::Color(0, static_cast<unsigned char>(setAlpha)));
 }
 
 void PlayerDamageEffect::Draw()

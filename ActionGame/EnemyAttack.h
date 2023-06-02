@@ -20,6 +20,8 @@ private:
 
 	void SetAttackTypeTag(AttackType type);
 	void SetInitData(const float radius, AttackType type);
+
+	int timer = 0;
 private:
 	static const std::string ATTACK_TYPE_STR_NORMAL;
 	static const std::string ATTACK_TYPE_STR_BE;

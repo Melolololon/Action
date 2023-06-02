@@ -42,6 +42,7 @@ EnemyAttack::EnemyAttack
 
 EnemyAttack::EnemyAttack(unsigned int power, const MelLib::ModelObject& model, float radius, const AttackType attackType)
 	:GameObject("EnemyAttack")
+	, power(power)
 	, MODEL(model)
 	, MOVE_TYPE(MoveType::OBJECT)
 {
@@ -77,6 +78,8 @@ void EnemyAttack::Update()
 {
 	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())return;
 
+	timer++;
+
 	if (MOVE_TYPE == MoveType::ANIMATION) 
 	{
 		// 座標計算してセット
@@ -96,13 +99,15 @@ void EnemyAttack::Update()
 		SetPosition(MODEL.GetPosition());
 	}
 
-	if (MODEL.GetAnimationEndFlag())eraseManager = true;
+	//if (MODEL.GetAnimationFrameCount() - (MODEL.GetAnimationFrame() - 7))
+	//if (MODEL.GetAnimationEndFlag())eraseManager = true;
+	if (timer >= 60 * 0.5)eraseManager = true;
 }
 
 void EnemyAttack::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)
 {
-	if (typeid(object) == typeid(Player)
-		&& !pPlayer->GetIsMuteki())
+	if (typeid(object) == typeid(Player)/*
+		&& !pPlayer->GetIsMuteki()*/)
 	{
 		pPlayer->DownHP(power);
 		eraseManager = true;
