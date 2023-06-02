@@ -201,6 +201,9 @@ void GamePlay::Draw()
 void GamePlay::Finalize()
 {
 	MelLib::GameObjectManager::GetInstance()->AllEraseObject();
+
+	if (gameState == GamePlay::GamePlayState::CLEAR 
+		|| gameState == GamePlay::GamePlayState::GAME_OVER) { ShowCursor(TRUE); }
 }
 
 MelLib::Scene* GamePlay::GetNextScene()

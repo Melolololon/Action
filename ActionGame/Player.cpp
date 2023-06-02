@@ -985,10 +985,10 @@ void Player::Dead()
 	modelObjects["main"].SetAnimation("Dead");
 	ChangeAnimationData();
 
-	if (!showMouse)
-	{
-		ShowCursor(TRUE);
-	}
+	//if (!showMouse)
+	//{
+	//	ShowCursor(TRUE);
+	//}
 }
 
 void Player::UpdateCamera()
