@@ -120,7 +120,7 @@ void Game::Initialize()
 
 	MelLib::ImguiManager::GetInstance()->SetReleaseDrawFlag(EDITER_FLAG);
 	MelLib::SceneEditer::GetInstance()->SetEditerFlag(EDITER_FLAG);
-	MelLib::SceneEditer::GetInstance()->SetReleaseEditFlag(EDITER_FLAG);
+	MelLib::SceneEditer::GetInstance()->SetReleaseEditFlag(!EDITER_FLAG);
 
 #pragma region エディター登録
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Player>(), "Player");
