@@ -248,8 +248,17 @@ void Boss::Initialize()
 	capsuleDatas["main"][0].GetRefSegment3DData().
 		SetPosition(MelLib::Value2<MelLib::Vector3>(GetPosition() + MelLib::Vector3(0, 25.0f, 0), GetPosition() + MelLib::Vector3(0,0.0f, 0)));
 
-	segment3DDatas["main"].resize(1);
+	segment3DDatas["main"].resize(2);
 	segment3DDatas["main"][0].SetPosition(capsuleDatas["main"][0].GetSegment3DData().GetPosition());
+	
+	segment3DDatas["main"][1] = capsuleDatas["main"][0].GetSegment3DData();
+
+	MelLib::Value2<MelLib::Vector3>segPos = capsuleDatas["main"][0].GetSegment3DData().GetPosition();
+	segPos.v1 += MelLib::Vector3(0.3f, 0, 0);
+	segPos.v2 += MelLib::Vector3(0.3f, 0, 0);
+	segment3DDatas["main"][1].SetPosition(segPos);
+
+
 
 	mutekiTimer.SetMaxTime(60 * 0.2);
 

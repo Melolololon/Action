@@ -108,20 +108,26 @@ Player::Player(const MelLib::Vector3& pos)
 		SetPosition(MelLib::Value2<MelLib::Vector3>
 			(GetPosition() + MelLib::Vector3(0, 15, 0), GetPosition() + MelLib::Vector3(0, -0.1f, 0)));
 
-	segment3DDatas["main"].resize(3);
+	segment3DDatas["main"].resize(4);
 	segment3DDatas["main"][0] = capsuleDatas["main"][0].GetSegment3DData();
+	segment3DDatas["main"][1] = capsuleDatas["main"][0].GetSegment3DData();
+	
+	MelLib::Value2<MelLib::Vector3>segPos = capsuleDatas["main"][0].GetSegment3DData().GetPosition();
+	segPos.v1 += MelLib::Vector3(0.3f, 0, 0);
+	segPos.v2 += MelLib::Vector3(0.3f, 0, 0);
+	segment3DDatas["main"][1].SetPosition(segPos);
 
 
 	const float SEGMENT_LENGTH = 6.0f;
 	const float SEGMENT_HEIGTH = 60.0f;
 	// •Ç‚Æ‚Ì”»’è
-	segment3DDatas["main"][1].SetPosition
+	segment3DDatas["main"][2].SetPosition
 	(
 		MelLib::Value2<MelLib::Vector3>
 		(GetPosition() + MelLib::Vector3(0, SEGMENT_HEIGTH, SEGMENT_LENGTH), GetPosition() + MelLib::Vector3(0, SEGMENT_HEIGTH, -SEGMENT_LENGTH))
 	);
 
-	segment3DDatas["main"][2].SetPosition
+	segment3DDatas["main"][3].SetPosition
 	(
 		MelLib::Value2<MelLib::Vector3>
 		(GetPosition() + MelLib::Vector3(SEGMENT_LENGTH, SEGMENT_HEIGTH, 0), GetPosition() + MelLib::Vector3(-SEGMENT_LENGTH, SEGMENT_HEIGTH, 0))
