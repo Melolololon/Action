@@ -623,8 +623,6 @@ void MelLib::GuiValueManager::Update()
 
 void MelLib::GuiValueManager::CopyGuiValue(const std::string& windowName1, const std::string& windowName2)
 {
-	//intValues.try_emplace(windowName2);
-
 	// int
 	for (const auto& gui1 : intValues[windowName1])
 	{
@@ -641,7 +639,6 @@ void MelLib::GuiValueManager::CopyGuiValue(const std::string& windowName1, const
 		}
 	}
 
-	//floatValues.try_emplace(windowName2);
 	// float
 	for (const auto& gui1 : floatValues[windowName1])
 	{
@@ -658,7 +655,6 @@ void MelLib::GuiValueManager::CopyGuiValue(const std::string& windowName1, const
 		}
 	}
 
-	//vector3Values.try_emplace(windowName2);
 	// Vector3
 	for (const auto& gui1 : vector3Values[windowName1])
 	{
@@ -675,7 +671,6 @@ void MelLib::GuiValueManager::CopyGuiValue(const std::string& windowName1, const
 		}
 	}
 
-	//boolValues.try_emplace(windowName2);
 	// bool
 	for (const auto& gui1 : boolValues[windowName1])
 	{
