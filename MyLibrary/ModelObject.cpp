@@ -655,6 +655,8 @@ void MelLib::ModelObject::Update()
 		{
 			FbxAnimation(bone.boneName);
 		}
+
+		return;
 	}
 }
 

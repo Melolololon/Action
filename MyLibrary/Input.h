@@ -233,7 +233,6 @@ namespace MelLib
 
 #pragma region ÉJÅ[É\Éã
 
-
 		static void SetViewMatrix(const DirectX::XMMATRIX& viewMatrix) { viewMat = viewMatrix; }
 		static void SetProjectionMatrix(const DirectX::XMMATRIX& projectionMatrix) { projectionMat = projectionMatrix; }
 		static void SetNear(float nearNumber) { nearNum = nearNumber; }

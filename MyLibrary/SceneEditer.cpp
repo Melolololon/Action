@@ -350,14 +350,14 @@ void MelLib::SceneEditer::LoadEditData(const std::string& sceneName)
 
 void MelLib::SceneEditer::UpdateSelectObject()
 {
-	if (!editorFlag || !ReleaseCheck())return;
+	if (!editorFlag || ReleaseCheck())return;
 	if (!isEdit)return;
 
 
 #ifdef _DEBUG
 
 #else
-	if (!releaseEdit)return;
+	if (releaseEdit)return;
 #endif // _DEBUG
 
 
@@ -969,7 +969,27 @@ void MelLib::SceneEditer::Update()
 				addObjects.erase(addObjects.begin() + i);
 				addObjectNames.erase(addObjectNames.begin() + i);
 				//GameObjectManager::GetInstance()->EraseObject(pSelectListObject);
-				pSelectListObject = nullptr;
+				
+				if (SIZE == 1) 
+				{
+					pSelectListObject = nullptr;
+					selectListObjectNum = 0;
+				}
+				else 
+				{
+					if (i == 0)
+					{
+						pSelectListObject = addObjects[0].get();
+						selectListObjectNum = 0;
+					}
+					else 
+					{
+						pSelectListObject = addObjects[i - 1].get();
+						selectListObjectNum = i - 1;
+					}
+				}
+				
+				break;
 			}
 		}
 	}
