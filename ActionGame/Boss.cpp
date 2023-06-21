@@ -41,7 +41,7 @@ void Boss::SelectAction()
 
 	float playerDir = MelLib::LibMath::CalcDistance2D(MelLib::Vector2(myPos.x, myPos.z), MelLib::Vector2(playerPos.x, playerPos.z));
 
-	static const float MIN_DIR = 60.0f;
+	static const float MIN_DIR = 30.0f;
 	
 	// ‰“‚©‚Á‚½‚çˆÚ“®
 	if (playerDir >= MIN_DIR)
@@ -51,17 +51,30 @@ void Boss::SelectAction()
 
 	if (actionTimer.GetMaxOverFlag()) 
 	{
-		if (playerDir < MIN_DIR && playerDir >= 6.0f) // ‚»‚¤‚Å‚Í‚È‚¢‚È‚çUŒ‚ 
+		//auto castEnum = [&](const Boss::CurrentState state)
+		//{
+		//	return static_cast<std::underlying_type_t<Boss::CurrentState>>(state);
+		//};
+
+		// ã‚Ìƒ‰ƒ€ƒ_®‚Æ—”‚ğ”äŠr‚µ‚ÄUŒ‚‚ğƒZƒbƒg‚·‚é
+		// 0‚ÍNONE‚È‚Ì‚Å1‰ÁZ‚·‚é
+		unsigned int attackNumber = MelLib::Random::GetRandomNumber(3) + 1;
+
+		if (playerDir < MIN_DIR /* && playerDir >= 6.0f*/) // ‚»‚¤‚Å‚Í‚È‚¢‚È‚çUŒ‚ 
 		{
+			// ‚±‚±‚ÉUŒ‚•ªŠòˆ—‚ğÀ‘•
+
 			currentState = Boss::CurrentState::ROLL_ATTACK;
 			modelObjects["main"].SetAnimation("Attack_Roll");
 		}
 		else
 		{
+			// ‚±‚±‚ÉUŒ‚•ªŠòˆ—‚ğÀ‘•
+			attackNumber += 10;
+
 			currentState = Boss::CurrentState::JUMP_ATTACK;
 			modelObjects["main"].SetAnimation("Attack_Jump.001");
 		}
-
 
 		actionTimer.SetStopFlag(true);
 	}
@@ -261,7 +274,6 @@ void Boss::Initialize()
 
 	mutekiTimer.SetMaxTime(60 * 0.2);
 
-	// ‰¼
 	thisState = ThisState::OTHER;
 
 	hpGauge = std::make_unique<EnemyHPGauge>(hp.GetRefValue());

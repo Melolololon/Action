@@ -40,13 +40,19 @@ private:
 	static const int JUMP_ATTACK_MAX_COUNT = 12;
 	MelLib::FrameTimer jumpAttackTimer;
 
-	enum class CurrentState 
+	enum class CurrentState : unsigned int
 	{
 		NONE,
 		NORMAL_1,
 		ROLL_ATTACK,
-		JUMP_ATTACK,
+
+		// ここから遠距離
+		JUMP_ATTACK = 10,
+		DASH_ATTACK,
+
 	};
+	// 乱数でジャンプ攻撃を指定するときに加算する値
+	const int JUMP_ATTACK_ADD_NUM = static_cast<std::underlying_type_t<Boss::CurrentState>>(Boss::CurrentState::JUMP_ATTACK);
 	CurrentState currentState = CurrentState::NONE;
 
 	MelLib::GuiInt hp;

@@ -468,6 +468,13 @@ namespace MelLib
 		Vector3 GetScale()const { return scale; }
 
 		/// <summary>
+		/// 前フレームの座標を取得します。
+		/// </summary>
+		Vector3 GetPrePosition()const { return prePosition; }
+		Vector3 GetPreAngle()const { return preAngle; }
+		Vector3 GetPreScale()const { return preScale; }
+
+		/// <summary>
 		/// 速度を取得します。
 		/// </summary>
 		/// <returns></returns>
@@ -643,6 +650,11 @@ namespace MelLib
 
 		void SetLerpPosition(const Vector3& pos) { lerpPosition = pos; }
 		void SetLerpMovePosition(const Vector3& pos) { lerpMovePosition = pos; }
+
+		/// <summary>
+		/// モデルオブジェクトから三角形の当たり判定を取得し格納し、同じ配列にすべて格納します。
+		/// </summary>
+		void SetModelTriangleDataAll(const std::string& modelObjectIndex,const std::string& triIndex);
 
 		/// <summary>
 		/// 衝突確認を1フレームで複数回行ったときに補間して衝突した時の座標を返します。

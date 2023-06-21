@@ -655,7 +655,6 @@ void MelLib::ModelObject::Update()
 		{
 			FbxAnimation(bone.boneName);
 		}
-
 		return;
 	}
 }
@@ -1643,7 +1642,6 @@ void MelLib::ModelObject::SetAddUV(const MelLib::Vector2& uv, const std::string&
 	}
 }
 
-
 void MelLib::ModelObject::SetAddColor(const Color& color, const std::string& name)
 {
 
@@ -2168,7 +2166,6 @@ void ModelObject::FbxAnimation(const std::string& boneName)
 
 	animData.animationEnd = false;
 
-
 	/*if (animData.currentTime > animData.animationTimes.endTime) 
 	{
 
@@ -2264,6 +2261,7 @@ void MelLib::ModelObject::GetFbxAnimationData(const std::string& boneName, FbxAn
 
 bool ModelObject::Create(ModelData* pModelData, const std::string& objectName, ConstBufferData* userConstBufferData)
 {
+
 #pragma region –¼‘O
 
 	this->objectName = objectName;
@@ -2439,6 +2437,7 @@ void MelLib::ModelObject::GetModelTriangleData(std::vector<std::vector<TriangleD
 	}
 
 }
+
 
 Vector3 MelLib::ModelObject::CalcAnimationPosition
 (
