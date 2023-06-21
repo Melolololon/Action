@@ -6,6 +6,18 @@
 #include"Player.h"
 #include"EnemyHPGauge.h"
 
+
+// メモスペース
+// 現在のボスの攻撃パターン
+// 回転　地面叩くやつ
+
+// 追加案
+// ジャンプからの落下振り下ろし(カメラがネック？)
+// 構え、超接近、ハンマー振り
+
+// 攻撃の選別基準をどうするか
+// 乱数?
+
 class Boss :public MelLib::GameObject
 {
 private:

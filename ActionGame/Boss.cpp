@@ -41,7 +41,7 @@ void Boss::SelectAction()
 
 	float playerDir = MelLib::LibMath::CalcDistance2D(MelLib::Vector2(myPos.x, myPos.z), MelLib::Vector2(playerPos.x, playerPos.z));
 
-	static const float MIN_DIR = 30.0f;
+	static const float MIN_DIR = 60.0f;
 	
 	// ‰“‚©‚Á‚½‚çˆÚ“®
 	if (playerDir >= MIN_DIR)
