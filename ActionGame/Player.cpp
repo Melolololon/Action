@@ -1094,7 +1094,7 @@ void Player::RotCamera()
 			MelLib::Vector2 moveVector = MelLib::Vector2(mousePos - winHarf).Normalize() * cameraSpeed;
 
 			// パッドの速度を使いまわすと遅いため、数値を掛けて速度を上げる
-			const float MUL_CAMERA_SPEED = 20.0f;
+			const float MUL_CAMERA_SPEED = 9.0f;
 			moveVector *= MUL_CAMERA_SPEED;
 
 			// 角度をセット

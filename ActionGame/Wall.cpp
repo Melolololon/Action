@@ -30,6 +30,9 @@ Wall::Wall()
 	
 	wallNum.SetData(1,GetObjectName(), "DeleteNum", 1, 99);
 
+	// ‰¼
+	wallNum.SetValue(0);
+
 	//wallSpr.Create(MelLib::Texture::Get("wall"));
 
 	/*

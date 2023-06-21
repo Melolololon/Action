@@ -47,7 +47,6 @@ void Boss::SelectAction()
 	if (playerDir >= MIN_DIR)
 	{
 		Move();
-		return;
 	}
 
 	if (actionTimer.GetMaxOverFlag()) 

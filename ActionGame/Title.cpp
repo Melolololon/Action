@@ -51,32 +51,14 @@ void Title::Initialize()
 void Title::Update()
 {
 
-	
-	//MelLib::GameObjectManager::GetInstance()->Update();
-
-
 #pragma region シーン遷移
-
-	//bool pushSceneChangeButton =
-	//	MelLib::Input::PadButtonTrigger(MelLib::PadButton::A)
-	//	|| MelLib::Input::PadButtonTrigger(MelLib::PadButton::B)
-	//	|| MelLib::Input::PadButtonTrigger(MelLib::PadButton::START);
-
-	//if(pushSceneChangeButton && !Fade::GetInstance()->GetIsFade())
-	//{
-	//	pushGameStart = true;
-	//}
-
-	//// プレイヤーのアニメーション
-	//if (pushGameStart) pPlayer->TitleUpdate();
 
 	bool pushSceneChangeButton =
 		MelLib::Input::PadButtonTrigger(MelLib::PadButton::A)
 		|| MelLib::Input::PadButtonTrigger(MelLib::PadButton::B)
 		|| MelLib::Input::PadButtonTrigger(MelLib::PadButton::START)
 		|| MelLib::Input::KeyTrigger(DIK_SPACE)
-		|| MelLib::Input::KeyTrigger(DIK_RETURN)
-		|| MelLib::Input::MouseButtonTrigger(MelLib::MouseButton::LEFT);
+		|| MelLib::Input::KeyTrigger(DIK_RETURN);
 
 	if (pushSceneChangeButton && !Fade::GetInstance()->GetIsFade())
 	{
@@ -100,10 +82,7 @@ void Title::Update()
 
 void Title::Draw()
 {
-	//MelLib::GameObjectManager::GetInstance()->Draw();
 	titleSprite->Draw();
-
-	//fierd.Draw();
 
 	Fade::GetInstance()->Draw();
 
