@@ -55,6 +55,11 @@ private:
 	const int JUMP_ATTACK_ADD_NUM = static_cast<std::underlying_type_t<Boss::CurrentState>>(Boss::CurrentState::JUMP_ATTACK);
 	CurrentState currentState = CurrentState::NONE;
 
+	// 攻撃制御用タイマー
+	MelLib::FrameTimer attackControlTimer;
+
+	MelLib::Vector3 dashAttackStartPlayerPos;
+
 	MelLib::GuiInt hp;
 	MelLib::FrameTimer mutekiTimer;
 	bool isMuteki = false;
@@ -68,10 +73,12 @@ private:
 
 	void AttackEnd();
 
+
+	// 攻撃一覧
 	void NormalAttackUpdate();
 	void RollAttackUpdate();
-	// 攻撃一覧
 	void JumpAttackUpdate();
+	void DashAttackUpdate();
 
 	void Rotate();
 
