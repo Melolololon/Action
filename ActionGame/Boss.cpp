@@ -72,10 +72,25 @@ void Boss::SelectAction()
 			// ここに攻撃分岐処理を実装
 			attackNumber += 10;
 
-			currentState = Boss::CurrentState::JUMP_ATTACK;
-			modelObjects["main"].SetAnimation("Attack_Jump.001");
+			// 仮
+			unsigned int ranNum = MelLib::Random::GetRandomNumber(2);
+			//unsigned int ranNum = 1;
+
+			if (ranNum == 0) 
+			{
+				currentState = Boss::CurrentState::JUMP_ATTACK;
+				modelObjects["main"].SetAnimation("Attack_Jump.001");
+			}
+			else 
+			{
+				currentState = Boss::CurrentState::DASH_ATTACK;
+				modelObjects["main"].SetAnimation("Attack_Dash");
+			}
+			
+
 		}
 
+		modelObjects["main"].SetAnimationFrame(0);
 		actionTimer.SetStopFlag(true);
 	}
 }
@@ -92,6 +107,9 @@ void Boss::AttackUpdate()
 		break;
 	case Boss::CurrentState::JUMP_ATTACK:
 		JumpAttackUpdate();
+		break;
+	case Boss::CurrentState::DASH_ATTACK:
+		DashAttackUpdate();
 		break;
 	default:
 		break;
@@ -133,6 +151,9 @@ void Boss::AttackEnd()
 
 		actionTimer.SetStopFlag(false);
 		actionTimer.ResetTimeZero();
+
+		attackControlTimer.SetStopFlag(true);
+		attackControlTimer.ResetTimeZero();
 	}
 }
 
@@ -174,6 +195,61 @@ void Boss::JumpAttackUpdate()
 
 	AttackEnd();
 	
+}
+
+void Boss::DashAttackUpdate()
+{
+	const unsigned int FRAME = modelObjects["main"].GetAnimationFrame();
+
+	if (FRAME == 9)
+	{
+		attackControlTimer.SetMaxTime(60 * 0.8);
+		attackControlTimer.SetStartFlag(true);
+		modelObjects["main"].SetAnimationPlayFlag(false);
+	}
+	else if (FRAME > 9) 
+	{
+
+		// アニメーション一定タイミングで固定したまま接近
+		if (FRAME == 30)
+		{
+			modelObjects["main"].SetAnimationPlayFlag(false);
+		}
+
+		// 近づいたら攻撃
+		MelLib::Vector3 toPlayer = (dashAttackStartPlayerPos - GetPosition()).Normalize();
+		float pDis = MelLib::LibMath::CalcDistance3D(dashAttackStartPlayerPos, GetPosition());
+		if (pDis <= 7.0f)
+		{
+			modelObjects["main"].SetAnimationPlayFlag(true);
+		}
+		else
+		{
+			AddPosition(toPlayer * 2.0f);
+		}
+
+		// 判定追加
+		if (FRAME == 37)
+		{
+			// 指定したフレームで攻撃判定消えるようにする
+
+			MelLib::GameObjectManager::GetInstance()->AddObject
+			(std::make_shared<EnemyAttack>(20, modelObjects["main"], 10.0f, EnemyAttack::AttackType::BE_BLOWN_AWAY));
+		}
+	}
+
+
+	if(attackControlTimer.GetMaxOverFlag())
+	{
+		modelObjects["main"].SetAnimationPlayFlag(true);
+
+		// プレイヤー座標を保存
+		dashAttackStartPlayerPos = pPlayer->GetPosition();
+		attackControlTimer.ResetTimeZero();
+		attackControlTimer.SetStopFlag(true);
+	}
+
+	AttackEnd();
 }
 
 void Boss::Rotate()
