@@ -70,6 +70,7 @@ void Boss::SelectAction()
 		else
 		{
 			// ‚±‚±‚ÉUŒ‚•ªŠòˆ—‚ðŽÀ‘•
+			// ‰“‹——£UŒ‚‚Í2Œ…‘ä‚È‚Ì‚Å10‰ÁŽZ‚·
 			attackNumber += 10;
 
 			// ‰¼
@@ -170,7 +171,7 @@ void Boss::RollAttackUpdate()
 	if (FRAME == ROLL_START_FLAME)
 	{
 		MelLib::GameObjectManager::GetInstance()->AddObject
-		(std::make_shared<EnemyAttack>(20,modelObjects["main"],10.0f,EnemyAttack::AttackType::BE_BLOWN_AWAY));
+		(std::make_shared<EnemyAttack>(20,modelObjects["main"],10.0f,EnemyAttack::AttackType::BE_BLOWN_AWAY,60));
 	}
 
 	if (FRAME >= ROLL_START_FLAME && FRAME <= 56)
@@ -190,7 +191,6 @@ void Boss::JumpAttackUpdate()
 	if (modelObjects["main"].GetAnimationFrame() == 47) 
 	{
 		jumpAttackTimer.SetStopFlag(false);
-
 	}
 
 	AttackEnd();
@@ -234,7 +234,7 @@ void Boss::DashAttackUpdate()
 			// Žw’è‚µ‚½ƒtƒŒ[ƒ€‚ÅUŒ‚”»’èÁ‚¦‚é‚æ‚¤‚É‚·‚é
 
 			MelLib::GameObjectManager::GetInstance()->AddObject
-			(std::make_shared<EnemyAttack>(20, modelObjects["main"], 10.0f, EnemyAttack::AttackType::BE_BLOWN_AWAY));
+			(std::make_shared<EnemyAttack>(20, modelObjects["main"], 10.0f, EnemyAttack::AttackType::BE_BLOWN_AWAY , 50));
 		}
 	}
 

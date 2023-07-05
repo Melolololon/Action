@@ -20,6 +20,8 @@ private:
 
 	static Player* pPlayer;
 
+	const float DELETE_FRAME;
+
 public:
 
 	// startPosを引数で渡すようにせず、クラス名わたしてこっちに定義した座標を持ってくるなりstatic関数で取得してもいい?
@@ -44,7 +46,8 @@ public:
 		const MelLib::Vector3& modelStartAngle,
 		const MelLib::Vector3& modelStartScale,
 		const std::string& boneName,
-		const std::string& meshName
+		const std::string& meshName,
+		const float deleteFrame
 	);
 	~CapsuleEnemyAttack() {}
 

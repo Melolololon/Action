@@ -17,6 +17,7 @@
 #include"BossAttack.h"
 #include"Water.h"
 #include"EnemyDamageParticle.h"
+#include"Stage.h"
 
 #include"ItemEffect.h"
 #include"RecoveryItem.h"

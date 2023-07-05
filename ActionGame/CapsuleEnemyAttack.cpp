@@ -14,7 +14,8 @@ CapsuleEnemyAttack::CapsuleEnemyAttack
 	const MelLib::Vector3& modelStartAngle,
 	const MelLib::Vector3& modelStartScale,
 	const std::string& boneName,
-	const std::string& meshName
+	const std::string& meshName,
+	const float deleteFrame
 )
 	:GameObject("CapsuleEnemyAttack")
 	, CAPSULE_START_POSITION(attackStartPos)
@@ -25,6 +26,7 @@ CapsuleEnemyAttack::CapsuleEnemyAttack
 	, MODEL_START_SCALE(modelStartScale)
 	, BONE_NAME(boneName)
 	, MESH_NAME(meshName)
+	, DELETE_FRAME(deleteFrame)
 {
 	capsuleDatas["main"].resize(1);
 	MelLib::Segment3DData d;

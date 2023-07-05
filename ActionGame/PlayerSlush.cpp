@@ -224,7 +224,7 @@ PlayerSlush::PlayerSlush
 void PlayerSlush::Update()
 {
 	MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
-	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())
+	if (Pause::GetInstance()->GetIsPause())
 	{
 		eraseTimer.SetStopFlag(true);
 		return;
