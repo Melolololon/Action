@@ -340,12 +340,25 @@ void MelLib::SceneEditer::LoadEditData(const std::string& sceneName)
 
 		if (!editorFlag)GameObjectManager::GetInstance()->AddObject(pObject);
 
+		pObject->SetPreData();
+
 		char c;
 		file.read(&c, 1);
 		if (c == -2)break;
 	}
 
 	file.close();
+}
+
+void MelLib::SceneEditer::LoadTestPlaySaveData()
+{
+	if (editorFlag) 
+	{
+		// 一旦falseにしてゲームオブジェクトManagerに突っ込む
+		editorFlag = false;
+		LoadEditData(TEST_START_EDIT_DATA_NAME);
+		editorFlag = true;
+	}
 }
 
 void MelLib::SceneEditer::UpdateSelectObject()
@@ -724,9 +737,11 @@ void MelLib::SceneEditer::Update()
 	if (!editorFlag || ReleaseCheck())return;
 
 
+
 	// シーンの更新オンオフ処理
-	if (Input::KeyTrigger(DIK_F5))
+	if (Input::KeyTrigger(DIK_F5) && addObjects.size() != 0)
 	{
+
 		isEdit = !isEdit;
 
 		if (isEdit)
@@ -742,9 +757,19 @@ void MelLib::SceneEditer::Update()
 			datas.push_back(data);
 
 			data.rt->SetCamera(pEditerCamera);
+
+			if (addObjects.size() != 0)
+			{
+				pSelectListObject = addObjects[0].get();
+			}
+			else
+			{
+				pSelectListObject = nullptr;
+			}
 		}
 		else
 		{
+
 			SceneManager::GetInstance()->ReLoadScene();
 			// オブジェクト全部消したのに追加したら0番とかにならない不具合修正する
 			// 前回の番号の状態を実行時に反映させるようにする
@@ -774,6 +799,8 @@ void MelLib::SceneEditer::Update()
 	}
 	if (!isEdit)return;
 
+	// マウスカーソル強制表示
+	Input::SetDrawCursorFlag(true);
 
 	if (pRegisterObjects.size() == 0 || !ImguiManager::GetInstance()->GetReleaseDrawFrag())return;
 

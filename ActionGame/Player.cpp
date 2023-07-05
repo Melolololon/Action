@@ -199,7 +199,7 @@ Player::Player(const MelLib::Vector3& pos)
 
 void Player::Initialize()
 {
-	ShowCursor(FALSE);
+	MelLib::Input::SetDrawCursorFlag(false);
 
 	MelLib::Camera* pCamera = MelLib::Camera::Get();
 	pCamera->SetRotatePoint(MelLib::Camera::RotatePoint::ROTATE_POINT_TARGET_POSITION);
@@ -1017,7 +1017,7 @@ void Player::ChangeMouseCursorShow()
 	if(Pause::GetInstance()->PauseTiming())
 	{
 		showMouse = !showMouse;
-		ShowCursor(showMouse);
+		MelLib::Input::SetDrawCursorFlag(showMouse);
 	}
 }
 
