@@ -20,7 +20,7 @@ private:
 
 	static Player* pPlayer;
 
-	const float DELETE_FRAME;
+	const unsigned int DELETE_FRAME;
 
 public:
 
@@ -47,7 +47,7 @@ public:
 		const MelLib::Vector3& modelStartScale,
 		const std::string& boneName,
 		const std::string& meshName,
-		const float deleteFrame
+		const unsigned int deleteFrame
 	);
 	~CapsuleEnemyAttack() {}
 

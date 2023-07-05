@@ -15,7 +15,7 @@ CapsuleEnemyAttack::CapsuleEnemyAttack
 	const MelLib::Vector3& modelStartScale,
 	const std::string& boneName,
 	const std::string& meshName,
-	const float deleteFrame
+	const unsigned int deleteFrame
 )
 	:GameObject("CapsuleEnemyAttack")
 	, CAPSULE_START_POSITION(attackStartPos)
@@ -78,7 +78,7 @@ void CapsuleEnemyAttack::Update()
 	// ‰¼‚Év1‚Ì’l‚ðÝ’è
 	SetPosition(pos.v1);
 
-	if (MODEL.GetAnimationEndFlag())
+	if (MODEL.GetAnimationFrame() >= DELETE_FRAME)
 	{
 		eraseManager = true;
 	}

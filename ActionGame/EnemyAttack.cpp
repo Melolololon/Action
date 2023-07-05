@@ -26,7 +26,7 @@ EnemyAttack::EnemyAttack
 	const MelLib::Vector3& modelStartAngle,
 	const MelLib::Vector3& modelStartScale,
 	const AttackType attackType,
-	const float deleteFrame
+	const unsigned int deleteFrame
 ) 
 	:GameObject("EnemyAttack")
 	, SPHERE_START_POSITION(attackStartPos)
@@ -48,7 +48,7 @@ EnemyAttack::EnemyAttack
 	const MelLib::ModelObject& model, 
 	float radius, 
 	const AttackType attackType,
-	const float deleteFrame
+	const unsigned int deleteFrame
 )
 	:GameObject("EnemyAttack")
 	, power(power)
@@ -113,7 +113,7 @@ void EnemyAttack::Update()
 	//if (MODEL.GetAnimationEndFlag())eraseManager = true;
 	//if (timer >= 60 * 0.5)eraseManager = true;
 
-	if (MODEL.GetAnimationFrameCount() >= DELETE_FRAME)eraseManager = true;
+	if (MODEL.GetAnimationFrame() >= DELETE_FRAME)eraseManager = true;
 }
 
 void EnemyAttack::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)

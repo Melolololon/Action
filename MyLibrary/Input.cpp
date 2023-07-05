@@ -700,8 +700,7 @@ void MelLib::Input::SetDrawCursorFlag(const bool flag)
 
 	// İ’è‚ğØ‚è‘Ö‚¦–ß‚è’l‚ğ‘ã“ü
 	// -1 or 0‚È‚Ì‚Å+1‚·‚é
-	int num = ShowCursor(flag);
-	cursorDrawFlag = static_cast<bool>(num + 1);
+	cursorDrawFlag = static_cast<bool>(ShowCursor(flag) + 1);
 }
 
 #pragma region ƒ{ƒ^ƒ“

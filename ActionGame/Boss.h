@@ -64,6 +64,10 @@ private:
 	MelLib::FrameTimer mutekiTimer;
 	bool isMuteki = false;
 	std::unique_ptr<EnemyHPGauge> hpGauge;
+
+	// 当たり判定配置用ボックス
+	MelLib::ModelObject hanteiBox;
+
 private:
 
 	void Move();

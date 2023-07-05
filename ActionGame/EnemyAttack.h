@@ -43,7 +43,7 @@ private:
 	const MelLib::Vector3 MODEL_START_ANGLE;
 	const MelLib::Vector3 MODEL_START_SCALE;
 
-	const float DELETE_FRAME;
+	const unsigned int DELETE_FRAME;
 	
 
 	static Player* pPlayer;
@@ -75,7 +75,7 @@ public:
 		const MelLib::Vector3& modelStartAngle,
 		const MelLib::Vector3& modelStartScale,
 		const AttackType attackType,
-		const float deleteFrame
+		const unsigned int deleteFrame
 	);
 
 	EnemyAttack
@@ -84,7 +84,7 @@ public:
 		const MelLib::ModelObject& model,
 		float radius,
 		const AttackType attackType,
-		const float deleteFrame
+		const unsigned int deleteFrame
 	);
 
 

@@ -233,8 +233,17 @@ void Boss::DashAttackUpdate()
 		{
 			// 指定したフレームで攻撃判定消えるようにする
 
+			// 攻撃判定ハンマーにセットできてないからバグる
+			// Tポーズでセットしなおせ！
 			MelLib::GameObjectManager::GetInstance()->AddObject
-			(std::make_shared<EnemyAttack>(20, modelObjects["main"], 10.0f, EnemyAttack::AttackType::BE_BLOWN_AWAY , 50));
+			(std::make_shared<EnemyAttack>
+				(
+					20,
+					modelObjects["main"], 
+					10.0f, 
+					EnemyAttack::AttackType::BE_BLOWN_AWAY ,
+					50)
+			);
 		}
 	}
 
