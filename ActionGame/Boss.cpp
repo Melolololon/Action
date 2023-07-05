@@ -5,6 +5,7 @@
 
 #include"EnemyAttack.h"
 #include"BossAttack.h"
+#include"CapsuleEnemyAttack.h"
 
 #include"JumpAttack.h"
 
@@ -13,8 +14,10 @@
 #include<GameObjectManager.h>
 
 #include"BossAliveChecker.h"
-#include<Random.h>
 #include"EnemyDamageParticle.h"
+
+
+#include<Random.h>
 
 Player* Boss::pPlayer;
 Boss* Boss::pBoss;
@@ -170,8 +173,7 @@ void Boss::RollAttackUpdate()
 
 	if (FRAME == ROLL_START_FLAME)
 	{
-		MelLib::GameObjectManager::GetInstance()->AddObject
-		(std::make_shared<EnemyAttack>(20,modelObjects["main"],10.0f,EnemyAttack::AttackType::BE_BLOWN_AWAY,60));
+		AddCupsuleAttack();
 	}
 
 	if (FRAME >= ROLL_START_FLAME && FRAME <= 56)
@@ -232,18 +234,7 @@ void Boss::DashAttackUpdate()
 		if (FRAME == 37)
 		{
 			// 指定したフレームで攻撃判定消えるようにする
-
-			// 攻撃判定ハンマーにセットできてないからバグる
-			// Tポーズでセットしなおせ！
-			MelLib::GameObjectManager::GetInstance()->AddObject
-			(std::make_shared<EnemyAttack>
-				(
-					20,
-					modelObjects["main"], 
-					10.0f, 
-					EnemyAttack::AttackType::BE_BLOWN_AWAY ,
-					50)
-			);
+			AddCupsuleAttack();
 		}
 	}
 
@@ -259,6 +250,32 @@ void Boss::DashAttackUpdate()
 	}
 
 	AttackEnd();
+}
+
+void Boss::AddCupsuleAttack()
+{
+	std::shared_ptr<CapsuleEnemyAttack>attack;
+
+
+	// 判定の座標
+	MelLib::Value2<MelLib::Vector3>p =
+		MelLib::Value2<MelLib::Vector3>(MelLib::Vector3(-9, 10, 5), MelLib::Vector3(-4, 10, 5));
+
+	attack = std::make_shared<CapsuleEnemyAttack>
+		(
+			10,
+			p,
+			3.0f,
+			modelObjects["main"],
+			0,
+			0,
+			1,
+			"Bone_R.003",
+			"Body.001",
+			40
+		);
+
+	MelLib::GameObjectManager::GetInstance()->AddObject(attack);
 }
 
 void Boss::Rotate()
@@ -303,7 +320,7 @@ Boss::Boss()
 	BossAliveChecker::GetInstance()->AddBoss(this);
 
 	modelObjects["main"].Create(MelLib::ModelData::Get("boss"), "boss", nullptr);
-	modelObjects["main"].SetAnimation("No_Cont");
+	modelObjects["main"].SetAnimation("_T");
 
 
 	//modelObjects["main"].SetPosition();
@@ -328,6 +345,13 @@ Boss::Boss()
 	tags.push_back("Boss");
 
 	pBoss = this;
+
+
+	hanteiBox.Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX),"test");
+	hanteiBox2.Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX), "test");
+	hanteiBox.SetPosition(GetPosition() + MelLib::Vector3(-9, 10, 5));
+	hanteiBox2.SetPosition(GetPosition() + MelLib::Vector3(-4, 10, 5));
+
 }
 
 std::shared_ptr<MelLib::GameObject> Boss::GetNewPtr()
@@ -337,8 +361,8 @@ std::shared_ptr<MelLib::GameObject> Boss::GetNewPtr()
 
 void Boss::Initialize()
 {
+	modelObjects["main"].SetAnimation("No_Cont");
 	
-
 	// 当たり判定の作成
 	capsuleDatas["main"].resize(1);
 	capsuleDatas["main"][0].SetRadius(4.5f);
@@ -413,6 +437,9 @@ void Boss::Draw()
 {
 	AllDraw();
 	if(hpGauge)hpGauge->Draw();
+
+	hanteiBox.Draw();
+	hanteiBox2.Draw();
 }
 
 void Boss::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)

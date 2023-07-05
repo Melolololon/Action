@@ -67,6 +67,7 @@ private:
 
 	// 当たり判定配置用ボックス
 	MelLib::ModelObject hanteiBox;
+	MelLib::ModelObject hanteiBox2;
 
 private:
 
@@ -77,7 +78,9 @@ private:
 
 	void AttackEnd();
 
-
+	// 攻撃判定追加
+	void AddCupsuleAttack();
+	
 	// 攻撃一覧
 	void NormalAttackUpdate();
 	void RollAttackUpdate();
