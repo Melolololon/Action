@@ -24,7 +24,7 @@ Boss* Boss::pBoss;
 
 void Boss::Move()
 {
-	static const float MOVE_SPEED = 0.5f;
+	static const float MOVE_SPEED = 1.2f;
 	
 	// ‹ß‚­‚ÉˆÚ“®
 	MoveToPlayer(MOVE_SPEED);
@@ -227,7 +227,7 @@ void Boss::DashAttackUpdate()
 		}
 		else
 		{
-			AddPosition(toPlayer * 2.0f);
+			AddPosition(toPlayer * 3.2f);
 		}
 
 		// ”»’è’Ç‰Á

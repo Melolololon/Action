@@ -17,7 +17,6 @@ void Stage::SetStageData(const unsigned int stageNum)
 		object.second.SetScale(stageScale);
 		object.second.SetAngle(stageAngle);
 	}
-
 }
 
 void Stage::LoadResources(unsigned int stageNum)
@@ -61,6 +60,7 @@ Stage::Stage(const unsigned int stageNum)
 	// 描画設定は3Dモデル用のデフォルト設定を適応
 	MelLib::DrawOption op;
 	op.SetModelDefData();
+	op.cullMode = MelLib::CullMode::BACK;
 
 	// マテリアル作成(描画設定,テクスチャ枚数,シェーダーの設定)
 	material.Create(op, 3, set);
