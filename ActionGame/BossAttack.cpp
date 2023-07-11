@@ -21,7 +21,7 @@ BossAttack::BossAttack(const MelLib::Vector3& pos)
 
 	deadTimer.SetMaxTime(60 * 0.8f);
 	SetScale(10.0f);
-	sphereDatas["main"][0].SetRadius(5.0f);
+	sphereDatas["main"][0].SetRadius(10.0f);
 }
 
 void BossAttack::Initialize()
