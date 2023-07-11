@@ -6,6 +6,20 @@
 #include"Player.h"
 #include"EnemyHPGauge.h"
 
+#include"EnemyAttack.h"
+
+
+// メモスペース
+// 現在のボスの攻撃パターン
+// 回転　地面叩くやつ
+
+// 追加案
+// ジャンプからの落下振り下ろし(カメラがネック？)
+// 構え、超接近、ハンマー振り
+
+// 攻撃の選別基準をどうするか
+// 乱数?
+
 class Boss :public MelLib::GameObject
 {
 private:
@@ -28,19 +42,35 @@ private:
 	static const int JUMP_ATTACK_MAX_COUNT = 12;
 	MelLib::FrameTimer jumpAttackTimer;
 
-	enum class CurrentState 
+	enum class CurrentState : unsigned int
 	{
 		NONE,
 		NORMAL_1,
 		ROLL_ATTACK,
-		JUMP_ATTACK,
+
+		// ここから遠距離
+		JUMP_ATTACK = 10,
+		DASH_ATTACK,
+
 	};
+	// 乱数でジャンプ攻撃を指定するときに加算する値
+	const int JUMP_ATTACK_ADD_NUM = static_cast<std::underlying_type_t<Boss::CurrentState>>(Boss::CurrentState::JUMP_ATTACK);
 	CurrentState currentState = CurrentState::NONE;
+
+	// 攻撃制御用タイマー
+	MelLib::FrameTimer attackControlTimer;
+
+	MelLib::Vector3 dashAttackStartPlayerPos;
 
 	MelLib::GuiInt hp;
 	MelLib::FrameTimer mutekiTimer;
 	bool isMuteki = false;
 	std::unique_ptr<EnemyHPGauge> hpGauge;
+
+	// 当たり判定配置用ボックス
+	MelLib::ModelObject hanteiBox;
+	MelLib::ModelObject hanteiBox2;
+
 private:
 
 	void Move();
@@ -50,10 +80,15 @@ private:
 
 	void AttackEnd();
 
+	// 攻撃判定追加
+	void AddCupsuleAttack(const unsigned int deleteFrame,
+		EnemyAttack::AttackType attackType);
+	
+	// 攻撃一覧
 	void NormalAttackUpdate();
 	void RollAttackUpdate();
-	// 攻撃一覧
 	void JumpAttackUpdate();
+	void DashAttackUpdate();
 
 	void Rotate();
 

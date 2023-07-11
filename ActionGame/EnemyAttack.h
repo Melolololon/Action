@@ -43,6 +43,7 @@ private:
 	const MelLib::Vector3 MODEL_START_ANGLE;
 	const MelLib::Vector3 MODEL_START_SCALE;
 
+	const unsigned int DELETE_FRAME;
 	
 
 	static Player* pPlayer;
@@ -50,6 +51,7 @@ private:
 public:
 	
 	static AttackType GetAttackType(const std::string& tag);
+	static std::string GetAttackTypeStr(const AttackType type);
 public:
 
 	// startPosを引数で渡すようにせず、クラス名わたしてこっちに定義した座標を持ってくるなりstatic関数で取得してもいい?
@@ -73,7 +75,8 @@ public:
 		const MelLib::Vector3& modelStartPos,
 		const MelLib::Vector3& modelStartAngle,
 		const MelLib::Vector3& modelStartScale,
-		const AttackType attackType
+		const AttackType attackType,
+		const unsigned int deleteFrame
 	);
 
 	EnemyAttack
@@ -81,7 +84,8 @@ public:
 		unsigned int power,
 		const MelLib::ModelObject& model,
 		float radius,
-		const AttackType attackType
+		const AttackType attackType,
+		const unsigned int deleteFrame
 	);
 
 

@@ -5,6 +5,7 @@
 
 #include"EnemyAttack.h"
 #include"BossAttack.h"
+#include"CapsuleEnemyAttack.h"
 
 #include"JumpAttack.h"
 
@@ -13,15 +14,17 @@
 #include<GameObjectManager.h>
 
 #include"BossAliveChecker.h"
-#include<Random.h>
 #include"EnemyDamageParticle.h"
+
+
+#include<Random.h>
 
 Player* Boss::pPlayer;
 Boss* Boss::pBoss;
 
 void Boss::Move()
 {
-	static const float MOVE_SPEED = 0.5f;
+	static const float MOVE_SPEED = 1.2f;
 	
 	// 近くに移動
 	MoveToPlayer(MOVE_SPEED);
@@ -51,18 +54,47 @@ void Boss::SelectAction()
 
 	if (actionTimer.GetMaxOverFlag()) 
 	{
-		if (playerDir < MIN_DIR && playerDir >= 6.0f) // そうではないなら攻撃 
+		//auto castEnum = [&](const Boss::CurrentState state)
+		//{
+		//	return static_cast<std::underlying_type_t<Boss::CurrentState>>(state);
+		//};
+
+		// 上のラムダ式と乱数を比較して攻撃をセットする
+		// 0はNONEなので1加算する
+		unsigned int attackNumber = MelLib::Random::GetRandomNumber(3) + 1;
+
+		if (playerDir < MIN_DIR /* && playerDir >= 6.0f*/) // そうではないなら攻撃 
 		{
+			// ここに攻撃分岐処理を実装
+
 			currentState = Boss::CurrentState::ROLL_ATTACK;
 			modelObjects["main"].SetAnimation("Attack_Roll");
 		}
 		else
 		{
-			currentState = Boss::CurrentState::JUMP_ATTACK;
-			modelObjects["main"].SetAnimation("Attack_Jump.001");
+			// ここに攻撃分岐処理を実装
+			// 遠距離攻撃は2桁台なので10加算す
+			attackNumber += 10;
+
+			// 仮
+			unsigned int ranNum = MelLib::Random::GetRandomNumber(2);
+			//unsigned int ranNum = 1;
+
+			if (ranNum == 0) 
+			{
+				currentState = Boss::CurrentState::JUMP_ATTACK;
+				modelObjects["main"].SetAnimation("Attack_Jump.001");
+			}
+			else 
+			{
+				currentState = Boss::CurrentState::DASH_ATTACK;
+				modelObjects["main"].SetAnimation("Attack_Dash");
+			}
+			
+
 		}
 
-
+		modelObjects["main"].SetAnimationFrame(0);
 		actionTimer.SetStopFlag(true);
 	}
 }
@@ -79,6 +111,9 @@ void Boss::AttackUpdate()
 		break;
 	case Boss::CurrentState::JUMP_ATTACK:
 		JumpAttackUpdate();
+		break;
+	case Boss::CurrentState::DASH_ATTACK:
+		DashAttackUpdate();
 		break;
 	default:
 		break;
@@ -120,6 +155,9 @@ void Boss::AttackEnd()
 
 		actionTimer.SetStopFlag(false);
 		actionTimer.ResetTimeZero();
+
+		attackControlTimer.SetStopFlag(true);
+		attackControlTimer.ResetTimeZero();
 	}
 }
 
@@ -135,8 +173,8 @@ void Boss::RollAttackUpdate()
 
 	if (FRAME == ROLL_START_FLAME)
 	{
-		MelLib::GameObjectManager::GetInstance()->AddObject
-		(std::make_shared<EnemyAttack>(20,modelObjects["main"],10.0f,EnemyAttack::AttackType::BE_BLOWN_AWAY));
+		AddCupsuleAttack(57,
+			EnemyAttack::AttackType::BE_BLOWN_AWAY);
 	}
 
 	if (FRAME >= ROLL_START_FLAME && FRAME <= 56)
@@ -156,11 +194,92 @@ void Boss::JumpAttackUpdate()
 	if (modelObjects["main"].GetAnimationFrame() == 47) 
 	{
 		jumpAttackTimer.SetStopFlag(false);
-
 	}
 
 	AttackEnd();
 	
+}
+
+void Boss::DashAttackUpdate()
+{
+	const unsigned int FRAME = modelObjects["main"].GetAnimationFrame();
+
+	if (FRAME == 9)
+	{
+		attackControlTimer.SetMaxTime(60 * 0.8);
+		attackControlTimer.SetStartFlag(true);
+		modelObjects["main"].SetAnimationPlayFlag(false);
+	}
+	else if (FRAME > 9) 
+	{
+
+		// アニメーション一定タイミングで固定したまま接近
+		if (FRAME == 30)
+		{
+			modelObjects["main"].SetAnimationPlayFlag(false);
+		}
+
+		// 近づいたら攻撃
+		MelLib::Vector3 toPlayer = (dashAttackStartPlayerPos - GetPosition()).Normalize();
+		float pDis = MelLib::LibMath::CalcDistance3D(dashAttackStartPlayerPos, GetPosition());
+		if (pDis <= 7.0f)
+		{
+			modelObjects["main"].SetAnimationPlayFlag(true);
+		}
+		else
+		{
+			AddPosition(toPlayer * 3.2f);
+		}
+
+		// 判定追加
+		if (FRAME == 37)
+		{
+			// 指定したフレームで攻撃判定消えるようにする
+			AddCupsuleAttack(40,
+				EnemyAttack::AttackType::BE_BLOWN_AWAY);
+		}
+	}
+
+
+	if(attackControlTimer.GetMaxOverFlag())
+	{
+		modelObjects["main"].SetAnimationPlayFlag(true);
+
+		// プレイヤー座標を保存
+		dashAttackStartPlayerPos = pPlayer->GetPosition();
+		attackControlTimer.ResetTimeZero();
+		attackControlTimer.SetStopFlag(true);
+	}
+
+	AttackEnd();
+}
+
+void Boss::AddCupsuleAttack(const unsigned int deleteFrame,
+	EnemyAttack::AttackType attackType)
+{
+	std::shared_ptr<CapsuleEnemyAttack>attack;
+
+
+	// 判定の座標
+	MelLib::Value2<MelLib::Vector3>p =
+		MelLib::Value2<MelLib::Vector3>(MelLib::Vector3(-9, 10, 5), MelLib::Vector3(-4, 10, 5));
+
+	attack = std::make_shared<CapsuleEnemyAttack>
+		(
+			10,
+			p,
+			3.0f,
+			modelObjects["main"],
+			0,
+			0,
+			1,
+			"Bone_R.003",
+			"Body.001",
+			deleteFrame,
+			attackType
+		);
+
+	MelLib::GameObjectManager::GetInstance()->AddObject(attack);
 }
 
 void Boss::Rotate()
@@ -205,7 +324,7 @@ Boss::Boss()
 	BossAliveChecker::GetInstance()->AddBoss(this);
 
 	modelObjects["main"].Create(MelLib::ModelData::Get("boss"), "boss", nullptr);
-	modelObjects["main"].SetAnimation("No_Cont");
+	modelObjects["main"].SetAnimation("_T");
 
 
 	//modelObjects["main"].SetPosition();
@@ -230,6 +349,13 @@ Boss::Boss()
 	tags.push_back("Boss");
 
 	pBoss = this;
+
+
+	hanteiBox.Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX),"test");
+	hanteiBox2.Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX), "test");
+	hanteiBox.SetPosition(GetPosition() + MelLib::Vector3(-9, 10, 5));
+	hanteiBox2.SetPosition(GetPosition() + MelLib::Vector3(-4, 10, 5));
+
 }
 
 std::shared_ptr<MelLib::GameObject> Boss::GetNewPtr()
@@ -239,8 +365,8 @@ std::shared_ptr<MelLib::GameObject> Boss::GetNewPtr()
 
 void Boss::Initialize()
 {
+	modelObjects["main"].SetAnimation("No_Cont");
 	
-
 	// 当たり判定の作成
 	capsuleDatas["main"].resize(1);
 	capsuleDatas["main"][0].SetRadius(4.5f);
@@ -261,7 +387,6 @@ void Boss::Initialize()
 
 	mutekiTimer.SetMaxTime(60 * 0.2);
 
-	// 仮
 	thisState = ThisState::OTHER;
 
 	hpGauge = std::make_unique<EnemyHPGauge>(hp.GetRefValue());
@@ -316,6 +441,9 @@ void Boss::Draw()
 {
 	AllDraw();
 	if(hpGauge)hpGauge->Draw();
+
+	hanteiBox.Draw();
+	hanteiBox2.Draw();
 }
 
 void Boss::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)

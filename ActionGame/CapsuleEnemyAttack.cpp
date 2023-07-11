@@ -1,5 +1,6 @@
 #include "CapsuleEnemyAttack.h"
 
+
 #include"Pause.h"
 
 Player* CapsuleEnemyAttack::pPlayer;
@@ -14,7 +15,9 @@ CapsuleEnemyAttack::CapsuleEnemyAttack
 	const MelLib::Vector3& modelStartAngle,
 	const MelLib::Vector3& modelStartScale,
 	const std::string& boneName,
-	const std::string& meshName
+	const std::string& meshName,
+	const unsigned int deleteFrame,
+	const EnemyAttack::AttackType attackType
 )
 	:GameObject("CapsuleEnemyAttack")
 	, CAPSULE_START_POSITION(attackStartPos)
@@ -25,6 +28,7 @@ CapsuleEnemyAttack::CapsuleEnemyAttack
 	, MODEL_START_SCALE(modelStartScale)
 	, BONE_NAME(boneName)
 	, MESH_NAME(meshName)
+	, DELETE_FRAME(deleteFrame)
 {
 	capsuleDatas["main"].resize(1);
 	MelLib::Segment3DData d;
@@ -34,6 +38,8 @@ CapsuleEnemyAttack::CapsuleEnemyAttack
 
 	collisionCheckDistance = 80.0f;
 	skipCollisionCheckTags.push_back("Stage");
+
+	tags.push_back(EnemyAttack::GetAttackTypeStr(attackType));
 }
 
 void CapsuleEnemyAttack::Update()
@@ -76,7 +82,7 @@ void CapsuleEnemyAttack::Update()
 	// ‰¼‚Év1‚Ì’l‚ðÝ’è
 	SetPosition(pos.v1);
 
-	if (MODEL.GetAnimationEndFlag())
+	if (MODEL.GetAnimationFrame() >= DELETE_FRAME)
 	{
 		eraseManager = true;
 	}

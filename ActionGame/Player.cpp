@@ -199,7 +199,7 @@ Player::Player(const MelLib::Vector3& pos)
 
 void Player::Initialize()
 {
-	ShowCursor(FALSE);
+	MelLib::Input::SetDrawCursorFlag(false);
 
 	MelLib::Camera* pCamera = MelLib::Camera::Get();
 	pCamera->SetRotatePoint(MelLib::Camera::RotatePoint::ROTATE_POINT_TARGET_POSITION);
@@ -218,9 +218,9 @@ void Player::Update()
 
 
 	MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
-	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())
+	if (Pause::GetInstance()->GetIsPause())
 	{
-		if (EditMode::GetInstance()->GetIsEdit())UpdateCamera();
+		
 		
 		MelLib::Scene* currentScene = MelLib::SceneManager::GetInstance()->GetCurrentScene();
 		if (typeid(*currentScene) != typeid(Title))
@@ -1017,7 +1017,7 @@ void Player::ChangeMouseCursorShow()
 	if(Pause::GetInstance()->PauseTiming())
 	{
 		showMouse = !showMouse;
-		ShowCursor(showMouse);
+		MelLib::Input::SetDrawCursorFlag(showMouse);
 	}
 }
 
@@ -1094,7 +1094,7 @@ void Player::RotCamera()
 			MelLib::Vector2 moveVector = MelLib::Vector2(mousePos - winHarf).Normalize() * cameraSpeed;
 
 			// パッドの速度を使いまわすと遅いため、数値を掛けて速度を上げる
-			const float MUL_CAMERA_SPEED = 9.0f;
+			const float MUL_CAMERA_SPEED = 11.0f;
 			moveVector *= MUL_CAMERA_SPEED;
 
 			// 角度をセット
@@ -1156,81 +1156,81 @@ void Player::LockOn()
 	// スティックでロックオン対象を切り替えれるようにすること
 
 	// ロックオンの最高距離
-	static const float LOCK_ON_DISTANCE = 200.0f;
+	//static const float LOCK_ON_DISTANCE = 200.0f;
 
-	// ロックオン有効、無効
-	if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::R_STICK))
-	{
-		lockOn = !lockOn;
-		if(lockOn)
-		{
-			lockOnEnemyDistance = FLT_MAX;
-			// 近い敵を取得
-			for (const auto& enemy : ActionPart::GetEnemys())
-			{
-				if (enemy->GetEraseManager())continue;
+	//// ロックオン有効、無効
+	//if (MelLib::Input::PadButtonTrigger(MelLib::PadButton::R_STICK))
+	//{
+	//	lockOn = !lockOn;
+	//	if(lockOn)
+	//	{
+	//		lockOnEnemyDistance = FLT_MAX;
+	//		// 近い敵を取得
+	//		for (const auto& enemy : ActionPart::GetEnemys())
+	//		{
+	//			if (enemy->GetEraseManager())continue;
 
-				float distance = MelLib::LibMath::CalcDistance3D(GetPosition(), enemy->GetPosition());
-				if (distance <= lockOnEnemyDistance)
-				{
-					lockOnEnemyDistance = distance;
-					lockOnEnemy = enemy.get();
-				}
-			}
+	//			float distance = MelLib::LibMath::CalcDistance3D(GetPosition(), enemy->GetPosition());
+	//			if (distance <= lockOnEnemyDistance)
+	//			{
+	//				lockOnEnemyDistance = distance;
+	//				lockOnEnemy = enemy.get();
+	//			}
+	//		}
 
-			// 敵いなかったら、または、近くにいなかったら終了
-			
-			if (lockOnEnemyDistance == FLT_MAX || lockOnEnemyDistance > LOCK_ON_DISTANCE)
-			{
-				LockOnEnd();
-				return;
-			}
+	//		// 敵いなかったら、または、近くにいなかったら終了
+	//		
+	//		if (lockOnEnemyDistance == FLT_MAX || lockOnEnemyDistance > LOCK_ON_DISTANCE)
+	//		{
+	//			LockOnEnd();
+	//			return;
+	//		}
 
-		}
-	}
+	//	}
+	//}
 
-	// 切り替え
-	if(MelLib::Input::RightStickRight(40.0f))
-	{
-	}
-	else if(MelLib::Input::RightStickLeft(40.0f))
-	{
-	}
+	//// 切り替え
+	//if(MelLib::Input::RightStickRight(40.0f))
+	//{
+	//}
+	//else if(MelLib::Input::RightStickLeft(40.0f))
+	//{
+	//}
 
-	// ロックオンを解除した、または、ロックオンした敵がやられてnullptrになったらreturn
-	if (!lockOn || !lockOnEnemy)return;
+	//// ロックオンを解除した、または、ロックオンした敵がやられてnullptrになったらreturn
+	//if (!lockOn || !lockOnEnemy)return;
 
-	// カメラ操作
-	// カメラの動きを補完すること
-	// まずは視点切り替えを優先して実装すること
-	
-	lockOnEnemyDistance = MelLib::LibMath::CalcDistance3D(GetPosition(), lockOnEnemy->GetPosition());
+	//// カメラ操作
+	//// カメラの動きを補完すること
+	//// まずは視点切り替えを優先して実装すること
+	//
+	//lockOnEnemyDistance = MelLib::LibMath::CalcDistance3D(GetPosition(), lockOnEnemy->GetPosition());
 
-	// 離れたら解除
-	if(lockOnEnemyDistance >= LOCK_ON_DISTANCE)
-	{
-		lockOn = false;
-		return;
-	}
+	//// 離れたら解除
+	//if(lockOnEnemyDistance >= LOCK_ON_DISTANCE)
+	//{
+	//	lockOn = false;
+	//	return;
+	//}
 
-	// 注視点を敵の座標に
-	MelLib::Camera::Get()->SetRotateCriteriaPosition(lockOnEnemy->GetPosition());
+	//// 注視点を敵の座標に
+	//MelLib::Camera::Get()->SetRotateCriteriaPosition(lockOnEnemy->GetPosition());
 
-	// 近づける限界地
-	static const float MIN_DISTANCE = 50.0f;
-	if (lockOnEnemyDistance < MIN_DISTANCE)lockOnEnemyDistance = MIN_DISTANCE;
+	//// 近づける限界地
+	//static const float MIN_DISTANCE = 50.0f;
+	//if (lockOnEnemyDistance < MIN_DISTANCE)lockOnEnemyDistance = MIN_DISTANCE;
 
-	// 注視点との距離を変える
-	MelLib::Camera::Get()->SetCameraToTargetDistance(lockOnEnemyDistance * 2.0f);
+	//// 注視点との距離を変える
+	//MelLib::Camera::Get()->SetCameraToTargetDistance(lockOnEnemyDistance * 2.0f);
 
 
-	MelLib::Vector3 playerToEnemy = lockOnEnemy->GetPosition() - GetPosition();
-	float xzAngle = MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(playerToEnemy.x, playerToEnemy.z), true);
+	//MelLib::Vector3 playerToEnemy = lockOnEnemy->GetPosition() - GetPosition();
+	//float xzAngle = MelLib::LibMath::Vector2ToAngle(MelLib::Vector2(playerToEnemy.x, playerToEnemy.z), true);
 
-	static const float CONST_ANGLE_X = 35;
-	/*float disAngle = lockOnEnemyDistance * 0.3f;
-	if (disAngle - CONST_ANGLE_X > 90 - CONST_ANGLE_X)disAngle = 90 - CONST_ANGLE_X;*/
-	MelLib::Camera::Get()->SetAngle(MelLib::Vector3(CONST_ANGLE_X , -xzAngle + 90,0));
+	//static const float CONST_ANGLE_X = 35;
+	///*float disAngle = lockOnEnemyDistance * 0.3f;
+	//if (disAngle - CONST_ANGLE_X > 90 - CONST_ANGLE_X)disAngle = 90 - CONST_ANGLE_X;*/
+	//MelLib::Camera::Get()->SetAngle(MelLib::Vector3(CONST_ANGLE_X , -xzAngle + 90,0));
 }
 
 void Player::HitWall()
@@ -1263,7 +1263,7 @@ void Player::Draw()
 
 void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)
 {
-	if (EditMode::GetInstance()->GetIsEdit() || Pause::GetInstance()->GetIsPause())return;
+	if (Pause::GetInstance()->GetIsPause())return;
 
 	// 敵と当たった時の処理
 	for (const auto& tag : object.GetTags()) 
@@ -1283,14 +1283,7 @@ void Player::Hit(const GameObject& object, const MelLib::ShapeType3D collisionTy
 			}
 			else if (prePosition - GetPosition() == 0)
 			{
-				if (typeid(object) == typeid(JumpEnemy))
-				{
-					AddPosition(MelLib::Vector3(1,0,0) * 1.0f);
-				}
-				else 
-				{
-					AddPosition(MelLib::Vector3(enemyToPlayer.x, 0, enemyToPlayer.z) * 4.0f);
-				}
+				AddPosition(MelLib::Vector3(enemyToPlayer.x, 0, enemyToPlayer.z) * 4.0f);
 			}
 			else 
 			{

@@ -19,7 +19,7 @@ const std::string MelLib::SceneEditer::CAMERA_WINDOW_NAME = "EditCamera";
 void MelLib::SceneEditer::StartSave()
 {
 
-	if (!editorFlag || !ReleaseCheck())return;
+	if (!editorFlag ||ReleaseCheck())return;
 
 
 	SaveRegisterObject();
@@ -40,7 +40,7 @@ void MelLib::SceneEditer::StartSave()
 
 void MelLib::SceneEditer::SaveEditData(const std::string& dataName)
 {
-	if (!editorFlag || !ReleaseCheck())return;
+	if (!editorFlag ||ReleaseCheck())return;
 	std::ofstream file(dataName + EDIT_DATA_FORMAT, std::ios_base::binary);
 
 	const size_t ADD_OBJECT_SIZE = addObjects.size();
@@ -85,7 +85,7 @@ void MelLib::SceneEditer::SaveEditData(const std::string& dataName)
 
 void MelLib::SceneEditer::InputEditDataName()
 {
-	if (!editorFlag || !ReleaseCheck())return;
+	if (!editorFlag ||ReleaseCheck())return;
 	//ImguiManager::GetInstance()->DrawTextBox("Input Object Name", inputObjectName, 20);
 	std::string s = "EditData";
 	char c[21];
@@ -116,7 +116,7 @@ void MelLib::SceneEditer::SaveRegisterObject()
 	// オブジェクト名(ファイル名)
 	// クラス名
 	// パラメーター
-	if (!editorFlag || !ReleaseCheck())return;
+	if (!editorFlag ||ReleaseCheck())return;
 
 	for (const auto& o : pRegisterObjects)
 	{
@@ -163,7 +163,7 @@ void MelLib::SceneEditer::SaveRegisterObject()
 
 void MelLib::SceneEditer::Load()
 {
-	if (!editorFlag || !ReleaseCheck())return;
+	if (!editorFlag ||ReleaseCheck())return;
 	// シーン名を格納
 	for (const auto& dirEntry : std::filesystem::directory_iterator("."))
 	{
@@ -185,7 +185,7 @@ void MelLib::SceneEditer::Load()
 void MelLib::SceneEditer::LoadRegisterSelectObject()
 {
 
-	if (!editorFlag || !ReleaseCheck())return;
+	if (!editorFlag ||ReleaseCheck())return;
 	for (const auto& dirEntry : std::filesystem::directory_iterator("."))
 	{
 		const std::string FILE_NAME = dirEntry.path().string();
@@ -235,7 +235,7 @@ void MelLib::SceneEditer::LoadFileName(std::ifstream& stream, std::string& str)
 
 void MelLib::SceneEditer::SelectEditData()
 {
-	if (!editorFlag || !ReleaseCheck())return;
+	if (!editorFlag ||ReleaseCheck())return;
 	ImguiManager::GetInstance()->BeginDrawWindow("SelectScene");
 
 
@@ -340,12 +340,25 @@ void MelLib::SceneEditer::LoadEditData(const std::string& sceneName)
 
 		if (!editorFlag)GameObjectManager::GetInstance()->AddObject(pObject);
 
+		pObject->SetPreData();
+
 		char c;
 		file.read(&c, 1);
 		if (c == -2)break;
 	}
 
 	file.close();
+}
+
+void MelLib::SceneEditer::LoadTestPlaySaveData()
+{
+	if (editorFlag) 
+	{
+		// 一旦falseにしてゲームオブジェクトManagerに突っ込む
+		editorFlag = false;
+		LoadEditData(TEST_START_EDIT_DATA_NAME);
+		editorFlag = true;
+	}
 }
 
 void MelLib::SceneEditer::UpdateSelectObject()
@@ -360,23 +373,11 @@ void MelLib::SceneEditer::UpdateSelectObject()
 	if (releaseEdit)return;
 #endif // _DEBUG
 
-
-	/*MelLib::Vector3 pos = pEditSelectObject->GetPosition();
-	ImguiManager::GetInstance()->DrawSliderVector3("Position", pos, -1000, 1000);
-	pEditSelectObject->SetPosition(pos);
-
-	MelLib::Vector3 angle = pEditSelectObject->GetAngle();
-	ImguiManager::GetInstance()->DrawSliderVector3("Angle", angle, 0, 359);
-	pEditSelectObject->SetAngle(angle);
-
-	MelLib::Vector3 scale = pEditSelectObject->GetScale();
-	ImguiManager::GetInstance()->DrawSliderVector3("Scale", scale, 0, 359);
-	pEditSelectObject->SetScale(scale);*/
 }
 
 void MelLib::SceneEditer::UpdateCamera()
 {
-	if (!editorFlag || !ReleaseCheck())return;
+	if (!editorFlag ||ReleaseCheck())return;
 	// エディター用のカメラを作る
 	// メインカメラ使うと設定とか変数の切替がいちいちめんどくさそう
 	// あと変数減る
@@ -400,7 +401,7 @@ void MelLib::SceneEditer::UpdateCamera()
 
 void MelLib::SceneEditer::DrawObjectList()
 {
-	if (!editorFlag || !ReleaseCheck())return;
+	if (!editorFlag ||ReleaseCheck())return;
 	// オブジェクトマネージャーに名前だけ取得する関数作ってもいいかも
 	// 毎回stringの配列に入れると処理遅くなるからオブジェクト追加時に名前追加していいかも
 	// 名前変更した時に変更する処理入れないとそれ出来ない
@@ -448,7 +449,7 @@ void MelLib::SceneEditer::DrawObjectList()
 
 void MelLib::SceneEditer::SetDrawWindowFlag(const std::vector<std::string>& objNames)
 {
-	if (!editorFlag || !ReleaseCheck())return;
+	if (!editorFlag ||ReleaseCheck())return;
 	for (const auto& name : objNames)
 	{
 		bool drawFlag = false;
@@ -462,7 +463,7 @@ void MelLib::SceneEditer::RegisterSelectObject()
 	// 読み込むときは、GetNewPtr関数を使ってNewすればいい
 	// そもそも書き出せない?
 	// クラス名だけ書き出して、RegisterObjectで登録したオブジェクトのGetNewPtrを呼び出せばOK
-	if (!editorFlag || !ReleaseCheck())return;
+	if (!editorFlag ||ReleaseCheck())return;
 
 
 	// コピーを生成
@@ -488,7 +489,7 @@ void MelLib::SceneEditer::RegisterSelectObject()
 
 void MelLib::SceneEditer::InputObjectName()
 {
-	if (!editorFlag || !ReleaseCheck())return;
+	if (!editorFlag || ReleaseCheck())return;
 	//ImguiManager::GetInstance()->DrawTextBox("Input Object Name", inputObjectName, 20);
 	std::string s = "Object";
 	char c[21];
@@ -517,7 +518,7 @@ void MelLib::SceneEditer::InputObjectName()
 
 void MelLib::SceneEditer::InputObjectType()
 {
-	if (!editorFlag || !ReleaseCheck())return;
+	if (!editorFlag || ReleaseCheck())return;
 	//ImguiManager::GetInstance()->DrawTextBox("Input Object Type", inputObjectType, 20);
 
 	std::string s = "Object";
@@ -542,7 +543,7 @@ void MelLib::SceneEditer::InputObjectType()
 
 void MelLib::SceneEditer::OtherCameraGuiDrawFlagFalse()
 {
-	if (!editorFlag || !ReleaseCheck())return;
+	if (!editorFlag || ReleaseCheck())return;
 	std::vector<std::string>cameraNames;
 	Camera::GetCameraNames(cameraNames);
 
@@ -555,18 +556,14 @@ void MelLib::SceneEditer::OtherCameraGuiDrawFlagFalse()
 
 void MelLib::SceneEditer::Reset()
 {
-	if (!editorFlag || !ReleaseCheck())return;
+	if (!editorFlag || ReleaseCheck())return;
 }
 
 void MelLib::SceneEditer::SetAddObjectsGUIData()
 {
-	for (auto& object : addObjects)
-	{
-		object->SetPreData();
-		object->SetGUIData();
-		object->SetPreDataPositions();
-	}
+	if (!pSelectListObject)return;
 
+	pSelectListObject->SetGUIData();
 }
 
 bool MelLib::SceneEditer::ReleaseCheck()
@@ -578,7 +575,7 @@ bool MelLib::SceneEditer::ReleaseCheck()
 	return !releaseEdit;
 #endif // _DEBUG
 
-	return true;
+	return false;
 }
 
 
@@ -591,8 +588,6 @@ MelLib::SceneEditer* MelLib::SceneEditer::GetInstance()
 
 void MelLib::SceneEditer::RegisterObject(const std::shared_ptr<MelLib::GameObject>& pObject, const std::string& objectType)
 {
-
-
 	const std::string OBJECT_NAME = pObject->GetObjectName();
 	// C++20のcontainsに置き換えできる
 	if (pRegisterObjects[objectType].find(OBJECT_NAME) != pRegisterObjects[objectType].end())
@@ -722,7 +717,7 @@ void MelLib::SceneEditer::MouseInputCamera()
 void MelLib::SceneEditer::Initialize()
 {
 
-	if (!editorFlag || !ReleaseCheck())return;
+	if (!editorFlag || ReleaseCheck())return;
 	LoadRegisterSelectObject();
 
 	SaveEditData(TEST_START_EDIT_DATA_NAME);
@@ -739,12 +734,14 @@ void MelLib::SceneEditer::Initialize()
 
 void MelLib::SceneEditer::Update()
 {
-	if (!editorFlag || !ReleaseCheck())return;
+	if (!editorFlag || ReleaseCheck())return;
+
 
 
 	// シーンの更新オンオフ処理
-	if (Input::KeyTrigger(DIK_F5))
+	if (Input::KeyTrigger(DIK_F5) && addObjects.size() != 0)
 	{
+
 		isEdit = !isEdit;
 
 		if (isEdit)
@@ -760,9 +757,19 @@ void MelLib::SceneEditer::Update()
 			datas.push_back(data);
 
 			data.rt->SetCamera(pEditerCamera);
+
+			if (addObjects.size() != 0)
+			{
+				pSelectListObject = addObjects[0].get();
+			}
+			else
+			{
+				pSelectListObject = nullptr;
+			}
 		}
 		else
 		{
+
 			SceneManager::GetInstance()->ReLoadScene();
 			// オブジェクト全部消したのに追加したら0番とかにならない不具合修正する
 			// 前回の番号の状態を実行時に反映させるようにする
@@ -792,8 +799,8 @@ void MelLib::SceneEditer::Update()
 	}
 	if (!isEdit)return;
 
-	// 更新
-	SetAddObjectsGUIData();
+	// マウスカーソル強制表示
+	Input::SetDrawCursorFlag(true);
 
 	if (pRegisterObjects.size() == 0 || !ImguiManager::GetInstance()->GetReleaseDrawFrag())return;
 
@@ -871,28 +878,41 @@ void MelLib::SceneEditer::Update()
 	pEditSelectObject = refObjects[OBJECT_NAME].get();
 	pEditSelectObject->SetGUIData();
 
-	// pEditSelectObjectのウィンドウ描画設定
+	// 更新
+	SetAddObjectsGUIData();
+
+	// pEditSelectObjectのウィンドウ設定
 	for (const auto& p : pRegisterObjects)
 	{
 		for (const auto& object : p.second)
 		{
-			if (object.first == OBJECT_NAME)GuiValueManager::GetInstance()->SetDrawWindowFlag(object.first, true);
+			if (object.first == OBJECT_NAME)
+			{
+				GuiValueManager::GetInstance()->SetDrawWindowFlag(object.first, true);
+
+			}
 			else GuiValueManager::GetInstance()->SetDrawWindowFlag(object.first, false);
 		}
 	}
+
+	// 選択したオブジェクトのサイズ固定
+	const std::string SELECT_OBJECT_NAME = pEditSelectObject->GetObjectName();
+	const float SELECT_OBJECT_WINDOW_X_HOSEI = 450.0f;
+	const float SELECT_OBJECT_WINDOW_X = MelLib::Library::GetWindowWidth() - SELECT_OBJECT_WINDOW_X_HOSEI;
+	MelLib::GuiValueManager::GetInstance()->SetPosition(MelLib::Vector2(SELECT_OBJECT_WINDOW_X,0), SELECT_OBJECT_NAME);
+	MelLib::GuiValueManager::GetInstance()->SetFixedPosition(true, SELECT_OBJECT_NAME);
+	MelLib::GuiValueManager::GetInstance()->SetSize(MelLib::Vector2(SELECT_OBJECT_WINDOW_X_HOSEI,300), SELECT_OBJECT_NAME);
+	MelLib::GuiValueManager::GetInstance()->SetFixedSize(true, SELECT_OBJECT_NAME);
 
 
 	if (pushChangeButton && !inpttingObjectName && !inpttingObjectType && !inpttingEditDataName && !selectingEditData)
 	{
 		typingInputFlag = !typingInputFlag;
 
-		GuiValueManager::GetInstance()->ChangeTypingInputFlag(pEditSelectObject->GetObjectName());
+		GuiValueManager::GetInstance()->ChangeTypingInputFlag(SELECT_OBJECT_NAME);
 		GuiValueManager::GetInstance()->ChangeTypingInputFlag(CAMERA_WINDOW_NAME);
 
 		if (pSelectListObject)GuiValueManager::GetInstance()->ChangeTypingInputFlag(pSelectListObject->GetObjectName());
-
-
-
 	}
 
 #pragma endregion
@@ -907,14 +927,6 @@ void MelLib::SceneEditer::Update()
 
 		if (pObject)
 		{
-			// 追加時に座標とかセットし直すのめんどいから
-			// pSelectObjectを管理クラスに追加して
-			// 戻り値のを新たにmapに入れてもいいかも
-			// どっちみちセットしないといけないから
-			/*pObject->SetPosition(pEditSelectObject->GetPosition());
-			pObject->SetAngle(pEditSelectObject->GetAngle());
-			pObject->SetScale(pEditSelectObject->GetScale());*/
-
 			// コピー
 			pEditSelectObject->CopyObjectData(*pObject, GameObject::CopyGameObjectContent::EDIT);
 
@@ -955,6 +967,8 @@ void MelLib::SceneEditer::Update()
 
 	// オブジェクト一覧の描画
 	DrawObjectList();
+
+	
 
 	// 削除
 	if (pushControl && Input::KeyTrigger(DIK_D) && pSelectListObject)
@@ -1002,14 +1016,8 @@ void MelLib::SceneEditer::Update()
 		// 開きっぱなしの方がテストプレイ中にファイル消して止まるとかそういうことなくなるかも
 	}
 
-	//// 描画設定
-	//for (auto& obj : addObjects) 
-	//{
-	//	if (pEditSelectObject == obj)pEditSelectObject->SetDrawGUIFlag(true);
-	//	else obj->SetDrawGUIFlag(false);
-	//}
-
 	pEditSelectObject->SetPreData();
+	if(pSelectListObject)pSelectListObject->SetPreData();
 
 
 	UpdateCamera();
@@ -1018,7 +1026,7 @@ void MelLib::SceneEditer::Update()
 
 void MelLib::SceneEditer::Draw()
 {
-	if (!editorFlag || !ReleaseCheck())return;
+	if (!editorFlag ||ReleaseCheck())return;
 
 	if (!isEdit)return;
 

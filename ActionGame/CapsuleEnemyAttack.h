@@ -1,6 +1,7 @@
 #pragma once
 #include <GameObject.h>
 #include"Player.h"
+#include"EnemyAttack.h"
 
 class CapsuleEnemyAttack :
 	public MelLib::GameObject
@@ -19,6 +20,8 @@ private:
 	const std::string MESH_NAME;
 
 	static Player* pPlayer;
+
+	const unsigned int DELETE_FRAME;
 
 public:
 
@@ -44,7 +47,9 @@ public:
 		const MelLib::Vector3& modelStartAngle,
 		const MelLib::Vector3& modelStartScale,
 		const std::string& boneName,
-		const std::string& meshName
+		const std::string& meshName,
+		const unsigned int deleteFrame,
+		const EnemyAttack::AttackType attack
 	);
 	~CapsuleEnemyAttack() {}
 

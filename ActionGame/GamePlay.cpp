@@ -94,7 +94,9 @@ void GamePlay::Initialize()
 
 	//MelLib::SceneEditer::GetInstance()->LoadEditData("_Kesuna_Mendanyou");
 	//MelLib::SceneEditer::GetInstance()->LoadEditData("Boss_PowerUp");
-	MelLib::SceneEditer::GetInstance()->LoadEditData("_Stage_01");
+
+	//MelLib::SceneEditer::GetInstance()->LoadEditData("BossOnly");
+	//MelLib::SceneEditer::GetInstance()->LoadEditData("_Stage_01");
 
 	// 毎回これ書くの大変だから、シングルトンのプレイヤーのダメージ減らしたりするクラス作るか、
 	// Playerクラスにstaticのポインタ取得関数を作ったほうがいい

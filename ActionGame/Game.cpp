@@ -17,6 +17,7 @@
 #include"BossAttack.h"
 #include"Water.h"
 #include"EnemyDamageParticle.h"
+#include"Stage.h"
 
 #include"ItemEffect.h"
 #include"RecoveryItem.h"
@@ -120,7 +121,7 @@ void Game::Initialize()
 
 	MelLib::ImguiManager::GetInstance()->SetReleaseDrawFlag(EDITER_FLAG);
 	MelLib::SceneEditer::GetInstance()->SetEditerFlag(EDITER_FLAG);
-	MelLib::SceneEditer::GetInstance()->SetReleaseEditFlag(!EDITER_FLAG);
+	MelLib::SceneEditer::GetInstance()->SetReleaseEditFlag(EDITER_FLAG);
 
 #pragma region エディター登録
 	MelLib::SceneEditer::GetInstance()->RegisterObject(std::make_shared<Player>(), "Player");
