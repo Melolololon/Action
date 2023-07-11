@@ -8,13 +8,15 @@ void HPGauge::LoadResources()
 {
 	std::string texturePath = Game::GetInstance()->GetPath(Game::ResourcePath::TEXTURE);
 	bool res = MelLib::Texture::Load(texturePath + "Player/hpGauge.png","hpGauge");
+	res = MelLib::Texture::Load(texturePath + "Player/hpFrame.png","hpFrame");
 }
 
 HPGauge::HPGauge()
 {
 	sprites["gauge"].Create(MelLib::Texture::Get("hpGauge"));
 	sprites["gauge"].SetPosition(MelLib::Vector2(30,30));
-	
+	sprites["frame"].Create(MelLib::Texture::Get("hpFrame"));
+	sprites["frame"].SetPosition(MelLib::Vector2(30, 30));
 }
 
 void HPGauge::Update()
@@ -28,5 +30,6 @@ void HPGauge::Update()
 void HPGauge::Draw()
 {
 	sprites["gauge"].Draw();
+	sprites["frame"].Draw();
 }
 
