@@ -228,7 +228,7 @@ void Boss::DashAttackUpdate()
 		}
 		else
 		{
-			AddPosition(toPlayer * 3.2f);
+			AddPosition(toPlayer * 4.5f);
 		}
 
 		// ”»’è’Ç‰Á
