@@ -51,6 +51,7 @@ private:
 public:
 	
 	static AttackType GetAttackType(const std::string& tag);
+	static std::string GetAttackTypeStr(const AttackType type);
 public:
 
 	// startPosを引数で渡すようにせず、クラス名わたしてこっちに定義した座標を持ってくるなりstatic関数で取得してもいい?

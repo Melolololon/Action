@@ -1,5 +1,6 @@
 #include "CapsuleEnemyAttack.h"
 
+
 #include"Pause.h"
 
 Player* CapsuleEnemyAttack::pPlayer;
@@ -15,7 +16,8 @@ CapsuleEnemyAttack::CapsuleEnemyAttack
 	const MelLib::Vector3& modelStartScale,
 	const std::string& boneName,
 	const std::string& meshName,
-	const unsigned int deleteFrame
+	const unsigned int deleteFrame,
+	const EnemyAttack::AttackType attackType
 )
 	:GameObject("CapsuleEnemyAttack")
 	, CAPSULE_START_POSITION(attackStartPos)
@@ -36,6 +38,8 @@ CapsuleEnemyAttack::CapsuleEnemyAttack
 
 	collisionCheckDistance = 80.0f;
 	skipCollisionCheckTags.push_back("Stage");
+
+	tags.push_back(EnemyAttack::GetAttackTypeStr(attackType));
 }
 
 void CapsuleEnemyAttack::Update()

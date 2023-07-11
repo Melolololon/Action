@@ -73,7 +73,8 @@ void WeakEnemy::AddAttackCollisionDetection()
 			1,
 			"Bone_R.003",
 			"Body.001",
-			40
+			40,
+			EnemyAttack::AttackType::NORMAL
 		);
 
 	MelLib::GameObjectManager::GetInstance()->AddObject(attack);

@@ -6,6 +6,8 @@
 #include"Player.h"
 #include"EnemyHPGauge.h"
 
+#include"EnemyAttack.h"
+
 
 // メモスペース
 // 現在のボスの攻撃パターン
@@ -79,7 +81,8 @@ private:
 	void AttackEnd();
 
 	// 攻撃判定追加
-	void AddCupsuleAttack();
+	void AddCupsuleAttack(const unsigned int deleteFrame,
+		EnemyAttack::AttackType attackType);
 	
 	// 攻撃一覧
 	void NormalAttackUpdate();

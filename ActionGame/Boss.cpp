@@ -173,7 +173,8 @@ void Boss::RollAttackUpdate()
 
 	if (FRAME == ROLL_START_FLAME)
 	{
-		AddCupsuleAttack();
+		AddCupsuleAttack(57,
+			EnemyAttack::AttackType::BE_BLOWN_AWAY);
 	}
 
 	if (FRAME >= ROLL_START_FLAME && FRAME <= 56)
@@ -234,7 +235,8 @@ void Boss::DashAttackUpdate()
 		if (FRAME == 37)
 		{
 			// Žw’è‚µ‚½ƒtƒŒ[ƒ€‚ÅUŒ‚”»’èÁ‚¦‚é‚æ‚¤‚É‚·‚é
-			AddCupsuleAttack();
+			AddCupsuleAttack(40,
+				EnemyAttack::AttackType::BE_BLOWN_AWAY);
 		}
 	}
 
@@ -252,7 +254,8 @@ void Boss::DashAttackUpdate()
 	AttackEnd();
 }
 
-void Boss::AddCupsuleAttack()
+void Boss::AddCupsuleAttack(const unsigned int deleteFrame,
+	EnemyAttack::AttackType attackType)
 {
 	std::shared_ptr<CapsuleEnemyAttack>attack;
 
@@ -272,7 +275,8 @@ void Boss::AddCupsuleAttack()
 			1,
 			"Bone_R.003",
 			"Body.001",
-			40
+			deleteFrame,
+			attackType
 		);
 
 	MelLib::GameObjectManager::GetInstance()->AddObject(attack);

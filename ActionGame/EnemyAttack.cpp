@@ -16,6 +16,13 @@ EnemyAttack::AttackType EnemyAttack::GetAttackType(const std::string& tag)
 	return AttackType::NORMAL;
 }
 
+std::string EnemyAttack::GetAttackTypeStr(const AttackType type)
+{
+	if (type == AttackType::BE_BLOWN_AWAY )return ATTACK_TYPE_STR_BE;
+
+	return "";
+}
+
 EnemyAttack::EnemyAttack
 (
 	unsigned int power,
