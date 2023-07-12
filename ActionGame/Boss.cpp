@@ -24,7 +24,7 @@ Boss* Boss::pBoss;
 
 void Boss::Move()
 {
-	static const float MOVE_SPEED = 1.2f;
+	static const float MOVE_SPEED = 1.7f;
 	
 	// 近くに移動
 	MoveToPlayer(MOVE_SPEED);
@@ -35,7 +35,6 @@ void Boss::SelectAction()
 
 	// 攻撃中だったらスキップ
 	if (currentState != Boss::CurrentState::NONE)return;
-	
 	else actionTimer.SetStopFlag(false);
 
 
@@ -220,15 +219,31 @@ void Boss::DashAttackUpdate()
 		}
 
 		// 近づいたら攻撃
-		MelLib::Vector3 toPlayer = (dashAttackStartPlayerPos - GetPosition()).Normalize();
-		float pDis = MelLib::LibMath::CalcDistance3D(dashAttackStartPlayerPos, GetPosition());
-		if (pDis <= 7.0f)
+		
+		float gDis = MelLib::LibMath::CalcDistance3D(dashAttackEndPos, GetPosition());
+		float pDis = MelLib::LibMath::CalcDistance3D(pPlayer->GetPosition(), GetPosition());
+		if (gDis <= 7.0f)
 		{
 			modelObjects["main"].SetAnimationPlayFlag(true);
 		}
 		else
 		{
-			AddPosition(toPlayer * 4.5f);
+			// 40以上の時は保持
+			if (pDis >= 70.0f && !dashAttackGoalSet)
+			{
+				// プレイヤー座標を保存
+		        dashAttackEndPos = pPlayer->GetPosition();
+				// 保持中は回転有効
+				Rotate();
+			}
+			else 
+			{
+				dashAttackGoalSet = true;
+			}
+			MelLib::Vector3 y0DashAttackEndPos = dashAttackEndPos;
+			y0DashAttackEndPos.y = 0;
+			MelLib::Vector3 toPlayer = (y0DashAttackEndPos - GetPosition()).Normalize();
+			AddPosition(toPlayer * 10.0f);
 		}
 
 		// 判定追加
@@ -237,6 +252,7 @@ void Boss::DashAttackUpdate()
 			// 指定したフレームで攻撃判定消えるようにする
 			AddCupsuleAttack(40,
 				EnemyAttack::AttackType::BE_BLOWN_AWAY);
+			dashAttackGoalSet = false;
 		}
 	}
 
@@ -245,8 +261,6 @@ void Boss::DashAttackUpdate()
 	{
 		modelObjects["main"].SetAnimationPlayFlag(true);
 
-		// プレイヤー座標を保存
-		dashAttackStartPlayerPos = pPlayer->GetPosition();
 		attackControlTimer.ResetTimeZero();
 		attackControlTimer.SetStopFlag(true);
 	}

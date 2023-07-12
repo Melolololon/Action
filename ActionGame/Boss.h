@@ -60,7 +60,8 @@ private:
 	// 攻撃制御用タイマー
 	MelLib::FrameTimer attackControlTimer;
 
-	MelLib::Vector3 dashAttackStartPlayerPos;
+	MelLib::Vector3 dashAttackEndPos;
+	bool dashAttackGoalSet = false;
 
 	MelLib::GuiInt hp;
 	MelLib::FrameTimer mutekiTimer;
