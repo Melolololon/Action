@@ -5,9 +5,10 @@
 class SandEffect : public MelLib::Particle3D
 {
 private:
+	const float FRAME_MOVE_DIS = 0.2f;
+
 	// 1フレでの減算アルファ値(パーセント)
 	const float FRAME_SUB_ALPHA = 5.0f;
-
 	float subAlpha = 0.0f;
 
 public:

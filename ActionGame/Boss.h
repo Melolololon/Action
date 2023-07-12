@@ -8,6 +8,8 @@
 
 #include"EnemyAttack.h"
 
+#include"SandEffect.h"
+
 
 // メモスペース
 // 現在のボスの攻撃パターン
@@ -62,15 +64,17 @@ private:
 
 	MelLib::Vector3 dashAttackEndPos;
 	bool dashAttackGoalSet = false;
+	// ダッシュ攻撃のダッシュ中かどうか
+	bool dashAttackDash = false;
 
 	MelLib::GuiInt hp;
 	MelLib::FrameTimer mutekiTimer;
 	bool isMuteki = false;
 	std::unique_ptr<EnemyHPGauge> hpGauge;
 
-	// 当たり判定配置用ボックス
-	MelLib::ModelObject hanteiBox;
-	MelLib::ModelObject hanteiBox2;
+	// パーティクル
+	SandEffect sandEffect;
+	MelLib::Emitter3D sandParEmitter;
 
 private:
 
