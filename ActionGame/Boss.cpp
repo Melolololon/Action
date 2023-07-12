@@ -218,17 +218,27 @@ void Boss::DashAttackUpdate()
 			modelObjects["main"].SetAnimationPlayFlag(false);
 		}
 
-		// 近づいたら攻撃
+		if (MelLib::Input::KeyTrigger(DIK_Q)) 
+		{
+			int fhweoifwu = 0;
+		}
+
+		// 近づいたら攻撃 yは考慮しない
+		MelLib::Vector3 y0Pos = GetPosition();
+		y0Pos.y = 0;
+		float gDis = MelLib::LibMath::CalcDistance3D(dashAttackEndPos, y0Pos);
 		
-		float gDis = MelLib::LibMath::CalcDistance3D(dashAttackEndPos, GetPosition());
-		float pDis = MelLib::LibMath::CalcDistance3D(pPlayer->GetPosition(), GetPosition());
+		MelLib::Vector3 y0PPos = pPlayer->GetPosition();
+		y0PPos.y = 0;
+		float pDis = MelLib::LibMath::CalcDistance3D(y0PPos, y0Pos);
+
 		if (gDis <= 7.0f)
 		{
 			modelObjects["main"].SetAnimationPlayFlag(true);
 		}
 		else
 		{
-			// 40以上の時は保持
+			// 70以上の時は保持
 			if (pDis >= 70.0f && !dashAttackGoalSet)
 			{
 				// プレイヤー座標を保存
@@ -240,9 +250,8 @@ void Boss::DashAttackUpdate()
 			{
 				dashAttackGoalSet = true;
 			}
-			MelLib::Vector3 y0DashAttackEndPos = dashAttackEndPos;
-			y0DashAttackEndPos.y = 0;
-			MelLib::Vector3 toPlayer = (y0DashAttackEndPos - GetPosition()).Normalize();
+			dashAttackEndPos.y = 0;
+			MelLib::Vector3 toPlayer = (dashAttackEndPos - GetPosition()).Normalize();
 			AddPosition(toPlayer * 10.0f);
 		}
 
