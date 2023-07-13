@@ -207,6 +207,7 @@
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="Tutorial.cpp" />
     <ClCompile Include="TutorialEventFlag.cpp" />
+    <ClCompile Include="TutorialMessege.cpp" />
     <ClCompile Include="Wall.cpp" />
     <ClCompile Include="Water.cpp" />
     <ClCompile Include="WeakEnemy.cpp" />
@@ -264,6 +265,7 @@
     <ClInclude Include="Title.h" />
     <ClInclude Include="Tutorial.h" />
     <ClInclude Include="TutorialEventFlag.h" />
+    <ClInclude Include="TutorialMessege.h" />
     <ClInclude Include="Wall.h" />
     <ClInclude Include="Water.h" />
     <ClInclude Include="WeakEnemy.h" />
