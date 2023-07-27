@@ -41,6 +41,7 @@
 #include"Title.h"
 #include"TestScene.h"
 #include"GamePlay.h"
+#include"SandEffect.h"
 
 #include"Option.h"
 #include"Tutorial.h"
@@ -48,6 +49,8 @@
 #include"EnemyDarknessEffect.h"
 
 #include"DirectionalLight.h"
+
+#include"LoadResources.h"
 
 Game* Game::GetInstance()
 {
@@ -84,40 +87,11 @@ void Game::Initialize()
 	MelLib::GameObject::SetGravutationalAcceleration(0.17f);
 
 
-	// 共通読み込み
- 	Player::LoadResources();
-
- 	Stage::LoadResources(1);
-	Water::LoadResources();
-	SlushEffect::LoadResources();
-	HPGauge::LoadResources();
-	Wall::LoadResources();
-	Tutorial::LoadResources();
-	ItemEffect::LoadResources();
-	
-	// ここにロード書くとシーン切替時に消されるから後で各シーンに変えとく
-	// エディターへの登録も
-	WeakEnemy::LoadResources();
-	Boss::LoadResources();
-	BossAttack::LoadResources();
-	RecoveryItem::LoadResources();
-	EnemyDamageParticle::LoadResources();
-	RecoveryEffect::LoadResources();
-	ClearSprite::LoadResources(); 
-	GameOverSprite::LoadResources();
+	// 読み込み エディターの追加もこんな感じでクラスでやったらインクルード減らせてすっきりするかも
+	LoadResources::GetInstance()->Load();
 
 	Pause::GetInstance()->Initialize();
-
-	for (int i = 0; i < 4; i++) 
-	{
-		std::string numStr = std::to_string(i);
-		bool res = MelLib::Texture::Load("Resources/Texture/SlushEffect/e_" + numStr + ".png", "slushEffect_" + numStr);
-	}
-
-	MelLib::Texture::Load("Resources/Model/Stage/Field_01.png","Grass");
-	MelLib::Texture::Load("Resources/Model/Stage/TitleFierd_Tex.png","Rock");
-	EnemyDarknessEffect::LoadResources();
-	bool r = MelLib::Texture::Load("Resources/Model/Stage/Stage_Mask_1.png","StageMask_1");
+	
 
 	MelLib::ImguiManager::GetInstance()->SetReleaseDrawFlag(EDITER_FLAG);
 	MelLib::SceneEditer::GetInstance()->SetEditerFlag(EDITER_FLAG);

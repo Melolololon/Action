@@ -28,7 +28,6 @@ void MelLib::Emitter3D::CheckChangeUpdateDrawFlag()
 void MelLib::Emitter3D::ParticleUpdate()
 {
 
-
 	for (int i = 0;i < particles.size(); i++)
 	{
 		if (!particleUpdateDrawFlag[i])return;
@@ -50,26 +49,28 @@ void MelLib::Emitter3D::ParticleUpdate()
 
 }
 
-MelLib::Emitter3D::Emitter3D(const Particle3D& pParticle, const unsigned int particleNum,  unsigned int releaseTime, const Vector3& pos, const std::string& name)
+MelLib::Emitter3D::Emitter3D(const Particle3D& pParticle, const unsigned int particleNum, unsigned int releaseTime, const Vector3& pos, const std::string& name)
 	:GameObject(name)
 {
 	//pParticleを元にパーティクルを生成
 	//particles.resize(particleNum, pParticle);
+	SetPosition(pos);
 
 	particles.resize(particleNum);
-	
+
 	for (auto& particle : particles)
 	{
 		particle = pParticle.GetNewPtr();
 		particle->Initialize();
+		particle->SetStartPosition(GetPosition());
 	}
 
 	particleUpdateDrawFlag.resize(particles.size(), false);
 	releaseTimer.SetMaxTime(releaseTime);
 
 	releaseTimer.SetStopFlag(false);
-	
-	
+
+
 }
 
 void MelLib::Emitter3D::Update()
@@ -84,5 +85,16 @@ void MelLib::Emitter3D::Draw()
 	{
 		if (!particleUpdateDrawFlag[i])return;
 		particles[i]->Draw();
+	}
+}
+
+void MelLib::Emitter3D::SetPosition(const Vector3& pos)
+{
+	SetPositionDefault(pos);
+	// ここにパーティクルのStartPosを変更する処理を書く
+
+	for (auto& par : particles) 
+	{
+		par->SetStartPosition(pos);
 	}
 }

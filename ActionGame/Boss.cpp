@@ -24,7 +24,7 @@ Boss* Boss::pBoss;
 
 void Boss::Move()
 {
-	static const float MOVE_SPEED = 1.2f;
+	static const float MOVE_SPEED = 1.7f;
 	
 	// 近くに移動
 	MoveToPlayer(MOVE_SPEED);
@@ -35,7 +35,6 @@ void Boss::SelectAction()
 
 	// 攻撃中だったらスキップ
 	if (currentState != Boss::CurrentState::NONE)return;
-	
 	else actionTimer.SetStopFlag(false);
 
 
@@ -219,16 +218,51 @@ void Boss::DashAttackUpdate()
 			modelObjects["main"].SetAnimationPlayFlag(false);
 		}
 
-		// 近づいたら攻撃
-		MelLib::Vector3 toPlayer = (dashAttackStartPlayerPos - GetPosition()).Normalize();
-		float pDis = MelLib::LibMath::CalcDistance3D(dashAttackStartPlayerPos, GetPosition());
-		if (pDis <= 7.0f)
+		if (MelLib::Input::KeyTrigger(DIK_Q)) 
+		{
+			int fhweoifwu = 0;
+		}
+
+		// 近づいたら攻撃 yは考慮しない
+		MelLib::Vector3 y0Pos = GetPosition();
+		y0Pos.y = 0;
+		float gDis = MelLib::LibMath::CalcDistance3D(dashAttackEndPos, y0Pos);
+		
+		MelLib::Vector3 y0PPos = pPlayer->GetPosition();
+		y0PPos.y = 0;
+		float pDis = MelLib::LibMath::CalcDistance3D(y0PPos, y0Pos);
+
+		if (gDis <= 7.0f)
 		{
 			modelObjects["main"].SetAnimationPlayFlag(true);
+
+
+			dashAttackDash = false;
 		}
 		else
 		{
-			AddPosition(toPlayer * 4.5f);
+			// 70以上の時は保持
+			if (pDis >= 70.0f && !dashAttackGoalSet)
+			{
+				// プレイヤー座標を保存
+		        dashAttackEndPos = pPlayer->GetPosition();
+				// 保持中は回転有効
+				Rotate();
+			}
+			else 
+			{
+				dashAttackGoalSet = true;
+			}
+			dashAttackEndPos.y = 0;
+			MelLib::Vector3 toPlayer = (dashAttackEndPos - GetPosition()).Normalize();
+			
+			// 移動
+			AddPosition(toPlayer * 10.0f);
+			dashAttackDash = true;
+
+			// 移動中のみパーティクルを出す
+			sandParEmitter.SetPosition(GetPosition());
+			sandParEmitter.Update();
 		}
 
 		// 判定追加
@@ -237,6 +271,7 @@ void Boss::DashAttackUpdate()
 			// 指定したフレームで攻撃判定消えるようにする
 			AddCupsuleAttack(40,
 				EnemyAttack::AttackType::BE_BLOWN_AWAY);
+			dashAttackGoalSet = false;
 		}
 	}
 
@@ -245,8 +280,6 @@ void Boss::DashAttackUpdate()
 	{
 		modelObjects["main"].SetAnimationPlayFlag(true);
 
-		// プレイヤー座標を保存
-		dashAttackStartPlayerPos = pPlayer->GetPosition();
 		attackControlTimer.ResetTimeZero();
 		attackControlTimer.SetStopFlag(true);
 	}
@@ -320,6 +353,7 @@ void Boss::LoadResources()
 
 Boss::Boss()
 	:GameObject("boss")
+	, sandParEmitter(sandEffect,10,60 * 0.5f,GetPosition(),"SandPar")
 {
 	BossAliveChecker::GetInstance()->AddBoss(this);
 
@@ -351,10 +385,6 @@ Boss::Boss()
 	pBoss = this;
 
 
-	hanteiBox.Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX),"test");
-	hanteiBox2.Create(MelLib::ModelData::Get(MelLib::ShapeType3D::BOX), "test");
-	hanteiBox.SetPosition(GetPosition() + MelLib::Vector3(-9, 10, 5));
-	hanteiBox2.SetPosition(GetPosition() + MelLib::Vector3(-4, 10, 5));
 
 }
 
@@ -391,11 +421,12 @@ void Boss::Initialize()
 
 	hpGauge = std::make_unique<EnemyHPGauge>(hp.GetRefValue());
 
+
+	
 }
 
 void Boss::Update()
 {
-
 	FallStart(0.0f);
 	CalcMovePhysics();
 
@@ -440,10 +471,14 @@ void Boss::Update()
 void Boss::Draw()
 {
 	AllDraw();
+	
+	if (dashAttackDash) 
+	{
+		sandParEmitter.Draw();
+	}
+
 	if(hpGauge)hpGauge->Draw();
 
-	hanteiBox.Draw();
-	hanteiBox2.Draw();
 }
 
 void Boss::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)

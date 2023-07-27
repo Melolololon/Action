@@ -183,6 +183,7 @@
     <ClCompile Include="ItemEffect.cpp" />
     <ClCompile Include="JumpAttack.cpp" />
     <ClCompile Include="JumpEnemy.cpp" />
+    <ClCompile Include="LoadResources.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NewEnemy.cpp" />
     <ClCompile Include="NoemalEnemy.cpp" />
@@ -197,6 +198,7 @@
     <ClCompile Include="RecoveryEffect.cpp" />
     <ClCompile Include="RecoveryItem.cpp" />
     <ClCompile Include="Rock.cpp" />
+    <ClCompile Include="SandEffect.cpp" />
     <ClCompile Include="Sky.cpp" />
     <ClCompile Include="SlushEffect.cpp" />
     <ClCompile Include="SlushHitEffect.cpp" />
@@ -242,6 +244,7 @@
     <ClInclude Include="ItemEffect.h" />
     <ClInclude Include="JumpAttack.h" />
     <ClInclude Include="JumpEnemy.h" />
+    <ClInclude Include="LoadResources.h" />
     <ClInclude Include="NewEnemy.h" />
     <ClInclude Include="NoemalEnemy.h" />
     <ClInclude Include="NormalEnemyAttack.h" />
@@ -255,6 +258,7 @@
     <ClInclude Include="RecoveryEffect.h" />
     <ClInclude Include="RecoveryItem.h" />
     <ClInclude Include="Rock.h" />
+    <ClInclude Include="SandEffect.h" />
     <ClInclude Include="Sky.h" />
     <ClInclude Include="SlushEffect.h" />
     <ClInclude Include="SlushHitEffect.h" />

@@ -260,7 +260,7 @@ namespace MelLib
 
 		void SetDataScale(const Vector3& scale);
 
-
+		
 	protected:
 		/// <summary>
 		/// 全てのModelObjectを描画します。
@@ -388,6 +388,12 @@ namespace MelLib
 		/// </summary>
 		/// <param name="acc"></param>
 		static void SetGravutationalAcceleration(const float acc) { gravutationalAcc = acc; };
+
+
+		/// <summary>
+		/// GameOjectデフォルトの移動関数
+		/// </summary>
+		void SetPositionDefault(const Vector3& pos);
 
 		/// <summary>
 		/// 座標をセットします。モデルオブジェクトと当たり判定はセット前の座標との差だけ移動します。
