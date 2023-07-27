@@ -261,6 +261,7 @@ void Boss::DashAttackUpdate()
 			dashAttackDash = true;
 
 			// 移動中のみパーティクルを出す
+			sandParEmitter.SetPosition(GetPosition());
 			sandParEmitter.Update();
 		}
 
