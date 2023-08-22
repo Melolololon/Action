@@ -74,7 +74,7 @@ private:
 
 	// パーティクル
 	SandEffect sandEffect;
-	MelLib::Emitter3D sandParEmitter;
+	//MelLib::Emitter3D sandParEmitter;
 
 private:
 

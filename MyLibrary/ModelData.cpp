@@ -672,57 +672,57 @@ bool ModelData::LoadModel(const std::string& path, const std::string& name)
 
 #pragma region 法線計算
 
-		auto vertNum = vertices.size();
-		smoothNormal.reserve(vertNum);
-		for (const auto& objectName : objectNames)
-		{
-			smoothNormal[objectName].resize(vertices[objectName].size());
-		}
+		//auto vertNum = vertices.size();
+		//smoothNormal.reserve(vertNum);
+		//for (const auto& objectName : objectNames)
+		//{
+		//	smoothNormal[objectName].resize(vertices[objectName].size());
+		//}
 
-		for (const auto& objectName : objectNames)
-		{
-			for (int j = 0; j < vertices[objectName].size(); j++)
-			{
-				smoothNormal[objectName][j] = vertices[objectName][j].normal;
-			}
-		}
+		//for (const auto& objectName : objectNames)
+		//{
+		//	for (int j = 0; j < vertices[objectName].size(); j++)
+		//	{
+		//		smoothNormal[objectName][j] = vertices[objectName][j].normal;
+		//	}
+		//}
 
-		//法線(平均求める用配列。ここに入れて、平均を求める)
-		std::vector<DirectX::XMFLOAT3>sNor;
+		////法線(平均求める用配列。ここに入れて、平均を求める)
+		//std::vector<DirectX::XMFLOAT3>sNor;
 
-		//オブジェクト分ループ
-		for (const auto& objectName : objectNames)
-		{
-			auto itr = smoothData[objectName].begin();
-			std::vector<USHORT>ver;
-			for (; itr != smoothData[objectName].end(); ++itr)
-			{
-				ver = itr->second;
-				for (auto& v : ver)
-				{
-					//一気に24個入ってるし、clearしてないからおかしかった
-					sNor.push_back(vertices[objectName][v].normal);
-				}
+		////オブジェクト分ループ
+		//for (const auto& objectName : objectNames)
+		//{
+		//	auto itr = smoothData[objectName].begin();
+		//	std::vector<USHORT>ver;
+		//	for (; itr != smoothData[objectName].end(); ++itr)
+		//	{
+		//		ver = itr->second;
+		//		for (auto& v : ver)
+		//		{
+		//			//一気に24個入ってるし、clearしてないからおかしかった
+		//			sNor.push_back(vertices[objectName][v].normal);
+		//		}
 
-				//法線平均化
-				DirectX::XMVECTOR aveNormal = { 0,0,0 };
-				for (auto& n : sNor)
-				{
-					aveNormal.m128_f32[0] += n.x;
-					aveNormal.m128_f32[1] += n.y;
-					aveNormal.m128_f32[2] += n.z;
-				}
-				aveNormal.m128_f32[0] /= sNor.size();
-				aveNormal.m128_f32[1] /= sNor.size();
-				aveNormal.m128_f32[2] /= sNor.size();
-				aveNormal = DirectX::XMVector3Normalize(aveNormal);
-				for (auto& v : ver)
-				{
-					smoothNormal[objectName][v] = { aveNormal.m128_f32[0],aveNormal.m128_f32[1], aveNormal.m128_f32[2] };
-				}
-				sNor.clear();
-			}
-		}
+		//		//法線平均化
+		//		DirectX::XMVECTOR aveNormal = { 0,0,0 };
+		//		for (auto& n : sNor)
+		//		{
+		//			aveNormal.m128_f32[0] += n.x;
+		//			aveNormal.m128_f32[1] += n.y;
+		//			aveNormal.m128_f32[2] += n.z;
+		//		}
+		//		aveNormal.m128_f32[0] /= sNor.size();
+		//		aveNormal.m128_f32[1] /= sNor.size();
+		//		aveNormal.m128_f32[2] /= sNor.size();
+		//		aveNormal = DirectX::XMVector3Normalize(aveNormal);
+		//		for (auto& v : ver)
+		//		{
+		//			smoothNormal[objectName][v] = { aveNormal.m128_f32[0],aveNormal.m128_f32[1], aveNormal.m128_f32[2] };
+		//		}
+		//		sNor.clear();
+		//	}
+		//}
 
 
 #pragma endregion

@@ -573,6 +573,10 @@ void MelLib::SceneEditer::SetAddObjectsGUIData()
 {
 	if (!pSelectListObject)return;
 
+	if (MelLib::Input::MouseButtonTrigger(MelLib::MouseButton::LEFT)) 
+	{
+		int r0iegfh = 0;
+	}
 	pSelectListObject->SetGUIData();
 }
 
@@ -756,8 +760,10 @@ void MelLib::SceneEditer::Update()
 
 		if (isEdit)
 		{
+			
 			// スコアなどをリセットするために読み込みなおす
 			SceneManager::GetInstance()->ReLoadScene();
+			GameObject::ResetObjectNumbers();
 			LoadEditData(TEST_START_EDIT_DATA_NAME);
 
 
@@ -787,7 +793,8 @@ void MelLib::SceneEditer::Update()
 
 			// 開始時点のデータを書き出す
 			SaveEditData(TEST_START_EDIT_DATA_NAME);
-
+			// GUI情報を出力
+			GuiValueManager::GetInstance()->Export();
 
 			// 切り替えた瞬間のカメラの名前を保存しておき、エディットオフにしたときにそれに切り替えるようにする
 			// 切り替えた瞬間のカメラが最初に使われるカメラとは限らないのでよくない

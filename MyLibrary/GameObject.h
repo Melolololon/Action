@@ -682,7 +682,6 @@ namespace MelLib
 
 		float GetCollisionCheckDistance()const { return collisionCheckDistance; }
 
-		// 開発者用
 #ifdef _DEBUG
 		static void CreateCollisionCheckModelPipelineState();
 
@@ -698,6 +697,11 @@ namespace MelLib
 
 
 #pragma endregion
+
+		/// <summary>
+		/// 開発者用関数。オブジェクトの数値をリセットします。
+		/// </summary>
+		static void ResetObjectNumbers();
 
 	};
 }

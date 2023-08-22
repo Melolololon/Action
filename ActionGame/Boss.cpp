@@ -261,8 +261,8 @@ void Boss::DashAttackUpdate()
 			dashAttackDash = true;
 
 			// 移動中のみパーティクルを出す
-			sandParEmitter.SetPosition(GetPosition());
-			sandParEmitter.Update();
+			//sandParEmitter.SetPosition(GetPosition());
+			//sandParEmitter.Update();
 		}
 
 		// 判定追加
@@ -353,7 +353,7 @@ void Boss::LoadResources()
 
 Boss::Boss()
 	:GameObject("boss")
-	, sandParEmitter(sandEffect,10,60 * 0.5f,GetPosition(),"SandPar")
+	//, /*sandParEmitter(sandEffect,10,60 * 0.5f,GetPosition(),"SandPar")*/
 {
 	BossAliveChecker::GetInstance()->AddBoss(this);
 
@@ -474,7 +474,7 @@ void Boss::Draw()
 	
 	if (dashAttackDash) 
 	{
-		sandParEmitter.Draw();
+		//sandParEmitter.Draw();
 	}
 
 	if(hpGauge)hpGauge->Draw();
