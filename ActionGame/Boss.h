@@ -75,7 +75,7 @@ private:
 	// パーティクル
 	SandEffect sandEffect;
 	MelLib::Emitter3D sandParEmitter;
-
+	int testTimer = 0;
 private:
 
 	void Move();

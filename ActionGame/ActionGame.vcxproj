@@ -205,6 +205,7 @@
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="StageObject.cpp" />
     <ClCompile Include="StageSelect.cpp" />
+    <ClCompile Include="TestSandParticle.cpp" />
     <ClCompile Include="TestScene.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="Tutorial.cpp" />
@@ -265,6 +266,7 @@
     <ClInclude Include="Stage.h" />
     <ClInclude Include="StageObject.h" />
     <ClInclude Include="StageSelect.h" />
+    <ClInclude Include="TestSandParticle.h" />
     <ClInclude Include="TestScene.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="Tutorial.h" />

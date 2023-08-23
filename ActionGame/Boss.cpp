@@ -16,6 +16,8 @@
 #include"BossAliveChecker.h"
 #include"EnemyDamageParticle.h"
 
+#include"SandEffect.h"
+#include"TestSandParticle.h"
 
 #include<Random.h>
 
@@ -245,17 +247,17 @@ void Boss::DashAttackUpdate()
 			if (pDis >= 70.0f && !dashAttackGoalSet)
 			{
 				// プレイヤー座標を保存
-		        dashAttackEndPos = pPlayer->GetPosition();
+				dashAttackEndPos = pPlayer->GetPosition();
 				// 保持中は回転有効
 				Rotate();
 			}
-			else 
+			else
 			{
 				dashAttackGoalSet = true;
 			}
 			dashAttackEndPos.y = 0;
 			MelLib::Vector3 toPlayer = (dashAttackEndPos - GetPosition()).Normalize();
-			
+
 			// 移動
 			AddPosition(toPlayer * 10.0f);
 			dashAttackDash = true;
@@ -263,6 +265,13 @@ void Boss::DashAttackUpdate()
 			// 移動中のみパーティクルを出す
 			sandParEmitter.SetPosition(GetPosition());
 			sandParEmitter.Update();
+
+			testTimer++;
+			if (testTimer >= 10) 
+			{
+				MelLib::GameObjectManager::GetInstance()->AddObject(std::make_shared<TestSandParticle>(GetPosition()));
+				testTimer = 0;
+			}
 		}
 
 		// 判定追加
