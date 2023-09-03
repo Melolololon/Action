@@ -363,8 +363,9 @@ void Boss::Dead()
 	modelObjects["main"].Update();
 	if (!deadTimer.GetMaxOverFlag())return;
 
-	SetScale(GetScale() - 0.1f);
-	if (GetScale().x <= 0)eraseManager = true;
+	modelObjects["main"].SetScale(modelObjects["main"].GetScale() - 0.1f);
+
+	if (modelObjects["main"].GetScale().x <= 0)eraseManager = true;
 }
 
 void Boss::LoadResources()
@@ -518,7 +519,6 @@ void Boss::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType
 		deadTimer.SetStartFlag(true);
 
 		isDead = true;
-
 		return;
 	}
 
@@ -561,6 +561,7 @@ void Boss::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType
 			mutekiTimer.SetStopFlag(false);
 		}
 	}
+
 
 
 	if (typeid(object) == typeid(Stage)
