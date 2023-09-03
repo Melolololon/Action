@@ -361,7 +361,7 @@ void Boss::Dead()
 	if (!isDead)return;
 
 	modelObjects["main"].Update();
-	if (!modelObjects["main"].GetAnimationEndFlag())return;
+	if (!deadTimer.GetMaxOverFlag())return;
 
 	SetScale(GetScale() - 0.1f);
 	if (GetScale().x <= 0)eraseManager = true;
@@ -515,6 +515,8 @@ void Boss::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType
 		modelObjects["main"].SetAnimationFrameStart();
 		modelObjects["main"].SetAnimation("Dead");
 		modelObjects["main"].SetAnimationEndStopFlag(true);
+		deadTimer.SetMaxTime(120);
+		deadTimer.SetStartFlag(true);
 
 		isDead = true;
 

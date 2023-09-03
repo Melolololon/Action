@@ -78,6 +78,7 @@ private:
 	int testTimer = 0;
 
 	bool isDead = false;
+	MelLib::FrameTimer deadTimer;
 private:
 
 	void Move();
