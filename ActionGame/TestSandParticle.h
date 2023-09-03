@@ -3,7 +3,7 @@
 #include<Sprite3D.h>
 class TestSandParticle :
     public MelLib::GameObject
-{const float FRAME_MOVE_DIS = 0.2f;
+{const float FRAME_MOVE_DIS = 2.0f;
 
 	// 1フレでの減算アルファ値(パーセント)
 	const float FRAME_SUB_ALPHA = 5.0f;

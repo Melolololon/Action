@@ -455,7 +455,6 @@ void Boss::Update()
 		CalcMovePhysics();
 	}
 
-	if (MelLib::Input::KeyTrigger(DIK_Q))hp = 0;
 	Dead();
 	if (isDead)return;
 
