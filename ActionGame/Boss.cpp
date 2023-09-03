@@ -355,6 +355,18 @@ void Boss::MoveToPlayer(const float speed)
 	AddPosition(moveVector);
 }
 
+void Boss::Dead()
+{
+	// 死亡アニメーション
+	if (!isDead)return;
+
+	modelObjects["main"].Update();
+	if (!modelObjects["main"].GetAnimationEndFlag())return;
+
+	SetScale(GetScale() - 0.1f);
+	if (GetScale().x <= 0)eraseManager = true;
+}
+
 void Boss::LoadResources()
 {
 	MelLib::ModelData::Load("Resources/Model/Boss/Boss.fbx", false,"boss");
@@ -436,8 +448,16 @@ void Boss::Initialize()
 
 void Boss::Update()
 {
-	FallStart(0.0f);
-	CalcMovePhysics();
+	// 仮if分
+	if (!isDead) 
+	{
+		FallStart(0.0f);
+		CalcMovePhysics();
+	}
+
+	if (MelLib::Input::KeyTrigger(DIK_Q))hp = 0;
+	Dead();
+	if (isDead)return;
 
 	// プレイヤーとの距離を計算
 	float toPDis = MelLib::LibMath::CalcDistance3D(pPlayer->GetPosition(), GetPosition());
@@ -460,12 +480,7 @@ void Boss::Update()
 	SelectAction();
 	AttackUpdate();
 
-	// 仮
-	if (hp.GetValue() <= 0) 
-	{
-		eraseManager = true;
-	}
-
+	
 	if (mutekiTimer.GetMaxOverFlag()) 
 	{
 		mutekiTimer.ResetTimeZero();
@@ -493,15 +508,15 @@ void Boss::Draw()
 void Boss::Hit(const GameObject& object, const MelLib::ShapeType3D collisionType, const std::string& shapeName, const MelLib::ShapeType3D hitObjColType, const std::string& hitShapeName)
 {
 	//// 0になったらやられ処理
-	if (hp.GetValue() <= 0)
+	if (hp.GetValue() <= 0 && !isDead)
 	{
-		/*state = ThisState::DEAD;
+		//state = ThisState::DEAD;
 
-		modelObjects["main"].SetAnimation("Dead");
 		modelObjects["main"].SetAnimationFrameStart();
-		modelObjects["main"].SetAnimationEndStopFlag(true);*/
+		modelObjects["main"].SetAnimation("Dead");
+		modelObjects["main"].SetAnimationEndStopFlag(true);
 
-		eraseManager = true;
+		isDead = true;
 
 		return;
 	}

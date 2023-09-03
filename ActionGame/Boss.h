@@ -76,6 +76,8 @@ private:
 	SandEffect sandEffect;
 	MelLib::Emitter3D sandParEmitter;
 	int testTimer = 0;
+
+	bool isDead = false;
 private:
 
 	void Move();
@@ -98,6 +100,8 @@ private:
 	void Rotate();
 
 	void MoveToPlayer(const float speed);
+
+	void Dead();
 public:
 
 
